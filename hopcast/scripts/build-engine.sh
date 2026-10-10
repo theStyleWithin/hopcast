@@ -11,6 +11,10 @@ ENGINE="$ROOT/src/obs-studio"
 BUILD="${1:-$ROOT/build/engine}"
 PREFIX="${2:-$ROOT/build/engine-install}"
 
+# Warnings-as-errors is off: NAVER's engine code has Windows/macOS-only
+# assumptions (e.g. printing uint64_t with %llu) that GCC on Linux flags.
+# They are logged and counted in CI; real fixes belong in a HopCast engine fork.
+
 # NAVER's engine requires the app version via environment (PRISM's own build
 # scripts export these). HopCast's version lives in hopcast/VERSION.
 VERSION="$(tr -d '[:space:]' < "$ROOT/hopcast/VERSION")"
@@ -36,6 +40,7 @@ cmake -S "$ENGINE" -B "$BUILD" -G Ninja \
   -DCMAKE_INSTALL_LIBDIR=lib \
   -DCMAKE_PROJECT_INCLUDE="$ROOT/hopcast/cmake/engine-compat.cmake" \
   -Wno-dev \
+  -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF \
   -DENABLE_UI=OFF \
   -DENABLE_RELOCATABLE=ON \
   -DENABLE_PORTABLE_CONFIG=ON \
@@ -46,7 +51,6 @@ cmake -S "$ENGINE" -B "$BUILD" -G Ninja \
   -DENABLE_DECKLINK=OFF \
   -DENABLE_VLC=OFF \
   -DENABLE_SCRIPTING=OFF \
-  -DENABLE_COMPAT_UPDATES=OFF \
   -DENABLE_SERVICE_UPDATES=OFF \
   -DENABLE_PIPEWIRE=ON \
   -DENABLE_PULSEAUDIO=ON \

@@ -43,6 +43,12 @@ jobs:
           set -o pipefail
           bash hopcast/scripts/build-engine.sh build/engine build/engine-install 2>&1 | tee build-engine.log
 
+      - name: Count engine warnings
+        run: |
+          n=$(grep -c "warning:" build-engine.log || true)
+          f=$(grep -c "\[-Wformat" build-engine.log || true)
+          echo "::notice title=engine warnings::$n compiler warnings ($f printf-format portability issues in NAVER code)"
+
       - name: Smoke test (libobs starts headless, plugins load)
         run: |
           set -o pipefail
