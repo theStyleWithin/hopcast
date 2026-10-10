@@ -11,6 +11,10 @@ ENGINE="$ROOT/src/obs-studio"
 BUILD="${1:-$ROOT/build/engine}"
 PREFIX="${2:-$ROOT/build/engine-install}"
 
+# ENABLE_VST=OFF: NAVER rewrote the VST host (path-based loading + a plugin
+# scanner) for Windows/macOS only; linux/VSTPlugin-linux.cpp no longer matches
+# the class. Porting it is a later-phase task.
+#
 # Warnings-as-errors is off: NAVER's engine code has Windows/macOS-only
 # assumptions (e.g. printing uint64_t with %llu) that GCC on Linux flags.
 # They are logged and counted in CI; real fixes belong in a HopCast engine fork.
@@ -63,6 +67,7 @@ cmake -S "$ENGINE" -B "$BUILD" -G Ninja \
   -DENABLE_DECKLINK=OFF \
   -DENABLE_VLC=OFF \
   -DENABLE_SCRIPTING=OFF \
+  -DENABLE_VST=OFF \
   -DENABLE_SERVICE_UPDATES=OFF \
   -DENABLE_PIPEWIRE=ON \
   -DENABLE_PULSEAUDIO=ON \
