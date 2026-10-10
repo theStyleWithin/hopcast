@@ -1,0 +1,397 @@
+#include "window-basic-settings.hpp"
+#include "window-basic-main.hpp"
+#include "obs-frontend-api.h"
+#include "obs-app.hpp"
+#include <qt-wrappers.hpp>
+#include "PLSColorDialogView.h"
+
+enum ColorPreset {
+	COLOR_PRESET_DEFAULT,
+	COLOR_PRESET_COLOR_BLIND_1,
+	COLOR_PRESET_CUSTOM = 99,
+};
+
+static inline QColor color_from_int(long long val)
+{
+	return QColor(val & 0xff, (val >> 8) & 0xff, (val >> 16) & 0xff, (val >> 24) & 0xff);
+}
+
+static inline long long color_to_int(QColor color)
+{
+	auto shift = [&](unsigned val, int shift) {
+		return ((val & 0xff) << shift);
+	};
+
+	return shift(color.red(), 0) | shift(color.green(), 8) | shift(color.blue(), 16) | shift(color.alpha(), 24);
+}
+
+QColor OBSBasicSettings::GetColor(uint32_t colorVal, QString label)
+{
+	QColorDialog::ColorDialogOptions options;
+
+#ifdef __linux__
+	// TODO: Revisit hang on Ubuntu with native dialog
+	options |= QColorDialog::DontUseNativeDialog;
+#endif
+
+	QColor color = color_from_int(colorVal);
+
+	return PLSColorDialogView::getColor(color, this, label, options);
+}
+
+void OBSBasicSettings::LoadA11ySettings(bool presetChange)
+{
+	if (!accessPage) {
+		return;
+	}
+
+	config_t *config = App()->GetUserConfig();
+
+	loading = true;
+	if (!presetChange) {
+		preset = config_get_int(config, "Accessibility", "ColorPreset");
+
+		bool block = accessPage->colorPreset->blockSignals(true);
+		accessPage->colorPreset->setCurrentIndex(
+			std::min(preset, (uint32_t)accessPage->colorPreset->count() - 1));
+		accessPage->colorPreset->blockSignals(block);
+
+		bool checked = config_get_bool(config, "Accessibility", "OverrideColors");
+
+		accessPage->colorCheckBox->setChecked(checked);
+		accessPage->colorsGroupBox->setEnabled(checked);
+	}
+
+	if (preset == COLOR_PRESET_DEFAULT) {
+		ResetDefaultColors();
+		SetDefaultColors();
+	} else if (preset == COLOR_PRESET_COLOR_BLIND_1) {
+		ResetDefaultColors();
+
+		mixerGreenActive = 0x742E94;
+		mixerGreen = 0x4A1A60;
+		mixerYellowActive = 0x3349F9;
+		mixerYellow = 0x1F2C97;
+		mixerRedActive = 0xBEAC63;
+		mixerRed = 0x675B28;
+
+		selectRed = 0x3349F9;
+		selectGreen = 0xFF56C9;
+		selectBlue = 0xB09B44;
+		selectPurple = 0xEE00FF;
+
+		SetDefaultColors();
+	} else if (preset == COLOR_PRESET_CUSTOM) {
+		SetDefaultColors();
+
+		selectRed = config_get_int(config, "Accessibility", "SelectRed");
+		selectGreen = config_get_int(config, "Accessibility", "SelectGreen");
+		selectBlue = config_get_int(config, "Accessibility", "SelectBlue");
+		selectPurple = config_get_int(config, "Accessibility", "SelectPurple");
+
+		mixerGreen = config_get_int(config, "Accessibility", "MixerGreen");
+		mixerYellow = config_get_int(config, "Accessibility", "MixerYellow");
+		mixerRed = config_get_int(config, "Accessibility", "MixerRed");
+
+		mixerGreenActive = config_get_int(config, "Accessibility", "MixerGreenActive");
+		mixerYellowActive = config_get_int(config, "Accessibility", "MixerYellowActive");
+		mixerRedActive = config_get_int(config, "Accessibility", "MixerRedActive");
+	}
+
+	UpdateA11yColors();
+
+	loading = false;
+}
+
+void OBSBasicSettings::SaveA11ySettings()
+{
+	if (!accessPage) {
+		return;
+	}
+
+	config_t *config = App()->GetUserConfig();
+
+	config_set_bool(config, "Accessibility", "OverrideColors", accessPage->colorCheckBox->isChecked());
+	config_set_int(config, "Accessibility", "ColorPreset", preset);
+
+	config_set_int(config, "Accessibility", "SelectRed", selectRed);
+	config_set_int(config, "Accessibility", "SelectGreen", selectGreen);
+	config_set_int(config, "Accessibility", "SelectBlue", selectBlue);
+	config_set_int(config, "Accessibility", "SelectPurple", selectPurple);
+	config_set_int(config, "Accessibility", "MixerGreen", mixerGreen);
+	config_set_int(config, "Accessibility", "MixerYellow", mixerYellow);
+	config_set_int(config, "Accessibility", "MixerRed", mixerRed);
+	config_set_int(config, "Accessibility", "MixerGreenActive", mixerGreenActive);
+	config_set_int(config, "Accessibility", "MixerYellowActive", mixerYellowActive);
+	config_set_int(config, "Accessibility", "MixerRedActive", mixerRedActive);
+
+	main->RefreshVolumeColors();
+}
+
+static void SetStyle(QLabel *label, uint32_t colorVal)
+{
+	QColor color = color_from_int(colorVal);
+	color.setAlpha(255);
+	QPalette palette = QPalette(color);
+	label->setFrameStyle(QFrame::Sunken | QFrame::Panel);
+	label->setText(color.name(QColor::HexRgb));
+	label->setPalette(palette);
+	label->setStyleSheet(QString("background-color: %1; color: %2;")
+				     .arg(palette.color(QPalette::Window).name(QColor::HexRgb))
+				     .arg(palette.color(QPalette::WindowText).name(QColor::HexRgb)));
+	label->setAutoFillBackground(true);
+	label->setAlignment(Qt::AlignCenter);
+}
+
+void OBSBasicSettings::UpdateA11yColors()
+{
+	accessPage->colorSelectLabel_1->setWordWrap(true);
+	accessPage->colorSelectLabel_2->setWordWrap(true);
+	accessPage->colorSelectLabel_3->setWordWrap(true);
+	accessPage->colorSelectLabel_4->setWordWrap(true);
+	accessPage->colorSelectLabel_5->setWordWrap(true);
+	accessPage->colorSelectLabel_6->setWordWrap(true);
+	accessPage->colorSelectLabel_7->setWordWrap(true);
+	accessPage->colorSelectLabel_8->setWordWrap(true);
+	accessPage->colorSelectLabel_9->setWordWrap(true);
+	accessPage->colorSelectLabel_10->setWordWrap(true);
+	SetStyle(accessPage->color1, selectRed);
+	SetStyle(accessPage->color2, selectGreen);
+	SetStyle(accessPage->color3, selectBlue);
+	SetStyle(accessPage->color10, selectPurple);
+	SetStyle(accessPage->color4, mixerGreen);
+	SetStyle(accessPage->color5, mixerYellow);
+	SetStyle(accessPage->color6, mixerRed);
+	SetStyle(accessPage->color7, mixerGreenActive);
+	SetStyle(accessPage->color8, mixerYellowActive);
+	SetStyle(accessPage->color9, mixerRedActive);
+}
+
+void OBSBasicSettings::SetDefaultColors()
+{
+	config_t *config = App()->GetUserConfig();
+	config_set_default_int(config, "Accessibility", "SelectRed", selectRed);
+	config_set_default_int(config, "Accessibility", "SelectGreen", selectGreen);
+	config_set_default_int(config, "Accessibility", "SelectBlue", selectBlue);
+	config_set_default_int(config, "Accessibility", "SelectPurple", selectPurple);
+
+	config_set_default_int(config, "Accessibility", "MixerGreen", mixerGreen);
+	config_set_default_int(config, "Accessibility", "MixerYellow", mixerYellow);
+	config_set_default_int(config, "Accessibility", "MixerRed", mixerRed);
+
+	config_set_default_int(config, "Accessibility", "MixerGreenActive", mixerGreenActive);
+	config_set_default_int(config, "Accessibility", "MixerYellowActive", mixerYellowActive);
+	config_set_default_int(config, "Accessibility", "MixerRedActive", mixerRedActive);
+}
+
+void OBSBasicSettings::ResetDefaultColors()
+{
+	selectRed = 0x35FCEC;
+	selectGreen = 0x5141C3;
+	selectBlue = 0xFF9100;
+	selectPurple = 0xEE00FF;
+	mixerGreen = 0x2E4821;
+	mixerYellow = 0x275E63;
+	mixerRed = 0x222255;
+	mixerGreenActive = 0x4cff4c;
+	mixerYellowActive = 0x4cffff;
+	mixerRedActive = 0x4c4cff;
+}
+
+void OBSBasicSettings::on_colorPreset_currentIndexChanged(int idx)
+{
+	preset = idx == accessPage->colorPreset->count() - 1 ? COLOR_PRESET_CUSTOM : idx;
+	LoadA11ySettings(true);
+}
+
+void OBSBasicSettings::on_choose1_clicked()
+{
+	QColor color = GetColor(selectRed, QTStr("Basic.Settings.Accessibility.ColorOverrides.SelectRed"));
+
+	if (!color.isValid())
+		return;
+
+	selectRed = color_to_int(color);
+
+	preset = COLOR_PRESET_CUSTOM;
+	bool block = accessPage->colorPreset->blockSignals(true);
+	accessPage->colorPreset->setCurrentIndex(accessPage->colorPreset->count() - 1);
+	accessPage->colorPreset->blockSignals(block);
+
+	A11yChanged();
+
+	UpdateA11yColors();
+}
+
+void OBSBasicSettings::on_choose2_clicked()
+{
+	QColor color = GetColor(selectGreen, QTStr("Basic.Settings.Accessibility.ColorOverrides.SelectGreen"));
+
+	if (!color.isValid())
+		return;
+
+	selectGreen = color_to_int(color);
+
+	preset = COLOR_PRESET_CUSTOM;
+	bool block = accessPage->colorPreset->blockSignals(true);
+	accessPage->colorPreset->setCurrentIndex(accessPage->colorPreset->count() - 1);
+	accessPage->colorPreset->blockSignals(block);
+
+	A11yChanged();
+
+	UpdateA11yColors();
+}
+
+void OBSBasicSettings::on_choose3_clicked()
+{
+	QColor color = GetColor(selectBlue, QTStr("Basic.Settings.Accessibility.ColorOverrides.SelectBlue"));
+
+	if (!color.isValid())
+		return;
+
+	selectBlue = color_to_int(color);
+
+	preset = COLOR_PRESET_CUSTOM;
+	bool block = accessPage->colorPreset->blockSignals(true);
+	accessPage->colorPreset->setCurrentIndex(accessPage->colorPreset->count() - 1);
+	accessPage->colorPreset->blockSignals(block);
+
+	A11yChanged();
+
+	UpdateA11yColors();
+}
+
+void OBSBasicSettings::on_choose10_clicked()
+{
+	QColor color = GetColor(selectPurple, QTStr("Basic.Settings.Accessibility.ColorOverrides.SelectPurple"));
+
+	if (!color.isValid())
+		return;
+
+	selectPurple = color_to_int(color);
+
+	preset = COLOR_PRESET_CUSTOM;
+	bool block = accessPage->colorPreset->blockSignals(true);
+	accessPage->colorPreset->setCurrentIndex(accessPage->colorPreset->count() - 1);
+	accessPage->colorPreset->blockSignals(block);
+
+	A11yChanged();
+
+	UpdateA11yColors();
+}
+
+void OBSBasicSettings::on_choose4_clicked()
+{
+	QColor color = GetColor(mixerGreen, QTStr("Basic.Settings.Accessibility.ColorOverrides.MixerGreen"));
+
+	if (!color.isValid())
+		return;
+
+	mixerGreen = color_to_int(color);
+
+	preset = COLOR_PRESET_CUSTOM;
+	bool block = accessPage->colorPreset->blockSignals(true);
+	accessPage->colorPreset->setCurrentIndex(accessPage->colorPreset->count() - 1);
+	accessPage->colorPreset->blockSignals(block);
+
+	A11yChanged();
+
+	UpdateA11yColors();
+}
+
+void OBSBasicSettings::on_choose5_clicked()
+{
+	QColor color = GetColor(mixerYellow, QTStr("Basic.Settings.Accessibility.ColorOverrides.MixerYellow"));
+
+	if (!color.isValid())
+		return;
+
+	mixerYellow = color_to_int(color);
+
+	preset = COLOR_PRESET_CUSTOM;
+	bool block = accessPage->colorPreset->blockSignals(true);
+	accessPage->colorPreset->setCurrentIndex(accessPage->colorPreset->count() - 1);
+	accessPage->colorPreset->blockSignals(block);
+
+	A11yChanged();
+
+	UpdateA11yColors();
+}
+
+void OBSBasicSettings::on_choose6_clicked()
+{
+	QColor color = GetColor(mixerRed, QTStr("Basic.Settings.Accessibility.ColorOverrides.MixerRed"));
+
+	if (!color.isValid())
+		return;
+
+	mixerRed = color_to_int(color);
+
+	preset = COLOR_PRESET_CUSTOM;
+	bool block = accessPage->colorPreset->blockSignals(true);
+	accessPage->colorPreset->setCurrentIndex(accessPage->colorPreset->count() - 1);
+	accessPage->colorPreset->blockSignals(block);
+
+	A11yChanged();
+
+	UpdateA11yColors();
+}
+
+void OBSBasicSettings::on_choose7_clicked()
+{
+	QColor color =
+		GetColor(mixerGreenActive, QTStr("Basic.Settings.Accessibility.ColorOverrides.MixerGreenActive"));
+
+	if (!color.isValid())
+		return;
+
+	mixerGreenActive = color_to_int(color);
+
+	preset = COLOR_PRESET_CUSTOM;
+	bool block = accessPage->colorPreset->blockSignals(true);
+	accessPage->colorPreset->setCurrentIndex(accessPage->colorPreset->count() - 1);
+	accessPage->colorPreset->blockSignals(block);
+
+	A11yChanged();
+
+	UpdateA11yColors();
+}
+
+void OBSBasicSettings::on_choose8_clicked()
+{
+	QColor color =
+		GetColor(mixerYellowActive, QTStr("Basic.Settings.Accessibility.ColorOverrides.MixerYellowActive"));
+
+	if (!color.isValid())
+		return;
+
+	mixerYellowActive = color_to_int(color);
+
+	preset = COLOR_PRESET_CUSTOM;
+	bool block = accessPage->colorPreset->blockSignals(true);
+	accessPage->colorPreset->setCurrentIndex(accessPage->colorPreset->count() - 1);
+	accessPage->colorPreset->blockSignals(block);
+
+	A11yChanged();
+
+	UpdateA11yColors();
+}
+
+void OBSBasicSettings::on_choose9_clicked()
+{
+	QColor color = GetColor(mixerRedActive, QTStr("Basic.Settings.Accessibility.ColorOverrides.MixerRedActive"));
+
+	if (!color.isValid())
+		return;
+
+	mixerRedActive = color_to_int(color);
+
+	preset = COLOR_PRESET_CUSTOM;
+	bool block = accessPage->colorPreset->blockSignals(true);
+	accessPage->colorPreset->setCurrentIndex(accessPage->colorPreset->count() - 1);
+	accessPage->colorPreset->blockSignals(block);
+
+	A11yChanged();
+
+	UpdateA11yColors();
+}

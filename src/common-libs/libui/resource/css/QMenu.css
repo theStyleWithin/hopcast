@@ -1,0 +1,124 @@
+QMenu {
+	font-size:14px; 
+	border:1px solid #111111;
+	background: #2d2d2d;
+	padding-top:8px;
+	padding-bottom:8px;
+	padding-left:0px;
+	padding-right:0px;
+}
+QMenu::right-arrow {
+	padding: 0px 14px 0px 0px;
+	width: 9px;
+	height: 13px;
+	image: url(":/libui/resource/images/ic-menu-next-normal.svg");
+}
+
+QMenu::icon {
+	padding-left:10px;
+	min-width:50px;
+	max-width:50px;
+	min-height:30px;
+	max-height:30px;
+}
+QMenu::item {
+	font-size:14px;
+    padding: 0px 25px 0px 20px;
+	min-height:40px;
+	max-height:40px;
+	min-width:190px;
+    color: #ffffff;
+    background: #2d2d2d;
+}
+
+QMenu::item:selected {
+    background: #444444;
+}
+QMenu::item:checked{
+    color: #effc35;
+}
+QMenu::item::!enabled{
+	color: #666666;
+}
+QMenu::separator {
+	height:1px;
+    background: #111111;
+}
+QMenu::indicator{
+	width: 0px;
+	height: 0px;
+	border: none;
+}
+
+QMenu #sourcePopupMenuCustomWidget {
+	margin: 0;
+	padding: 0;
+	min-height: 40px;
+	max-height: 40px;
+	min-width: 0px;
+	max-width: 100000px;
+	background: #2d2d2d;
+	border-radius: 0;
+}
+QMenu #sourcePopupMenuCustomWidget:hover {
+	background: #373737;
+}
+QMenu #sourcePopupMenuCustomWidget > #icon {
+	margin-left: 10px;
+	min-width: 30px;
+	max-width: 30px;
+	min-height: 30px;
+	max-height: 30px;
+	background: transparent;
+}
+QMenu #sourcePopupMenuCustomWidget > #text {
+	qproperty-indent: 0;
+	padding: 0;
+	margin-left: 4px;
+	min-height: 40px;
+	max-height: 40px;
+	background: transparent;
+	font-size: 14px;
+	font-weight: normal;
+	color: white;
+}
+QMenu #sourcePopupMenuCustomWidget > #badge {
+	margin-left: 6px;
+	margin-right: 20px;
+	min-width: 38px;
+	max-width: 38px;
+	min-height: 18px;
+	max-height: 18px;
+	background: transparent;
+	image: url(":/libui/resource/images/img-sourcelist-badge.svg");
+}
+QMenu #sourcePopupMenuCustomWidget[hasBadge="false"] > #text {
+	margin-right: 20px;
+}
+
+QMenu #colorSelectWidget #presetFrame {
+	min-height: 48px;
+	max-height: 48px;
+    min-width: 276px;
+	max-width: 276px;
+    background-color: #2d2d2d;
+}
+
+QMenu #colorSelectWidget #recentColorWidget {
+	min-height: 56px;
+	max-height: 56px;
+    min-width: 276px;
+	max-width: 276px;
+    background-color: #2d2d2d;
+    border-bottom: 1px solid #000000;
+}
+
+QMenu #colorSelectWidget #recentColorWidget QPushButton,
+QMenu #colorSelectWidget #presetFrame QPushButton {
+	background: transparent;
+	min-height: 28px;
+	max-height: 28px;
+	min-height: 28px;
+	max-height: 28px;
+}
+

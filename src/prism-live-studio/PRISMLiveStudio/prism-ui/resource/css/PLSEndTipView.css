@@ -1,0 +1,35 @@
+PLSEndTipView {
+    qproperty-hasHLine: true;
+    qproperty-hasMinButton: false;
+    qproperty-hasCloseButton: false;
+    min-width: 410px;
+    max-width: 410px;
+    min-height: 436px;
+    max-height: 486px;
+}
+
+
+    PLSEndTipView #topTitle {
+        color: #effc35;
+        font-size: 18px;
+        font-weight: bold;
+        min-height: 52px;
+        max-height: 102px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+
+    PLSEndTipView #widget_content {
+        min-height: 228px;
+        max-height: 228px;
+    }
+
+    PLSEndTipView #pushButton_ok {
+        border-radius: 3px;
+    }
+
+    PLSEndTipView #widget_ok {
+        min-height: 60px;
+        max-height: 60px;
+    }

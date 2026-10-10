@@ -1,0 +1,128 @@
+
+PLSWindow {
+	qproperty-captionBarHeight: 34;
+	qproperty-captionHeight: 34;
+	qproperty-captionButtonSize: 22;
+	qproperty-textMarginLeft: 17;
+	qproperty-textMarginRight: 5;
+	qproperty-closeButtonMarginRight: 8;
+	qproperty-captionButtonMargin: 9;
+	qproperty-captionButtonTopMargin: 6;
+	background-color: #272727;
+	qproperty-titleBarBkgColor: #272727;
+}
+
+
+	PLSWindow >  #hline {
+		background-color: #111111;
+		min-height: 1px;
+		max-height: 1px;
+	}
+	PLSWindow > #titleBar {
+		border: none;
+	}
+		PLSWindow > #titleBar > #titleLabel,
+		PLSWindow > #titleBar > #min,
+		PLSWindow > #titleBar > #maxres,
+		PLSWindow > #titleBar > #close {
+			background-color: #272727;
+			border: none;
+		}
+
+		PLSWindow > #titleBar > #titleLabel {
+			font-size: 12px;
+			color: #ffffff;
+		}
+
+		PLSWindow > #titleBar > #min {
+			image: url(":/libui/resource/images/btn-min-normal.svg");
+		}
+
+		PLSWindow > #titleBar > #min:hover {
+			image: url(":/libui/resource/images/btn-min-over.svg");
+		}
+		PLSWindow > #titleBar > #min:pressed {
+			image: url(":/libui/resource/images/btn-min-click.svg");
+		}
+		PLSWindow > #titleBar > #min:disabled {
+			image: url(":/libui/resource/images/btn-min-disable.svg");
+		}
+
+	PLSWindow[maxState="false"] > #titleBar > #maxres {
+		image: url(":/libui/resource/images/btn-max-normal.svg");
+	}
+
+	PLSWindow[maxState="false"] > #titleBar > #maxres:hover {
+		image: url(":/libui/resource/images/btn-max-over.svg");
+	}
+	PLSWindow[maxState="false"] > #titleBar > #maxres:pressed {
+		image: url(":/libui/resource/images/btn-max-click.svg");
+	}
+	PLSWindow[maxState="false"] > #titleBar > #maxres:disabled {
+		image: url(":/libui/resource/images/btn-max-disable.svg");
+	}
+
+	PLSWindow[maxState="true"] > #titleBar > #maxres {
+		image: url(":/libui/resource/images/btn-maxres-normal.svg");
+	}
+
+	PLSWindow[maxState="true"] > #titleBar > #maxres:hover {
+		image: url(":/libui/resource/images/btn-maxres-over.svg");
+	}
+	PLSWindow[maxState="true"] > #titleBar > #maxres:pressed {
+		image: url(":/libui/resource/images/btn-maxres-click.svg");
+	}
+	PLSWindow[maxState="true"] > #titleBar > #maxres:disabled {
+		image: url(":/libui/resource/images/btn-maxres-disable.svg");
+	}
+
+	PLSWindow > #titleBar > #close {
+		image: url(":/libui/resource/images/btn-close-normal.svg");
+	}
+
+	PLSWindow > #titleBar > #close:hover {
+		image: url(":/libui/resource/images/btn-close-over.svg");
+	}
+	PLSWindow > #titleBar > #close:pressed {
+		image: url(":/libui/resource/images/btn-close-click.svg");
+	}
+	PLSWindow > #titleBar > #close:disabled {
+		image: url(":/libui/resource/images/btn-close-disable.svg");
+	}
+
+	PLSWindow > #titleBar > #helpBtn {
+		min-width: 15px;
+		max-width: 15px;
+		min-height: 16px;
+		max-height: 16px;
+		margin-top: -1px;
+		margin-left: 1px;
+		margin: 0;
+		padding: 0;
+		background: transparent;
+	}
+	PLSWindow > #titleBar > #helpBtn {
+		image: url(":/libui/resource/images/ic-scene-help-normal.svg");
+	}
+		PLSWindow > #titleBar > #helpBtn:hover {
+			image: url(":/libui/resource/images/ic-scene-help-over.svg");
+		}
+
+PLSWindow .QWidget,
+PLSWindow .QLabel,
+PLSWindow .QFrame,
+PLSWindow .QCheckBox,
+PLSWindow .QRadioButton,
+PLSWindow .QToolButton,
+PLSWindow .QTableView,
+PLSWindow .QHeaderView,
+PLSWindow .QScrollArea,
+PLSWindow QPushButton[useFor="QToolButton"] {
+	background-color: #272727;
+}
+PLSWindow QLineEdit {
+	background-color: #222222;
+}
+PLSWindow PLSSpinBox, PLSWindow PLSDoubleSpinBox {
+	background-color: #222222;
+}

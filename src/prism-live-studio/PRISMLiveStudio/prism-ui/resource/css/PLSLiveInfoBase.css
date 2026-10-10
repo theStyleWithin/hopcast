@@ -1,0 +1,269 @@
+PLSLiveInfoBase > #content #labelCaption {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background-color: transparent;
+}
+
+PLSLiveInfoBase > #content > QLabel {
+    font-size: 14px;
+    font-weight: bold;
+    color: #bababa;
+    background-color: transparent;
+}
+
+PLSLiveInfoBase > #content QLineEdit {
+    background-color: #1e1e1e;
+}
+
+    PLSLiveInfoBase > #content QLineEdit:focus {
+        border: 1px solid #effc35;
+    }
+
+
+PLSLiveInfoBase > #content QTextEdit {
+    background-color: #1e1e1e;
+}
+
+    PLSLiveInfoBase > #content QTextEdit:focus {
+        border: 1px solid #effc35;
+    }
+
+PLSLiveInfoBase QPushButton[useFor="Ok"][prepareLive=true] {
+    background-color: #effc35;
+    color: black;
+}
+
+    PLSLiveInfoBase QPushButton[useFor="Ok"][prepareLive=true]:hover {
+        background-color: #f1fa75;
+    }
+
+    PLSLiveInfoBase QPushButton[useFor="Ok"][prepareLive=true]:pressed {
+        background-color: #7a7f34;
+    }
+
+    PLSLiveInfoBase QPushButton[useFor="Ok"][prepareLive=true]:disabled {
+        background-color: #444444;
+        color: #666666;
+    }
+
+PLSLiveInfoBase QPushButton[useFor="Rehearsal"] {
+    border-radius: 3px;
+    border: 1px solid #f1fa75;
+    background-color: #272727;
+    font-size: 14px;
+    font-weight: bold;
+    color: #effc35;
+}
+
+    PLSLiveInfoBase QPushButton[useFor="Rehearsal"]:hover {
+        border-radius: 3px;
+        border: 1px solid #effc35;
+        background-color: #272727;
+        color: #f1fa75;
+    }
+
+    PLSLiveInfoBase QPushButton[useFor="Rehearsal"]:pressed {
+        border-radius: 3px;
+        border: 1px solid #7a7f34;
+        background-color: #272727;
+        color: #7a7f34;
+    }
+
+    PLSLiveInfoBase QPushButton[useFor="Rehearsal"]:disabled {
+        border-radius: 3px;
+        border: 1px solid #444444;
+        background-color: #272727;
+        color: #444444;
+    }
+
+PLSLiveInfoBase QLineEdit {
+    font-size: 14px;
+}
+
+PLSLiveInfoBase QListWidget {
+    background: #2d2d2d;
+    border: 1px solid #111111;
+    border-radius: 3px;
+    outline: none;
+    font-size: 14px;
+    color: white;
+}
+
+    PLSLiveInfoBase QListWidget::item {
+        background-color: #2d2d2d;
+        height: 56px;
+    }
+
+        PLSLiveInfoBase QListWidget::item:selected {
+            color: white;
+            background-color: #373737;
+        }
+
+        PLSLiveInfoBase QListWidget::item:hover {
+            background-color: #373737;
+        }
+
+    PLSLiveInfoBase QListWidget .QWidget {
+        background-color: #2d2d2d;
+        height: 56px;
+    }
+
+        PLSLiveInfoBase QListWidget .QWidget:selected {
+            color: white;
+            background-color: #373737;
+        }
+
+        PLSLiveInfoBase QListWidget .QWidget:hover {
+            background-color: #373737;
+        }
+
+        PLSLiveInfoBase QListWidget .QWidget QLabel {
+            background-color: transparent;
+        }
+
+        PLSLiveInfoBase QListWidget .QWidget #categoryLabel {
+            font-size: 14px;
+        }
+
+PLSLiveInfoBase #lineEditCategory {
+    padding-right: 60px;
+}
+
+PLSLiveInfoBase #pushButtonSearch {
+    min-width: 22px;
+    max-width: 22px;
+    min-height: 22px;
+    max-height: 22px;
+    border-style: none;
+    background-color: transparent;
+    image: url(":/libui/resource/images/btn-search-normal.svg");
+}
+
+PLSLiveInfoBase #loadingBG {
+    background-color: rgba(39, 39, 39, 0.8);
+}
+
+PLSLiveInfoBase #loadingBtn {
+    background-color: transparent;
+}
+
+
+PLSLiveInfoBase #ToResolutionBtn {
+    background-color: transparent;
+    min-height: 17px;
+    max-height: 17px;
+    margin: 0px;
+    padding: 0px;
+    font-size: 13px;
+    font-weight: bold;
+    font-style: normal;
+    color: #bababa;
+    spacing: 5px;
+}
+
+    PLSLiveInfoBase #ToResolutionBtn:hover {
+        color: white;
+    }
+
+    PLSLiveInfoBase #ToResolutionBtn:pressed {
+        color: #444444;
+    }
+
+    PLSLiveInfoBase #ToResolutionBtn:disabled {
+        color: #666666;
+    }
+
+
+    PLSLiveInfoBase #ToResolutionBtn::indicator {
+        margin: 0px;
+        padding: 0px;
+        padding-top: 5px;
+        min-height: 15px;
+        max-height: 15px;
+        min-width: 12px;
+        max-width: 12px;
+        background-color: transparent;
+        image: url(:/resource/images/ResolutionGuide/ic-setting-liveinfo-normal.svg);
+    }
+
+        PLSLiveInfoBase #ToResolutionBtn::indicator:hover {
+            image: url(:/resource/images/ResolutionGuide/ic-setting-liveinfo-over.svg);
+        }
+
+        PLSLiveInfoBase #ToResolutionBtn::indicator:pressed {
+            image: url(:/resource/images/ResolutionGuide/ic-setting-liveinfo-click.svg);
+        }
+
+        PLSLiveInfoBase #ToResolutionBtn::indicator:disabled {
+            image: url(:/resource/images/ResolutionGuide/ic-setting-liveinfo-disable.svg);
+        }
+
+
+
+PLSLiveInfoBase #CheckInvalidTipFrame {
+    min-height: 40px;
+    background-color: rgba(30, 30, 30, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    padding: 9px 12px 12px 20px;
+}
+
+PLSLiveInfoBase #CheckInvalidTip {
+    background-color: transparent;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    color: #bababa;
+}
+
+PLSLiveInfoBase #CheckInvalidTipCloseBtn {
+    min-width: 16px;
+    min-height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    margin: 0px 0px 0px 0px;
+    padding: 0px;
+    image: url(":/resource/images/ResolutionGuide/btn-close-normal.svg");
+    background-color: transparent;
+    border-radius: 0px;
+    border: none;
+}
+
+    PLSLiveInfoBase #CheckInvalidTipCloseBtn:hover {
+        image: url(":/resource/images/ResolutionGuide/btn-close-over.svg");
+    }
+
+    PLSLiveInfoBase #CheckInvalidTipCloseBtn:pressed {
+        image: url(":/resource/images/ResolutionGuide/btn-close-click.svg");
+    }
+
+    PLSLiveInfoBase #CheckInvalidTipCloseBtn:disabled {
+        image: url(":/resource/images/ResolutionGuide/close-btn-disable.svg");
+    }
+
+PLSLiveInfoDualWidget #dualImageLabel {
+    margin: 0px;
+    padding: 0px;
+    min-height: 30px;
+    max-height: 30px;
+    max-width: 30px;
+    min-width: 30px;
+    background-color: transparent;
+    color: transparent;
+}
+
+PLSLiveInfoDualWidget[dualModel="h"] #dualImageLabel {
+    image: url(":/resource/images/dual-output/ic_dualoutput_liveinfo_horizontal.svg");
+}
+
+PLSLiveInfoDualWidget[dualModel="v"] #dualImageLabel {
+    image: url(":/resource/images/dual-output/ic_dualoutput_liveinfo_vertical.svg");
+}
+
+
+PLSLiveInfoDualWidget #dualTitleLabel {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+}

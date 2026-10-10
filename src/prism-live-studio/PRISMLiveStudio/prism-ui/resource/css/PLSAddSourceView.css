@@ -1,0 +1,287 @@
+PLSAddSourceView#PLSAddSourceView {
+    qproperty-hasHLine: true;
+    qproperty-hasMinButton: false;
+    qproperty-captionButtonMargin: 10;
+}
+
+#PLSAddSourceView > #content {
+    background-color: #1e1e1f;
+    border: none;
+}
+
+#PLSAddSourceView #guideButton {
+    padding:0;
+    margin:0;
+    font-size: 13px;
+    font-weight: normal;
+    color: #1e1e1f;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    margin-left: 12px;
+
+}
+
+#PLSAddSourceView #guideButton:hover {
+    background-color: #f5f5f5;
+}
+
+#PLSAddSourceView #guideButton:pressed {
+    background-color: #dedede;
+}
+
+#PLSAddSourceView #guideButton:disabled {
+    background-color: #444444;
+    color: #888888;
+}
+
+QFrame #frame_desc {
+    border: none;
+    min-width: 292px;
+    max-width: 292px;
+    background-color: #1e1e1f;
+}
+
+QFrame #frame_baseSource, QFrame #frame_prismSource {
+    border: 1px solid #272727;
+    border-radius: 3px;
+}
+
+PLSAddSourceView QGroupBox {
+    border: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: #999999;
+}
+
+PLSAddSourceView QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 3px;
+    top: 1px;
+    font-size: 12px;
+    color: #999999;
+}
+
+QScrollArea #scrollArea_2, QScrollArea #scrollArea {
+    border: none;
+}
+
+QLabel#label_space {
+    border: none;
+    min-height: 9px;
+    max-height: 9px;
+    background-color: transparent;
+}
+
+QLabel#label_descTitle {
+    min-width: 260px;
+    max-width: 260px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: transparent;
+    padding: 0px;
+    margin: 0px;
+}
+
+QLabel#label_descContent {
+    min-width: 260px;
+    max-width: 260px;
+    font-size: 12px;
+    font-weight: normal;
+    color: #A3A3A3;
+    background-color: transparent;
+    padding: 0px;
+    margin: 0px;
+}
+
+
+QLabel#label_descPic {
+    min-width: 280px;
+    max-width: 280px;
+    min-height: 140px;
+    max-height: 140px;
+    background-color: transparent;
+}
+
+QFrame #frame_buttonBox {
+    min-height: 78px;
+    max-height: 78px;
+    background-color: #272727;
+    border: none;
+    border-top: 1px solid #151515;
+}
+
+#frame_buttonBox #buttonOK, #frame_buttonBox #buttonCancel {
+    qproperty-minimumSize: 128px 40px;
+    qproperty-maximumSize: 128px 40px;
+}
+
+PLSAddSourceItem#PLSAddSourceItem {
+    min-height: 56px;
+    max-height: 88px;
+    min-width: 217px;
+    max-width: 217px;
+    padding: 0;
+    margin: 0;
+    background-color: #272727;
+}
+
+    PLSAddSourceItem#PLSAddSourceItem:hover {
+        background-color: #444444;
+    }
+
+    PLSAddSourceItem#PLSAddSourceItem:pressed {
+        background-color: #2d2d2d;
+    }
+
+    PLSAddSourceItem#PLSAddSourceItem:checked {
+        background-color: #444444;
+    }
+
+PLSAddSourceItem #label_icon {
+    min-height: 36px;
+    max-height: 36px;
+    min-width: 36px;
+    max-width: 36px;
+    background-color: #555555;
+    background-position: center;
+    border-radius: 18px;
+}
+
+PLSAddSourceItem #label_text {
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    background-color: transparent;
+    padding:0;
+}
+PLSAddSourceItem #label_short_desc {
+    font-size: 11px;
+    font-weight: normal;
+    color: #999999;
+    background-color: transparent;
+    padding:0;
+}
+PLSAddSourceItem #label_short_desc[select="false"] {
+    color: #999999;
+}
+PLSAddSourceItem #label_short_desc[select="true"] {
+    color: white;
+}
+PLSAddSourceItem #label_text[select="false"] {
+    color: white;
+}
+
+    PLSAddSourceItem #label_text[select="true"] {
+        color: #effc35;
+    }
+
+PLSAddSourceItem #label_status {
+    min-width: 34px;
+    max-width: 34px;
+    min-height: 16px;
+    max-height: 16px;
+    background-color: transparent;
+    image: url(":/resource/images/add-source-view/ic-badge-new.svg");
+}
+PLSAddSourceItem #betaLabel {
+    min-width: 30px;
+    max-width: 30px;
+    min-height: 16px;
+    max-height: 16px;
+    background-color: transparent;
+    image: url(":/resource/images/add-source-view/ic_badge_source_beta.svg");
+}
+PLSRecommendationBanner {
+    qproperty-minimumSize: 433px 45px;
+    qproperty-maximumSize: 433px 45px;
+    padding: 0;
+    margin: 0;
+    background-color: #2D2D2D;
+    border-radius: 5px;
+    border: 1px solid #555555;
+    box-sizing: border-box;
+}
+
+PLSRecommendationBanner:hover {
+    background-color: #343435;
+    border: 1px solid #effc35;
+}
+PLSRecommendationBanner:pressed {
+    background-color: #1e1e1f;
+    border: 1px solid #effc35;
+}
+    PLSRecommendationBanner #Avatar {
+        min-width: 44px;
+        max-width: 44px;
+        min-height: 27px;
+        max-height: 27px;
+        background-color: transparent;
+    }
+PLSRecommendationBanner #Message {
+    font-size: 12px;
+    font-weight: Bold;
+    color: #ffffff;
+    background-color: transparent;
+}
+PLSRecommendationBanner[hovered="true"] #Message {
+    color: #effc35;
+}
+PLSRecommendationBanner[pressed="true"] #Message {
+    color: #effc35;
+}
+PLSRecommendationBanner #Arrow {
+    min-width: 10px;
+    max-width: 10px;
+    min-height: 10px;
+    max-height: 10px;
+    background-color: transparent;
+    image: url(":/resource/images/add-source-view/ic_next_normal.svg");
+}
+PLSRecommendationBanner[hovered="true"] #Arrow {
+    image: url(":/resource/images/add-source-view/ic_next_over.svg");
+}
+PLSRecommendationBanner[pressed="true"] #Arrow {
+    image: url(":/resource/images/add-source-view/ic_next_over.svg");
+}
+
+PLSAddSourceView #searchLineEdit {
+    qproperty-minimumSize: 217px 45px;
+    qproperty-maximumSize: 217px 45px;
+    border-radius: 5px;
+    background-color: #2d2d2d;
+    placeholder-text-color: #ffffff;
+}
+
+PLSAddSourceView #searchLineEdit[searchButtonPosition="left"] {
+    padding-left: /*hdpi*/ 0px; 
+    border-radius: 5px;
+
+}
+
+#emptyStateWidget {
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+}
+
+#emptyStateWidget #emptyStateIcon {
+    min-width: 90px;
+    max-width:90px;
+    min-height: 90px;
+    max-height: 90px;
+    background-color: transparent;
+    padding: 0px;
+    margin: 0px;
+}
+
+#emptyStateWidget #emptyStateText {
+    font-size: 14px;
+    font-weight: normal;
+    color: #666666; 
+    background-color: transparent;
+    padding: 0px;
+    margin: 0px;
+    text-align: center;
+}

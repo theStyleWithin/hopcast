@@ -1,0 +1,693 @@
+
+PLSLoginView {
+    min-width: 730px;
+    min-height: 510px;
+    max-width: 730px;
+    max-height: 510px;
+    qproperty-hasHLine: false;
+    qproperty-hasMinButton: false;
+    qproperty-captionButtonMargin: 10;
+    color: #1e1e1f;
+}
+
+    PLSLoginView > #titleBar,
+    PLSLoginView > #titleBar > #titleLabel {
+        color: #1e1e1f;
+        background-color: #1e1e1f;
+    }
+
+        PLSLoginView > #label,
+        PLSLoginView > #titleBar > #min,
+        PLSLoginView > #titleBar > #close {
+            background-color: #1e1e1f;
+        }
+
+    PLSLoginView PLSBrowserView > #close, PLSLoginView PLSBrowserView QWidget {
+        background-color: #333333;
+    }
+
+#PLSLoginView #LoginBackgroundView, #PLSLoginView #LoginWithEmailView, #PLSLoginView #SignupWithEmailView {
+    background-color: #1e1e1f;
+}
+
+#PLSLoginView #loginMainStackedWidget {
+    background-color: #1e1e1f;
+}
+
+#SelectLoginPlatformView #platformButtonsScrollArea {
+    border: none;
+    min-width: 250px;
+    max-width: 250px;
+}
+
+#SelectLoginPlatformView #scrollAreaWidgetContents {
+    background-color: #1e1e1f;
+}
+
+#loginPrismLogoLabel {
+    background-color: transparent;
+    min-width: 255px;
+    min-height: 230px;
+    max-width: 255px;
+    max-height: 230px;
+}
+
+#loginPrismInfoLabel {
+    min-height: 16px;
+    font-size: 12px;
+    color: #6a6a6a;
+    background-color: #1e1e1f;
+}
+
+LoginBackgroundView #loginTermsOfUseBtn, #loginTermsOfUseBtn2, #loginPrivacyPolicyBtn {
+    font-size: 12px;
+    border: none;
+    color: #a3a3a3;
+    background-color: #1e1e1f;
+    padding: 0;
+    margin: 0;
+}
+
+    LoginBackgroundView #loginPrivacyPolicyBtn:hover, #loginTermsOfUseBtn:hover, #loginTermsOfUseBtn2:hover {
+        color: #ffeffc35;
+    }
+
+    LoginBackgroundView #loginPrivacyPolicyBtn:pressed, #loginTermsOfUseBtn:pressed, #loginTermsOfUseBtn2:pressed {
+        color: #ff7C7F43;
+        background-color: #1e1e1f;
+    }
+
+#SelectLoginPlatformView #loginFooterSeparatorDot {
+    min-width: 3px;
+    max-width: 3px;
+    min-height: 3px;
+    max-height: 3px;
+    background-color: transparent;
+    image: url(":/resource/images/prism-login/ic-launcher-footer-dot.svg");
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+#SelectLoginPlatformView #loginContactUsBtn {
+    font-size: 12px;
+    font-weight: bold;
+    border: none;
+    color: #ffffff;
+    background-color: #1e1e1f;
+    padding: 0;
+    margin: 0;
+    min-height: 18px;
+    max-height: 18px;
+}
+
+    #SelectLoginPlatformView #loginContactUsBtn:hover {
+        color: #ffeffc35;
+    }
+
+    #SelectLoginPlatformView #loginContactUsBtn:pressed {
+        color: #ff7C7F43;
+        background-color: #1e1e1f;
+    }
+
+LoginBackgroundView #loginAndLabel, #defaultNotAMemberLabel, #loginEndLabel {
+    font-size: 12px;
+    color: #6a6a6a;
+    background-color: #1e1e1f;
+}
+
+#SelectLoginPlatformView {
+    qproperty-minimumSize: 338px 0px;
+    qproperty-maximumSize: 338px 1000px;
+}
+
+    #SelectLoginPlatformView #defaultSignupBtn {
+        min-width: 46px;
+        min-height: 18px;
+        max-height: 18px;
+        border: none;
+        font-size: 12px;
+        font-weight: bold;
+        color: #ffeffc35;
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
+    }
+
+QPushButton > #picButtonLabel {
+    background: transparent;
+}
+
+#SelectLoginPlatformView #defaultSignupBtn:hover {
+    background-color: #1e1e1f;
+}
+
+#SelectLoginPlatformView #defaultSignupBtn:pressed {
+    color: #ff7C7F43;
+    background-color: #1e1e1f;
+}
+
+#SelectLoginPlatformView LoginCustomButton QLabel {
+    background: transparent;
+    background-color: transparent;
+    background-position: center;
+    min-width: 36px;
+    max-width: 36px;
+    min-height: 36px;
+    max-height: 36px;
+}
+
+#SelectLoginPlatformView LoginCustomButton {
+    qproperty-maximumSize: 250px 40px;
+    qproperty-minimumSize: 250px 40px;
+    border-top: 0px none #ff000000;
+    border-right: 0px none #ff000000;
+    border-bottom: 0px none #ff000000;
+    border-left: 0px none #ff000000;
+    border-radius: 3px;
+    background-color: #444444;
+    font-size: 13px;
+    font-weight: bold;
+    color: #ffffffff;
+    border-image: none;
+}
+
+    #SelectLoginPlatformView LoginCustomButton:hover {
+        border-image: none;
+        background: #555555;
+    }
+
+    #SelectLoginPlatformView LoginCustomButton:pressed {
+        border-image: none;
+        background: #2d2d2d;
+    }
+
+#defaultLoginWithEmailBtn {
+    qproperty-minimumSize: 250px 40px;
+    qproperty-maximumSize: 250px 40px;
+    border-radius: 3px;
+    border: 1px solid #6a6a6a;
+    background-color: #ff1e1e1f;
+    font-size: 13px;
+    font-weight: bold;
+    color: #ffffffff;
+    border-image: none;
+}
+
+    #defaultLoginWithEmailBtn:hover {
+        border: 1px solid #FFFFFF;
+        border-image: none;
+    }
+
+    #defaultLoginWithEmailBtn:pressed {
+        border: 1px solid #2D2D2D;
+        color: #2D2D2D;
+        border-image: none;
+    }
+
+
+
+
+#LoginWithEmailView > QWidget {
+    background-color: #1e1e1f;
+}
+
+#LoginWithEmailView #tipIconBtn {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+}
+
+#LoginWithEmailView #tipIcon {
+    min-height: 16px;
+    max-height: 16px;
+    max-width: 16px;
+    min-width: 16px;
+    image: url(":/resource/images/prism-login/ic_newpage.svg");
+    background-color: transparent;
+}
+
+    #LoginWithEmailView #tipIcon[status="normal"] {
+        image: url(":/resource/images/prism-login/ic_newpage.svg");
+        background-color: transparent;
+    }
+
+    #LoginWithEmailView #tipIcon[status="hover"] {
+        image: url(":/resource/images/prism-login/ic_newpage_hover.svg");
+        background-color: transparent;
+    }
+
+#LoginWithEmailView #label_3 {
+    background-color: transparent;
+    color: #bababa;
+    font-size: 12px;
+}
+
+    #LoginWithEmailView #label_3[status="hover"] {
+        color: white;
+    }
+
+    #LoginWithEmailView #label_3[status="normal"] {
+        color: #bababa;
+    }
+
+#LoginWithEmailView #loginEmailAddressLineEdit {
+    min-height: 48px;
+    max-height: 48px;
+    border-radius: 3px;
+    background: #ffffffff;
+    padding-right: 20px;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #ff000000;
+}
+
+#LoginWithEmailView #loginPasswordLineEdit {
+    min-height: 48px;
+    max-height: 48px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    padding-right: 50px;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #ff000000;
+}
+
+    #LoginWithEmailView #loginPasswordLineEdit QPushButton[password="true"] {
+        background-color: transparent;
+        qproperty-minimumSize: 36px 36px;
+        qproperty-maximumSize: 36px 36px;
+        image: url(":/resource/images/prism-login/invisible.svg");
+        padding: 0;
+        margin: 0;
+    }
+
+    #LoginWithEmailView #loginPasswordLineEdit QPushButton[password="false"] {
+        background-color: transparent;
+        qproperty-minimumSize: 36px 36px;
+        qproperty-maximumSize: 36px 36px;
+        image: url(":/resource/images/prism-login/visible.svg");
+        padding: 0;
+        margin: 0;
+    }
+
+#LoginWithEmailView #loginBtn:hover[status="enable"] {
+    background: #ffF1FA75;
+    border-image: none;
+}
+
+#LoginWithEmailView #loginBtn:pressed[status="enable"] {
+    background: #ff7A7F34;
+    border-image: none;
+}
+
+#LoginWithEmailView #loginBtn[status="enable"] {
+    qproperty-minimumSize: 295px 48px;
+    qproperty-maximumSize: 295px 48px;
+    border-image: none;
+    border-radius: 3px;
+    background: #ffeffc35;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ff000000;
+}
+
+#LoginWithEmailView #loginBtn[status="disable"] {
+    qproperty-minimumSize: 295px 48px;
+    qproperty-maximumSize: 295px 48px;
+    border-image: none;
+    border-radius: 3px;
+    background: #ff363636;
+    font-size: 14px;
+    font-weight: bold;
+    color: #777777;
+}
+
+#LoginWithEmailView #loginSeparatorLabel, #loginBackTipsLabel, #loginSeparatorLabel {
+    min-height: 14px;
+    font-size: 12px;
+    color: #ff6a6a6a;
+}
+
+#LoginWithEmailView #loginSeparatorLabel {
+    min-width: 1px;
+    max-width: 1px;
+    min-height: 10px;
+    max-height: 10px;
+    background-color: #363636;
+}
+
+#LoginWithEmailView #loginListBtn, #loginListBtn_2 {
+    border: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ffeffc35;
+    padding: 0;
+    margin: 0;
+}
+
+    #LoginWithEmailView #loginListBtn:hover, #loginListBtn_2:hover {
+        background-color: #1e1e1f;
+    }
+
+    #LoginWithEmailView #loginListBtn:pressed, #loginListBtn_2:pressed {
+        color: #ff7C7F43;
+    }
+
+#LoginWithEmailView #loginForgotPasswordBtn {
+    border: none;
+    font-size: 12px;
+    color: #ffa3a3a3;
+}
+
+    #LoginWithEmailView #loginForgotPasswordBtn:hover {
+        background-color: #1e1e1f;
+        color: #ffffffff;
+    }
+
+    #LoginWithEmailView #loginForgotPasswordBtn:pressed {
+        color: #6a6a6a;
+    }
+
+#LoginWithEmailView #loginTipsLabel {
+    min-width: 580px;
+    min-height: 31px;
+    font-size: 11px;
+    color: #ffd32f2f;
+}
+
+#LoginWithEmailView #loginWithEmailLabel {
+    qproperty-minimumSize: 200px 27px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff1fd56;
+}
+
+#LoginWithEmailView #b2bTipButton {
+    font-weight: normal;
+    color: #effc35;
+    font-size: 12px;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+    #LoginWithEmailView #b2bTipButton:hove {
+        background-color: #1e1e1f;
+    }
+
+    #LoginWithEmailView #b2bTipButton:pressed {
+        color: #ff7C7F43;
+    }
+
+#SignupWithEmailView > QWidget {
+    background-color: #1e1e1f;
+}
+
+#SignupWithEmailView #createNewAccountBtn:hover[status="enable"] {
+    background: #ffF1FA75;
+    border-image: none;
+}
+
+#SignupWithEmailView #createNewAccountBtn:pressed[status="enable"] {
+    background: #ff7A7F34;
+    border-image: none;
+}
+
+#SignupWithEmailView #createNewAccountBtn[status="enable"] {
+    qproperty-minimumSize: 292px 48px;
+    qproperty-maximumSize: 292px 48px;
+    min-height: 48px;
+    max-height: 48px;
+    border-radius: 3px;
+    background: #ffeffc35;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ff000000;
+    border-image: none;
+}
+
+#SignupWithEmailView #createNewAccountBtn[status="disable"] {
+    qproperty-minimumSize: 292px 48px;
+    qproperty-maximumSize: 292px 48px;
+    border-image: none;
+    border-radius: 3px;
+    background: #ff363636;
+    font-size: 14px;
+    font-weight: bold;
+    color: #777777;
+}
+
+#SignupWithEmailView #facebookBtn {
+    min-width: 42px;
+    min-height: 42px;
+    max-width: 42px;
+    max-height: 42px;
+    border-top: 0px none #ff000000;
+    border-right: 0px none #ff000000;
+    border-bottom: 0px none #ff000000;
+    border-left: 0px none #ff000000;
+    border-radius: 20px;
+    background: #444444;
+    background-position: center;
+    background-image: url(":/resource/images/prism-login/login-facebook.svg");
+}
+
+    #SignupWithEmailView #facebookBtn:hover {
+        background-color: #555555;
+    }
+
+    #SignupWithEmailView #facebookBtn:pressed {
+        background-color: #ff2d2d2d;
+    }
+
+#SignupWithEmailView #twitchBtn {
+    min-width: 42px;
+    min-height: 42px;
+    max-width: 42px;
+    max-height: 42px;
+    border-top: 0px none #ff000000;
+    border-right: 0px none #ff000000;
+    border-bottom: 0px none #ff000000;
+    border-left: 0px none #ff000000;
+    border-radius: 20px;
+    background: #444444;
+    background-position: center;
+    background-image: url(":/resource/images/prism-login/login-twitch.svg");
+}
+
+    #SignupWithEmailView #twitchBtn:hover {
+        background-color: #555555;
+    }
+
+    #SignupWithEmailView #twitchBtn:pressed {
+        background-color: #2d2d2d;
+    }
+
+#SignupWithEmailView #googleBtn {
+    min-width: 42px;
+    min-height: 42px;
+    max-width: 42px;
+    max-height: 42px;
+    border-radius: 20px;
+    background: #444444;
+    background-position: center;
+    background-image: url(":/resource/images/prism-login/login-google.svg");
+}
+
+    #SignupWithEmailView #googleBtn:hover {
+        background-color: #555555;
+    }
+
+    #SignupWithEmailView #googleBtn:pressed {
+        background-color: #2d2d2d;
+    }
+
+#SignupWithEmailView #lineBtn {
+    min-width: 42px;
+    min-height: 42px;
+    max-width: 42px;
+    max-height: 42px;
+    border-radius: 20px;
+    background: #444444;
+    background-position: center;
+    background-image: url(":/resource/images/prism-login/login-line.svg");
+    font-size: 14px;
+}
+
+    #SignupWithEmailView #lineBtn:hover {
+        background-color: #555555;
+    }
+
+    #SignupWithEmailView #lineBtn:pressed {
+        background-color: #2d2d2d;
+    }
+
+#SignupWithEmailView #lineEdit {
+    min-width: 252px;
+    max-width: 252px;
+    min-height: 48px;
+    max-height: 48px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    padding-right: 20px;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #ff000000;
+}
+
+    #SignupWithEmailView #lineEdit QPushButton[password="true"] {
+        background-color: transparent;
+        qproperty-minimumSize: 36px 36px;
+        qproperty-maximumSize: 36px 36px;
+        image: url(":/resource/images/prism-login/invisible.svg");
+        padding: 0;
+        margin: 0;
+    }
+
+    #SignupWithEmailView #lineEdit QPushButton[password="false"] {
+        background-color: transparent;
+        qproperty-minimumSize: 36px 36px;
+        qproperty-maximumSize: 36px 36px;
+        image: url(":/resource/images/prism-login/visible.svg");
+        padding: 0;
+        margin: 0;
+    }
+
+#SignupWithEmailView #signEmailAddressLineEdit {
+    min-width: 252px;
+    max-width: 252px;
+    min-height: 48px;
+    max-height: 48px;
+    border-radius: 3px;
+    background: #ffffffff;
+    padding-right: 20px;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #ff000000;
+}
+
+#SignupWithEmailView #signBackToLabel {
+    min-height: 14px;
+    font-size: 12px;
+    color: #ff6a6a6a;
+}
+
+#SignupWithEmailView #signLoginBtn, #signLoginBtn_2 {
+    border-top: 0px none #ff000000;
+    border-right: 0px none #ff000000;
+    border-bottom: 0px none #ff000000;
+    border-left: 0px none #ff000000;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ffeffc35;
+}
+
+    #SignupWithEmailView #signLoginBtn:hover, #signLoginBtn_2:hover {
+        background-color: #1e1e1f;
+    }
+
+    #SignupWithEmailView #signLoginBtn:pressed, #signLoginBtn_2:pressed {
+        color: #ff7C7F43;
+    }
+
+#SignupWithEmailView #signTipsLabel {
+    min-width: 580px;
+    min-height: 30px;
+    max-width: 580px;
+    max-height: 30px;
+    font-size: 11px;
+    color: #ffd32f2f;
+}
+
+#SignupWithEmailView #signUpWithEmailLabel {
+    min-height: 27px;
+    max-height: 27px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff1fd56;
+}
+
+#SignupWithEmailView #signUsernameLineEdit {
+    min-width: 252px;
+    max-width: 252px;
+    min-height: 48px;
+    max-height: 48px;
+    border-radius: 3px;
+    background: #ffffffff;
+    padding-right: 20px;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #ff000000;
+}
+
+#SelectLoginPlatformView #signBtn {
+    border-radius: 3px;
+    background-color: #444444;
+    min-height: 40px;
+    max-height: 40px;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+#SelectLoginPlatformView #signBtn:hover {
+    background-color: #555555;
+
+}
+
+#SelectLoginPlatformView #signBtn:pressed {
+    background-color: #2d2d2d;
+}
+#SelectLoginPlatformView #orLabel {
+    padding-top:6px;
+    padding-bottom:6px;
+    min-height: 9px;
+    max-height: 9px;
+    image: url(":/resource/images/prism-login/or.svg");
+    background-color:transparent;
+    border:none;
+}
+
+SignupWithEmailView #signBtn {
+    qproperty-minimumSize: 42px 42px;
+    qproperty-maximumSize: 42px 42px;
+    border-radius:  21px;
+    background: #444444;
+    background-position: center;
+    margin: 0px;
+    padding:0;
+}
+
+    SignupWithEmailView #signBtn:hover {
+        background-color: #555555;
+        border-image: none;
+    }
+
+    SignupWithEmailView #signBtn:pressed {
+        background-color: #2d2d2d;
+        border-image: none;
+    }
+
+SignupWithEmailView #signupWithLabel {
+    min-width: 378px;
+    max-width: 378px;
+    min-height: 9px;
+    max-height: 9px;
+    image: url(":/resource/images/prism-login/sign-up-with.svg");
+}
+
+LoginLoadingView #loginLoadingProgressLabel {
+    background-color: #1e1e1f;
+    font-size: 12px;
+    font-weight: normal;
+    color: #ffffff;
+    min-height: 16px;
+}
+
+LoginLoadingView #loginLoadingDescLabel {
+    background-color: #1e1e1f;
+    font-size: 16px;
+    font-weight: normal;
+    color: #ffffff;
+    min-height: 21px;
+}

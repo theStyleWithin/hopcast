@@ -1,0 +1,43 @@
+
+QTabWidget::pane {
+	border-top:1px solid rgb(31,30,31);
+}
+
+QTabWidget::tab-bar {
+    alignment: left;
+}
+
+QTabBar::tab {
+    background-color: rgb(76,76,76);
+	border:none;
+    padding:/*hdpi*/5px;
+	min-width:50px;
+    margin:/*hdpi*/1px;
+}
+
+QTabBar::tab:top {
+	border-bottom:1px transparent;
+	border-top-left-radius:3px;
+	border-top-right-radius:3px;
+
+}
+
+QTabBar::tab:bottom {
+	padding-top:1px;
+	margin-bottom:4px;
+	border-bottom-left-radius:3px;
+	border-bottom-right-radius:3px;
+	height:14px;
+}
+
+QTabBar::tab:selected {
+    background-color: rgb(31,30,31); 
+}
+
+QTabBar::tab:hover {
+    background-color: rgb(122,121,122); 
+}
+
+QTabBar::tab:pressed {
+    background-color: rgb(31,30,31);
+}

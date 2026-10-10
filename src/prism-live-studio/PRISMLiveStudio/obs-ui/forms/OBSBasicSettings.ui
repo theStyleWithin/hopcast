@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OBSBasicSettings</class>
+ <widget class="QWidget" name="OBSBasicSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>985</width>
+    <height>775</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>512</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <layout class="QVBoxLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="leftLabel">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QListWidget" name="listWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>180</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+       <property name="spacing">
+        <number>1</number>
+       </property>
+       <property name="currentRow">
+        <number>-1</number>
+       </property>
+       <property name="notShowHandCursor" stdset="0">
+        <bool>true</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>Basic.Settings.General</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Basic.Settings.Output</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Basic.Settings.Audio</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Basic.Settings.Video</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Basic.Settings.Hotkeys</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Basic.Settings.Accessibility</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Basic.Settings.Advanced</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="vLineLabel">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="vBoxLayout_1" stretch="1,0">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QStackedWidget" name="settingsPages">
+         <widget class="QWidget" name="generalPage"/>
+         <widget class="QWidget" name="outputPage">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+         <widget class="QWidget" name="audioPage"/>
+         <widget class="QWidget" name="videoPage"/>
+         <widget class="QWidget" name="hotkeyPage"/>
+         <widget class="QWidget" name="accessPage"/>
+         <widget class="QWidget" name="advancedPage"/>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="alertMessageLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
+         </property>
+         <property name="leftMargin">
+          <number>20</number>
+         </property>
+         <property name="rightMargin">
+          <number>20</number>
+         </property>
+         <property name="bottomMargin">
+          <number>20</number>
+         </property>
+         <item>
+          <widget class="QScrollArea" name="alertMessageFrame">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>300</height>
+            </size>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="alertMessageFrame_3">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>741</width>
+              <height>69</height>
+             </rect>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <layout class="QVBoxLayout" name="alertMessageFrameLayout">
+             <property name="spacing">
+              <number>5</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QLabel" name="rightLabel">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="hLineLabel">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="buttonBoxFrame">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_33">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="resetButton">
+        <property name="text">
+         <string>Reset</string>
+        </property>
+        <property name="useFor" stdset="0">
+         <string notr="true">Reset</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_1">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="PLSDialogButtonBox" name="buttonBox">
+        <property name="standardButtons">
+         <set>QDialogButtonBox::StandardButton::Apply|QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PLSDialogButtonBox</class>
+   <extends>QDialogButtonBox</extends>
+   <header>PLSDialogButtonBox.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>listWidget</tabstop>
+ </tabstops>
+ <resources>
+  <include location="obs.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>listWidget</sender>
+   <signal>currentRowChanged(int)</signal>
+   <receiver>settingsPages</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>75</x>
+     <y>35</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>50</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

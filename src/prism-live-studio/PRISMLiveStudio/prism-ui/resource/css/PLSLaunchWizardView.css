@@ -1,0 +1,482 @@
+PLSLaunchWizardView {
+    qproperty-hasHLine: false;
+    qproperty-captionHeight: 29;
+    qproperty-closeButtonMarginRight: 10;
+    qproperty-captionButtonMargin: 10;
+    margin: 0px;
+    padding: 0px 0px 0px 0px;
+    background-color: #1e1e1f;
+    border: none;
+}
+
+#PLSLaunchWizardView #contentScroll {
+    background-color: #1e1e1f;
+    border: none;
+    margin: 0px;
+    padding: 0px;
+    max-width: 648px;
+    min-width: 648px;
+}
+
+#PLSLaunchWizardView>#titleBar {
+    background-color: transparent;
+    max-height: 20px;
+    min-height: 20px;
+    padding-top: 10px;
+    border: none;
+    /*border: 1px solid red;*/
+}
+
+#PLSLaunchWizardView>#titleBar #titleLabel,
+#PLSLaunchWizardView>#titleBar #min,
+#PLSLaunchWizardView>#titleBar #maxres,
+#PLSLaunchWizardView>#titleBar #close {
+    background-color: #1e1e1f;
+    color: transparent;
+    border: none;
+}
+
+#PLSLaunchWizardView>#titleBar #min {
+    margin-right: 0px;
+}
+
+#PLSLaunchWizardView #userThumbnailLabel {
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    background-color: transparent;
+    /*border: 1px solid red;*/
+    color: transparent;
+    margin-bottom: 20px;
+}
+
+PLSLaunchWizardView #nickNameLabel {
+    padding: 0px;
+    margin: 0px;
+    min-width: 50px;
+    background-color: transparent;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    color: white;
+    border: none;
+    margin-bottom: 20px;
+}
+
+
+PLSLaunchWizardView #wizardScrollArea {
+    border: none;
+    background-color: transparent;
+    margin: 0px;
+    padding: 0px;
+    min-height: 0px;
+}
+
+PLSLaunchWizardView #wizardScrollArea QScrollBar:vertical {
+    background-color: #1e1e1f;
+    max-height: 458px;
+    min-width: 10px;
+    max-width: 10px;
+}
+
+PLSLaunchWizardView #scrollAreaWidgetContents,
+PLSLaunchWizardView #contentScrollWidgetContents,
+PLSLaunchWizardView #rightMarginWidget {
+    border: none;
+    background-color: transparent;
+}
+
+
+PLSLaunchWizardView #stackedWidget {
+    border: none;
+    background-color: transparent;
+    min-width: 570px;
+    min-height: 210px;
+    max-width: 570px;
+    max-height: 210px;
+    /*border: 1px solid red;*/
+}
+
+PLSLaunchWizardView #bannerScrollArea {
+    border: none;
+    background-color: transparent;
+    margin: 0px;
+    padding: 0px;
+}
+
+PLSLaunchWizardView #bannerContentLabel {
+    min-width: 570px;
+    min-height: 210px;
+    max-width: 570px;
+    max-height: 210px;
+}
+
+PLSLaunchWizardView #leftButton,
+PLSLaunchWizardView #rightButton {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    qproperty-minimumSize: 12px 20px;
+    qproperty-maximumSize: 12px 20px;
+    background-color: transparent;
+}
+
+PLSLaunchWizardView #leftButton[isOn="false"],
+PLSLaunchWizardView #rightButton[isOn="false"] {
+    image: none;
+}
+
+PLSLaunchWizardView #leftButton {
+    image: url(":/resource/images/wizard/ic-pre-normal.svg");
+}
+
+PLSLaunchWizardView #leftButton:hover {
+    image: url(":/resource/images/wizard/ic-pre-over.svg");
+}
+
+PLSLaunchWizardView #leftButton:pressed {
+    image: url(":/resource/images/wizard/ic-pre-click.svg");
+}
+
+PLSLaunchWizardView #leftButton[isOn="true"]:disabled {
+    image: url(":/resource/images/wizard/ic-pre-disable.svg");
+}
+
+PLSLaunchWizardView #rightButton {
+    image: url(":/resource/images/wizard/ic-next-normal.svg");
+}
+
+PLSLaunchWizardView #rightButton:hover {
+    image: url(":/resource/images/wizard/ic-next-over.svg");
+}
+
+PLSLaunchWizardView #rightButton:pressed {
+    image: url(":/resource/images/wizard/ic-next-clik.svg");
+}
+
+PLSLaunchWizardView #rightButton[isOn="true"]:disabled {
+    image: url(":/resource/images/wizard/ic-next-disable.svg");
+}
+
+
+PLSLaunchWizardView #bannerPointFrame {
+    background-color: transparent;
+}
+
+
+
+PLSLaunchWizardView #wizardBannerPointer {
+    min-height: 5px;
+    max-height: 5px;
+    min-width: 5px;
+    max-width: 5px;
+    background-color: transparent;
+    border: none;
+    color: transparent;
+    margin: 0px;
+    padding: 0px;
+}
+
+PLSLaunchWizardView #wizardBannerPointer:disabled {
+    image: url(":/resource/images/wizard/ic-dot-disable.svg");
+}
+
+PLSLaunchWizardView #wizardBannerPointer {
+    image: url(":/resource/images/wizard/ic-dot-active.svg");
+}
+
+PLSLaunchWizardView #bannerFrame {
+    background-color: transparent;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+PLSLaunchWizardView #bannerContentLabel {
+    border: none;
+    background-color: black;
+    background-origin: content;
+}
+
+PLSLaunchWizardView #overlay {
+    border: none;
+    background-color: transparent;
+    image: url(":/resource/images/wizard/img-banner-overlay.svg");
+    margin: 0;
+    padding: 0;
+}
+
+PLSLaunchWizardView #InfosFrame {
+    background-color: transparent;
+}
+
+PLSLaunchWizardView #InfoView {
+    border: 1px solid #272727;
+    background-color: #272727;
+    border-radius: 8px;
+    min-height: 81px;
+    max-height: 81px;
+    min-width: 383px;
+    max-width: 383px;
+    margin: 0px;
+    padding: 0px;
+}
+
+PLSLaunchWizardView #alertView {
+    border: 1px solid #272727;
+    background-color: #272727;
+    border-radius: 8px;
+    min-height: 100px;
+    min-width: 568px;
+    max-width: 568px;
+    margin: 0px 0px 3px 0px;
+    padding: 0px;
+}
+
+PLSLaunchWizardView #browserWidget {
+    border: 1px solid #272727;
+    background-color: #272727;
+    border-radius: 14px;
+    min-height: 68px;
+    max-height: 68px;
+    min-width: 568px;
+    max-width: 568px;
+    margin: 0px;
+    padding: 0px;
+}
+
+PLSLaunchWizardView #browserContainer {
+    border: none;
+    background-color: #272727;
+    min-height: 70px;
+    max-height: 70px;
+    min-width: 570px;
+    max-width: 570px;
+    padding: 0px;
+    margin-bottom: 3px;
+}
+
+PLSLaunchWizardView #buttonInfoView {
+    border: 1px solid #272727;
+    background-color: #272727;
+    border-radius: 8px;
+    min-height: 36px;
+    max-height: 36px;
+    min-width: 176px;
+    max-width: 176px;
+    margin: 0px;
+    padding: 0px;
+}
+
+PLSLaunchWizardView #buttonInfoView:hover {
+    background-color: #373737;
+    border: none;
+}
+
+PLSLaunchWizardView #buttonInfoView:pressed {
+    background-color: #2d2d2d;
+    border: none;
+}
+
+PLSLaunchWizardView #buttonInfoView #contentFrame {
+    background-color: transparent;
+    margin: 0px;
+    padding: 0px;
+}
+
+PLSWizardInfoView #alertView #contentFrame,
+PLSWizardInfoView #InfoView #contentFrame {
+    background-color: transparent;
+    padding: 0px;
+    margin: 21px 0px 23px 0px;
+}
+
+PLSWizardInfoView #infoFrame {
+    border: none;
+    background-color: transparent;
+}
+
+PLSWizardInfoView #refreshBtn {
+    border: none;
+    min-height: 15px;
+    max-height: 15px;
+    max-width: 15px;
+    min-width: 15px;
+    background-color: transparent;
+    image: url(":/resource/images/wizard/ic-reroad-normal.svg");
+    margin: 0px 22px 0px 20px;
+    padding: 0px;
+}
+
+PLSWizardInfoView #refreshBtn:hover {
+    image: url(":/resource/images/wizard/ic-reroad-over.svg");
+}
+
+PLSWizardInfoView #refreshBtn:disabled {
+    image: url(":/resource/images/wizard/ic-reroad-disable.svg");
+}
+
+PLSWizardInfoView #refreshBtn:pressed {
+    image: url(":/resource/images/wizard/ic-reroad-click.svg");
+}
+
+PLSWizardInfoView #iconLabel {
+    border: none;
+    background-color: transparent;
+    min-height: 30px;
+    max-height: 30px;
+    min-width: 30px;
+    max-width: 30px;
+    padding: 0px;
+    margin: 0px 22px 0px 22px;
+}
+
+PLSWizardInfoView #iconLabel[type="calendar"] {
+    image: url(":/resource/images/wizard/ic-calendar.svg");
+}
+
+PLSWizardInfoView #iconLabel[type="alert"] {
+    image: url(":/resource/images/wizard/ic-alert.svg");
+}
+
+PLSWizardInfoView #iconLabel[type="blog"] {
+    border: none;
+    background-color: transparent;
+    min-height: 20px;
+    max-height: 20px;
+    min-width: 20px;
+    max-width: 20px;
+    padding: 0px;
+    margin: 0px 8px 0px 14px;
+    image: url(":/resource/images/wizard/ic-blog.svg");
+}
+
+PLSWizardInfoView #iconLabel[type="que"] {
+    border: none;
+    background-color: transparent;
+    min-height: 20px;
+    max-height: 20px;
+    min-width: 20px;
+    max-width: 20px;
+    padding: 0px;
+    margin: 0px 8px 0px 14px;
+    image: url(":/resource/images/wizard/ic-discord.svg");
+}
+
+
+
+PLSWizardInfoView #infoLabel {
+    min-height: 18px;
+    max-height: 18px;
+    font-size: 12px;
+    color: white;
+    font-weight: normal;
+    background-color: transparent;
+    border: none;
+    min-width: 120px;
+}
+
+PLSLaunchWizardView #alertView #infoLabel {
+    min-height: 36px;
+    max-height: 500px;
+    max-width: 466px;
+}
+
+PLSWizardInfoView #infoLabel:hover {
+    color: transparent;
+}
+
+PLSWizardInfoView #infoLabel:disabled {
+    color: #666;
+}
+
+PLSWizardInfoView #timeLabel {
+    color: #effc35;
+    font-size: 12px;
+    font-weight: normal;
+    background-color: transparent;
+}
+
+PLSWizardInfoView #pointLabel {
+    background-color: transparent;
+    min-height: 3px;
+    max-height: 3px;
+    min-width: 3px;
+    max-width: 3px;
+    image: url(":/resource/images/wizard/ic-dot.svg");
+}
+
+PLSWizardInfoView #tipLabel {
+    font-size: 12px;
+    font-weight: normal;
+    background-color: transparent;
+    min-height: 18px;
+    max-height: 18px;
+}
+
+PLSWizardInfoView #tipLabel[type="normal"] {
+    color: #bababa;
+}
+
+PLSWizardInfoView #tipLabel[type="calendar"] {
+    color: #bababa;
+}
+
+PLSWizardInfoView #tipLabel[type="alert"] {
+    color: #666;
+}
+
+PLSWizardInfoView #loading {
+    background-color: transparent;
+    min-height: 20px;
+    min-width: 20px;
+    max-height: 20px;
+    max-width: 20px;
+    margin: 0px 11px 0px 0px;
+    border: none;
+    color: transparent;
+}
+
+PLSLaunchWizardView #wizardFrame {
+    border-top: 1px solid #151515;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    background-color: transparent;
+    padding: 17px 29px 17px 30px;
+    margin: 0px;
+}
+
+PLSLaunchWizardView #checkBox #plsCheckBox_text {
+    color: #ffffff;
+    font-size: 14px;
+    background-color: transparent;
+    font-weight: bold;
+}
+
+/* bottom tip*/
+PLSLaunchWizardView #tipsLabel {
+    background-color: transparent;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    color: #bababa;
+    padding: 0px;
+    margin: 0px;
+}
+
+PLSLaunchWizardView #hideButton {
+    min-width: 128px;
+    min-height: 40px;
+    max-width: 128px;
+    max-height: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+PLSLaunchWizardView #spaceLabel {
+    background-color: transparent;
+    border: none;
+}

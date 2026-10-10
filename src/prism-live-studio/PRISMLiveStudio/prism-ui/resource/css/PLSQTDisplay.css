@@ -1,0 +1,39 @@
+OBSQTDisplay {
+	qproperty-displayBackgroundColor: #151515;
+}
+
+OBSQTDisplay QLabel#displaySourceInvalid {
+	background-color: #1e1e1f;
+	color: #666666;
+	font-size: /*hdpi*/ 20px;
+	font-weight: bold;
+}
+
+OBSQTDisplay QLabel#displayResizeScreen {
+	background-color: #151515;
+}
+
+OBSQTDisplay QLabel#displayResizeCenter {
+	background-color: #000000;
+}
+
+OBSQTDisplay QLabel#displayText {
+	background-color: #1e1e1f;
+	color: #666666;
+	font-size: /*hdpi*/ 14px;
+	font-weight: normal;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+QWidget#sourceLoadingPage {
+	background-color: #151515;
+}
+
+QWidget#failedTextView,
+QLabel#failedText {
+	background-color: #151515;
+	font-size: /*hdpi*/ 14px;
+	font-weight: normal;
+}
+

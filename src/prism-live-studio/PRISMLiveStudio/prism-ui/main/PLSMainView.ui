@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PLSMainView</class>
+ <widget class="QFrame" name="PLSMainView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>925</width>
+    <height>696</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PRISM Live Studio</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_4">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="PLSTransparentForMouseEventsFrame" name="plsMainViewBorderFrame">
+     <property name="frameShape">
+      <enum>QFrame::Shape::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="mainLayout" stretch="0,0,1">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="PLSTransparentForMouseEventsFrame" name="titleBar">
+        <property name="frameShape">
+         <enum>QFrame::Shape::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Shadow::Raised</enum>
+        </property>
+        <property name="excludeSpecChildren" stdset="0">
+         <stringlist notr="true">
+          <string>min</string>
+          <string>maxres</string>
+          <string>close</string>
+          <string>menu</string>
+          <string>logo_update</string>
+         </stringlist>
+        </property>
+        <layout class="QHBoxLayout" name="titleBarLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="menu">
+           <property name="cursor">
+            <cursorShape>ArrowCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string notr="true"/>
+           </property>
+           <property name="ui-step.controls" stdset="0">
+            <string notr="true">Main Frame Title Bar's Main Menu Button</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Policy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>13</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="PLSLogo" name="logo_update">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="PLSTransparentForMouseEventsLabel" name="devLabel">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="excludeChildren" stdset="0">
+            <string notr="true">All</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="titleButtonLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QToolButton" name="min">
+             <property name="cursor">
+              <cursorShape>ArrowCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="ui-step.controls" stdset="0">
+              <string notr="true">Main Frame Title Bar's Minimized Button</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="maxres">
+             <property name="cursor">
+              <cursorShape>ArrowCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="ui-step.controls" stdset="0">
+              <string notr="true">Main Frame Title Bar's Maximized Button</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="close">
+             <property name="cursor">
+              <cursorShape>ArrowCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="ui-step.controls" stdset="0">
+              <string notr="true">Main Frame Title Bar's Close Button</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="hline" native="true"/>
+      </item>
+      <item>
+       <widget class="PLSTransparentForMouseEventsFrame" name="body">
+        <property name="frameShape">
+         <enum>QFrame::Shape::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Shadow::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,1,0">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QFrame" name="channelsArea">
+             <property name="frameShape">
+              <enum>QFrame::Shape::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Raised</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="PLSTransparentForMouseEventsFrame" name="content">
+             <property name="frameShape">
+              <enum>QFrame::Shape::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Raised</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="PLSBasicStatusBar" name="bottomArea"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="PLSTransparentForMouseEventsFrame" name="rightArea">
+           <property name="frameShape">
+            <enum>QFrame::Shape::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Shadow::Plain</enum>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>1</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>1</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PLSTransparentForMouseEventsFrame</class>
+   <extends>QFrame</extends>
+   <header>PLSTransparentForMouseEvents.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PLSTransparentForMouseEventsLabel</class>
+   <extends>QLabel</extends>
+   <header>PLSTransparentForMouseEvents.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PLSBasicStatusBar</class>
+   <extends>QStatusBar</extends>
+   <header>PLSBasicStatusBar.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PLSLogo</class>
+   <extends>QPushButton</extends>
+   <header>PLSLogo.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+ <slots>
+  <slot>on_beauty_clicked()</slot>
+ </slots>
+</ui>

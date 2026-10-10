@@ -1,0 +1,249 @@
+
+ChannelConfigPannel {
+	min-height: 48px;
+	max-height: 48px;
+	min-width: 200px;
+	max-width: 200px;
+	margin-top: 1px;
+	padding: 0px;
+	border: none;
+	border-radius: 3px;
+	background-color: rgb(68, 68, 68);
+	qproperty-minimumSize: 200px 48px;
+	qproperty-maximumSize: 200px 48px;
+}
+
+	ChannelConfigPannel * {
+		padding: 0px;
+		margin: 0px;
+	}
+
+	ChannelConfigPannel #ConfigWidget {
+		border: none;
+		padding: 0px;
+		margin: 0px;
+	}
+
+	ChannelConfigPannel #EnableSwitch {
+		min-height: 17px;
+		max-height: 17px;
+		max-width: 28px;
+		min-width: 28px;
+		image: url(":/channels/resource/images/ChannelsSource/slider-on.svg");
+		background-color: transparent;
+		color: transparent;
+		qproperty-maximumSize: 28px 17px;
+		
+	}
+
+		ChannelConfigPannel #EnableSwitch:checked {
+			image: url(":/channels/resource/images/ChannelsSource/slider-on.svg");
+		}
+
+			ChannelConfigPannel #EnableSwitch:checked:hover {
+				image: url(":/channels/resource/images/ChannelsSource/slider-on-over.svg");
+			}
+
+			ChannelConfigPannel #EnableSwitch:checked:disabled {
+				image: url(":/channels/resource/images/ChannelsSource/slider-on-click.svg");
+			}
+
+			ChannelConfigPannel #EnableSwitch:checked:pressed {
+				image: url(":/channels/resource/images/ChannelsSource/slider-on-click.svg");
+			}
+
+		ChannelConfigPannel #EnableSwitch:!checked {
+			image: url(":/channels/resource/images/ChannelsSource/slider-off-default.svg");
+		}
+
+			ChannelConfigPannel #EnableSwitch:!checked:hover {
+				image: url(":/channels/resource/images/ChannelsSource/slider-off-over.svg");
+			}
+
+			ChannelConfigPannel #EnableSwitch:!checked:pressed {
+				image: url(":/channels/resource/images/ChannelsSource/slider-off-click.svg");
+			}
+
+			ChannelConfigPannel #EnableSwitch:!checked:disabled {
+				image: url(":/channels/resource/images/ChannelsSource/slider-off-disable.svg");
+			}
+
+
+	ChannelConfigPannel #showInfoBtn {
+		min-height: 22px;
+		max-height: 22px;
+		max-width: 22px;
+		min-width: 22px;
+		background-color: transparent;
+		color: transparent;
+		image: url(":/channels/resource/images/ChannelsSource/ic-liveinfo-normal.svg");
+	}
+
+		ChannelConfigPannel #showInfoBtn:hover {
+			image: url(":/channels/resource/images/ChannelsSource/ic-liveinfo-over.svg");
+		}
+
+		ChannelConfigPannel #showInfoBtn:pressed {
+			image: url(":/channels/resource/images/ChannelsSource/ic-liveinfo-click.svg");
+		}
+
+		ChannelConfigPannel #showInfoBtn:disabled {
+			image: url(":/channels/resource/images/ChannelsSource/ic-liveinfo-disable.svg");
+		}
+
+		ChannelConfigPannel #showInfoBtn[shape="pen"] {
+			image: url(":/channels/resource/images/ChannelsSource/ic-edit-l-normal.svg");
+		}
+
+			ChannelConfigPannel #showInfoBtn[shape="pen"]:hover {
+				image: url(":/channels/resource/images/ChannelsSource/ic-edit-l-over.svg");
+			}
+
+			ChannelConfigPannel #showInfoBtn[shape="pen"]:pressed {
+				image: url(":/channels/resource/images/ChannelsSource/ic-edit-l-click.svg");
+			}
+
+			ChannelConfigPannel #showInfoBtn[shape="pen"]:disabled {
+				image: url(":/channels/resource/images/ChannelsSource/ic-edit-l-disable.svg");
+			}
+
+
+	ChannelConfigPannel #ShareBtn {
+		min-height: 22px;
+		max-height: 22px;
+		max-width: 22px;
+		min-width: 22px;
+		background-color: transparent;
+		color: transparent;
+		image: url(":/channels/resource/images/ChannelsSource/ic-share-normal.svg");
+	}
+
+		ChannelConfigPannel #ShareBtn:hover {
+			image: url(":/channels/resource/images/ChannelsSource/ic-share-over.svg");
+		}
+
+		ChannelConfigPannel #ShareBtn:pressed {
+			image: url(":/channels/resource/images/ChannelsSource/ic-share-click.svg");
+		}
+
+		ChannelConfigPannel #ShareBtn:disabled {
+			image: url(":/channels/resource/images/ChannelsSource/ic-share-disable.svg");
+		}
+
+
+	ChannelConfigPannel #ConfigBtn {
+		min-height: 22px;
+		max-height: 22px;
+		max-width: 22px;
+		min-width: 22px;
+		background-color: transparent;
+		color: transparent;
+		image: url(":/channels/resource/images/ChannelsSource/ic-large-more-normal.svg");
+	}
+
+		ChannelConfigPannel #ConfigBtn:hover {
+			image: url(":/channels/resource/images/ChannelsSource/ic-large-more-over.svg");
+		}
+
+		ChannelConfigPannel #ConfigBtn:pressed {
+			image: url(":/channels/resource/images/ChannelsSource/ic-large-more-click.svg");
+		}
+
+		ChannelConfigPannel #ConfigBtn:disabled {
+			image: url(":/channels/resource/images/ChannelsSource/ic-large-more-disable.svg");
+		}
+
+	ChannelConfigPannel QMenu {
+		max-width: 208px;
+		min-height: 56px;
+		margin: 0px;
+		padding: 8px 0px 8px 0px;
+		border: 1px solid #111111;
+		background-color: #2d2d2d;
+		qproperty-minimumSize: 210px 56px;
+		qproperty-maximumSize: 210px 136px;
+	}
+
+	ChannelConfigPannel QMenu::item {
+		padding: 0px;
+		padding-left: 20px;
+		margin: 0px;
+		background-color: transparent;
+		border: none;
+		min-height: 40px;
+		max-height: 40px;
+		max-width: 187px;
+		min-width: 187px;
+		font-size: 14px;
+		font-weight: normal;
+		font-style: normal;
+		color: #ffffff;
+	}
+
+	ChannelConfigPannel QMenu::item:disabled {
+		color: #666666;
+		background-color: transparent;
+	}
+
+	ChannelConfigPannel QMenu::item:selected:!disabled {
+		background-color: #444444;
+		color: #ffffff;
+	}
+
+	ChannelConfigPannel #dualOutputBtn {
+		margin: 0px;
+		padding: 0px;
+		min-height: 28px;
+		max-height: 28px;
+		max-width: 41px;
+		min-width: 41px;
+
+	}
+
+ChannelConfigPannel #arrowIconLabel {
+	max-width: 9px;
+	min-width: 9px;
+	min-height: 9px;
+	max-height: 9px;
+	padding-left: 2px;
+	padding-right: 2px;
+	padding-top: 9px;
+	padding-bottom: 10px;
+	border: none;
+	image: url(":/channels/resource/images/ChannelsSource/btn_cd_layeropen_normal.svg");
+}
+	ChannelConfigPannel #arrowIconLabel[state="normal"] {
+		image: url(":/channels/resource/images/ChannelsSource/btn_cd_layeropen_normal.svg");
+	}
+	ChannelConfigPannel #arrowIconLabel[state="hover"] {
+		image: url(":/channels/resource/images/ChannelsSource/btn_cd_layeropen_over.svg");
+	}
+	ChannelConfigPannel #arrowIconLabel[state="pressed"] {
+		image: url(":/channels/resource/images/ChannelsSource/btn_cd_layeropen_click.svg");
+	}
+	ChannelConfigPannel #dualOutputIconLabel {
+		max-width: 28px;
+		min-width: 28px;
+		min-height: 28px;
+		max-height: 28px;
+		border:none;
+		background-color:transparent;
+	}
+	ChannelConfigPannel #dualOutputIconLabel[orientation="H"] {
+		image: url(":/channels/resource/images/ChannelsSource/btn_dualoutput_horizontal_on.svg");
+	}
+	ChannelConfigPannel #dualOutputIconLabel[orientation="V"] {
+		image: url(":/channels/resource/images/ChannelsSource/btn_dualoutput_vertical_on.svg");
+	}
+	ChannelConfigPannel #dualOutputIconLabel[orientation="None"] {
+		image: url(":/channels/resource/images/ChannelsSource/btn_dualoutput_none_on.svg");
+	}
+
+	ChannelConfigPannel #seprator {
+		border:none;
+		max-width: 1px;
+		min-width: 1px;
+		min-height: 20px;
+		max-height: 20px;
+		background-color:#5e5e5e;
+	}

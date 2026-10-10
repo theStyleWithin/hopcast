@@ -1,0 +1,87 @@
+PLSLoginMainView {
+    min-width: 730px;
+    min-height: 544px;
+    max-width: 730px;
+    max-height: 544px;
+    qproperty-hasHLine: false;
+    qproperty-captionButtonMargin: 10;
+    qproperty-closeButtonMarginRight: 9;
+    color: #1e1e1f;
+}
+
+PLSLoginMainView {
+    background-color: #1e1e1f;
+}
+
+    PLSLoginMainView > #titleBar,
+    PLSLoginMainView > #titleBar > #titleLabel {
+        color: #1e1e1f;
+        background-color: #1e1e1f;
+    }
+
+        PLSLoginMainView > #label,
+        PLSLoginMainView > #titleBar > #min,
+        PLSLoginMainView > #titleBar > #close {
+            background-color: #1e1e1f;
+        }
+
+
+#PLSLoginMainView PLSProgressView, #PLSLoginMainView PLSUpdateTipView {
+    background-color: #1e1e1f;
+}
+
+PLSLoginMainView #stackedWidget {
+    background-color: #1e1e1f;
+    border: none;
+    max-width: 730px;
+    max-height: 544px;
+    max-width: 730px;
+    max-height: 544px;
+}
+
+QProgressBar {
+    border: none;
+    border-radius: 3px;
+    background-color: black;
+    max-height: 6px;
+    min-height: 6px;
+    margin: 10px 0px 10px 0px;
+    color: #effc35;
+    text-align: left top;
+}
+
+    QProgressBar::chunk {
+        border-radius: 3px;
+        background-color: #effc35;
+    }
+
+PLSProgressView #versionLabel {
+    font-size: 12px;
+    font-weight: normal;
+    color: #bababa;
+    background-color: transparent;
+}
+
+PLSProgressView #progressNumLabel {
+    font-size: 12px;
+    font-weight: bold;
+    color: #effc35;
+    background-color: transparent;
+}
+
+PLSProgressView #progressContent {
+    font-size: 12px;
+    font-weight: normal;
+    color: white;
+    background-color: transparent;
+}
+
+PLSProgressView #logoLabel {
+    min-width: 255px;
+    min-height: 230px;
+    max-width: 255px;
+    max-height: 230px;
+    background-color: transparent;
+}
+
+

@@ -1,0 +1,452 @@
+ResolutionGuidePage {
+    qproperty-captionBarHeight: 0;
+    qproperty-captionHeight: 0;
+    min-width: 720px;
+    min-height: 488px;
+    max-width: 720px;
+    max-height: 2250px;
+    margin: 0px 0px 0px 0px;
+    border: none;
+    background: #272727;
+    qproperty-hasHLine: false;
+}
+
+    ResolutionGuidePage #content {
+        background: #272727;
+        border: none;
+    }
+
+    ResolutionGuidePage #ContentFrame {
+        margin: 0px;
+        padding: 0px 15px 0px 30px;
+        border: none;
+    }
+
+
+    ResolutionGuidePage #ContentScrollArea, ResolutionGuidePage #B2BScrollArea {
+        min-width: 660px;
+        max-width: 660px;
+    }
+
+        ResolutionGuidePage #ContentScrollArea QScrollBar::handle:vertical, ResolutionGuidePage #B2BScrollArea QScrollBar::handle:vertical {
+            min-width: 6px;
+            min-height: 105px;
+            max-width: 6px;
+            max-height: 105px;
+            border-radius: 3px;
+            background-color: #444444;
+        }
+
+    ResolutionGuidePage #ContentFrame, ResolutionGuidePage #ContentScrollArea, ResolutionGuidePage #scrollAreaWidgetContents, ResolutionGuidePage #HeaderFrame {
+        background-color: transparent;
+    }
+
+    ResolutionGuidePage #MainTitleLabel {
+        padding: 0px;
+        font-size: 20px;
+        font-weight: bold;
+        font-style: normal;
+        color: #effc35;
+        min-height: 30px;
+        max-height: 30px;
+        border: none;
+    }
+
+
+    ResolutionGuidePage #SubtitleLabel {
+        margin: 0px;
+        padding: 0px;
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        color: #bababa;
+        min-height: 18px;
+        max-height: 18px;
+        border: none;
+    }
+
+    ResolutionGuidePage #TabFrame {
+        border: none;
+        border-bottom: 1px solid #323232;
+        min-height: 35px;
+        max-height: 35px;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    ResolutionGuidePage #B2BTab {
+        qproperty-maximumSize: 180px 35px;
+        qproperty-minimumSize: 180px 35px;
+        margin: 0;
+        padding: 0;
+        border: none;
+        border-radius: 0px;
+        background-color: transparent;
+    }
+
+    ResolutionGuidePage #B2BServerName {
+        min-height: 30px;
+        max-height: 30px;
+        margin: 0;
+        padding: 0;
+        border: none;
+        font-weight: normal;
+        font-size: 14px;
+        color: #BABABA;
+        background-color: transparent;
+        /*border: 1px solid yellow;*/
+        margin-bottom: 5px;
+    }
+
+        ResolutionGuidePage #B2BServerName[slected = "true"] {
+            color: #effc35;
+            font-weight: bold;
+        }
+
+    ResolutionGuidePage #B2BTab:checked {
+        border-bottom: 2px solid #effc35;
+    }
+
+    ResolutionGuidePage #updateButton {
+        min-height: 30px;
+        max-height: 30px;
+        min-width: 30px;
+        max-width: 30px;
+        margin: 0;
+        padding: 0;
+        margin-bottom: 5px;
+        background: transparent;
+        image: url(":/resource/images/ncp/ic-refresh-normal.svg");
+        /*border: 1px solid yellow;*/
+    }
+
+        ResolutionGuidePage #updateButton:hover {
+            image: url(":/resource/images/ncp/ic-refresh-normal-over.svg");
+        }
+
+    ResolutionGuidePage #otherTab {
+        qproperty-maximumSize: 180px 35px;
+        qproperty-minimumSize: 180px 35px;
+        margin: 0;
+        padding: 0;
+        font-weight: normal;
+        font-size: 14px;
+        border: none;
+        border-radius: 0px;
+        background-color: transparent;
+        padding-bottom: 5px;
+        color: #BABABA;
+    }
+
+        ResolutionGuidePage #otherTab:checked {
+            color: #effc35;
+            font-weight: bold;
+            border-bottom: 2px solid #effc35;
+        }
+
+    ResolutionGuidePage #content #HeaderFrame, ResolutionGuidePage #content #B2BHeaderFrame {
+        min-height: 40px;
+        max-height: 40px;
+        min-width: 600px;
+        max-width: 600px;
+        background-color: #363636;
+        border-radius: 3px;
+        margin: 0px;
+        padding: 0px 30px 0px 30px;
+        border: none;
+    }
+
+        ResolutionGuidePage #content #HeaderFrame QLabel, ResolutionGuidePage #content #B2BHeaderFrame QLabel {
+            margin: 0px;
+            padding: 0px;
+            background-color: transparent;
+            font-size: 12px;
+            font-weight: bold;
+            font-style: normal;
+            color: white;
+        }
+
+    ResolutionGuidePage #errorLabel {
+        font-size: 14px;
+        font-weight: normal;
+        color: #BABABA;
+    }
+
+    ResolutionGuidePage ResolutionGuideItem {
+        min-width: 615px;
+        max-width: 615px;
+        min-height: 50px;
+        margin: 0px 0px 0px 0px;
+        padding: 10px 10px 10px 25px;
+        border-radius: 3px;
+        background-color: #363636;
+        /*border: 1px solid red;*/
+    }
+
+    ResolutionGuidePage B2BResolutionGuideItem {
+        min-width: 600px;
+        max-width: 600px;
+        min-height: 50px;
+        Max-height: 50px;
+        margin: 0px 0px 0px 0px;
+        padding: 10px 30px 10px 25px;
+        border-radius: 3px;
+        background-color: #363636;
+        /*border: 1px solid red;*/
+    }
+
+
+    ResolutionGuidePage #IconFrame {
+        min-width: 67px;
+        max-width: 67px;
+        max-height: 40px;
+        margin: 0px 0px 0px 0px;
+        padding: 0px 0px 0px 0px;
+        background-color: transparent;
+    }
+
+    ResolutionGuidePage B2BResolutionGuideItem #IconFrame, ResolutionGuidePage #B2BIcon {
+        margin: 0px 0px 0px 0px;
+        padding: 0px 0px 0px 0px;
+        background-color: transparent;
+        min-width: 67px;
+        max-width: 67px;
+        max-height: 40px;
+    }
+
+    ResolutionGuidePage #B2BTemplateName {
+        min-width: 149px;
+        max-width: 149px;
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        /*border: 1px solid yellow;*/
+    }
+
+    ResolutionGuidePage #B2BFPS {
+        min-width: 150px;
+        max-width: 150px;
+        max-height: 40px;
+        margin: 0px 0px 0px 0px;
+        padding: 0px 0px 0px 0px;
+        background-color: transparent;
+        /*border: 1px solid yellow;*/
+    }
+
+    ResolutionGuidePage #B2BBitrate {
+        min-width: 130px;
+        max-width: 130px;
+        max-height: 40px;
+        margin: 0px 0px 0px 0px;
+        padding: 0px 0px 0px 0px;
+        background-color: transparent;
+        /*border: 1px solid yellow;*/
+    }
+
+    ResolutionGuidePage #MiddleFrame {
+        min-width: 163px;
+        max-width: 163px;
+        max-height: 40px;
+        margin: 0px;
+        padding: 0px;
+        background-color: transparent;
+        /*border: 1px solid red;*/
+    }
+
+
+    ResolutionGuidePage #DescriptionLabel {
+        min-width: 400px;
+        max-width: 400px;
+        margin: 0;
+        padding: 0px;
+        background-color: transparent;
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        color: #bababa;
+        /*border: 1px solid red;*/
+    }
+
+    ResolutionGuidePage ResolutionGuideItem #blockLabel {
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        color: #bababa;
+        background-color: transparent;
+        border: none;
+        min-width: 385px;
+        max-width: 385px;
+    }
+
+    ResolutionGuidePage ResolutionGuideItem > #IconFrame {
+        max-height: 46px;
+        margin-top: 2px;
+    }
+
+    ResolutionGuidePage ResolutionGuideItem ComplexHeaderIcon, ResolutionGuidePage B2BResolutionGuideItem ComplexHeaderIcon {
+        margin: 0px 0px 0px 0px;
+        padding: 0px;
+        qproperty-minimumSize: 46px 46px;
+        qproperty-maximumSize: 46px 46px;
+        background-color: transparent;
+        color: transparent;
+    }
+
+    ResolutionGuidePage ResolutionGuideItem > #MiddleFrame {
+        margin-left: 5px;
+        min-width: 163px;
+        max-width: 163px;
+    }
+
+    ResolutionGuidePage B2BResolutionGuideItem > #MiddleFrame {
+        min-width: 153px;
+        max-width: 153px;
+    }
+
+    ResolutionGuidePage ResolutionGuideItem #ResolutionApplyBtn, ResolutionGuidePage B2BResolutionGuideItem #ResolutionApplyBtn {
+        min-height: 18px;
+        max-height: 18px;
+        margin: 0px;
+        padding: 0px;
+        background-color: transparent;
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        text-align: left;
+        color: #effc35;
+    }
+
+        ResolutionGuidePage ResolutionGuideItem #ResolutionApplyBtn:hover, ResolutionGuidePage B2BResolutionGuideItem #ResolutionApplyBtn:hover {
+            color: #F9FFA7;
+        }
+
+        ResolutionGuidePage ResolutionGuideItem #ResolutionApplyBtn:pressed, ResolutionGuidePage B2BResolutionGuideItem #ResolutionApplyBtn:pressed {
+            color: #7a7f34;
+        }
+
+        ResolutionGuidePage ResolutionGuideItem #ResolutionApplyBtn:disabled, ResolutionGuidePage B2BResolutionGuideItem #ResolutionApplyBtn:disabled {
+            color: #444444;
+        }
+
+    ResolutionGuidePage ResolutionGuideItem #ResolutionLabel {
+        min-height: 18px;
+        margin: 0px;
+        padding: 0px;
+        background-color: transparent;
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        color: #bababa;
+        /*border: 1px solid red;*/
+    }
+
+    ResolutionGuidePage B2BResolutionGuideItem #templateName {
+        min-height: 18px;
+        margin: 0px;
+        padding: 0px;
+        background-color: transparent;
+        font-size: 12px;
+        font-weight: bold;
+        font-style: normal;
+        color: #bababa;
+        min-width: 138px;
+        max-width: 138px;
+    }
+
+    ResolutionGuidePage B2BResolutionGuideItem #output_FPS, ResolutionGuidePage B2BResolutionGuideItem #bitrate, ResolutionGuidePage B2BResolutionGuideItem #keyframeInterval {
+        min-height: 18px;
+        margin: 0px;
+        padding: 0px;
+        background-color: transparent;
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        color: #bababa;
+        /*border: 1px solid red;*/
+    }
+
+    ResolutionGuidePage B2BResolutionGuideItem #output_FPS {
+        min-width: 150px;
+        max-width: 150px;
+    }
+
+    ResolutionGuidePage B2BResolutionGuideItem #bitrate {
+        min-width: 130px;
+        max-width: 130px;
+    }
+
+    ResolutionGuidePage #OtherInforFrame {
+        min-height: 16px;
+        min-width: 600px;
+        padding: 8px 0px 40px 0px;
+        margin: 0px;
+        border: none;
+        background-color: transparent;
+    }
+
+    ResolutionGuidePage #OtherLabel {
+        font-size: 12px;
+        font-style: normal;
+        font-weight: bold;
+        color: #bababa;
+        background-color: transparent;
+        max-height: 16px;
+        border: none;
+    }
+
+    ResolutionGuidePage #OtherInforFrame #ResolutionOtherTipsLabel {
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        color: #bababa;
+        background-color: transparent;
+        max-height: 16px;
+        border: none;
+        margin: 0px;
+        padding: 0px
+    }
+
+    ResolutionGuidePage #BottomFrame {
+        min-height: 78px;
+        max-height: 78px;
+        border-top: 1px solid #111111;
+    }
+
+    ResolutionGuidePage #content #CloseBtn {
+        min-width: 170px;
+        max-width: 170px;
+        min-height: 40px;
+        max-height: 40px;
+        margin: 0px;
+        padding: 0px;
+        border-radius: 3px;
+        background-color: #444444;
+    }
+
+        ResolutionGuidePage #content #CloseBtn:hover {
+            background-color: #555555;
+            color: #ffffff;
+        }
+
+        ResolutionGuidePage #content #CloseBtn::pressed {
+            background-color: #2d2d2d;
+            color: #ffffff;
+        }
+
+        ResolutionGuidePage #content #CloseBtn:disabled {
+            color: #777777;
+            background-color: #444444;
+        }
+
+
+    ResolutionGuidePage #CannotTip {
+        margin: 0px;
+        padding: 11px 20px 14px 20px;
+        background-color: rgba(30,30, 30, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        font-size: 14px;
+        font-weight: normal;
+        font-style: normal;
+        color: #bababa;
+    }

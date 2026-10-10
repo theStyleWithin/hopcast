@@ -1,0 +1,126 @@
+QComboBox {
+    background-color: #444444;
+	border-radius: 3px;
+	padding-left: 12px;
+	min-height: 40px;
+	max-height: 40px;
+	font-size: 14px;
+    color: #ffffff;
+	combobox-popup:0;
+}
+
+QComboBox:hover {
+    background-color: #555555;
+}
+
+QComboBox:disabled,
+QComboBox:disabled[status=error],
+QComboBox:disabled[status=normal] {
+    background-color: #373737;
+    color: #666666;
+}
+
+QComboBox::drop-down {
+	border: none;
+	width: 30px;
+}
+QComboBox::down-arrow {
+	image: url(":/libui/resource/images/txt-dropbox-open-normal.svg");
+	margin-right: 12px;
+	width: 10px;
+	height: 10px;
+}
+QComboBox::down-arrow:hover {
+	image:url(":/libui/resource/images/txt-dropbox-open-over.svg");
+}
+QComboBox::down-arrow:!enabled {
+	image:url(":/libui/resource/images/txt-dropbox-open-disable.svg");
+}
+QComboBox::down-arrow:on {
+	image:url(":/libui/resource/images/txt-dropbox-open-click.svg");
+}
+QComboBox:on, QComboBox:editable {
+    background-color: #1e1e1e;
+}
+
+QComboBox QListView,
+PLSComboBoxListView {
+    show-decoration-selected: 1;
+    background-color: #2d2d2d;
+	font-size: 14px;
+    color: #ffffff;
+	border: 1px solid #111111;
+	border-radius: 3px;
+	margin-top: 1px;
+}
+QComboBox QListView:focus,
+PLSComboBoxListView:focus {
+    outline: none;
+}
+QComboBox QListView::item,
+PLSComboBoxListView::item {
+	height: 40px;
+	padding-left: 0;
+    background-color: #2d2d2d;
+    border-radius: 3px;
+}
+QComboBox QListView::item:selected,
+PLSComboBoxListView::item:selected {
+    color: #effc35;
+    background-color: #373737;
+}
+QComboBox QListView::item:hover,
+PLSComboBoxListView::item:hover {
+    background-color: #373737;
+}
+
+QComboBox[status=error]{
+    color: #666666;
+}
+
+QComboBox[status=normal] {
+    color: #ffffff;
+}
+
+PLSComboBoxListView QWidget#qt_scrollarea_vcontainer,
+PLSComboBoxListView QScrollBar:vertical {
+	border-bottom-right-radius: 3px;
+	border-top-right-radius: 3px;
+}
+
+PLSComboBoxListView QLabel#itemLabel {
+	background-color: #2d2d2d;
+	font-size: 14px;
+	color: #ffffff;
+	padding-left: 12px;
+	border-radius: 0;
+}
+PLSComboBoxListView QLabel#itemLabel[enable="false"],
+PLSComboBoxListView QLabel#itemLabel[enable="false"][isCurrent="true"] {
+	color: #666666;
+}
+PLSComboBoxListView QLabel#itemLabel[enable="false"][isHover="true"] {
+    	background-color: #2d2d2d;
+}
+PLSComboBoxListView QLabel#itemLabel[isCurrent="true"] {
+	background-color: #373737;
+	color: #effc35;
+}
+PLSComboBoxListView QLabel#itemLabel[isHover="true"] {
+	background-color: #373737;
+}
+PLSComboBoxListView QLabel#itemLabel[itemPosition="0"] {
+	border-top-left-radius: 3px;
+}
+PLSComboBoxListView QLabel#itemLabel[itemPosition="1"] {
+	border-bottom-left-radius: 3px;
+}
+PLSComboBoxListView[scrollBarShow="false"] QLabel#itemLabel[itemPosition="0"] {
+	border-top-right-radius: 3px;
+}
+PLSComboBoxListView[scrollBarShow="false"] QLabel#itemLabel[itemPosition="1"] {
+	border-bottom-right-radius: 3px;
+}
+PLSComboBoxListView[scrollBarShow="false"] QLabel#itemLabel[itemPosition="2"] {
+	border-radius: 3px;
+}

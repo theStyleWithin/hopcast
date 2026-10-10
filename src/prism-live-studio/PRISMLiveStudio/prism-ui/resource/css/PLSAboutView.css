@@ -1,0 +1,57 @@
+
+PLSAboutView {
+    qproperty-hasHLine: false;
+    qproperty-hasMinButton: false;
+    qproperty-hasBorder: true;
+    background-color: #272727;
+}
+
+        PLSAboutView #logoLabel {
+            qproperty-minimumSize: 175px 123px;
+            qproperty-maximumSize: 175px 123px;
+            image: url(":/resource/images/login-logo.svg");
+            background-color: transparent;
+        }
+
+        PLSAboutView #logoInfoLabel {
+            qproperty-minimumSize: 175px 15px;
+            qproperty-maximumSize: 175px 15px;
+            background-color: transparent;
+        }
+
+        PLSAboutView #versionLabel {
+            color: #bababa;
+            font-size: 12px;
+            min-height: 16px;
+            max-height: 16px;
+        }
+
+        PLSAboutView #checkUpdateButton {
+            qproperty-minimumSize: 150px 40px;
+            max-height: 40px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            color: #000000;
+            border-radius: 3px;
+            background-color: #effc35;
+            font-size: 14px;
+        }
+
+            PLSAboutView #checkUpdateButton:disabled {
+                background-color: #7a7f34;
+            }
+
+        PLSAboutView #rightLabel {
+            color: #666666;
+            font-size: 11px;
+            min-height: 20px;
+            max-height: 20px;
+        }
+
+        PLSAboutView #lineView {
+            background-color: #111111;
+            min-height: 1px;
+            max-height: 1px;
+        }
