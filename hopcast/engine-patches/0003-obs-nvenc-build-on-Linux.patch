@@ -1,0 +1,49 @@
+From: HopCast <dev@localhost>
+Subject: [PATCH] obs-nvenc: build on Linux
+
+NAVER's NVENC error-message changes used Windows-only constructs:
+- nvenc-helpers.c: the Windows FALSE macro -> C `false`.
+- nvenc.c: MSVC structured exception handling (__try/__except) around
+  reading nvEncGetLastErrorString(); keep it on Windows, plain check on
+  Linux (no SEH there; the driver returns a valid string).
+
+License: GPL-2.0-or-later (same as the patched files).
+---
+diff --git a/plugins/obs-nvenc/nvenc-helpers.c b/plugins/obs-nvenc/nvenc-helpers.c
+index 61ea543..504c646 100644
+--- a/plugins/obs-nvenc/nvenc-helpers.c
++++ b/plugins/obs-nvenc/nvenc-helpers.c
+@@ -100,7 +100,7 @@ bool nv_failed2(obs_encoder_t *encoder, bool msg_error, void *session, NVENCSTAT
+ }
+ 
+ //PRISM/chenguoxi/20251210/PRISM_PC-4574/nvenc error msg
+-#define NV_FAILED(e, x) nv_failed2(e, FALSE, NULL, x, __FUNCTION__, #x)
++#define NV_FAILED(e, x) nv_failed2(e, false, NULL, x, __FUNCTION__, #x) /* HopCast: FALSE is a Windows macro */
+ 
+ bool load_nvenc_lib(void)
+ {
+diff --git a/plugins/obs-nvenc/nvenc.c b/plugins/obs-nvenc/nvenc.c
+index 3526595..a20f3a6 100644
+--- a/plugins/obs-nvenc/nvenc.c
++++ b/plugins/obs-nvenc/nvenc.c
+@@ -845,6 +845,7 @@ static void *nvenc_create_internal(enum codec_type codec, obs_data_t *settings,
+ 	//PRISM/chenguoxi/20251210/PRISM_PC-4574/nvenc error msg
+ 	if (enc != NULL && enc->session != NULL) {
+ 		const char *nvenc_error = nv.nvEncGetLastErrorString(enc->session);
++#ifdef _WIN32
+ 		__try {
+ 			if (nvenc_error != NULL && nvenc_error[0] != '\0') {
+ 				enc->is_nvenc_error_msg_error = true;
+@@ -852,6 +853,12 @@ static void *nvenc_create_internal(enum codec_type codec, obs_data_t *settings,
+ 		} __except (EXCEPTION_EXECUTE_HANDLER) {
+ 			enc->is_nvenc_error_msg_error = true;
+ 		}
++#else
++		/* HopCast (Linux): no SEH; the driver returns a valid string here. */
++		if (nvenc_error != NULL && nvenc_error[0] != '\0') {
++			enc->is_nvenc_error_msg_error = true;
++		}
++#endif
+ 
+ 		if (enc->is_nvenc_error_msg_error) {
+ 			error("nvenc [%p]: is_nvenc_error_msg_error is true.", enc->encoder);
