@@ -54,6 +54,13 @@ jobs:
           set -o pipefail
           bash hopcast/scripts/smoke-test-engine.sh build/engine-install 2>&1 | tee smoke.log
 
+      - name: Summarize smoke test
+        if: success()
+        run: |
+          summary=$(grep -E "^(libobs .* started|video:|audio:|input types|  [a-z0-9_]+ +(ok|MISSING)|created source|PASS|FAIL)" smoke.log | awk 'BEGIN{ORS="%0A"}{print}')
+          echo "::notice title=smoke test::${summary}"
+          grep -E "^(libobs .* started|video:|audio:|input types|  [a-z0-9_]+ +(ok|MISSING)|created source|PASS|FAIL)" smoke.log >> "$GITHUB_STEP_SUMMARY"
+
       - name: Report failure details
         if: failure()
         env:
