@@ -1,0 +1,37 @@
+From: HopCast <dev@localhost>
+Subject: [PATCH] util/pipe-posix: add os_process_pipe_set_userdata()
+
+NAVER declared os_process_pipe_set_userdata() in util/pipe.h and
+implemented it only in pipe-windows.c, but plugins/obs-ffmpeg/obs-ffmpeg-mux.c
+calls it unconditionally. Without a POSIX implementation the obs-ffmpeg
+plugin (recording/streaming output) can't link or load on Linux.
+Mirror the Windows implementation (stores a pointer used for log context).
+
+License: GPL-2.0-or-later (same as the patched file).
+---
+diff --git a/libobs/util/pipe-posix.c b/libobs/util/pipe-posix.c
+index cf97d45..86fd06c 100644
+--- a/libobs/util/pipe-posix.c
++++ b/libobs/util/pipe-posix.c
+@@ -29,6 +29,7 @@ struct os_process_pipe {
+ 	int pid;
+ 	FILE *file;
+ 	FILE *err_file;
++	void *user_data; /* HopCast: parity with pipe-windows.c */
+ };
+ 
+ os_process_pipe_t *os_process_pipe_create_internal(const char *bin, char **argv, const char *type)
+@@ -199,3 +200,13 @@ size_t os_process_pipe_write(os_process_pipe_t *pp, const uint8_t *data, size_t
+ 	}
+ 	return written;
+ }
++
++/* HopCast (Linux): NAVER added this on Windows only (used for log context),
++ * but obs-ffmpeg-mux.c calls it on every platform. */
++void os_process_pipe_set_userdata(os_process_pipe_t *pp, void *userdata)
++{
++	if (pp == NULL)
++		return;
++
++	pp->user_data = userdata;
++}

@@ -7,7 +7,8 @@ Subject: [PATCH] libobs/pls: build on Linux
   controllable, remove-VB request ignored). PRISM Lens has no Linux build.
 - pls-obs-api-ex.cpp: include <atomic> for std::atomic_bool.
 - pls-obs-api.c: define MAX_IGNORE_DROP_SPACE on non-Windows/macOS too
-  (same 10 s as the other platforms).
+  (same 10 s as the other platforms); pls_get_module_file_name_ptr()
+  returns NULL on Linux like it does on macOS (was missing a return).
 
 License: GPL-2.0-or-later (same as the patched files).
 ---
@@ -92,7 +93,7 @@ index 8805347..9e63a4e 100644
  #if defined(_WIN32)
  #include <Windows.h>
 diff --git a/libobs/pls/pls-obs-api.c b/libobs/pls/pls-obs-api.c
-index eaf6b6b..6ed8517 100644
+index eaf6b6b..d4fd2bd 100644
 --- a/libobs/pls/pls-obs-api.c
 +++ b/libobs/pls/pls-obs-api.c
 @@ -18,6 +18,9 @@
@@ -105,3 +106,14 @@ index eaf6b6b..6ed8517 100644
  #endif
  
  gs_effect_t *pls_effect = NULL;
+@@ -274,8 +277,8 @@ char *pls_get_module_file_name_ptr(const char *module_name)
+ 		return path.array;
+ 	}
+ 	return NULL;
+-#elif defined(__APPLE__)
+-	return NULL;
++#else
++	return NULL; // macOS and Linux (HopCast): not implemented upstream either
+ #endif
+ }
+ 
