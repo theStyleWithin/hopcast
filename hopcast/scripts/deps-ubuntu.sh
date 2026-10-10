@@ -6,6 +6,7 @@ set -euo pipefail
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends \
   build-essential cmake ninja-build pkg-config git ccache file xvfb xauth \
+  libegl1 libegl-mesa0 libgl1-mesa-dri mesa-utils \
   libglib2.0-dev libcurl4-openssl-dev \
   libavcodec-dev libavdevice-dev libavfilter-dev libavformat-dev libavutil-dev \
   libswresample-dev libswscale-dev \
