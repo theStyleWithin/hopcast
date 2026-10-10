@@ -34,6 +34,8 @@ cmake -S "$ENGINE" -B "$BUILD" -G Ninja \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCMAKE_INSTALL_PREFIX="$PREFIX" \
   -DCMAKE_INSTALL_LIBDIR=lib \
+  -DCMAKE_PROJECT_INCLUDE="$ROOT/hopcast/cmake/engine-compat.cmake" \
+  -Wno-dev \
   -DENABLE_UI=OFF \
   -DENABLE_RELOCATABLE=ON \
   -DENABLE_PORTABLE_CONFIG=ON \
