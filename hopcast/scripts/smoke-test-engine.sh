@@ -8,5 +8,13 @@ OUT="$ROOT/build/engine-smoke"
 cc -O1 -o "$OUT" "$ROOT/hopcast/tests/engine_smoke.c" \
   -I"$PREFIX/include/obs" -L"$PREFIX/lib" -lobs -Wl,-rpath,"$PREFIX/lib"
 
-# No display in CI: libobs core + plugin loading do not need one.
+# On Linux, obs_startup() initialises hotkeys, which needs a display server.
+# Real desktops have one; on headless CI we run inside a virtual X server.
+if [[ -z "${DISPLAY:-}" && -z "${WAYLAND_DISPLAY:-}" ]]; then
+  if command -v xvfb-run >/dev/null; then
+    LD_LIBRARY_PATH="$PREFIX/lib" exec xvfb-run -a "$OUT" "$PREFIX"
+  fi
+  echo "No display and xvfb-run not found (install xvfb)" >&2
+  exit 1
+fi
 LD_LIBRARY_PATH="$PREFIX/lib" "$OUT" "$PREFIX"
