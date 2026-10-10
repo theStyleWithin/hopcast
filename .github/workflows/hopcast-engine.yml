@@ -1,0 +1,47 @@
+# Phase 0 CI: build the pinned engine on a fixed Ubuntu 24.04 image so every
+# build (and later every AppImage) is produced the same way.
+name: hopcast-engine
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  engine-linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Fetch pinned engine (NAVER libobs fork)
+        # obs-browser/obs-websocket must exist for CMake on Linux even when disabled
+        run: |
+          git submodule update --init --depth 1 src/obs-studio
+          git -C src/obs-studio submodule update --init --depth 1 plugins/obs-browser plugins/obs-websocket
+
+      - name: Install dependencies
+        run: bash hopcast/scripts/deps-ubuntu.sh
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-engine-${{ github.sha }}
+          restore-keys: ccache-engine-
+
+      - name: Build engine
+        env:
+          CMAKE_C_COMPILER_LAUNCHER: ccache
+          CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        run: bash hopcast/scripts/build-engine.sh build/engine build/engine-install
+
+      - name: Smoke test (libobs starts headless, plugins load)
+        run: bash hopcast/scripts/smoke-test-engine.sh build/engine-install
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hopcast-engine-linux-x86_64
+          path: build/engine-install
