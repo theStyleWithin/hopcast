@@ -34,6 +34,18 @@ for sm in plugins/obs-browser plugins/obs-websocket; do
   [[ -f "$ENGINE/$sm/CMakeLists.txt" ]] || git -C "$ENGINE" submodule update --init --depth 1 "$sm"
 done
 
+# HopCast patches to NAVER's engine (Linux portability fixes), applied on top of
+# the pinned, unmodified submodule. Idempotent: already-applied patches are skipped.
+for p in "$ROOT"/hopcast/engine-patches/*.patch; do
+  [[ -e "$p" ]] || continue
+  if git -C "$ENGINE" apply --reverse --check "$p" 2>/dev/null; then
+    echo "engine patch already applied: $(basename "$p")"
+  else
+    git -C "$ENGINE" apply --whitespace=nowarn "$p"
+    echo "engine patch applied: $(basename "$p")"
+  fi
+done
+
 cmake -S "$ENGINE" -B "$BUILD" -G Ninja \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCMAKE_INSTALL_PREFIX="$PREFIX" \

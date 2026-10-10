@@ -1,0 +1,107 @@
+From: HopCast <dev@localhost>
+Subject: [PATCH] libobs/pls: build on Linux
+
+- pls-lens-event.cpp: include <condition_variable> (MSVC/Clang got it
+  transitively); compile PRISM Lens IPC paths only on Windows/macOS and
+  give Linux "no Lens" behavior (empty monitor thread, UI not
+  controllable, remove-VB request ignored). PRISM Lens has no Linux build.
+- pls-obs-api-ex.cpp: include <atomic> for std::atomic_bool.
+- pls-obs-api.c: define MAX_IGNORE_DROP_SPACE on non-Windows/macOS too
+  (same 10 s as the other platforms).
+
+License: GPL-2.0-or-later (same as the patched files).
+---
+diff --git a/libobs/pls/pls-lens-event.cpp b/libobs/pls/pls-lens-event.cpp
+index e25ab2c..7987c73 100644
+--- a/libobs/pls/pls-lens-event.cpp
++++ b/libobs/pls/pls-lens-event.cpp
+@@ -7,6 +7,7 @@
+ #include <atomic>
+ #include <thread>
+ #include <chrono>
++#include <condition_variable>
+ #ifdef _WIN32
+ #include <Windows.h>
+ #include <string>
+@@ -344,6 +345,7 @@ void PLSLensEventCenter::EnumHandler(std::function<void(std::shared_ptr<LensEven
+ 	}
+ }
+ 
++#if defined(_WIN32) || defined(__APPLE__)
+ void PLSLensEventCenter::CheckLicense(std::shared_ptr<IPCPrismLens> ipc)
+ {
+ #ifdef _WIN32
+@@ -387,6 +389,8 @@ void PLSLensEventCenter::CheckVbState(std::shared_ptr<IPCPrismLens> ipc, int cam
+ 	}
+ }
+ 
++#endif
++
+ #ifdef _WIN32
+ void PLSLensEventCenter::CheckResolution(int cam_index)
+ {
+@@ -690,6 +694,9 @@ void PLSLensEventCenter::MonitorThread()
+ 
+ 	async_task->run_all_tasks();
+ }
++#else
++// HopCast (Linux): PRISM Lens has no Linux build, so there is no Lens to monitor.
++void PLSLensEventCenter::MonitorThread() {}
+ #endif
+ 
+ void PLSLensEventCenter::UpdateDeviceState(int index, bool is_active, bool force_notify)
+@@ -808,8 +815,10 @@ bool pls_is_lens_ui_controllable()
+ {
+ #if defined(__APPLE__)
+ 	return PLSLensEventCenter::Get()->is_lens_ui_controllable;
+-#else
++#elif defined(_WIN32)
+ 	return IPCPrismLens::is_lens_ui_controllable();
++#else
++	return false; // HopCast (Linux): no PRISM Lens
+ #endif
+ }
+ 
+@@ -827,7 +836,7 @@ void pls_request_lens_remove_vb(int cam_index, bool need_remove)
+ 	if (ipc) {
+ 		ipc->request_lens_remove_vb(need_remove);
+ 	}
+-#else
++#elif defined(_WIN32)
+ 	PLSLensEventCenter::Get()->async_task->push_task([cam_index, need_remove]() {
+ 		auto ipc = PLSLensEventCenter::Get()->lens_ipc[cam_index];
+ 		if (ipc) {
+@@ -839,5 +848,7 @@ void pls_request_lens_remove_vb(int cam_index, bool need_remove)
+ 			}
+ 		}
+ 	});
++#else
++	(void)need_remove; // HopCast (Linux): no PRISM Lens
+ #endif
+ }
+diff --git a/libobs/pls/pls-obs-api-ex.cpp b/libobs/pls/pls-obs-api-ex.cpp
+index 8805347..9e63a4e 100644
+--- a/libobs/pls/pls-obs-api-ex.cpp
++++ b/libobs/pls/pls-obs-api-ex.cpp
+@@ -12,6 +12,7 @@
+ #include <deque>
+ #include <limits>
+ #include <map>
++#include <atomic>
+ 
+ #if defined(_WIN32)
+ #include <Windows.h>
+diff --git a/libobs/pls/pls-obs-api.c b/libobs/pls/pls-obs-api.c
+index eaf6b6b..6ed8517 100644
+--- a/libobs/pls/pls-obs-api.c
++++ b/libobs/pls/pls-obs-api.c
+@@ -18,6 +18,9 @@
+ #elif defined(__APPLE__)
+ // TODO by aiguanghua
+ #define MAX_IGNORE_DROP_SPACE (10 * 1000000000ULL)
++#else
++// HopCast (Linux): same 10s grace period as the other platforms
++#define MAX_IGNORE_DROP_SPACE (10 * 1000000000ULL)
+ #endif
+ 
+ gs_effect_t *pls_effect = NULL;
