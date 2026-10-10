@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           for f in build-engine.log smoke.log; do
-            [ -f "$f" ] && bash hopcast/scripts/ci-report-failure.sh "$f" "${f%.log}"
+            if [ -f "$f" ]; then bash hopcast/scripts/ci-report-failure.sh "$f" "${f%.log}"; fi
           done
 
       - uses: actions/upload-artifact@v4
