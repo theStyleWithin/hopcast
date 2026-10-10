@@ -37,6 +37,40 @@ bash hopcast/scripts/smoke-test-engine.sh
 
 Expected output ends with `PASS`.
 
+### Phase 0 status: ✅ passing in CI (2026-10-09)
+
+Verified on Ubuntu 24.04 (GitHub Actions, Xvfb + Mesa software GL):
+
+```
+libobs 31.0.3 started
+video: OpenGL renderer up
+audio: 48 kHz stereo up
+input types registered: 17
+  ffmpeg_source / v4l2_input / pulse_input_capture / image_source / color_source_v3  ok
+created source 'smoke-color' (320x180)
+PASS
+```
+
+What it took (NAVER's engine had never been built on Linux):
+
+| Fix | Where |
+|---|---|
+| Export `PLS_VERSION` & friends (engine hard-requires them) | `build-engine.sh`, `hopcast/VERSION` |
+| No-op `legacy_check()` (removed by NAVER, still used by obs-websocket) | `hopcast/cmake/engine-compat.cmake` |
+| Skip macOS-only Objective-C `libobs/pls/*.m` on Linux | `hopcast/cmake/engine-compat.cmake` |
+| Warnings not fatal (NAVER prints `uint64_t` with `%llu`) | `build-engine.sh` |
+| `libobs/pls`: missing includes, Linux values, "no PRISM Lens" stubs | `engine-patches/0001` |
+| POSIX `os_process_pipe_set_userdata()` (Windows-only, used by obs-ffmpeg) | `engine-patches/0002` |
+| NVENC: Windows `FALSE` macro and MSVC `__try/__except` | `engine-patches/0003` |
+
+Engine features **off for now**: browser source (CEF), websocket, WebRTC, VLC, scripting,
+AJA/DeckLink, and the **VST host** (NAVER rewrote it for Windows/macOS only).
+
+### Next: Phase 1 (PRISM layer)
+
+PRISM's own code requires **Qt ≥ 6.6** (Ubuntu 24.04 ships 6.4), so CI will install a newer Qt
+(e.g. via aqtinstall) and bundle it in the AppImage.
+
 ## AppImage target
 
 - Built in CI on a fixed Ubuntu 24.04 image → runs on glibc ≥ 2.39 (CachyOS, Arch, Fedora 40+, Ubuntu 24.04+).
