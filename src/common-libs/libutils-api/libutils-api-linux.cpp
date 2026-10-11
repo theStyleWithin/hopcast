@@ -524,7 +524,7 @@ void removeObserverProcessExit(MacHandle) {}
 
 void pls_mac_create_process_with_not_inherit(const QString &program, const QStringList &arguments, void *receiver, PLSMacProcessCallback callback)
 {
-	MacHandle h = pls_process_create(program, arguments, QString());
+	MacHandle h = pls_libutil_api_mac::pls_process_create(program, arguments, QString());
 	bool ok = h && h->pid != 0;
 	int pid = h ? static_cast<int>(h->pid) : 0;
 	delete h;
@@ -534,7 +534,7 @@ void pls_mac_create_process_with_not_inherit(const QString &program, const QStri
 void pls_create_and_observe_process(const QString &program, const QStringList &arguments, void *user_data,
 				    void (*callback)(void *user_data, bool created, bool processed))
 {
-	MacHandle h = pls_process_create(program, arguments, QString());
+	MacHandle h = pls_libutil_api_mac::pls_process_create(program, arguments, QString());
 	bool ok = h && h->pid != 0;
 	delete h;
 	if (callback)
@@ -542,7 +542,7 @@ void pls_create_and_observe_process(const QString &program, const QStringList &a
 }
 bool pls_restart_mac_app(const QStringList &arguments)
 {
-	MacHandle h = pls_process_create(self_exe_path(), arguments, QString());
+	MacHandle h = pls_libutil_api_mac::pls_process_create(self_exe_path(), arguments, QString());
 	bool ok = h && h->pid != 0;
 	delete h;
 	return ok;

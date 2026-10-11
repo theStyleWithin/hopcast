@@ -4399,6 +4399,13 @@ LIBUTILSAPI_API bool pls_request_lens_show_settings()
 
 #endif
 
+#if defined(Q_OS_LINUX) // HopCast: macOS notify(3) is not available; Lens calls return early on Linux
+static inline uint32_t notify_post(const char *)
+{
+	return 1;
+}
+#define NOTIFY_STATUS_OK 0
+#endif
 #if defined(PLS_POSIX_API)
 #define PRISM_LENS_REQUEST_EXIT_NOTIFY "prism_request_exit"
 #define PRISM_LENS_REQUEST_SHOW_SETTINGS_NOTIFY "prism_request_show_settings"
@@ -4410,6 +4417,9 @@ LIBUTILSAPI_API bool pls_is_process_running(const char *executableName, int &pid
 
 LIBUTILSAPI_API bool pls_request_lens_exit()
 {
+#if defined(Q_OS_LINUX) // HopCast: no PRISM Lens on Linux
+	return false;
+#endif
 	uint32_t status = notify_post(PRISM_LENS_REQUEST_EXIT_NOTIFY);
 
 	if (status != NOTIFY_STATUS_OK) {
@@ -4424,6 +4434,9 @@ LIBUTILSAPI_API bool pls_request_lens_exit()
 
 LIBUTILSAPI_API bool pls_request_lens_show_settings()
 {
+#if defined(Q_OS_LINUX) // HopCast: no PRISM Lens on Linux
+	return false;
+#endif
 	uint32_t status = notify_post(PRISM_LENS_REQUEST_SHOW_SETTINGS_NOTIFY);
 
 	if (status != NOTIFY_STATUS_OK) {
@@ -4537,6 +4550,9 @@ bool pls_dlopen_i(pls_dl_t &dl, const QString &dl_path)
 	PLS_WARN(UTILS_API_MODULE, "load library failed, path: %s, error code: %u", pls_get_path_file_name(dl_path).toUtf8().constData(), GetLastError());
 #elif defined(PLS_POSIX_API)
 	auto path = dl_path.toStdString();
+	#ifndef RTLD_FIRST
+#define RTLD_FIRST 0 // HopCast: macOS-only dlopen flag
+#endif
 	if (auto handle = dlopen(path.c_str(), RTLD_LAZY | RTLD_FIRST); handle) {
 		dl.handle = handle;
 		dl.close = true;
