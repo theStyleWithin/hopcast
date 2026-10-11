@@ -41,14 +41,21 @@ jobs:
           modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats'
           cache: true
 
-      - name: Cache ccache
-        uses: actions/cache@v4
+      # Restore/save split so the compiler cache is kept even when the build fails
+      # (actions/cache only saves on success; during porting most runs fail).
+      - name: Restore ccache
+        uses: actions/cache/restore@v4
         with:
           path: ~/.cache/ccache
           key: ccache-app-${{ github.sha }}
           restore-keys: |
             ccache-app-
             ccache-engine-
+
+      - name: Configure ccache
+        run: |
+          ccache --max-size=2G
+          ccache --zero-stats
 
       - name: Build engine
         env:
@@ -65,6 +72,17 @@ jobs:
         run: |
           set -o pipefail
           bash hopcast/scripts/build-app.sh build/engine build/app 2>&1 | tee build-app.log
+
+      - name: Save ccache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-app-${{ github.sha }}
+
+      - name: ccache stats
+        if: always()
+        run: echo "::notice title=ccache::$(ccache --show-stats | grep -E 'Hits|Misses' | tr '\n' ' ')"
 
       - name: Count app warnings
         if: success()
