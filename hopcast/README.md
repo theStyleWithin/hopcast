@@ -163,12 +163,24 @@ Everything that holds a stream key or a platform token is encrypted on disk by H
   and the key is sent to your streaming platform when you go live — that's how RTMP works. On SSDs, overwritten old plaintext files may still
   physically linger until the drive reuses those blocks.
 
+### UI map (screenshots of every screen)
+
+[`hopcast/docs/ui-map/`](docs/ui-map/README.md) shows every button and menu and what it opens,
+one folder per area (start, channels, menus, scenes, settings, sidebar, bottom). The screenshots
+come from the automated UI tour: run the `hopcast-app` workflow with **ui_tour** checked
+(scenarios in `hopcast/tests/ui-tour.txt`), then regenerate with
+`hopcast/scripts/ui-map.py <tour-dir>`.
+
+Also removed in the cleanup pass: PRISM/NAVER/OBS links in Help (only Program Info and Open
+Source License remain), the PRISM logo and update check in Program Info (now "HopCast" with the
+GPL credit), the account avatar, PRISM Lens, PRISM/GIPHY stickers, scene templates and NAVER
+business settings in the sidebar, the platform chat panel (whose "Add PRISM Chat Source" button
+crashed), the "recommended sources" upsell in Add Source, and the "DialogView" placeholder title.
+
 ### Next in Phase 1
 
-- **Bug:** Chat panel › "Add PRISM Chat Source" crashes (the chat-source plugin isn't built on
-  Linux yet). Found by the UI tour (`hopcast/scripts/ui-tour.sh`).
-- Remaining PRISM text in less visible places (dialog titles, translations, About box, the
-  `PRISMLiveStudio` config folder and binary name) — full rebrand pass.
+- Remaining PRISM naming under the hood: translations, the `PRISMLiveStudio` config folder and
+  binary name, NAVER image assets — full rebrand pass.
 - PRISM source plugins (timer, text template, chat, sticker, …) on Linux.
 - Real-desktop test on CachyOS (X11 and Wayland).
 

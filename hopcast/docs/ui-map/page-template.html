@@ -62,7 +62,7 @@ h1 { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-siz
 .leftovers h2 { font-family: var(--display); font-stretch: 100%; font-size: 1.05rem; font-weight: 700; margin: 0 0 4px; display: flex; gap: 8px; align-items: center; }
 .leftovers > p { margin: 0 0 12px; color: var(--muted); font-size: .9rem; }
 .leftovers ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
-.leftovers li { font-size: .92rem; padding-left: 14px; border-left: 3px solid var(--prism); }
+.leftovers li { font-size: .92rem; padding-left: 14px; border-left: 3px solid var(--hop); }
 .leftovers li a { color: var(--ink); text-decoration: none; }
 .leftovers li a:hover strong { text-decoration: underline; }
 .leftovers li span { color: var(--muted); }
@@ -127,13 +127,19 @@ html { scroll-behavior: smooth; }
         <span><span class="dot" aria-hidden="true"></span>where the script clicked</span>
         <span><span class="num" aria-hidden="true">1</span>click order</span>
         <span class="flag flag-hop">HopCast change</span>
-        <span class="flag flag-prism">PRISM leftover</span>
       </div>
     </div>
     <aside class="leftovers" aria-labelledby="h-left">
-      <h2 id="h-left"><span class="flag flag-prism">To clean up</span> Still from PRISM</h2>
-      <p>Spotted during the tour. These go in the next rebrand pass.</p>
-      <ul>{{LEFTOVERS}}</ul>
+      <h2 id="h-left"><span class="flag flag-hop">HopCast</span> Removed from PRISM</h2>
+      <p>What this build leaves out, compared with PRISM Live Studio.</p>
+      <ul>
+        <li><strong>Accounts</strong> <span>no sign-in, profile or logout</span></li>
+        <li><strong>NAVER services</strong> <span>blocked in the network layer; no calls at startup</span></li>
+        <li><strong>Platform buttons</strong> <span>Custom RTMP only, no suggested platforms</span></li>
+        <li><strong>Add-ons</strong> <span>no PRISM Lens, stickers, GIPHY, scene templates or platform chat</span></li>
+        <li><strong>Links</strong> <span>no PRISM/NAVER web pages in Help</span></li>
+        <li><strong>Stream keys</strong> <span>encrypted on your computer, in a folder you choose</span></li>
+      </ul>
     </aside>
   </div>
 </div>
@@ -142,7 +148,7 @@ html { scroll-behavior: smooth; }
 
 <main class="wrap">
   {{SECTIONS}}
-  <p class="foot">Screens come from HopCast’s automated UI tour (<code>hopcast/scripts/ui-tour.sh</code>, scenarios in <code>hopcast/tests/ui-tour.txt</code>) on GitHub Actions, without a window manager. On your desktop, windows get your usual title bars. The hamburger button (☰, top left) showed no visible change in this test.</p>
+  <p class="foot">Screens come from HopCast’s automated UI tour (<code>hopcast/scripts/ui-tour.sh</code>, scenarios in <code>hopcast/tests/ui-tour.txt</code>) on GitHub Actions, without a window manager. On your desktop, windows get your usual title bars.</p>
 </main>
 
 <dialog class="lb" id="lightbox" aria-label="Screenshot">
