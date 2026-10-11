@@ -14,7 +14,7 @@
 #include "PLSChannelDataAPI.h"
 #include "frontend-api.h"
 
-#include "../../PLSPlatformApi/NCB2B/PLSNCB2BDataHandler.h"
+#include "../../PLSPlatformApi/ncb2b/PLSNCB2BDataHandler.h"
 #include "../../PLSPlatformApi/band/PLSBandDataHandler.h"
 #include "../../PLSPlatformApi/facebook/PLSFacebookDataHandler.h"
 #include "../../PLSPlatformApi/naver-shopping-live/PLSNaverShoppingLIVEDataHandler.h"
