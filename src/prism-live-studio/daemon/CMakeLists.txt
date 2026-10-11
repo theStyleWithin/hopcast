@@ -1,5 +1,11 @@
 project(PRISMDaemon)
 
+# HopCast: the crash-watchdog daemon is Windows/macOS-only (kqueue / Win32);
+# a Linux version (pidfd/waitpid) is a later task. The app runs without it.
+if(OS_LINUX)
+  return()
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 

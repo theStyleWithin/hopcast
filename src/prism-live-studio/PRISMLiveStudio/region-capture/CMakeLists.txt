@@ -1,5 +1,11 @@
 project(region-capture)
 
+# HopCast: region capture uses Win32/Cocoa keyboard hooks and overlays; on Linux
+# this will go through the desktop portal later. Skipped for now.
+if(OS_LINUX)
+  return()
+endif()
+
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
 set(CMAKE_CXX_STANDARD 17)
