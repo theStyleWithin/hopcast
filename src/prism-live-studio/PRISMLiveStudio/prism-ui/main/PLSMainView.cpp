@@ -1230,7 +1230,11 @@ void PLSMainView::setupRightSidebarWidgets()
 	m_userBtn->setText(QString());
 	m_userBtn->setIconSize(QSize(34, 34));
 	m_userBtn->setProperty("useFor", "QToolButton");
+#ifdef HOPCAST_NO_NAVER
+	m_userBtn->hide(); // HopCast: no accounts, so no profile avatar
+#else
 	m_sideBarLayout->addWidget(m_userBtn, 0, Qt::AlignHCenter | Qt::AlignTop);
+#endif
 
 	m_studioModeBtn = pls_new<QPushButton>(m_sideBarMenus);
 	m_studioModeBtn->setObjectName(QStringLiteral("studioMode"));
