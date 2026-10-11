@@ -26,12 +26,13 @@ PLSAboutView::PLSAboutView(QWidget *parent) : PLSDialogView(parent)
 	ui->logoLabel->setText(QStringLiteral("HopCast"));
 	ui->logoInfoLabel->setText(QString());
 	ui->checkUpdateButton->setVisible(false);
-	ui->rightLabel->setWordWrap(true);
-	ui->rightLabel->setMinimumHeight(48);
-	ui->rightLabel->setText(QStringLiteral("Free software under the GNU GPL v2.\nBased on PRISM Live Studio (NAVER Corp.) and OBS Studio."));
-	ui->rightLabel->setAlignment(Qt::AlignCenter);
-	setFixedSize(342, 400); // room for the two-line credit (no update button)
-	initSize(342, 400);
+	/* The credit goes under the version: the stylesheet pins the bottom label's height. */
+	ui->rightLabel->setText(QString());
+	ui->versionLabel->setWordWrap(true);
+	ui->versionLabel->setAlignment(Qt::AlignCenter);
+	ui->versionLabel->setStyleSheet(QStringLiteral("min-height: 0px; max-height: 200px; color: #bababa; font-size: 12px;"));
+	ui->versionLabel->setText(ui->versionLabel->text() +
+				  QStringLiteral("\n\nFree software under the GNU GPL v2.\nBased on PRISM Live Studio (NAVER Corp.)\nand OBS Studio."));
 #endif
 
 #if defined(Q_OS_MACOS)
