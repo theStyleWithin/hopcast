@@ -34,8 +34,9 @@ jobs:
       - name: Secure store tests (key file, then a real GNOME Keyring)
         run: |
           sudo apt-get install -y --no-install-recommends gnome-keyring dbus libsecret-1-dev
-          bash hopcast/scripts/test-securestore.sh
-          timeout 180 dbus-run-session -- bash -c 'printf "" | gnome-keyring-daemon --unlock --components=secrets >/dev/null && HOPCAST_TEST_KEYRING=1 bash hopcast/scripts/test-securestore.sh'
+          set -o pipefail
+          { echo "### without keyring"; bash hopcast/scripts/test-securestore.sh; } 2>&1 | tee securestore.log
+          { echo "### with GNOME Keyring"; timeout 180 dbus-run-session -- bash -c 'printf "" | gnome-keyring-daemon --unlock --components=secrets >/dev/null && HOPCAST_TEST_KEYRING=1 bash hopcast/scripts/test-securestore.sh'; } 2>&1 | tee -a securestore.log
 
       - name: Install Qt 6.8
         uses: jurplel/install-qt-action@v4
@@ -129,6 +130,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          for f in build-engine.log build-app.log; do
+          for f in securestore.log build-engine.log build-app.log; do
             if [ -f "$f" ]; then bash hopcast/scripts/ci-report-failure.sh "$f" "${f%.log}"; fi
           done

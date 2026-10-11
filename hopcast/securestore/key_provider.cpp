@@ -73,9 +73,14 @@ std::string trim(std::string s)
 #ifdef HOPCAST_HAVE_LIBSECRET
 const SecretSchema *schema()
 {
-	static const SecretSchema s = {"io.github.thestylewithin.HopCast.SecureStore",
-				       SECRET_SCHEMA_NONE,
-				       {{"purpose", SECRET_SCHEMA_ATTRIBUTE_STRING}, {nullptr, SECRET_SCHEMA_ATTRIBUTE_STRING}}};
+	static const SecretSchema s = [] {
+		SecretSchema schema{}; // zero-initialises the reserved fields too
+		schema.name = "io.github.thestylewithin.HopCast.SecureStore";
+		schema.flags = SECRET_SCHEMA_NONE;
+		schema.attributes[0].name = "purpose";
+		schema.attributes[0].type = SECRET_SCHEMA_ATTRIBUTE_STRING;
+		return schema; // attributes[1] stays {nullptr, ...}: end of list
+	}();
 	return &s;
 }
 #endif
