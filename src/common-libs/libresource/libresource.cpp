@@ -1645,6 +1645,8 @@ public:
 		auto wv = pls_get_win_ver();
 		LANGID langId = GetUserDefaultUILanguage();
 		return QString("PRISM Live Studio/%1 (Windows %2 Build %3 Architecture x64 Language %4)").arg(pls_get_prism_version_string()).arg(wv.major).arg(wv.build).arg(langId);
+#elif defined(Q_OS_LINUX) // HopCast
+		return pls_get_user_agent();
 #else
 		pls_mac_ver_t wvi = pls_get_mac_systerm_ver();
 		QString langId = pls_get_current_system_language_id();

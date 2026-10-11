@@ -541,15 +541,13 @@ QNetworkCookie createPrismCookie()
 
 void updateAllRtmpsV1()
 {
+#ifdef HOPCAST_NO_NAVER
+	return; // HopCast: old server API - channels are stored locally
+#endif
 	PRE_LOG("update all old API RTMPs begin", INFO)
 	HolderReleaser releaser(&PLSChannelDataAPI::holdOnChannelArea);
 	PLSCHANNELS_API->release();
 
-#ifdef HOPCAST_NO_NAVER
-	/* HopCast: load the locally saved channels (same format the server returned). */
-	updateRTMPCallback(QJsonDocument(hopcast_rtmp::load()).toJson(QJsonDocument::Compact), true);
-	return;
-#endif
 	auto headerMap = createPrismHeader();
 	if (headerMap.isEmpty()) {
 		PRE_LOG("update all RTMPs error when prism token is not right", INFO)
@@ -593,6 +591,12 @@ void updateAllRtmps()
 	PRE_LOG("update all new API RTMPs begin", INFO)
 	HolderReleaser releaser(&PLSChannelDataAPI::holdOnChannelArea);
 	PLSCHANNELS_API->release();
+
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: load the locally saved channels (same format the server returned). */
+	updateRTMPCallback(QJsonDocument(hopcast_rtmp::load()).toJson(QJsonDocument::Compact), true);
+	return;
+#endif
 
 	auto headerMap = createPrismHeader();
 	if (headerMap.isEmpty()) {

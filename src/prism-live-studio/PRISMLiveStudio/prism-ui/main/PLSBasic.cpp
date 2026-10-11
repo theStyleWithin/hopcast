@@ -546,6 +546,8 @@ static QString getUserAgent()
 	LANGID langId = GetUserDefaultUILanguage();
 
 	return QString("PRISM Live Studio/" PLS_VERSION " (Windows %1 Build %2 Architecture x64 Language %3)").arg(wvi.major).arg(wvi.build).arg(langId);
+#elif defined(Q_OS_LINUX) // HopCast
+	return pls_get_user_agent();
 #else
 	pls_mac_ver_t wvi = pls_get_mac_systerm_ver();
 	QString langId = pls_get_current_system_language_id();
