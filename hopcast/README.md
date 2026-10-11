@@ -25,6 +25,10 @@ hopcast/scripts/deps-arch.sh         build deps, Arch / CachyOS
 hopcast/scripts/build-engine.sh      Phase 0: build the pinned engine (no UI)
 hopcast/scripts/smoke-test-engine.sh Phase 0: headless engine + plugin load test
 hopcast/tests/engine_smoke.c
+hopcast/scripts/build-app.sh         Phase 1: build PRISM's layer, stage engine+app into build/stage
+hopcast/scripts/launch-test-app.sh   Phase 1: run the staged app under Xvfb (gdb backtrace + screenshot)
+hopcast/cmake/prism-linux.cmake      Linux-wide CMake adjustments + install layout for PRISM's tree
+hopcast/engine-patches/              patch series applied to the pinned engine submodule
 ```
 
 ## Phase 0 — build the engine
@@ -66,10 +70,36 @@ What it took (NAVER's engine had never been built on Linux):
 Engine features **off for now**: browser source (CEF), websocket, WebRTC, VLC, scripting,
 AJA/DeckLink, and the **VST host** (NAVER rewrote it for Windows/macOS only).
 
-### Next: Phase 1 (PRISM layer)
+## Phase 1 — PRISM's own interface on Linux
 
-PRISM's own code requires **Qt ≥ 6.6** (Ubuntu 24.04 ships 6.4), so CI will install a newer Qt
-(e.g. via aqtinstall) and bundle it in the AppImage.
+### Status: ✅ builds, links and launches in CI (2026-10-11)
+
+![PRISM's login window running on Linux (Xvfb, CI)](docs/phase1-first-launch.png)
+
+- All of PRISM's common-libs and the PRISMLiveStudio app compile and link on Ubuntu 24.04 with Qt 6.8.3.
+- `build-app.sh` stages a runnable tree in `build/stage` (engine install + app on top):
+  `bin/PRISMLiveStudio`, `lib/` (libobs, PRISM libs, RPATH `$ORIGIN/../lib`), `lib/obs-plugins/`,
+  `lib/hopcast/plugins/` (PRISM plugins), `share/obs/`, `share/hopcast/data/prism-studio/`.
+  This is also the AppDir layout for the AppImage.
+- CI launch test: the app starts, stays up for 30 s and shows PRISM's login window.
+  Network requests fail cleanly because NAVER's public source ships with no server URLs.
+
+Startup fixes made to get here (all marked `HopCast` in the source):
+
+| Problem | Fix |
+|---|---|
+| `bringWindowToTop`, `system_info` undefined at link | Linux implementation in `platform-x11.cpp`; build `system-info-posix.cpp` |
+| Stack overflow at startup in `findFileInResources` | Skip `.`/`..` (upstream bug, triggered by an empty path); Linux uses the shared POSIX gpop defaults |
+| No Linux data layout | Generic install rules + `share/hopcast` data paths (`GetDataFilePath`, locale.ini, plugin path) |
+| Null `PLSBasic` in side-bar hide event during construction (X11 realizes docks early) | Guarded |
+
+### Next in Phase 1
+
+- **Login gate.** The studio window sits behind PRISM's account login, which needs NAVER's
+  servers. HopCast needs a local (no-account) mode that goes straight to the studio window;
+  per-platform streaming logins (Twitch, YouTube, …) come later with our own OAuth app IDs.
+- PRISM source plugins (timer, text template, chat, sticker, …) on Linux.
+- Real-desktop test on CachyOS (X11 and Wayland).
 
 ## AppImage target
 
