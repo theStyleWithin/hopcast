@@ -12,6 +12,10 @@ on:
         description: "Also run the UI tour (screenshots of every screen)"
         type: boolean
         default: false
+      tour_only:
+        description: "Only these UI tour scenarios (comma-separated names; empty = all)"
+        type: string
+        default: ""
 
 permissions:
   contents: write   # ci-report-failure.sh pushes logs to the ci-logs branch
@@ -114,7 +118,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           sudo apt-get install -y --no-install-recommends xdotool xcompmgr imagemagick x11-utils
-          bash hopcast/scripts/ui-tour.sh build/stage build/ui-tour 2>&1 | tee build/ui-tour.log
+          TOUR_ONLY="${{ inputs.tour_only }}" bash hopcast/scripts/ui-tour.sh build/stage build/ui-tour 2>&1 | tee build/ui-tour.log
           tmp=$(mktemp -d)
           git -C "$tmp" init -q -b ci-logs
           mkdir -p "$tmp/tour-${GITHUB_RUN_ID}"

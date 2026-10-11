@@ -40,10 +40,19 @@ n=0
 while IFS= read -r line; do
   [[ -z "${line// }" || "$line" == \#* ]] && continue
   name="$(echo "${line%%|*}" | xargs)"; actions="${line#*|}"
-  n=$((n + 1)); printf -v name '%02d-%s' "$n" "$name"
+  n=$((n + 1))
+  # TOUR_ONLY="a,b": run only these scenarios (numbering stays the same)
+  if [[ -n "${TOUR_ONLY:-}" && ",$TOUR_ONLY," != *",$name,"* ]]; then continue; fi
+  printf -v name '%02d-%s' "$n" "$name"
   echo "scenario $name"
   ( cd "$STAGE/bin" && exec "$BIN" ) >> "$OUT/app.log" 2>&1 & APP=$!
-  for _ in $(seq 1 60); do xdotool search --name '^HopCast$' >/dev/null 2>&1 && break; sleep 1; done
+  started=0
+  for _ in $(seq 1 60); do xdotool search --onlyvisible --name '^HopCast$' >/dev/null 2>&1 && { started=1; break; }; sleep 1; done
+  if (( !started )); then # start race with a leftover instance: stop everything and try once more
+    pkill -KILL -f "$STAGE/bin/" 2>/dev/null; sleep 2; rm -rf "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel"
+    ( cd "$STAGE/bin" && exec "$BIN" ) >> "$OUT/app.log" 2>&1 & APP=$!
+    for _ in $(seq 1 60); do xdotool search --onlyvisible --name '^HopCast$' >/dev/null 2>&1 && break; sleep 1; done
+  fi
   sleep 4 # let the studio finish laying out
   IFS=';' read -ra steps <<< "$actions"
   for step in "${steps[@]}"; do run_action "$(echo "$step" | xargs)"; done
