@@ -133,22 +133,23 @@ Everything that holds a stream key or a platform token is encrypted on disk by H
   is detected: the file is not loaded, it's set aside as `….unreadable-<time>`, and HopCast tells
   you to re-enter your keys. Only HopCast, when you change a key in the app, writes these files
   (atomically, mode 0600).
-- **The key lives in your desktop keyring** (Secret Service: KWallet on Plasma, GNOME Keyring,
-  KeePassXC…), protected by your login password, under "HopCast secure store key".
-  If no keyring is running, or it refuses to store the key, HopCast uses an owner-only key file
-  (`user/.hopcast-store.key`) instead and says so in its log. That still keeps the data safe from
-  other users and from someone copying the data file alone, but not from anyone who can read
-  your whole home folder.
-- **Keyring locked or missing later?** HopCast won't overwrite data it can't read: your saved
-  channels stay untouched, HopCast tells you, and saving is paused until the keyring is available.
+- **The key is a separate owner-only file**, `~/.local/share/hopcast/secure-store.key` (mode 0600),
+  kept apart from the encrypted data in `~/.config` — so a copy or dotfile backup of `~/.config`
+  alone holds only locked data. **No keyring is used** (no KWallet / GNOME Keyring; decided
+  2026-10-11). Keep that key file if you back up or move your HopCast data — without it the
+  encrypted files can't be opened. (A keyring-backed key is still in the code behind the CMake
+  option `HOPCAST_USE_KEYRING`, off by default.)
+- **Key file missing later?** HopCast won't overwrite data it can't read: your saved channels stay
+  untouched, HopCast tells you, and saving is paused until the key file is back.
 - **No plaintext copies:** older plaintext files (`hopcast-rtmp-channels.json`, `channel_cache.dat`)
   are encrypted and then overwritten and deleted on first start. `service.json` no longer stores
   the key (it's re-applied from your channel at every Go Live), and PRISM's unmasked "KR" log
   lines — which printed keys and tokens — are dropped.
-- **Limits, honestly:** while your keyring is unlocked, any program running as *you* can ask it
-  for secrets (Linux keyrings have no per-app access control; KWallet may ask first). HopCast has
-  to decrypt a key in memory to stream with it, and the key is sent to your streaming platform
-  when you go live — that's how RTMP works. On SSDs, overwritten old plaintext files may still
+- **Limits, honestly:** the key file protects against other users on the PC, against someone who
+  only gets the data file or your `~/.config`, and against edits — but anyone or any program that
+  can read your *whole* home folder as you can read both files. (An optional HopCast master
+  password could close that gap later.) HopCast has to decrypt a key in memory to stream with it,
+  and the key is sent to your streaming platform when you go live — that's how RTMP works. On SSDs, overwritten old plaintext files may still
   physically linger until the drive reuses those blocks.
 
 ### Next in Phase 1

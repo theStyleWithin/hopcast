@@ -10,7 +10,10 @@
 #include <liblog.h>
 #include <PLSAlertView.h>
 
+#include <QDir>
+#include <QFile>
 #include <QFileInfo>
+#include <QStandardPaths>
 #include <QMutex>
 
 #include <map>
@@ -27,9 +30,26 @@ QString userFile(const QString &relative)
 	return pls_get_user_path(QStringLiteral("PRISMLiveStudio/user/") + relative);
 }
 
+/* The key is kept apart from the encrypted files: data in ~/.config/PRISMLiveStudio,
+ * key in ~/.local/share/hopcast. A copy or dotfile backup of ~/.config alone then
+ * holds only locked data. Owner-only (0600) either way; no keyring is used. */
+QString keyFilePath()
+{
+	const QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("/hopcast");
+	const QString path = dir + QStringLiteral("/secure-store.key");
+	const QString old = userFile(QStringLiteral(".hopcast-store.key")); // earlier HopCast builds
+	if (!QFile::exists(path) && QFile::exists(old)) {
+		QDir().mkpath(dir);
+		QFile::rename(old, path);
+	}
+	QDir().mkpath(dir);
+	QFile::setPermissions(dir, QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner);
+	return path;
+}
+
 secure::KeyProvider &keys()
 {
-	return secure::default_key_provider(userFile(QStringLiteral(".hopcast-store.key")).toStdString());
+	return secure::default_key_provider(keyFilePath().toStdString());
 }
 
 QMutex g_mutex;
@@ -72,9 +92,9 @@ std::optional<QByteArray> secureRead(const QString &path, const QString &legacyP
 		break;
 	case secure::LoadStatus::KeyMissing:
 		PLS_ERROR(MODULE, "HopCast: cannot unlock %s: %s", qUtf8Printable(QFileInfo(path).fileName()), store.last_error().c_str());
-		warnOnce(QStringLiteral("HopCast couldn't unlock your saved stream keys because the desktop keyring is locked or not running.\n\n"
-					"Your saved channels are kept safe but can't be shown or changed until the keyring is available. "
-					"Unlock your keyring (KWallet / GNOME Keyring) and restart HopCast."));
+		warnOnce(QStringLiteral("HopCast couldn't unlock your saved stream keys because their key file (~/.local/share/hopcast/secure-store.key) is missing or unreadable.\n\n"
+					"Your saved channels are kept and won't be overwritten, but they can't be shown or changed. "
+					"Restore the key file (for example from a backup) and restart HopCast."));
 		return std::nullopt;
 	case secure::LoadStatus::Tampered:
 		PLS_ERROR(MODULE, "HopCast: %s failed integrity check: %s", qUtf8Printable(QFileInfo(path).fileName()), store.last_error().c_str());

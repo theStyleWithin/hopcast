@@ -2,7 +2,7 @@
 # Build dependencies for the engine on Arch / CachyOS / SteamOS-dev.
 set -euo pipefail
 sudo pacman -S --needed --noconfirm \
-  base-devel cmake ninja git ccache pkgconf libsecret \
+  base-devel cmake ninja git ccache pkgconf \
   ffmpeg x264 jansson curl mbedtls simde \
   libglvnd mesa wayland libxkbcommon \
   pipewire libpulse alsa-lib jack2 speexdsp \

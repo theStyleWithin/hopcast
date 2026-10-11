@@ -7,7 +7,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUT="${OUT:-$ROOT/build/securestore-test}"
 mkdir -p "$(dirname "$OUT")"
 flags=() libs=(-lcrypto)
-if pkg-config --exists libsecret-1; then
+if [[ "${HOPCAST_USE_KEYRING:-0}" == 1 ]]; then # off by default, like the app
   flags+=(-DHOPCAST_HAVE_LIBSECRET $(pkg-config --cflags libsecret-1)); libs+=($(pkg-config --libs libsecret-1))
 fi
 g++ -std=c++17 -Wall -Wextra -Werror -O1 -g -fsanitize=address,undefined "${flags[@]}" -o "$OUT" \

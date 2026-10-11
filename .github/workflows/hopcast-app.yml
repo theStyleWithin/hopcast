@@ -31,12 +31,10 @@ jobs:
             libssl-dev libmosquitto-dev libmosquittopp-dev libzstd-dev libpng-dev \
             libgl-dev libxcb-cursor0 libxkbcommon-x11-0 libfftw3-dev
 
-      - name: Secure store tests (key file, then a real GNOME Keyring)
+      - name: Secure store tests
         run: |
-          sudo apt-get install -y --no-install-recommends gnome-keyring dbus libsecret-1-dev
           set -o pipefail
-          { echo "### without keyring"; bash hopcast/scripts/test-securestore.sh; } 2>&1 | tee securestore.log
-          { echo "### with GNOME Keyring"; timeout 180 dbus-run-session -- bash -c 'eval "$(printf hopcast-ci | gnome-keyring-daemon --login)"; eval "$(gnome-keyring-daemon --start --components=secrets)"; HOPCAST_TEST_KEYRING=1 bash hopcast/scripts/test-securestore.sh'; } 2>&1 | tee -a securestore.log
+          bash hopcast/scripts/test-securestore.sh 2>&1 | tee securestore.log
 
       - name: Install Qt 6.8
         uses: jurplel/install-qt-action@v4
