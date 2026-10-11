@@ -1,0 +1,172 @@
+<title>HopCast UI Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a field guide. Sticky section rail, then each area of the app as a grid of
+   "click → opens" cards; screenshots carry the pink click markers drawn in the tour. */
+:root {
+  --bg: #f5f4f8;
+  --surface: #ffffff;
+  --ink: #1c1a24;
+  --muted: #5f5b6d;
+  --line: #e0dde8;
+  --accent: #d42a66;          /* the click-marker pink, darkened for text */
+  --accent-soft: #fbe3ec;
+  --hop: #17694f;  --hop-soft: #ddf1e8;
+  --prism: #8a4f00; --prism-soft: #fbecd6;
+  --crash: #b3261e; --crash-soft: #fbe0de;
+  --kbd: #efedf4;
+  --shadow: 0 1px 2px rgba(28, 26, 36, .06), 0 6px 18px rgba(28, 26, 36, .06);
+  --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131118; --surface: #1c1923; --ink: #ece9f3; --muted: #a29eb0; --line: #2d2937;
+    --accent: #ff5c93; --accent-soft: #3a1626;
+    --hop: #6fd3ab; --hop-soft: #123327; --prism: #f2b35c; --prism-soft: #3a2a10;
+    --crash: #ff8a80; --crash-soft: #3d1715; --kbd: #2a2633;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131118; --surface: #1c1923; --ink: #ece9f3; --muted: #a29eb0; --line: #2d2937;
+  --accent: #ff5c93; --accent-soft: #3a1626;
+  --hop: #6fd3ab; --hop-soft: #123327; --prism: #f2b35c; --prism-soft: #3a2a10;
+  --crash: #ff8a80; --crash-soft: #3d1715; --kbd: #2a2633;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 1rem; line-height: 1.55;
+  padding-inline: clamp(16px, 4vw, 40px); padding-block: 0 64px;
+}
+.wrap { max-width: 1240px; margin-inline: auto; }
+
+/* intro */
+.intro { padding-block: 44px 28px; display: grid; gap: 22px; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; }
+.eyebrow { font-family: var(--mono); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin: 0 0 10px; }
+h1 { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1; letter-spacing: -.01em; margin: 0 0 14px; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 60ch; margin: 0 0 18px; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: .9rem; color: var(--muted); }
+.legend .dot { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 3px solid #ff4081; margin-right: 6px; vertical-align: -6px; }
+.legend .dot::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #ff4081; }
+.legend .num { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: #ff4081; color: #fff; font: 700 .72rem/1 var(--body); margin-right: 6px; vertical-align: -4px; }
+
+.leftovers { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); }
+.leftovers h2 { font-family: var(--display); font-stretch: 100%; font-size: 1.05rem; font-weight: 700; margin: 0 0 4px; display: flex; gap: 8px; align-items: center; }
+.leftovers > p { margin: 0 0 12px; color: var(--muted); font-size: .9rem; }
+.leftovers ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.leftovers li { font-size: .92rem; padding-left: 14px; border-left: 3px solid var(--prism); }
+.leftovers li a { color: var(--ink); text-decoration: none; }
+.leftovers li a:hover strong { text-decoration: underline; }
+.leftovers li span { color: var(--muted); }
+
+/* section rail */
+.rail { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); margin-inline: calc(-1 * clamp(16px, 4vw, 40px)); padding-inline: clamp(16px, 4vw, 40px); }
+.rail nav { max-width: 1240px; margin-inline: auto; display: flex; gap: 6px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+.rail a { flex: none; font-size: .88rem; color: var(--muted); text-decoration: none; padding: 6px 12px; border-radius: 999px; border: 1px solid transparent; }
+.rail a:hover { color: var(--ink); border-color: var(--line); }
+.rail a:focus-visible, .shot:focus-visible, .lb-close:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* sections */
+section { padding-top: 40px; scroll-margin-top: 64px; }
+.sec-head { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; margin-bottom: 18px; }
+.sec-head h2 { font-family: var(--display); font-stretch: 108%; font-weight: 750; font-size: 1.6rem; margin: 0; text-wrap: balance; }
+.sec-head p { margin: 0; color: var(--muted); }
+.grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); min-width: 0; }
+.card-crash { border-color: color-mix(in srgb, var(--crash) 45%, var(--line)); }
+.shot { display: block; padding: 0; border: 0; border-bottom: 1px solid var(--line); background: #0d0c10; cursor: zoom-in; aspect-ratio: 16 / 9; width: 100%; max-width: 100%; }
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity .15s; }
+.shot:hover img { opacity: .9; }
+.shot-empty { display: grid; place-items: center; cursor: default; background: repeating-linear-gradient(135deg, var(--crash-soft) 0 12px, var(--surface) 12px 24px); color: var(--crash); font-weight: 700; text-align: center; }
+.meta { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+.path { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+kbd { font-family: var(--mono); font-size: .76rem; background: var(--kbd); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; padding: 2px 7px; color: var(--ink); white-space: nowrap; }
+.arrow { color: var(--muted); font-weight: 700; padding-inline: 2px; }
+.meta h3 { font-family: var(--display); font-stretch: 100%; font-size: 1.12rem; font-weight: 700; margin: 2px 0 0; line-height: 1.25; text-wrap: balance; }
+.opens { font-family: var(--mono); font-size: .7rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-right: 4px; vertical-align: 2px; }
+.meta p { margin: 0; color: var(--muted); font-size: .93rem; }
+.flags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
+.flags:empty { display: none; }
+.flag { font-size: .74rem; font-weight: 700; letter-spacing: .03em; padding: 3px 9px; border-radius: 999px; }
+.flag-hop { color: var(--hop); background: var(--hop-soft); }
+.flag-prism { color: var(--prism); background: var(--prism-soft); }
+.flag-crash { color: var(--crash); background: var(--crash-soft); }
+
+.foot { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; max-width: 80ch; }
+.foot code { font-family: var(--mono); font-size: .82rem; }
+
+/* lightbox */
+dialog.lb { border: 0; padding: 0; background: transparent; max-width: min(96vw, 1600px); width: 100%; }
+dialog.lb::backdrop { background: rgba(10, 9, 14, .86); }
+.lb figure { margin: 0; display: grid; gap: 10px; }
+.lb img { width: 100%; height: auto; border-radius: 10px; box-shadow: 0 10px 40px rgba(0, 0, 0, .5); }
+.lb figcaption { color: #f1eef6; font-size: .95rem; display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
+.lb-close { font: 700 .9rem var(--body); color: #fff; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .25); border-radius: 8px; padding: 6px 14px; cursor: pointer; }
+
+@media (max-width: 860px) { .intro { grid-template-columns: minmax(0, 1fr); padding-block: 28px 20px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<div class="wrap">
+  <div class="intro">
+    <div>
+      <p class="eyebrow">HopCast 0.1 · Linux · captured in CI</p>
+      <h1>HopCast UI Map</h1>
+      <p class="lede">Every button and menu in HopCast as it is today, and what each one opens. A script started the app on a virtual 1600×900 screen, clicked through it, and took these {{COUNT}} screenshots. Tap any screenshot to see it full size.</p>
+      <div class="legend">
+        <span><span class="dot" aria-hidden="true"></span>where the script clicked</span>
+        <span><span class="num" aria-hidden="true">1</span>click order</span>
+        <span class="flag flag-hop">HopCast change</span>
+        <span class="flag flag-prism">PRISM leftover</span>
+      </div>
+    </div>
+    <aside class="leftovers" aria-labelledby="h-left">
+      <h2 id="h-left"><span class="flag flag-prism">To clean up</span> Still from PRISM</h2>
+      <p>Spotted during the tour. These go in the next rebrand pass.</p>
+      <ul>{{LEFTOVERS}}</ul>
+    </aside>
+  </div>
+</div>
+
+<div class="rail"><nav aria-label="Sections">{{NAV}}</nav></div>
+
+<main class="wrap">
+  {{SECTIONS}}
+  <p class="foot">Screens come from HopCast’s automated UI tour (<code>hopcast/scripts/ui-tour.sh</code>, scenarios in <code>hopcast/tests/ui-tour.txt</code>) on GitHub Actions, without a window manager. On your desktop, windows get your usual title bars. The hamburger button (☰, top left) showed no visible change in this test.</p>
+</main>
+
+<dialog class="lb" id="lightbox" aria-label="Screenshot">
+  <figure>
+    <img id="lb-img" alt="">
+    <figcaption><span id="lb-cap"></span><button class="lb-close" id="lb-close" type="button">Close</button></figcaption>
+  </figure>
+</dialog>
+
+<script>
+(() => {
+  const dlg = document.getElementById("lightbox");
+  const img = document.getElementById("lb-img");
+  const cap = document.getElementById("lb-cap");
+  document.querySelectorAll("button.shot").forEach((b) => {
+    b.addEventListener("click", () => {
+      const src = b.querySelector("img");
+      img.src = src.src;
+      img.alt = src.alt;
+      cap.textContent = src.alt;
+      if (typeof dlg.showModal === "function") dlg.showModal();
+    });
+  });
+  document.getElementById("lb-close").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
+})();
+</script>

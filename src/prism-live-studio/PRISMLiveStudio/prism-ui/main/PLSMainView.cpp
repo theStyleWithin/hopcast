@@ -514,23 +514,29 @@ void PLSMainView::on_help_clicked()
 	PLS_UI_STEP(MAINFRAME_MODULE, "PLSMainView SideBar Help Button", ACTION_CLICK);
 	bool isChecked = m_helpBtn->isChecked();
 	if (isChecked) {
+		/* HopCast: rows can be missing (the PRISM/NAVER entries are removed), so look them
+		 * up defensively instead of assuming every row exists. */
 		QListWidgetItem *checkListWidgetItem = m_helpListWidget->item(CheckForUpdate);
-		PLSNewIconActionWidget *checkMenuItem = dynamic_cast<PLSNewIconActionWidget *>(m_helpListWidget->itemWidget(checkListWidgetItem));
-		checkMenuItem->setBadgeVisible(PLSBasic::instance()->getUpdateResult() == AppUpdateResult::AppHasUpdate);
-		bool disabled = pls_is_output_actived();
-		if (disabled) {
-			checkListWidgetItem->setFlags(checkListWidgetItem->flags() & ~Qt::ItemIsEnabled);
-		} else {
-			checkListWidgetItem->setFlags(checkListWidgetItem->flags() | Qt::ItemIsEnabled);
+		auto *checkMenuItem = checkListWidgetItem ? dynamic_cast<PLSNewIconActionWidget *>(m_helpListWidget->itemWidget(checkListWidgetItem)) : nullptr;
+		if (checkMenuItem) {
+			checkMenuItem->setBadgeVisible(PLSBasic::instance()->getUpdateResult() == AppUpdateResult::AppHasUpdate);
+			bool disabled = pls_is_output_actived();
+			if (disabled) {
+				checkListWidgetItem->setFlags(checkListWidgetItem->flags() & ~Qt::ItemIsEnabled);
+			} else {
+				checkListWidgetItem->setFlags(checkListWidgetItem->flags() | Qt::ItemIsEnabled);
+			}
+			checkMenuItem->setItemDisabled(disabled);
 		}
-		checkMenuItem->setItemDisabled(disabled);
 		QListWidgetItem *noticeWidgetItem = m_helpListWidget->item(NoticeAndUpdate);
-		PLSNewIconActionWidget *noticeWidget = dynamic_cast<PLSNewIconActionWidget *>(m_helpListWidget->itemWidget(noticeWidgetItem));
-		const bool forB2B = !PLSLoginUserInfo::getInstance()->getNCPPlatformServiceName().isEmpty();
-		const bool hasUnread = PLSNoticeUpdateRepository::instance()->hasUnreadNotice(forB2B);
-		PLSNoticeUpdateCoordinator::instance()->onHelpSidebarOpened(hasUnread);
-		applyNoticeBadgeState();
-		noticeWidget->setNoticeTipsVisible(PLSNoticeUpdateCoordinator::instance()->helpMenuBadgeVisible());
+		auto *noticeWidget = noticeWidgetItem ? dynamic_cast<PLSNewIconActionWidget *>(m_helpListWidget->itemWidget(noticeWidgetItem)) : nullptr;
+		if (noticeWidget) {
+			const bool forB2B = !PLSLoginUserInfo::getInstance()->getNCPPlatformServiceName().isEmpty();
+			const bool hasUnread = PLSNoticeUpdateRepository::instance()->hasUnreadNotice(forB2B);
+			PLSNoticeUpdateCoordinator::instance()->onHelpSidebarOpened(hasUnread);
+			applyNoticeBadgeState();
+			noticeWidget->setNoticeTipsVisible(PLSNoticeUpdateCoordinator::instance()->helpMenuBadgeVisible());
+		}
 		updateHelpMenuGeometry();
 		// Anchor PRISM Info menu top-left at (icon top-right + 4px, same y), not at cursor.
 		const QPoint iconTopRightGlobal = m_helpBtn->mapToGlobal(m_helpBtn->rect().topRight());
