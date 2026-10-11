@@ -18,6 +18,18 @@ PLSAboutView::PLSAboutView(QWidget *parent) : PLSDialogView(parent)
 	bool disabled = pls_is_output_actived();
 	ui->checkUpdateButton->setDisabled(disabled);
 	pls_uistep_v2_set_title(this, QStringLiteral("About"));
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: no PRISM logo or update check; GPL attribution instead of NAVER's copyright line. */
+	setWindowTitle(QStringLiteral("About HopCast"));
+	ui->logoLabel->setStyleSheet(QStringLiteral("image: none; color: #ffffff; font-size: 30px; font-weight: bold;"));
+	ui->logoLabel->setAlignment(Qt::AlignCenter);
+	ui->logoLabel->setText(QStringLiteral("HopCast"));
+	ui->logoInfoLabel->setText(QString());
+	ui->checkUpdateButton->setVisible(false);
+	ui->rightLabel->setWordWrap(true);
+	ui->rightLabel->setMinimumHeight(48);
+	ui->rightLabel->setText(QStringLiteral("Free software under the GNU GPL v2.\nBased on PRISM Live Studio (NAVER Corp.) and OBS Studio."));
+#endif
 
 #if defined(Q_OS_MACOS)
 	ui->verticalSpacer_2->changeSize(0, 51, QSizePolicy::Fixed, QSizePolicy::Fixed);

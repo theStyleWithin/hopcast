@@ -33,8 +33,6 @@ settings-hotkeys | click 157 873; wait 3; click 399 318; wait 2
 settings-accessibility | click 157 873; wait 3; click 416 360; wait 2
 settings-advanced | click 157 873; wait 3; click 406 402; wait 2
 performance | click 274 873; wait 2
-chat-add-source | click 1448 519; wait 3
 go-live | click 1328 873; wait 3
 record | click 1460 873; wait 4; shot record-running; key Escape; wait 1; click 1460 873; wait 3
 notifications | click 1572 820; wait 2
-right-sidebar-button | click 1572 867; wait 2

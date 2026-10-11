@@ -402,6 +402,9 @@ PLSAddSourceView::PLSAddSourceView(QWidget *parent) : PLSDialogView(parent)
 	ui->horizontalLayout_4->addWidget(guideButton);
 
 	connect(guideButton, &QPushButton::clicked, this, &PLSAddSourceView::openSourceGuideDialog);
+#ifdef HOPCAST_NO_NAVER
+	guideButton->setVisible(false); // HopCast: no "recommended sources" upsell
+#endif
 	connect(ui->label_descContent, &QLabel::linkActivated, this, [this](const QString &url) {
 		PLS_UI_ACTION("click How to use it");
 		pls_async_invoke([url]() { QDesktopServices::openUrl(url); });
@@ -675,6 +678,18 @@ void PLSAddSourceView::setSourceDesc(QAbstractButton *button)
 	if (key == "spout2") {
 		ui->label_descContent->setText(content.arg("https://guide.prismlive.com/desktop/guides/sources/spout2-capture-source/using-spout2-capture-source"));
 	}
+#ifdef HOPCAST_NO_NAVER
+	if (!item) { // HopCast: plain hint instead of the promo illustration
+		ui->label_descTitle->setText(QStringLiteral("Add a source"));
+		ui->label_descContent->setVisible(true);
+		ui->label_descContent->setText(QStringLiteral("Choose a source on the left to see what it does."));
+		calculateDescHeight(ui->label_descTitle);
+		calculateDescHeight(ui->label_descContent, true);
+		ui->label_descPic->setVisible(false);
+		ui->label_descGif->setVisible(false);
+		return;
+	}
+#endif
 	calculateDescHeight(ui->label_descTitle);
 	calculateDescHeight(ui->label_descContent, true);
 

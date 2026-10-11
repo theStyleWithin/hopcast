@@ -1,3 +1,4 @@
+#include <QDockWidget>
 #include "PLSBasic.h"
 #include "pls-gpop-data.hpp"
 #ifdef HOPCAST_NO_NAVER
@@ -1272,6 +1273,14 @@ void PLSBasic::PLSInit()
 	initLabMenu();
 #ifdef HOPCAST_NO_NAVER
 	hopcast::addStreamKeyStorageMenu(ui->menuTools); // HopCast: where the encrypted stream-key file lives
+	/* HopCast: the platform chat panel has nothing to show for Custom RTMP and its
+	 * "Add PRISM Chat Source" button crashed - keep it hidden and out of the Docks menu. */
+	ui->menuDocks->removeAction(ui->chatDock->toggleViewAction());
+	ui->chatDock->setVisible(false);
+	connect(ui->chatDock, &QDockWidget::visibilityChanged, ui->chatDock, [dock = ui->chatDock](bool visible) {
+		if (visible)
+			QMetaObject::invokeMethod(dock, [dock]() { dock->hide(); }, Qt::QueuedConnection);
+	});
 #endif
 
 #if defined(Q_OS_MACOS)
@@ -1406,6 +1415,15 @@ void PLSBasic::PLSInit()
 	actionNoticeAndUpdate = pls_new<QAction>(QTStr("NoticeAndUpdateMsg"), this);
 	connect(actionNoticeAndUpdate, &QAction::triggered, this, &PLSBasic::onNoticeUpdateMsgTirggered);
 	ui->menuBasic_MainMenu_Help->insertAction(ui->menuLogFiles->menuAction(), actionNoticeAndUpdate);
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: no PRISM/NAVER/OBS web links or NAVER services in Help - only Program Info
+	 * and the open-source license list. Hidden actions also lose their shortcuts. */
+	for (QAction *action : {ui->actionUserGuide, ui->actionHelpPortal, ui->actionWebsite, ui->actionPrismPolicy, ui->actionPrismDiscord,
+				ui->actionContactUs, actionNoticeAndUpdate, ui->actionRepair, ui->actionCheckForUpdates}) {
+		action->setVisible(false);
+		action->setEnabled(false);
+	}
+#endif
 
 	auto text = ui->actionRepair->text();
 	text.replace("PRISM", "OBS");

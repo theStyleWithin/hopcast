@@ -1,3 +1,4 @@
+#include <QTimer>
 #include "PLSChannelsArea.h"
 #include <QCheckBox>
 #include <QGuiApplication>
@@ -806,6 +807,11 @@ void PLSChannelsArea::initializeMychannels()
 	myChannelsTxtBtn->setObjectName("MyChannelsTxtBtn");
 	myChannelsTxtBtn->setProperty("notShowHandCursor", true);
 	myChannelsTxtBtn->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed));
+#ifdef HOPCAST_NO_NAVER
+	QTimer::singleShot(0, myChannelsTxtBtn, [btn = myChannelsTxtBtn]() { // after the stylesheet font applies
+		btn->setMinimumWidth(btn->fontMetrics().horizontalAdvance(btn->text()) + 8);
+	});
+#endif
 	ui->HeaderLayout->addWidget(myChannelsTxtBtn, 25);
 	ui->HeaderLayout->addWidget(myChannelsIconBtn, 1, Qt::AlignLeft | Qt::AlignHCenter);
 

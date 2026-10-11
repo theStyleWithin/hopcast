@@ -53,7 +53,7 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>DialogView</string>
+       <string/>
       </property>
      </widget>
      <widget class="QPushButton" name="helpBtn">

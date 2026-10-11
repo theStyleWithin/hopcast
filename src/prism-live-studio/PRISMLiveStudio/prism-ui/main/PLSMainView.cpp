@@ -463,6 +463,10 @@ void PLSMainView::onSideBarButtonClicked(int buttonId)
 void PLSMainView::showChatView(bool isOnlyShow, bool isOnlyInit) const
 {
 	PLS_PERFORMANCE_FUNCTION();
+#ifdef HOPCAST_NO_NAVER
+	pls_unused(isOnlyShow, isOnlyInit);
+	return; // HopCast: no platform chat (Custom RTMP has none)
+#endif
 	auto basic = PLSBasic::instance();
 	if (!basic) {
 		return;
@@ -1092,6 +1096,22 @@ void PLSMainView::createSidebarUtilityButtons()
 
 void PLSMainView::registerSideBarButton(ConfigId id, const IconData &data, bool isAddLoading)
 {
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: PRISM Lens (NAVER's camera app), NAVER business browser settings, PRISM
+	 * stickers and scene templates (NAVER downloads), GIPHY stickers (GIPHY's service) and
+	 * platform chat (no platform logins) don't exist in HopCast. */
+	switch (id) {
+	case ConfigId::CamStudioConfig:
+	case ConfigId::Ncb2bBrowserSettings:
+	case ConfigId::PrismStickerConfig:
+	case ConfigId::GiphyStickersConfig:
+	case ConfigId::SceneTemplateConfig:
+	case ConfigId::ChatConfig:
+		return;
+	default:
+		break;
+	}
+#endif
 	if (!sideBarBtnGroup) {
 		sideBarBtnGroup = pls_new<QButtonGroup>(this);
 		sideBarBtnGroup->setExclusive(false);
