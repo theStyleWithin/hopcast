@@ -1142,15 +1142,9 @@ elseif(OS_POSIX)
     target_link_libraries(PRISMLiveStudio PRIVATE procstat)
   endif()
 
-  if(OS_LINUX AND ENABLE_WHATSNEW)
-    find_package(MbedTLS)
-
-    if(NOT MBEDTLS_FOUND)
-      message(FATAL_ERROR "mbedTLS not found, but required for WhatsNew support on Linux")
-    endif()
-
-    target_link_libraries(PRISMLiveStudio PRIVATE Mbedtls::Mbedtls OBS::blake2)
-  endif()
+  # HopCast: upstream OBS linked mbedTLS/blake2 here for WhatsNew signature checks.
+  # In PRISM the WhatsNew code is compiled out (#ifndef WHATSNEW_ENABLED), so the
+  # Linux link step isn't needed.
 endif()
 
 target_link_libraries(PRISMLiveStudio PRIVATE prism::frontend-api)
