@@ -483,6 +483,11 @@ QStringList getChatChannelNameList(bool bAddNCPPrefix)
 
 QString guessPlatformFromRTMP(const QString &rtmpUrl)
 {
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: every server address is treated the same - no Twitch/YouTube special modes. */
+	pls_unused(rtmpUrl);
+	return QString(CUSTOM_RTMP);
+#endif
 	const auto &rtmpInfos = PLSCHANNELS_API->getRTMPInfos();
 	auto isUrlMatched = [&](const QString &url) { return rtmpUrl.compare(url, Qt::CaseInsensitive) == 0; };
 

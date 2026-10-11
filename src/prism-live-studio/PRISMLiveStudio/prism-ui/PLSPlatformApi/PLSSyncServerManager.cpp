@@ -1067,13 +1067,10 @@ const QStringList &PLSSyncServerManager::getSupportedPlatformsList()
 			initSupportedPlatforms(m_policyPublishDefaultValueObject);
 		}
 	}
-#ifdef HOPCAST_NO_NAVER // HopCast: NAVER's own services removed
-	m_supportedPlatformsList.removeIf([](const QString &name) {
-		for (const auto &naver : {NAVER_SHOPPING_LIVE, CHZZK, NAVER_TV, BAND, NCB2B, WHALE_SPACE, NOW})
-			if (name.compare(QString::fromUtf8(naver), Qt::CaseInsensitive) == 0)
-				return true;
-		return false;
-	});
+#ifdef HOPCAST_NO_NAVER // HopCast: no platform gets special treatment - Custom RTMP only
+	m_supportedPlatformsList.removeIf([](const QString &name) { return name.compare(QString::fromUtf8(CUSTOM_RTMP), Qt::CaseInsensitive) != 0; });
+	if (m_supportedPlatformsList.isEmpty())
+		m_supportedPlatformsList.append(QString::fromUtf8(CUSTOM_RTMP));
 #endif
 	return m_supportedPlatformsList;
 }

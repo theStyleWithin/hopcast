@@ -615,6 +615,9 @@ void PLSRtmpChannelView::updateRtmpInfos()
 	PLS_PERFORMANCE_FUNCTION();
 	mRtmps = PLSCHANNELS_API->getRTMPInfos();
 	mPlatforms = PLSCHANNELS_API->getRTMPsName();
+#ifdef HOPCAST_NO_NAVER
+	mPlatforms.clear(); // HopCast: no list of suggested platforms - just RTMP / SRT / RIST
+#endif
 }
 
 bool PLSRtmpChannelView::isUrlRight(const QString &regular, const QString &url) const

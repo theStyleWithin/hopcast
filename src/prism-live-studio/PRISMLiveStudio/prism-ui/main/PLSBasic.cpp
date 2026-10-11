@@ -7045,7 +7045,9 @@ PLSInitApiFlow::PLSInitApiFlow()
 void PLSInitApiFlow::startInitApisFlow()
 {
 	PLS_INFO(MAINFRAME_MODULE, "start init api flow");
+#ifndef HOPCAST_NO_NAVER // HopCast: no call to Twitch's servers at every startup
 	requestTwitchServiceData();
+#endif
 #ifdef HOPCAST_NO_NAVER
 	/* HopCast: no PRISM token, app-init/gpop/update, notice or thumbnail calls to
 	 * NAVER. Use the bundled defaults (gpop) instead. */

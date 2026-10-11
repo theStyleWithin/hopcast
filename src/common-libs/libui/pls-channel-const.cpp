@@ -134,8 +134,8 @@ LIBUI_API const QString g_defaultRTMPAddButtonIcon = ":/channels/resource/images
 LIBUI_API const QStringList g_platformsToClearData{YOUTUBE, BAND, VLIVE, NAVER_TV, FACEBOOK, NAVER_SHOPPING_LIVE, NCB2B};
 LIBUI_API const QStringList g_exclusivePlatform{NAVER_SHOPPING_LIVE, NCB2B, CUSTOM_SRT, CUSTOM_RIST};
 LIBUI_API const QStringList g_rehearsalingConfigEnabledList{NAVER_SHOPPING_LIVE, YOUTUBE};
-#ifdef HOPCAST_NO_NAVER // HopCast: NAVER's own services removed
-LIBUI_API const QStringList gDefaultPlatform{TWITCH, YOUTUBE, FACEBOOK, AFREECATV, CUSTOM_RTMP};
+#ifdef HOPCAST_NO_NAVER // HopCast: no platform gets special treatment - Custom RTMP only
+LIBUI_API const QStringList gDefaultPlatform{CUSTOM_RTMP};
 #else
 LIBUI_API const QStringList gDefaultPlatform{TWITCH, YOUTUBE, FACEBOOK, NAVER_SHOPPING_LIVE, CHZZK, NAVER_TV, BAND, AFREECATV, CUSTOM_RTMP};
 #endif
