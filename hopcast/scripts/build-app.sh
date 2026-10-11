@@ -32,11 +32,16 @@ QT_PREFIX="${QT_ROOT_DIR:-${QTDIR:-}}"
 export QTDIR="$QT_PREFIX"
 echo "HopCast app build $VERSION ($BUILD_TYPE), engine: $ENGINE_BUILD, Qt: ${QT_PREFIX:-<system>}"
 
+# FFmpeg_ROOT: Qt Multimedia ships its own (newer) FFmpeg libraries in the Qt
+# prefix; PRISM must use the same system FFmpeg as the engine (headers + libs).
 cmake -S "$ROOT/src" -B "$APP_BUILD" -G Ninja \
   -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
   ${QT_PREFIX:+-DCMAKE_PREFIX_PATH="$QT_PREFIX"} \
   -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF \
   -DENABLE_TEST=OFF \
+  -DFFmpeg_ROOT="${FFMPEG_ROOT:-/usr}" \
   -Wno-dev
 
-cmake --build "$APP_BUILD" --parallel "$(nproc)" ${HOPCAST_APP_TARGET:+--target "$HOPCAST_APP_TARGET"}
+# Keep going past failures (ninja -k 0) so one run reports every compile error;
+# the exit status is still non-zero if anything failed.
+cmake --build "$APP_BUILD" --parallel "$(nproc)" ${HOPCAST_APP_TARGET:+--target "$HOPCAST_APP_TARGET"} -- -k 0
