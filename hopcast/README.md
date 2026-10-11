@@ -165,6 +165,8 @@ Everything that holds a stream key or a platform token is encrypted on disk by H
 
 ### Next in Phase 1
 
+- **Bug:** Chat panel › "Add PRISM Chat Source" crashes (the chat-source plugin isn't built on
+  Linux yet). Found by the UI tour (`hopcast/scripts/ui-tour.sh`).
 - Remaining PRISM text in less visible places (dialog titles, translations, About box, the
   `PRISMLiveStudio` config folder and binary name) — full rebrand pass.
 - PRISM source plugins (timer, text template, chat, sticker, …) on Linux.
