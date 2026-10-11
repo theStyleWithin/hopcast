@@ -1,5 +1,8 @@
 #include "PLSBasic.h"
 #include "pls-gpop-data.hpp"
+#ifdef HOPCAST_NO_NAVER
+#include "../hopcast/HopCastSecrets.h"
+#endif
 #include "pls-common-define.hpp"
 #include "pls-common-language.hpp"
 #include <util/profiler.hpp>
@@ -1267,6 +1270,9 @@ void PLSBasic::PLSInit()
 
 	initVirtualCamMenu();
 	initLabMenu();
+#ifdef HOPCAST_NO_NAVER
+	hopcast::addStreamKeyStorageMenu(ui->menuTools); // HopCast: where the encrypted stream-key file lives
+#endif
 
 #if defined(Q_OS_MACOS)
 	ui->menuTools->addAction(virtualCamMenu->menuAction());

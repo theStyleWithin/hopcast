@@ -1,11 +1,14 @@
 /* HopCast: encrypted storage for secrets (stream keys, platform tokens).
- * Qt wrapper around hopcast/securestore (AES-256-GCM, key in the desktop keyring).
+ * Qt wrapper around hopcast/securestore (AES-256-GCM; key in an owner-only key file).
  * Original code for HopCast, GPL-2.0-or-later.
  */
 #pragma once
 
 #include <QByteArray>
 #include <QString>
+
+class QMenu;
+class QWidget;
 
 #include <optional>
 
@@ -21,7 +24,15 @@ std::optional<QByteArray> secureRead(const QString &path, const QString &legacyP
 bool secureWrite(const QString &path, const QByteArray &data);
 
 /* Files this module manages. */
-QString rtmpChannelsPath();       // encrypted Custom RTMP channels
+QString rtmpChannelsPath();       // encrypted Custom RTMP channels (in the folder the user chose)
 QString rtmpChannelsLegacyPath(); // plaintext file from HopCast builds before encryption
+
+/* Where the stream-key file lives. The first time HopCast saves a stream key it asks
+ * the user to pick a folder (Documents is suggested); the choice is remembered. */
+bool ensureStreamKeyFolderChosen(QWidget *parent = nullptr);
+/* Lets the user pick another folder and moves the file there (Tools menu). */
+void changeStreamKeyFolder(QWidget *parent = nullptr);
+/* Adds "Stream Key Storage…" to the given menu. */
+void addStreamKeyStorageMenu(QMenu *menu);
 
 } // namespace hopcast

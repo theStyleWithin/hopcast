@@ -14,6 +14,14 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QStandardPaths>
+#include <QAction>
+#include <QApplication>
+#include <QFileDialog>
+#include <QMap>
+#include <QMenu>
+#include <QSettings>
+#include <QThread>
+#include <QTemporaryFile>
 #include <QMutex>
 
 #include <map>
@@ -114,8 +122,13 @@ std::optional<QByteArray> secureRead(const QString &path, const QString &legacyP
 	return QByteArray(plaintext.data(), static_cast<qsizetype>(plaintext.size()));
 }
 
-bool secureWrite(const QString &path, const QByteArray &data)
+bool secureWrite(const QString &requestedPath, const QByteArray &data)
 {
+	QString path = requestedPath;
+	if (path == rtmpChannelsPath() && chosenFolder().isEmpty()) {
+		ensureStreamKeyFolderChosen(nullptr); // first stream key: ask where to keep the file
+		path = rtmpChannelsPath();
+	}
 	QMutexLocker lock(&g_mutex);
 	auto &store = storeFor(path, {});
 	std::string error;
@@ -128,9 +141,170 @@ bool secureWrite(const QString &path, const QByteArray &data)
 	return true;
 }
 
+/* ---- stream-key folder choice ------------------------------------------- */
+
+namespace {
+
+constexpr auto FILE_NAME = "hopcast-rtmp-channels.enc";
+constexpr auto SETTING_FOLDER = "secureStore/streamKeyFolder";
+
+QSettings &settings()
+{
+	/* Not secret: just remembers the folder. */
+	static QSettings s(userFile(QStringLiteral("hopcast.ini")), QSettings::IniFormat);
+	return s;
+}
+
+QString defaultFolder()
+{
+	return QFileInfo(userFile(QString::fromLatin1(FILE_NAME))).absolutePath();
+}
+
+QString chosenFolder()
+{
+	return settings().value(SETTING_FOLDER).toString();
+}
+
+/* The folder must exist and be writable by us; checked with a real temp file. */
+bool folderUsable(const QString &folder, QString &why)
+{
+	QDir dir(folder);
+	if (!dir.exists() && !QDir().mkpath(folder)) {
+		why = QStringLiteral("The folder can't be created.");
+		return false;
+	}
+	QTemporaryFile probe(dir.filePath(QStringLiteral(".hopcast-write-test-XXXXXX")));
+	if (!probe.open()) {
+		why = QStringLiteral("HopCast can't write to this folder.");
+		return false;
+	}
+	return true;
+}
+
+/* Move the encrypted file (if any) from `from` to `to` folder. */
+bool moveStreamKeyFile(const QString &fromFolder, const QString &toFolder, QString &why)
+{
+	const QString src = QDir(fromFolder).filePath(QString::fromLatin1(FILE_NAME));
+	const QString dst = QDir(toFolder).filePath(QString::fromLatin1(FILE_NAME));
+	if (QFileInfo(src).absoluteFilePath() == QFileInfo(dst).absoluteFilePath() || !QFile::exists(src))
+		return true;
+	if (QFile::exists(dst)) {
+		why = QStringLiteral("That folder already contains a %1 file. Move or rename it first, so nothing gets overwritten.").arg(QString::fromLatin1(FILE_NAME));
+		return false;
+	}
+	if (!QFile::rename(src, dst)) { // also works across drives (copy + remove)
+		why = QStringLiteral("The file couldn't be moved there.");
+		return false;
+	}
+	QFile::setPermissions(dst, QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+	return true;
+}
+
+bool onGuiThread()
+{
+	return qApp && QThread::currentThread() == qApp->thread();
+}
+
+/* Shows the folder picker; returns the chosen folder or an empty string. */
+QString pickFolder(QWidget *parent, const QString &startFolder)
+{
+	return QFileDialog::getExistingDirectory(parent, QStringLiteral("Choose where HopCast keeps your stream keys"), startFolder,
+						 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+}
+
+} // namespace
+
+bool ensureStreamKeyFolderChosen(QWidget *parent)
+{
+	if (!chosenFolder().isEmpty())
+		return true;
+	if (!onGuiThread()) {
+		bool done = false;
+		QMetaObject::invokeMethod(qApp, [&done, parent]() { done = ensureStreamKeyFolderChosen(parent); }, Qt::BlockingQueuedConnection);
+		return done;
+	}
+
+	const QString documents = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+	const QString suggested = documents.isEmpty() ? QDir::homePath() : documents;
+	const auto answer = PLSAlertView::question(
+		parent, QStringLiteral("Where should HopCast keep your stream keys?"),
+		QStringLiteral("HopCast saves your stream keys in one encrypted file (%1). Only HopCast can open or change it.\n\n"
+			       "Choose the folder for it, for example your Documents folder. The key that unlocks it stays separately in "
+			       "~/.local/share/hopcast, so the folder you pick only ever holds locked data.\n\n"
+			       "You can change this later under Tools > Stream Key Storage…")
+			.arg(QString::fromLatin1(FILE_NAME)),
+		QMap<PLSAlertView::Button, pls_text_t>{{PLSAlertView::Button::Yes, pls_text_t(QStringLiteral("Choose Folder…"))},
+						       {PLSAlertView::Button::No, pls_text_t(QStringLiteral("Use HopCast's Folder"))}},
+		PLSAlertView::Button::Yes);
+
+	QString folder = defaultFolder();
+	if (answer == PLSAlertView::Button::Yes) {
+		for (;;) {
+			const QString picked = pickFolder(parent, suggested);
+			if (picked.isEmpty())
+				break; // cancelled: fall back to HopCast's folder
+			QString why;
+			if (folderUsable(picked, why)) {
+				folder = picked;
+				break;
+			}
+			PLSAlertView::warning(parent, QStringLiteral("HopCast"), why + QStringLiteral("\nPlease choose another folder."));
+		}
+	}
+	QString why;
+	if (!moveStreamKeyFile(defaultFolder(), folder, why)) {
+		PLSAlertView::warning(parent, QStringLiteral("HopCast"), why);
+		folder = defaultFolder();
+	}
+	settings().setValue(SETTING_FOLDER, folder);
+	settings().sync();
+	PLS_INFO(MODULE, "HopCast: stream-key file folder set (%s)", folder == defaultFolder() ? "HopCast's folder" : "user-chosen folder");
+	return true;
+}
+
+void changeStreamKeyFolder(QWidget *parent)
+{
+	const QString current = chosenFolder().isEmpty() ? defaultFolder() : chosenFolder();
+	const QString picked = pickFolder(parent, current);
+	if (picked.isEmpty())
+		return;
+	QString why;
+	if (!folderUsable(picked, why) || !moveStreamKeyFile(current, picked, why)) {
+		PLSAlertView::warning(parent, QStringLiteral("HopCast"), why);
+		return;
+	}
+	{
+		QMutexLocker lock(&g_mutex);
+		g_stores.erase(QDir(current).filePath(QString::fromLatin1(FILE_NAME))); // reopen at the new place
+	}
+	settings().setValue(SETTING_FOLDER, picked);
+	settings().sync();
+	PLSAlertView::information(parent, QStringLiteral("HopCast"),
+				  QStringLiteral("Your stream keys are now kept in:\n%1").arg(QDir(picked).filePath(QString::fromLatin1(FILE_NAME))));
+}
+
+void addStreamKeyStorageMenu(QMenu *menu)
+{
+	if (!menu)
+		return;
+	auto action = menu->addAction(QStringLiteral("Stream Key Storage…"));
+	QObject::connect(action, &QAction::triggered, menu, [menu]() {
+		const QString current = chosenFolder().isEmpty() ? defaultFolder() : chosenFolder();
+		const auto answer = PLSAlertView::question(
+			menu->window(), QStringLiteral("Stream Key Storage"),
+			QStringLiteral("Your encrypted stream-key file is kept in:\n%1\n\nMove it to another folder?").arg(QDir(current).filePath(QString::fromLatin1(FILE_NAME))),
+			QMap<PLSAlertView::Button, pls_text_t>{{PLSAlertView::Button::Yes, pls_text_t(QStringLiteral("Choose Folder…"))},
+							       {PLSAlertView::Button::Cancel, pls_text_t(QStringLiteral("Close"))}},
+			PLSAlertView::Button::Cancel);
+		if (answer == PLSAlertView::Button::Yes)
+			changeStreamKeyFolder(menu->window());
+	});
+}
+
 QString rtmpChannelsPath()
 {
-	return userFile(QStringLiteral("hopcast-rtmp-channels.enc"));
+	const QString folder = chosenFolder();
+	return QDir(folder.isEmpty() ? defaultFolder() : folder).filePath(QString::fromLatin1(FILE_NAME));
 }
 
 QString rtmpChannelsLegacyPath()
