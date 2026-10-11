@@ -32,7 +32,7 @@ PLSAboutView::PLSAboutView(QWidget *parent) : PLSDialogView(parent)
 	ui->versionLabel->setAlignment(Qt::AlignCenter);
 	ui->versionLabel->setStyleSheet(QStringLiteral("min-height: 0px; max-height: 200px; color: #bababa; font-size: 12px;"));
 	ui->versionLabel->setText(ui->versionLabel->text() +
-				  QStringLiteral("\n\nFree software under the GNU GPL v2.\nBased on PRISM Live Studio (NAVER Corp.)\nand OBS Studio."));
+				  QStringLiteral("\nFree software under the GNU GPL v2, based on\nPRISM Live Studio (NAVER Corp.) and OBS Studio."));
 #endif
 
 #if defined(Q_OS_MACOS)
