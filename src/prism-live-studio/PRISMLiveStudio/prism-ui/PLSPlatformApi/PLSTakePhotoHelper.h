@@ -13,6 +13,8 @@ constexpr const char *RES_TYPE = "res_type";
 
 #elif defined(__APPLE__)
 constexpr const char *CSTR_VIDEO_DEVICE_ID = "device";
+#else // HopCast: Linux v4l2_input
+constexpr const char *CSTR_VIDEO_DEVICE_ID = "device_id";
 #endif
 constexpr const char *CSTR_CAPTURE_STATE = "capture_state";
 constexpr const char *CSTR_SOURCE_IMAGE_STATUS = "source_image_status";

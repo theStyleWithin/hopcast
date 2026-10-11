@@ -516,6 +516,10 @@ void OBSPropertiesView::OnCameraChanged(bool userOperation)
 	int lens = GetLensIndexFromDeviceString(device);
 	bool lens_selected = (lens >= 0 && lens < MAX_LENS_COUNT);
 	m_openLensBtn->setLensSelected(lens_selected);
+#else // HopCast: no PRISM Lens on Linux
+	(void)lensInstalled;
+	(void)children;
+	m_openLensBtn->setLensSelected(false);
 #endif
 
 	if (lens_selected && !lensInstalled && (showInstallLens || userOperation)) {

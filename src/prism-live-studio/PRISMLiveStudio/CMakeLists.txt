@@ -78,6 +78,9 @@ add_subdirectory(prism-ui/laboratory)
 add_subdirectory(prism-ui/prism-login)
 
 find_package(Qt6 COMPONENTS Widgets Network Svg Xml Gui NetworkAuth WebSockets Multimedia)
+if(OS_LINUX) # HopCast: obs-ui/platform-x11.cpp talks to xdg-desktop-portal over D-Bus
+  find_package(Qt6 REQUIRED COMPONENTS DBus)
+endif()
 find_package(nlohmann_json REQUIRED)
 target_link_libraries(PRISMLiveStudio PRIVATE Qt6::Widgets Qt6::WidgetsPrivate Qt6::Svg Qt6::Xml Qt6::Network Qt6::WebSockets nlohmann_json::nlohmann_json Qt6::Multimedia)
 
@@ -768,6 +771,13 @@ elseif(OS_MACOS)
     prism-ui/main/mac/PLSMacSleepNotify.mm
     prism-ui/main/mac/PLSMacSleepNotify.h
     )
+elseif(OS_LINUX) # HopCast: shared draw-pen code + placeholder Linux backend
+  source_group("prism-drawpen" FILES ${DRAW_PEN_COMMON_FILE})
+  target_sources(
+    PRISMLiveStudio PRIVATE
+    ${DRAW_PEN_COMMON_FILE}
+    prism-ui/main/PLSDrawPen/linux/PLSDrawPenLinux.h
+    prism-ui/forms/PLSDrawPenView.ui)
 endif()
 
 # Outro files
@@ -898,6 +908,29 @@ elseif(OS_MACOS)
     common-libs::third-party::mqtt
     common-libs::third-party::openssl
     Qt6::NetworkAuth
+    OBS::properties-view
+    OBS::bpm
+    OBS::caption)
+elseif(OS_LINUX) # HopCast: same as macOS + D-Bus
+  target_link_libraries(
+    PRISMLiveStudio
+    PRIVATE CURL::libcurl
+    FFmpeg::avcodec
+    FFmpeg::avutil
+    FFmpeg::avformat
+    OBS::libobs
+    OBS::frontend-api
+    common-libs::ui
+    common-libs::dump-analyzer
+    common-libs::ipc
+    common-libs::utils-api
+    common-libs::log
+    common-libs::resource
+    common::browser
+    common-libs::third-party::mqtt
+    common-libs::third-party::openssl
+    Qt6::NetworkAuth
+    Qt6::DBus
     OBS::properties-view
     OBS::bpm
     OBS::caption)

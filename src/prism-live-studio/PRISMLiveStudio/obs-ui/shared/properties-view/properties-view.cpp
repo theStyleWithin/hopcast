@@ -2060,6 +2060,9 @@ void WidgetInfo::ListChanged(const char *setting)
 		bool isDshow = pls_is_equal(id, OBS_MACOS_VIDEO_CAPTURE_SOURCE_ID) ||
 			       pls_is_equal(id, OBS_MACOS_CAPTURE_CARD_SOURCE_ID);
 		isVideoDeviceId = pls_is_equal(setting, "device");
+#else // HopCast: Linux v4l2_input uses "device_id"
+		bool isDshow = pls_is_equal(id, OBS_DSHOW_SOURCE_ID);
+		isVideoDeviceId = pls_is_equal(setting, "device_id");
 #endif
 		if (isVideoDeviceId && (view->isPrismLensOrMobileSource() || isDshow)) {
 			if (combo) {

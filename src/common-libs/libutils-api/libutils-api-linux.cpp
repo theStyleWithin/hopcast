@@ -617,3 +617,14 @@ bool pls_lens_needs_reboot()
 }
 
 } // namespace pls_libutil_api_mac
+
+/* HopCast: PRISM Lens camera-window queries (implemented in libutils-api-mac.mm on
+ * macOS). There is no Lens on Linux. */
+LIBUTILSAPI_API LENS_WINDOWS_STATUS pls_is_cam_window_visible()
+{
+	return LENS_WINDOWS_STATUS::NO_SHOW;
+}
+LIBUTILSAPI_API bool pls_active_cam_window()
+{
+	return false;
+}

@@ -473,7 +473,7 @@ template<class Callback> void PLSSelectLoginPlatformView::onWriteClient(const QS
 	QUrlQuery query(url.query());
 #if defined(Q_OS_WIN)
 	QString htmlPath = pls_get_app_dir() + QString("/../../data/prism-studio/webpage/%1");
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	QString htmlPath = pls_get_app_resource_dir() + "/data/prism-studio/webpage/%1";
 #endif
 	if (auto code = query.queryItemValue("code", QUrl::FullyDecoded); code.isEmpty()) {

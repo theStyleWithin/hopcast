@@ -49,6 +49,11 @@ static constexpr const char *CSTR_VIDEO_DEVICE_ID = "device";
 static const char *CSTR_PRISM_LEN1 = UUID_PRISM_LEN1;
 static const char *CSTR_PRISM_LEN2 = UUID_PRISM_LEN2;
 static const char *CSTR_PRISM_LEN3 = UUID_PRISM_LEN3;
+#else // HopCast: Linux v4l2_input; there are no PRISM Lens devices on Linux
+static constexpr const char *CSTR_VIDEO_DEVICE_ID = "device_id";
+static const char *CSTR_PRISM_LEN1 = "\x01hopcast-no-lens-1";
+static const char *CSTR_PRISM_LEN2 = "\x01hopcast-no-lens-2";
+static const char *CSTR_PRISM_LEN3 = "\x01hopcast-no-lens-3";
 #endif
 
 /* ------------------------------------------------------------------------- */

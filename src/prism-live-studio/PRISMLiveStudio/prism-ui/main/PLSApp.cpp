@@ -582,7 +582,7 @@ void PLSApp::AppInit()
 	//add custom chatv2 font database
 #if defined(Q_OS_WIN)
 	QString chatV2FontPath = pls_get_app_data_path(QStringLiteral("/prism-plugins/prism-chatv2-source/fonts"));
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	QString chatV2FontPath = pls_get_dll_dir("prism-chatv2-source") + "/fonts";
 #endif
 	pls_add_custom_font(chatV2FontPath);

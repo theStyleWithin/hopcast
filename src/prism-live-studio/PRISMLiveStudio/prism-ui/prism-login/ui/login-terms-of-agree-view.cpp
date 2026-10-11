@@ -117,7 +117,7 @@ void PLSTermsOfAgreeView::initContent(const QString &_lang, const QString &payTe
 	QString lang(_lang.split('-')[0]);
 #if defined(Q_OS_WIN)
 	QString privacyPath = QApplication::applicationDirPath() + QString("/../../data/prism-studio/webpage/%1_%2.html").arg("privacy").arg(lang);
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	QString privacyPath = pls_get_app_resource_dir() + QString("/data/prism-studio/webpage/%1_%2.html").arg("privacy").arg(lang);
 #endif
 	if (!QFileInfo(privacyPath).exists()) {
@@ -183,7 +183,7 @@ void PLSTermsOfAgreeView::onAgreeButtonClicked()
 		QDir appDir(QApplication::applicationDirPath());
 #if defined(Q_OS_WIN)
 		QString agreePath = QApplication::applicationDirPath() + QString("/../../data/prism-studio/webpage/whalespace.html");
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 		QString agreePath = pls_get_app_resource_dir() + QString("/data/prism-studio/webpage/whalespace.html");
 
 #endif

@@ -14,6 +14,7 @@
 #include <filesystem>
 #include <obs-module.h>
 #include <thread>
+#include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <functional>

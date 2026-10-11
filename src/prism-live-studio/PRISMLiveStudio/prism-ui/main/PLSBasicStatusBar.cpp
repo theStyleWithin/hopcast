@@ -18,7 +18,7 @@
 
 #ifdef Q_OS_WIN
 #include <Windows.h>
-#else
+#elif defined(Q_OS_MACOS) // HopCast: Bonjour header not needed on Linux
 #include <dns_sd.h>
 #endif
 

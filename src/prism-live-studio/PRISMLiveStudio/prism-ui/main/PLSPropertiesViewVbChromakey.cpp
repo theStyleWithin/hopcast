@@ -445,6 +445,8 @@ int PLSPropertiesView::GetCurrentLensIndex()
 #elif defined(Q_OS_MACOS)
 	auto deviceId = obs_data_get_string(settings, CSTR_VIDEO_DEVICE_ID);
 	return GetLensIndexFromDeviceString(deviceId);
+#else // HopCast: no PRISM Lens on Linux
+	return -1;
 #endif
 
 	assert(false);

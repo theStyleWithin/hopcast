@@ -24,7 +24,7 @@ static void copyTextTemplateResFromPackage()
 	QString dstWebPath = pls::rsm::getAppDataPath("textTemplatePC/web");
 #if defined(Q_OS_WIN)
 	QString srcWebPath = pls_get_dll_dir("libresource") + "/../../data/prism-plugins/prism-text-template-source/web";
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	QString srcWebPath = pls_get_dll_dir("prism-text-template-source") + "/web";
 #endif
 	auto isSuccess = pls_copy_dir(srcWebPath, dstWebPath);

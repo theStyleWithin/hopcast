@@ -42,3 +42,10 @@ cmake_language(DEFER DIRECTORY "${CMAKE_SOURCE_DIR}" CALL hopcast_exclude_objc_e
 # MSVC calling-convention keywords used in shared PRISM headers (clang on macOS
 # accepts them; GCC doesn't). x86-64 Linux has a single calling convention.
 add_compile_definitions(__cdecl= __stdcall=)
+
+# libobs headers use SIMDe with native aliases on non-MSVC compilers; if GCC's
+# <immintrin.h> is included *after* them (e.g. via Qt's qsimd.h), the alias macros
+# break GCC's intrinsics headers at -O2. Including <immintrin.h> first avoids it.
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64|amd64")
+  string(APPEND CMAKE_CXX_FLAGS " -include immintrin.h")
+endif()

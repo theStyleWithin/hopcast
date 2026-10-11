@@ -9,6 +9,8 @@
 
 #if defined(__APPLE__)
 #include "mac/PLSDrawPenMac.h"
+#elif defined(__linux__) // HopCast
+#include "linux/PLSDrawPenLinux.h"
 #endif
 
 PLSDrawPenMgr *PLSDrawPenMgr::Instance()
@@ -229,6 +231,8 @@ void PLSDrawPenMgr::AddSceneData(const QString &name)
 			emit p->RedoDisabled(redoEmpty);
 		}
 	});
+#else // HopCast: Linux placeholder backend
+	auto sceneData = std::make_shared<PLSDrawPenLinux>();
 #endif
 
 	std::lock_guard<std::recursive_mutex> lock(lockInterfaces);

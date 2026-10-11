@@ -484,7 +484,7 @@ void CheckCamProcessWorker::checkWindowVisible()
 
 #if defined(Q_OS_WIN)
 	LENS_WINDOWS_STATUS isProcessIsVisible = pls_is_cam_window_visible(pid);
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	LENS_WINDOWS_STATUS isProcessIsVisible = pls_is_cam_window_visible();
 #endif
 
@@ -499,7 +499,7 @@ void CheckCamProcessWorker::checkProcessRunning()
 	int pid = 0;
 #if defined(Q_OS_WIN)
 	bool processRun = pls_is_process_running(m_camProcessName.toStdWString().c_str(), pid);
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	bool processRun = pls_is_process_running(m_camProcessName.toUtf8().constData(), pid);
 #endif
 
@@ -4665,7 +4665,7 @@ void PLSBasic::restartApp(const RestartAppType &restartType, const QStringList &
 
 #if defined(Q_OS_WIN)
 	QString filePath = pls_get_app_dir() + "/" + "PRISMLiveStudio.exe";
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	QString filePath = QApplication::applicationFilePath();
 #endif
 	QStringList allParams = params;

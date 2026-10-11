@@ -416,6 +416,8 @@ void PLSSyncServerManager::initOpenSourceInfo()
 	QString openSourceDir = pls_get_user_path(OPEN_SOURCE_DIR) + "/win";
 #elif defined(Q_OS_MACOS)
 	QString openSourceDir = pls_get_user_path(OPEN_SOURCE_DIR) + "/mac";
+#else // HopCast
+	QString openSourceDir = pls_get_user_path(OPEN_SOURCE_DIR) + "/linux";
 #endif
 
 	QString maxFileVersion;

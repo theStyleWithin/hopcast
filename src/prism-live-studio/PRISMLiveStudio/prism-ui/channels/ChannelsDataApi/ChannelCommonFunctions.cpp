@@ -196,7 +196,7 @@ QString getDynamicChannelIcon(QString &imagePath)
 		} else {
 #if defined(Q_OS_WIN)
 			auto localeTempPath = QApplication::applicationDirPath() + QStringLiteral("/../../data/prism-studio/DynamicChannelIcon/%1");
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 			auto localeTempPath = pls_get_app_resource_dir() + "/data/prism-studio/DynamicChannelIcon/%1";
 #endif
 			QString localePath = localeTempPath.arg(imagePath);

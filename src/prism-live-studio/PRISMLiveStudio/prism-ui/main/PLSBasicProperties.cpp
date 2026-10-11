@@ -542,7 +542,7 @@ void PLSBasicProperties::updateToastPosition(const QRect &geometry)
 	toastButton->move(toast->width() - toastButton->width() - 5, 5);
 #if defined(Q_OS_WIN)
 	int offset = 49;
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	int offset = 9;
 #endif
 
@@ -589,6 +589,8 @@ void PLSBasicProperties::showEvent(QShowEvent *event)
 #elif defined(Q_OS_MACOS)
 	bool isDshow = pls_is_equal(id, OBS_DSHOW_SOURCE_ID_V2) || pls_is_equal(id, OBS_DSHOW_SOURCE_ID) || pls_is_equal(id, OBS_MACOS_VIDEO_CAPTURE_SOURCE_ID) ||
 		       pls_is_equal(id, OBS_MACOS_CAPTURE_CARD_SOURCE_ID);
+#else // HopCast: Linux webcam source (v4l2_input)
+	bool isDshow = pls_is_equal(id, OBS_DSHOW_SOURCE_ID);
 #endif
 	if (isDshow) {
 		int outputCamIndex = view->getPrismLensOutputIndex();

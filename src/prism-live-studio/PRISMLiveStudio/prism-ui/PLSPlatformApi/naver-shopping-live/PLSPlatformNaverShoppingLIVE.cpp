@@ -938,7 +938,7 @@ bool PLSPlatformNaverShoppingLIVE::checkGoLiveShoppingResolution(const PLSNaverS
 #if defined(Q_OS_WIN)
 		QString fileName =
 			QString("PRISMLiveStudio/resources/library/library_Policy_PC/Policy_Publish_win_v%1.%2.%3.json").arg(PRISM_VERSION_MAJOR).arg(PRISM_VERSION_MINOR).arg(PRISM_VERSION_PATCH);
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 		QString fileName =
 			QString("PRISMLiveStudio/resources/library/library_Policy_PC/Policy_Publish_mac_v%1.%2.%3.json").arg(PRISM_VERSION_MAJOR).arg(PRISM_VERSION_MINOR).arg(PRISM_VERSION_PATCH);
 #endif
