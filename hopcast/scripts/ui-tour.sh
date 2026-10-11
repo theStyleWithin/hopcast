@@ -13,6 +13,7 @@ BIN="$STAGE/bin/PRISMLiveStudio"
 export LIBGL_ALWAYS_SOFTWARE=1 QT_QPA_PLATFORM=xcb DISPLAY=:98
 export XDG_CONFIG_HOME="$OUT/home/config" XDG_DATA_HOME="$OUT/home/data" XDG_CACHE_HOME="$OUT/home/cache"
 export HOME="$OUT/home" # folder pickers etc. start here
+rm -rf "$OUT/home" # every tour starts from a fresh profile
 mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$HOME/Documents"
 
 Xvfb :98 -screen 0 1600x900x24 >/dev/null 2>&1 & XVFB=$!
@@ -47,17 +48,12 @@ while IFS= read -r line; do
   IFS=';' read -ra steps <<< "$actions"
   for step in "${steps[@]}"; do run_action "$(echo "$step" | xargs)"; done
   shot "$name"
-  # Quit cleanly so the next start has no "didn't shut down properly" prompt:
-  # close open menus/dialogs, then File > Exit (Shift+X), confirming if asked.
-  xdotool key Escape; sleep 0.5; xdotool key Escape; sleep 0.5
-  xdotool key shift+x; sleep 3
-  kill -0 "$APP" 2>/dev/null && { xdotool key Return; sleep 3; }
-  for _ in $(seq 1 10); do kill -0 "$APP" 2>/dev/null || break; sleep 1; done
-  if kill -0 "$APP" 2>/dev/null; then
-    echo "  (had to stop the app)"; kill -TERM "$APP"; sleep 3; kill -KILL "$APP" 2>/dev/null
-  fi
-  wait "$APP" 2>/dev/null
-  rm -rf "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel" # crash marker, if any
+  # Stop every HopCast process (PRISM also starts helper processes that would otherwise
+  # keep the single-instance lock), and drop the crash marker so the next start is normal.
+  pkill -KILL -f "$STAGE/bin/" 2>/dev/null; wait "$APP" 2>/dev/null
+  for _ in $(seq 1 10); do pgrep -f "$STAGE/bin/" >/dev/null || break; sleep 0.5; done
+  rm -rf "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel"
+  sleep 1
 done < "$SCENARIOS"
 
 kill "$COMP" "$XVFB" 2>/dev/null

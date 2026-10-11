@@ -12,16 +12,29 @@ menu-docks | click 380 109; wait 1.5
 menu-profile | click 437 109; wait 1.5
 menu-tools | click 491 109; wait 1.5
 menu-help | click 538 109; wait 1.5
+help-program-info | click 538 109; wait 1.5; click 580 152; wait 3
 my-channel-menu | click 127 62; wait 1.5
 custom-rtmp | click 216 62; wait 3
+custom-rtmp-url-types | click 216 62; wait 3; click 880 224; wait 1.5
+custom-rtmp-save | click 216 62; wait 3; click 880 273; type rtmp://live.example.com/app; click 880 323; type demo-stream-key-1234; click 880 445; type My Server; wait 1; shot custom-rtmp-filled; click 942 763; wait 3; shot storage-prompt; key Return; wait 3; shot folder-picker; key Escape; wait 3
+after-channel-added | wait 3
+channel-in-bar-menu | click 216 62; wait 2
+tools-stream-key-storage | click 491 109; wait 1.5; click 540 152; wait 3
 scenes-add | click 426 657; wait 2
 scenes-transition | click 458 657; wait 2
 scenes-more | click 490 657; wait 1.5
 sources-add | click 971 657; wait 3
 sources-more | click 1004 657; wait 1.5
-output-settings-gear | click 157 873; wait 3
+settings-video | click 157 873; wait 3
+settings-general | click 157 873; wait 3; click 398 150; wait 2
+settings-output | click 157 873; wait 3; click 395 192; wait 2
+settings-audio | click 157 873; wait 3; click 390 234; wait 2
+settings-hotkeys | click 157 873; wait 3; click 399 318; wait 2
+settings-accessibility | click 157 873; wait 3; click 416 360; wait 2
+settings-advanced | click 157 873; wait 3; click 406 402; wait 2
 performance | click 274 873; wait 2
+chat-add-source | click 1448 519; wait 3
 go-live | click 1328 873; wait 3
-record | click 1460 873; wait 4; shot record-running; click 1460 873; wait 3
+record | click 1460 873; wait 4; shot record-running; key Escape; wait 1; click 1460 873; wait 3
 notifications | click 1572 820; wait 2
 right-sidebar-button | click 1572 867; wait 2
