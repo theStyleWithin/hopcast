@@ -1,3 +1,4 @@
+#include <libhttp-client.h>
 #include "PLSChannelDataAPI.h"
 #include <qnetworkaccessmanager.h>
 #include <quuid.h>
@@ -254,7 +255,17 @@ void PLSChannelDataAPI::registerEnumsForStream() const
 	qRegisterMetaType<TaskFun>();
 }
 
+#ifdef HOPCAST_NO_NAVER // HopCast: same NAVER block as libhttp-client
+static QNetworkAccessManager *hopcastNetworkManager(QObject *parent)
+{
+	auto manager = new pls::http::NetworkAccessManager();
+	manager->setParent(parent);
+	return manager;
+}
+PLSChannelDataAPI::PLSChannelDataAPI(QObject *parent) : QObject(parent), mNetWorkAPI(hopcastNetworkManager(this))
+#else
 PLSChannelDataAPI::PLSChannelDataAPI(QObject *parent) : QObject(parent), mNetWorkAPI(new QNetworkAccessManager(this))
+#endif
 
 {
 	mInstance = this;

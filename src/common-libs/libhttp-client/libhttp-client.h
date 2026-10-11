@@ -128,7 +128,16 @@ public:
 
 signals:
 	void readyToClose();
+
+#ifdef HOPCAST_NO_NAVER
+protected:
+	QNetworkReply *createRequest(Operation op, const QNetworkRequest &request, QIODevice *outgoingData = nullptr) override;
+#endif
 };
+
+/* HopCast: true for hosts operated by NAVER (and for http(s) URLs with no host, which is
+ * what PRISM's empty NAVER endpoint constants turn into). Such requests are never sent. */
+LIBHTTPCLIENT_API bool pls_hopcast_is_blocked_url(const QUrl &url);
 class LIBHTTPCLIENT_API NetworkReply : public QObject, public std::enable_shared_from_this<NetworkReply> {
 	Q_OBJECT
 

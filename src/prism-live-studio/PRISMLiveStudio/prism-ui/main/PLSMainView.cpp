@@ -107,7 +107,12 @@ PLSMainView::PLSMainView(QWidget *parent) : PLSToplevelView<QFrame>(CreateWinId:
 #endif
 
 	pls_set_main_view(this);
+#ifdef HOPCAST_NO_NAVER
+	setWindowTitle(QStringLiteral("HopCast")); // HopCast: no PRISM name or icon
+	setWindowIcon(QIcon::fromTheme(QStringLiteral("camera-video")));
+#else
 	setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico"));
+#endif
 	ui = pls_new<Ui::PLSMainView>();
 	ui->setupUi(this);
 	setupRightSidebarWidgets();
@@ -164,7 +169,9 @@ PLSMainView::PLSMainView(QWidget *parent) : PLSToplevelView<QFrame>(CreateWinId:
 	m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	m_scrollArea->setObjectName("sidebarMenuScrollarea");
 	m_separatorBottom->hide();
+#ifndef HOPCAST_NO_NAVER // HopCast: the logo button opened NAVER's update check
 	connect(ui->logo_update, &QPushButton::clicked, this, &PLSMainView::updateAppView);
+#endif
 
 	m_toastMsg = pls_new<PLSToastMsgPopup>(this);
 	m_toastMsg->hide();

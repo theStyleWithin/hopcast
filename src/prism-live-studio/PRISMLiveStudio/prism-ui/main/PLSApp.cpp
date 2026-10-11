@@ -946,7 +946,11 @@ int PLSApp::runProgram(PLSApp &program, int argc, char *argv[], ScopeProfiler &p
 		// Check registry flag to skip resource download for debugging
 		// Set "SkipResourceDownload" to true in registry to skip resource download
 		// Windows: HKEY_CURRENT_USER\Software\NAVER Corporation\Prism Live Studio\SkipResourceDownload
+#ifdef HOPCAST_NO_NAVER
+		if (bool skipResourceDownload = true; !skipResourceDownload) { // HopCast: no NAVER resource CDN
+#else
 		if (bool skipResourceDownload = pls_get_qsetting_value("SkipResourceDownload", false).toBool(); !skipResourceDownload) {
+#endif
 			pls::rsm::downloadAll();
 		} else {
 			PLS_INIT_INFO(MAINFRAME_MODULE, "SkipResourceDownload flag is set, skipping resource download for debugging.");

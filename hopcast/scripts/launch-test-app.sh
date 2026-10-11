@@ -70,5 +70,12 @@ find "$OUT/config" "$OUT/data" "$OUT/cache" -type f > "$OUT/files.txt" 2>/dev/nu
 find "$OUT/config" "$OUT/data" -type f \( -name '*.txt' -o -name '*.log' \) -size -2M \
   -exec sh -c 'cp "$1" "$2/applog-$(basename "$1")"' _ {} "$OUT" \; 2>/dev/null
 echo "--- stdout/stderr ---"; sed -n "/CRASH BACKTRACE/,/ALL THREADS/p" "$OUT/stdout.txt"; tail -n 40 "$OUT/stdout.txt"
+# HopCast must never reach NAVER: report blocked attempts and any request that got through.
+blocked=$(grep -c "HopCast: blocked request" "$OUT/stdout.txt" || true)
+leaked=$(grep -E "http response (success|failed), url = https?://[^ ]*(naver\.(com|net)|navercorp\.com|pstatic\.net|prismlive\.com|ncloud\.com)" "$OUT/stdout.txt" | grep -v "hopcast-blocked" | head -5)
+echo "NAVER requests blocked before sending: $blocked" | tee "$OUT/naver-check.txt"
+if [[ -n "$leaked" ]]; then
+  echo "::error title=NAVER traffic::$leaked"; echo "LEAKED: $leaked" >> "$OUT/naver-check.txt"; status=1
+fi
 echo "--- top-level windows ---"; grep -E '^\s+0x[0-9a-f]+ "' "$OUT/windows.txt" | head -20
 exit $status

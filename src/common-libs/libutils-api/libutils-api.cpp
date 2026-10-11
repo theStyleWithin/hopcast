@@ -1,3 +1,4 @@
+#include <QSysInfo>
 #include "libutils-api.h"
 
 #if defined(Q_OS_WIN)
@@ -273,7 +274,11 @@ QString get_product_name()
 {
 	switch (pls_product_type()) {
 	case pls_product_type_t::Prism:
+#ifdef HOPCAST_NO_NAVER
+		return QStringLiteral("HopCast");
+#else
 		return QStringLiteral("PRISM Live Studio");
+#endif
 	case pls_product_type_t::Lens:
 		return QStringLiteral("PRISM Lens");
 	case pls_product_type_t::Installer:
@@ -4076,6 +4081,8 @@ LIBUTILSAPI_API QString pls_get_os_ver_string()
 #ifdef Q_OS_WIN
 	auto wv = pls_get_win_ver();
 	return QString("Windows %1.%2.%3.%4").arg(wv.major).arg(wv.minor).arg(wv.build).arg(wv.revis);
+#elif defined(Q_OS_LINUX) // HopCast
+	return QStringLiteral("Linux %1").arg(QSysInfo::kernelVersion());
 #else
 	pls_mac_ver_t ver = pls_get_mac_systerm_ver();
 	return QString("Mac %1.%2.%3").arg(ver.major).arg(ver.minor).arg(ver.patch);
@@ -4087,6 +4094,8 @@ LIBUTILSAPI_API QString pls_get_user_agent()
 	LANGID langId = GetUserDefaultUILanguage();
 	auto mv = pls_get_win_ver();
 	return QString("%1/%2 (Windows %3 Build %4 Architecture x64 Language %5)").arg(get_product_name()).arg(pls_get_prism_version_string()).arg(mv.major).arg(mv.build).arg(langId);
+#elif defined(Q_OS_LINUX) // HopCast
+	return QString("%1/%2 (Linux; %3)").arg(get_product_name()).arg(pls_get_prism_version_string()).arg(QSysInfo::currentCpuArchitecture());
 #else
 	pls_mac_ver_t mv = pls_get_mac_systerm_ver();
 	QString langId = pls_get_current_system_language_id();

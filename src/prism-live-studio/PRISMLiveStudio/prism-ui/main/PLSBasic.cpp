@@ -1,4 +1,5 @@
 #include "PLSBasic.h"
+#include "pls-gpop-data.hpp"
 #include "pls-common-define.hpp"
 #include "pls-common-language.hpp"
 #include <util/profiler.hpp>
@@ -587,7 +588,11 @@ PLSBasic::PLSBasic(PLSMainView *mainView) : OBSBasic(mainView)
 	ui->actionRemoveScene->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	ui->scenesFrame->addAction(ui->actionRemoveScene);
 	ui->sources->addAction(ui->actionRemoveSource);
+#ifdef HOPCAST_NO_NAVER
+	setWindowIcon(QIcon::fromTheme(QStringLiteral("camera-video"))); // HopCast: no PRISM icon
+#else
 	setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico"));
+#endif
 
 	connect(ui->sources, &SourceTree::SelectItemChanged, this, &OBSBasic::OnSelectItemChanged, Qt::QueuedConnection);
 	connect(ui->sources, &SourceTree::VisibleItemChanged, this, &OBSBasic::OnVisibleItemChanged, Qt::QueuedConnection);
@@ -3369,7 +3374,9 @@ void PLSBasic::showMainViewAfter(QWidget *parentWidget)
 		});
 	}
 
+#ifndef HOPCAST_NO_NAVER // HopCast: PRISM Lens is NAVER's separate app
 	pls::lens::showOnBoardingDialogIfNeed(this);
+#endif
 }
 
 void PLSBasic::LogoutCallback(pls_frontend_event event, const QVariantList &l, void *v)
@@ -7031,6 +7038,14 @@ void PLSInitApiFlow::startInitApisFlow()
 {
 	PLS_INFO(MAINFRAME_MODULE, "start init api flow");
 	requestTwitchServiceData();
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: no PRISM token, app-init/gpop/update, notice or thumbnail calls to
+	 * NAVER. Use the bundled defaults (gpop) instead. */
+	PLSGpopData::instance()->getGpopData(QByteArray());
+	m_sessionStatus = PLSInitApiFlow::SessionStatus::SessionApiFinished;
+	m_initStatus = PLSInitApiFlow::InitStatus::InitApiFinished;
+	return;
+#endif
 	PLSLOGINDATAHANDLER->refreshPrismToken([this](bool isOk) { m_sessionStatus = PLSInitApiFlow::SessionStatus::SessionApiFinished; });
 
 	PLSLOGINDATAHANDLER->getAppInitDataFromRemote([this]() {

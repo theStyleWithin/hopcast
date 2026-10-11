@@ -1051,7 +1051,11 @@ OBSApp::OBSApp(int &argc, char **argv, profiler_name_store_t *store) : PLSUiApp(
 	sleepInhibitor = os_inhibit_sleep_create("OBS Video/audio");
 
 #ifndef __APPLE__
+#ifdef HOPCAST_NO_NAVER
+	setWindowIcon(QIcon::fromTheme(QStringLiteral("camera-video"))); // HopCast: no PRISM icon
+#else
 	setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico"));
+#endif
 #endif
 
 	//setDesktopFileName("com.obsproject.Studio");

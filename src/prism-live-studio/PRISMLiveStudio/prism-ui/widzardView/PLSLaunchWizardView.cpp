@@ -670,6 +670,9 @@ void PLSLaunchWizardView::onPrismMessageCome(const QVariantHash &params)
 
 bool PLSLaunchWizardView::isNeedShow()
 {
+#ifdef HOPCAST_NO_NAVER
+	return false; // HopCast: the welcome window shows NAVER banners/notices
+#endif
 	if (m_bShowFlag || pls::lens::getThisShowOnBoardingDialog()) {
 		return false;
 	}

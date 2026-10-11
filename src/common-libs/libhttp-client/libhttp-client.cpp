@@ -1443,6 +1443,41 @@ bool isTextContent(const QString &contentType)
 
 NetworkAccessManager::NetworkAccessManager() : QNetworkAccessManager(nullptr) {}
 
+LIBHTTPCLIENT_API bool pls_hopcast_is_blocked_url(const QUrl &url)
+{
+	const QString scheme = url.scheme().toLower();
+	if (!scheme.isEmpty() && scheme != QLatin1String("http") && scheme != QLatin1String("https") && scheme != QLatin1String("ws") &&
+	    scheme != QLatin1String("wss"))
+		return false; // file:, qrc:, data: ... are local
+	const QString host = url.host().toLower();
+	if (host.isEmpty())
+		return true; // unset NAVER endpoint constant
+	static const char *const naverDomains[] = {"naver.com",   "naver.net",    "navercorp.com", "naver.jp",  "pstatic.net", "prismlive.com",
+						   "ncloud.com",  "navercloud.com", "ntruss.com",  "naverncp.com", "band.us",  "vlive.tv",
+						   "nelo2-col.navercorp.com", "whalespace.io"};
+	for (const char *d : naverDomains) {
+		const QString domain = QString::fromLatin1(d);
+		if (host == domain || host.endsWith(QLatin1Char('.') + domain))
+			return true;
+	}
+	return false;
+}
+
+#ifdef HOPCAST_NO_NAVER
+QNetworkReply *NetworkAccessManager::createRequest(Operation op, const QNetworkRequest &request, QIODevice *outgoingData)
+{
+	if (pls_hopcast_is_blocked_url(request.url())) {
+		PLS_INFO(LIBHTTP_CLIENT_MODULE, "HopCast: blocked request to NAVER service (%s)", qUtf8Printable(request.url().host()));
+		/* An unsupported scheme makes Qt fail the reply immediately, without any I/O,
+		 * through the same error path callers already handle. */
+		QNetworkRequest blocked(request);
+		blocked.setUrl(QUrl(QStringLiteral("hopcast-blocked:")));
+		return QNetworkAccessManager::createRequest(op, blocked, outgoingData);
+	}
+	return QNetworkAccessManager::createRequest(op, request, outgoingData);
+}
+#endif
+
 NetworkReply::NetworkReply(NetworkAccessManagerPtr manager, QNetworkReply *reply) : m_manager(manager), m_reply(reply) {}
 
 void NetworkReply::init()

@@ -1067,6 +1067,14 @@ const QStringList &PLSSyncServerManager::getSupportedPlatformsList()
 			initSupportedPlatforms(m_policyPublishDefaultValueObject);
 		}
 	}
+#ifdef HOPCAST_NO_NAVER // HopCast: NAVER's own services removed
+	m_supportedPlatformsList.removeIf([](const QString &name) {
+		for (const auto &naver : {NAVER_SHOPPING_LIVE, CHZZK, NAVER_TV, BAND, NCB2B, WHALE_SPACE, NOW})
+			if (name.compare(QString::fromUtf8(naver), Qt::CaseInsensitive) == 0)
+				return true;
+		return false;
+	});
+#endif
 	return m_supportedPlatformsList;
 }
 
