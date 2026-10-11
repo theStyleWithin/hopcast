@@ -932,7 +932,8 @@ if(TARGET OBS::browser-panels)
       ON
       CACHE INTERNAL "Enable WhatsNew dialog")
   elseif(OS_LINUX)
-    option(ENABLE_WHATSNEW "Enable WhatsNew dialog" ON)
+    # HopCast: WhatsNew shows OBS Project announcements fetched from OBS servers; off.
+    option(ENABLE_WHATSNEW "Enable WhatsNew dialog" OFF)
   endif()
 
   if(ENABLE_WHATSNEW)
@@ -1088,7 +1089,9 @@ elseif(OS_MACOS)
   endif()
 
 elseif(OS_POSIX)
-  target_sources(PRISMLiveStudio PRIVATE platform-x11.cpp)
+  # HopCast: path fixed (file lives in obs-ui/); LINUX_PORTABLE is the AppImage layout.
+  option(LINUX_PORTABLE "Build portable version (Linux)" ON)
+  target_sources(PRISMLiveStudio PRIVATE obs-ui/platform-x11.cpp)
   target_link_libraries(PRISMLiveStudio PRIVATE Qt::GuiPrivate)
 
   if(TARGET obspython)
@@ -1109,9 +1112,7 @@ elseif(OS_POSIX)
     find_package(MbedTLS)
 
     if(NOT MBEDTLS_FOUND)
-      obs_status(
-        FATAL_ERROR
-        "mbedTLS not found, but required for WhatsNew support on Linux")
+      message(FATAL_ERROR "mbedTLS not found, but required for WhatsNew support on Linux")
     endif()
 
     target_link_libraries(PRISMLiveStudio PRIVATE Mbedtls::Mbedtls OBS::blake2)
