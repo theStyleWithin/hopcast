@@ -3866,6 +3866,9 @@ void OBSBasicSettings::initGeneralage()
 		PLS_PERFORMANCE_START(initGeneralage_setupUi);
 
 		generalPage->setupUi(ui->generalPage);
+#ifdef HOPCAST_NO_ACCOUNT
+		generalPage->groupBox->setVisible(false); // HopCast: Settings > Account (nickname, logout, delete account)
+#endif
 		PLS_PERFORMANCE_END(initGeneralage_setupUi);
 
 		auto watcher = new PLSShowWatcher(generalPage->language);

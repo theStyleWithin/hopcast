@@ -87,3 +87,13 @@ function(hopcast_install_everything)
 endfunction()
 
 cmake_language(DEFER DIRECTORY "${CMAKE_SOURCE_DIR}" CALL hopcast_install_everything)
+
+# ---- No accounts (HopCast) ----------------------------------------------------
+# PRISM gates the studio behind a NAVER/PRISM account login (Facebook, Google,
+# Twitch, NAVER, Apple, LINE or e-mail). HopCast doesn't use NAVER's account
+# service, so the app opens straight into the studio and the account UI
+# (login window, Logout menu item, Settings > Account) is removed.
+option(HOPCAST_NO_ACCOUNT "Start without a PRISM account and hide account UI" ON)
+if(HOPCAST_NO_ACCOUNT)
+  add_compile_definitions(HOPCAST_NO_ACCOUNT)
+endif()

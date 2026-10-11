@@ -1164,6 +1164,13 @@ bool PLSBasic::willshow()
 			}
 		}
 	};
+#ifdef HOPCAST_NO_ACCOUNT
+	/* HopCast: no account login - go straight to the studio. */
+	pls_unused(showLoginViewAndWait, sendLoginAnalog);
+	PLS_INFO(LAUNCHER_LOGIN, "HopCast: starting without an account");
+	App()->UpdateHotkeyFocusSetting();
+	return true;
+#endif
 	bool isSuccess = false;
 
 	App()->DisableHotkeys();
@@ -1504,6 +1511,7 @@ QList<QAction *> PLSBasic::adjustedMenu()
 
 	connect(mainView, &PLSMainView::onGolivePending, ui->action_Settings, &QAction::setDisabled);
 
+#ifndef HOPCAST_NO_ACCOUNT // HopCast: no account, so no Logout item
 	if (logOut == nullptr) {
 		logOut = new QAction(QTStr("Basic.MainMenu.File.Logout"), this);
 		this->addAction(logOut);
@@ -1516,6 +1524,7 @@ QList<QAction *> PLSBasic::adjustedMenu()
 		});
 	}
 	ret << logOut;
+#endif
 
 	if (exitApp == nullptr) {
 		exitApp = new QAction(QTStr("Basic.MainMenu.File.Exit"), OBSBasic::Get());
