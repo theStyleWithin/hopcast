@@ -180,9 +180,16 @@ int main()
 		CHECK(s.save(json, err));
 		if (!err.empty())
 			std::printf("  error: %s\n", err.c_str());
-		CHECK(s.key_source() == (keyring ? KeySource::Keyring : KeySource::KeyFile));
+		const bool usedKeyring = s.key_source() == KeySource::Keyring;
+		std::printf("  key stored in: %s\n", usedKeyring ? "desktop keyring" : "owner-only key file");
+		if (std::getenv("HOPCAST_TEST_KEYRING"))
+			CHECK(usedKeyring); // a working, unlocked keyring must be used
 		if (!keyring)
+			CHECK(!usedKeyring);
+		if (!usedKeyring) // fallback (no keyring, or it refused to store the key)
 			CHECK(file_mode(keyFile) == 0600);
+		else
+			CHECK(access(keyFile.c_str(), F_OK) != 0); // no key file when the keyring holds the key
 		Store again(enc, "rtmp-channels", real);
 		CHECK(again.load(pt) == LoadStatus::Ok && pt == json);
 	}
