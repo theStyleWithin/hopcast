@@ -1,6 +1,9 @@
 #ifndef CHANELCOMMONFUNCTION_H
 #define CHANELCOMMONFUNCTION_H
 
+#ifdef HOPCAST_NO_NAVER
+#include "../../hopcast/HopCastSecrets.h"
+#endif
 #include <qdatastream.h>
 #include <qnetworkreply.h>
 #include <qscrollarea.h>
@@ -203,6 +206,16 @@ DECLARE_ENUM_SERIALIZATION(ChannelData::ChannelDualOutput);
 
 template<typename DataType> bool saveDataXToFile(const DataType &srcData, const QString &path)
 {
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: the channel cache holds stream keys and platform tokens - encrypt it. */
+	QByteArray bytes;
+	{
+		QDataStream out(&bytes, QIODevice::WriteOnly);
+		out.setVersion(QDataStream::Qt_5_12);
+		out << srcData;
+	}
+	return hopcast::secureWrite(path, bytes);
+#endif
 	QFile file(path);
 	if (file.open(QIODevice::WriteOnly)) {
 		QDataStream out(&file);
@@ -215,6 +228,15 @@ template<typename DataType> bool saveDataXToFile(const DataType &srcData, const 
 
 template<typename DataType> bool loadDataFromFile(DataType &destData, const QString &path)
 {
+#ifdef HOPCAST_NO_NAVER
+	auto bytes = hopcast::secureRead(path);
+	if (!bytes)
+		return false;
+	QDataStream in(*bytes);
+	in.setVersion(QDataStream::Qt_5_12);
+	in >> destData;
+	return in.status() == QDataStream::Ok;
+#endif
 	QFile file(path);
 	if (file.open(QIODevice::ReadOnly)) {
 		QDataStream in(&file);

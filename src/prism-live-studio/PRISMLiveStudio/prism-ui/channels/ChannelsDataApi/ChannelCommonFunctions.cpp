@@ -355,7 +355,16 @@ QString getImageCacheFilePath()
 
 QString getChannelCacheFilePath()
 {
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: encrypted cache; an older plaintext cache is encrypted and removed on first use. */
+	const QString legacy = getChannelCacheDir() + QDir::separator() + g_channelCacheFile;
+	const QString encrypted = legacy + QStringLiteral(".enc");
+	if (!QFile::exists(encrypted) && QFile::exists(legacy))
+		hopcast::secureRead(encrypted, legacy);
+	return encrypted;
+#else
 	return getChannelCacheDir() + QDir::separator() + g_channelCacheFile;
+#endif
 }
 
 QString getChannelCacheDir()

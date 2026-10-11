@@ -1933,7 +1933,17 @@ void OBSBasic::SaveService()
 	OBSDataAutoRelease settings = obs_service_get_settings(service);
 
 	obs_data_set_string(data, "type", obs_service_get_type(service));
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: never write stream keys/passwords to service.json in plain text. They
+	 * live in the encrypted channel store and are applied again at every Go Live. */
+	OBSDataAutoRelease savedSettings = obs_data_create();
+	obs_data_apply(savedSettings, settings);
+	for (const char *secret : {"key", "bearer_token", "password", "username"})
+		obs_data_erase(savedSettings, secret);
+	obs_data_set_obj(data, "settings", savedSettings);
+#else
 	obs_data_set_obj(data, "settings", settings);
+#endif
 
 	const char *service = obs_data_get_string(settings, "service");
 	const char *chServer = obs_data_get_string(settings, "server");
@@ -1941,6 +1951,11 @@ void OBSBasic::SaveService()
 	if (!obs_data_save_json_safe(data, serviceJsonPath, "tmp", "bak")) {
 		PLS_ERROR(MAINFRAME_MODULE, "Failed to save service");
 	}
+#ifdef HOPCAST_NO_NAVER
+	/* The .bak holds the previous version, which may predate this scrubbing. */
+	std::string backup = std::string(serviceJsonPath) + ".bak";
+	os_unlink(backup.c_str());
+#endif
 }
 
 bool OBSBasic::LoadService()
@@ -1965,6 +1980,16 @@ bool OBSBasic::LoadService()
 
 	if (!service)
 		return false;
+
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: scrub a stream key left in service.json by an older build. */
+	for (const char *secret : {"key", "bearer_token", "password"}) {
+		if (obs_data_has_user_value(settings, secret) && *obs_data_get_string(settings, secret)) {
+			SaveService();
+			break;
+		}
+	}
+#endif
 
 	/* Enforce Opus on FTL if needed */
 	if (pls_is_equal(obs_service_get_protocol(service), "WHIP")) {

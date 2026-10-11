@@ -766,6 +766,13 @@ LIBLOG_API void pls_logva(bool kr, pls_log_level_t log_level, const char *module
 LIBLOG_API void pls_logvaex(bool kr, pls_log_level_t log_level, const char *module_name, const char *file_name, int file_line, const std::vector<std::pair<const char *, const char *>> &fields,
 			    int arg_count, const char *format, va_list args)
 {
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: "KR" log lines are PRISM's unmasked variants (stream keys, tokens,
+	 * full URLs) meant for NAVER's log servers. Every one has a masked twin, so
+	 * HopCast drops them instead of writing secrets to local log files. */
+	if (kr)
+		return;
+#endif
 	if ((!format || !format[0]) || ((arg_count >= 0) && (get_format_param_count(format) != arg_count))) {
 		PLS_WARN("liblog", "log format param error, format: %s, argcount: %d, file: %s + %d", format ? format : "nullptr", arg_count, file_name ? file_name : "null", file_line);
 		assert(false && "You are passing wrong params!");

@@ -1,6 +1,9 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QSaveFile>
+#ifdef HOPCAST_NO_NAVER
+#include "../../hopcast/HopCastSecrets.h"
+#endif
 #include "PLSChannelDataHandlerFunctions.h"
 
 #include <QJsonArray>
@@ -160,30 +163,18 @@ QVariantMap createPrismHeader()
 
 #ifdef HOPCAST_NO_NAVER
 /* HopCast: PRISM saved Custom RTMP channels on NAVER's server (per PRISM account).
- * HopCast keeps the same records - {customUserDataSeq, customData} - in a local file,
- * so the rest of PRISM's channel code works unchanged. */
+ * HopCast keeps the same records - {customUserDataSeq, customData} - in a local,
+ * encrypted file, so the rest of PRISM's channel code works unchanged. */
 namespace hopcast_rtmp {
-static QString storePath()
-{
-	return pls_get_user_path(QStringLiteral("PRISMLiveStudio/user/hopcast-rtmp-channels.json"));
-}
+/* Encrypted with AES-256-GCM, key in the desktop keyring - see prism-ui/hopcast/HopCastSecrets. */
 static QJsonArray load()
 {
-	QFile file(storePath());
-	if (!file.open(QIODevice::ReadOnly))
-		return {};
-	return QJsonDocument::fromJson(file.readAll()).array();
+	auto data = hopcast::secureRead(hopcast::rtmpChannelsPath(), hopcast::rtmpChannelsLegacyPath());
+	return data ? QJsonDocument::fromJson(*data).array() : QJsonArray();
 }
 static void save(const QJsonArray &records)
 {
-	QDir().mkpath(QFileInfo(storePath()).absolutePath());
-	QSaveFile file(storePath());
-	if (file.open(QIODevice::WriteOnly)) {
-		file.write(QJsonDocument(records).toJson());
-		if (!file.commit())
-			PLS_ERROR(CHANNELDATAHANDLER, "HopCast: saving RTMP channels failed");
-	}
-	QFile::setPermissions(storePath(), QFileDevice::ReadOwner | QFileDevice::WriteOwner); // stream keys
+	hopcast::secureWrite(hopcast::rtmpChannelsPath(), QJsonDocument(records).toJson(QJsonDocument::Compact));
 }
 static QString nextSeq(const QJsonArray &records)
 {
