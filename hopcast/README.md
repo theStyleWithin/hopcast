@@ -93,11 +93,25 @@ Startup fixes made to get here (all marked `HopCast` in the source):
 | No Linux data layout | Generic install rules + `share/hopcast` data paths (`GetDataFilePath`, locale.ini, plugin path) |
 | Null `PLSBasic` in side-bar hide event during construction (X11 realizes docks early) | Guarded |
 
+### No accounts
+
+PRISM normally won't open its studio until you sign in with a PRISM account (Facebook, Google,
+Twitch, NAVER, Apple, LINE or e-mail), and that account system only works with NAVER's servers.
+HopCast removes it: the CMake option `HOPCAST_NO_ACCOUNT` (on by default) skips the login window,
+drops the File › Logout item and hides Settings › General › Account. The app opens straight into
+the studio:
+
+![HopCast studio window, no sign-in (Xvfb, CI)](docs/phase1-studio-no-account.png)
+
+(The black rectangles in CI screenshots are translucent pop-ups — the welcome/notice dialogs and
+the chat panel — which need a compositor to draw; on a normal desktop they render normally.)
+
 ### Next in Phase 1
 
-- **Login gate.** The studio window sits behind PRISM's account login, which needs NAVER's
-  servers. HopCast needs a local (no-account) mode that goes straight to the studio window;
-  per-platform streaming logins (Twitch, YouTube, …) come later with our own OAuth app IDs.
+- Channel bar: hide the NAVER-only services (NAVER TV, BAND, Shopping Live, CHZZK, SOOP) and
+  keep Custom RTMP, which streams to Twitch/YouTube/Kick/etc. with a stream key and no login.
+  Optional Twitch/YouTube sign-in (chat, titles) later, with HopCast's own registered app IDs.
+- Drop the welcome/notice pop-ups that fetch NAVER content.
 - PRISM source plugins (timer, text template, chat, sticker, …) on Linux.
 - Real-desktop test on CachyOS (X11 and Wayland).
 
