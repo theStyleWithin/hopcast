@@ -21,7 +21,7 @@
 #else
 #define LIBBROWSER_API __declspec(dllimport)
 #endif
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 #define LIBBROWSER_API
 #endif
 

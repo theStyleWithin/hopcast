@@ -3782,7 +3782,7 @@ LIRESOURCE_API QString getDataPath(const QString &subpath)
 		return pls_get_app_data_path_pn(QStringLiteral("/resources"));
 #if defined(Q_OS_WIN)
 	else if (subpath.startsWith('/') || subpath.startsWith('\\'))
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	else if (subpath.startsWith('/'))
 #endif
 		return pls_get_app_data_path_pn(QStringLiteral("/resources")) + subpath;
@@ -3795,7 +3795,7 @@ LIRESOURCE_API QString getAppDataPath(const QString &subpath)
 		return pls_get_app_user_data_dir_path_pn(QStringLiteral("/resources"));
 #if defined(Q_OS_WIN)
 	else if (subpath.startsWith('/') || subpath.startsWith('\\'))
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	else if (subpath.startsWith('/'))
 #endif
 		return pls_get_app_user_data_dir_path_pn(QStringLiteral("/resources")) + subpath;

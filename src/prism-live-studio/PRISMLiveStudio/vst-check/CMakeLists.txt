@@ -1,3 +1,8 @@
+# HopCast: VST scanning helper; VST hosting is off on Linux for now.
+if(OS_LINUX)
+  return()
+endif()
+
 project(vst-check)
 
 find_package(Qt6Core REQUIRED)
