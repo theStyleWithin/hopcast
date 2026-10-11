@@ -1560,7 +1560,8 @@ void PLSBasic::onShowMainMenu()
 		mainMenu.setWindowFlags(Qt::Popup | Qt::NoDropShadowWindowHint);
 		mainMenu.addActions(adjustedMenu());
 		auto bOutputActived = pls_is_output_actived();
-		logOut->setEnabled(!bOutputActived);
+		if (logOut) // HopCast: absent in no-account builds
+			logOut->setEnabled(!bOutputActived);
 		ui->profileMenu->setEnabled(!bOutputActived);
 		mainMenu.exec(pos);
 		pls_pop_modal_view(&mainMenu);

@@ -2771,7 +2771,7 @@ bool OBSBasic::OBSInit()
 	}
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__linux__) // HopCast: Linux tray set up like Windows
 	//init system tray
 	SystemTrayInit(false);
 #elif __APPLE__
