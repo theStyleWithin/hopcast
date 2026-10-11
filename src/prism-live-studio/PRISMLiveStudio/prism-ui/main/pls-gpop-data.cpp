@@ -24,7 +24,7 @@ void PLSGpopData::getGpopData(const QByteArray &gpopData)
 		QString filePath;
 #if defined(Q_OS_WIN)
 		filePath = ChannelData::defaultSourcePath + "/win";
-#elif defined(Q_OS_MACOS)
+#else // HopCast: Linux shares the POSIX copy (identical to win/mac)
 		filePath = ChannelData::defaultSourcePath + "/mac";
 #endif
 		auto file = findFileInResources(filePath, "gpop");

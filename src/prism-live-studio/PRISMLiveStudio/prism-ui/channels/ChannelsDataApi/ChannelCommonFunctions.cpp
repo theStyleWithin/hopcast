@@ -46,7 +46,11 @@ QString findFileInResources(const QString &dirPath, const QString &key)
 		return *it;
 	QDir dir(dirPath);
 	QRegularExpression rex(key, QRegularExpression::CaseInsensitiveOption);
-	auto filesList = dir.entryInfoList();
+	/* HopCast: skip "." and ".." - including them recursed forever (stack
+	 * overflow at startup) whenever dirPath was empty or had no match. */
+	if (dirPath.isEmpty())
+		return QString();
+	auto filesList = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
 	for (const auto &file : filesList) {
 		QString filename = file.fileName();
 

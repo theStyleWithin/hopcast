@@ -30,6 +30,7 @@
 #include <locale.h>
 
 #include "platform.hpp"
+#include <libutils-api.h>
 
 #ifdef __linux__
 #include <sys/socket.h>
@@ -183,6 +184,11 @@ static inline bool check_path(const char *data, const char *path, string &output
 
 bool GetDataFilePath(const char *data, string &output)
 {
+	/* HopCast: PRISM's UI data lives in <prefix>/share/hopcast/data/prism-studio
+	 * (Windows: data/prism-studio, macOS: Resources/data/prism-studio). */
+	if (check_path(data, (pls_get_app_data_path(QStringLiteral("prism-studio")).toStdString() + "/").c_str(), output))
+		return true;
+
 	char *data_path = getenv("OBS_DATA_PATH");
 	if (data_path != NULL) {
 		if (check_path(data, data_path, output))

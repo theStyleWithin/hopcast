@@ -95,7 +95,7 @@ jobs:
         continue-on-error: true
         run: |
           sudo apt-get install -y --no-install-recommends x11-apps x11-utils imagemagick gdb
-          bash hopcast/scripts/launch-test-app.sh build/app build/launch-test 30
+          bash hopcast/scripts/launch-test-app.sh build/stage build/launch-test 30
 
       - name: Publish launch results
         if: always() && hashFiles('build/launch-test/stdout.txt') != ''

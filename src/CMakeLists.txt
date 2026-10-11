@@ -170,6 +170,8 @@ function(copy_common_libs_data target data_src_path data_output_path)
     copy_data(${target} ${target} ${data_src_path} ${data_output_path})
   elseif(OS_MACOS)
     copy_mac_common_libs_data(${data_src_path} ${data_output_path})
+  elseif(OS_LINUX) # HopCast: <prefix>/share/hopcast/<data_output_path>
+    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${data_src_path}/" DESTINATION "share/hopcast/${data_output_path}")
   endif()
 endfunction()
 

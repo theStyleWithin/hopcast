@@ -45,3 +45,16 @@ cmake -S "$ROOT/src" -B "$APP_BUILD" -G Ninja \
 # Keep going past failures (ninja -k 0) so one run reports every compile error;
 # the exit status is still non-zero if anything failed.
 cmake --build "$APP_BUILD" --parallel "$(nproc)" ${HOPCAST_APP_TARGET:+--target "$HOPCAST_APP_TARGET"} -- -k 0
+
+# Stage: engine install tree + the app installed on top of it. This is the
+# runnable layout (bin/, lib/, share/obs/, share/hopcast/) and the AppDir base.
+ENGINE_PREFIX="${ENGINE_PREFIX:-$ROOT/build/engine-install}"
+STAGE="${HOPCAST_STAGE:-$ROOT/build/stage}"
+if [[ -d "$ENGINE_PREFIX" ]]; then
+  rm -rf "$STAGE"
+  cp -a "$ENGINE_PREFIX" "$STAGE"
+  cmake --install "$APP_BUILD" --prefix "$STAGE"
+  echo "HopCast staged at: $STAGE"
+else
+  echo "Engine install tree not found at $ENGINE_PREFIX - skipping staging" >&2
+fi

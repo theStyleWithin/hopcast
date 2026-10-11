@@ -12865,6 +12865,10 @@ void OBSBasic::addPrismPlugins()
 		return;
 	string path = base_module_dir;
 	obs_add_module_path((path + "/Contents/MacOS").c_str(), (path + "/Contents/Resources").c_str());
+#else // HopCast: <prefix>/lib/hopcast/plugins/<module>.so, data in share/hopcast/data/prism-plugins/<module>
+	const std::string bin = pls_libutil_api_mac::pls_get_app_plugin_dir().toStdString();
+	const std::string data = pls_get_app_data_path(QStringLiteral("prism-plugins")).toStdString() + "/%module%";
+	obs_add_module_path(bin.c_str(), data.c_str());
 #endif
 }
 

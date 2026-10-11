@@ -58,3 +58,32 @@ endif()
 # `linux` as 1, which breaks e.g. `bool linux` in obs-ui/update/models/whatsnew.hpp.
 # Upstream OBS builds with extensions off as well.
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+# ---- Install layout (HopCast) -------------------------------------------------
+# The app is installed into the same prefix as the engine, which is the layout
+# the AppImage uses:  bin/  lib/ (libobs, PRISM libs)  lib/obs-plugins/
+#                     lib/hopcast/plugins/ (PRISM plugins)  share/obs/  share/hopcast/
+# NAVER's copy_* helpers only know Windows/macOS staging, so on Linux every
+# built binary is installed generically once the tree is configured.
+set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib;$ORIGIN/../..")
+set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
+
+function(hopcast_install_everything)
+  hopcast_collect_targets("${CMAKE_SOURCE_DIR}" _all)
+  foreach(_t IN LISTS _all)
+    get_target_property(_imported ${_t} IMPORTED)
+    if(_imported)
+      continue()
+    endif()
+    get_target_property(_type ${_t} TYPE)
+    if(_type STREQUAL "EXECUTABLE")
+      install(TARGETS ${_t} RUNTIME DESTINATION bin)
+    elseif(_type STREQUAL "SHARED_LIBRARY")
+      install(TARGETS ${_t} LIBRARY DESTINATION lib)
+    elseif(_type STREQUAL "MODULE_LIBRARY")
+      install(TARGETS ${_t} LIBRARY DESTINATION lib/hopcast/plugins)
+    endif()
+  endforeach()
+endfunction()
+
+cmake_language(DEFER DIRECTORY "${CMAKE_SOURCE_DIR}" CALL hopcast_install_everything)

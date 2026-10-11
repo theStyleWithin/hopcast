@@ -142,7 +142,7 @@ PLSMainView::PLSMainView(QWidget *parent) : PLSToplevelView<QFrame>(CreateWinId:
 	setMinimumSize({975, 633});
 #if defined(Q_OS_WIN)
 	initSize({1600, 1000});
-#elif defined(Q_OS_MACOS)
+#else // macOS and HopCast/Linux (both draw PRISM's own title bar)
 	initSize({1600, 1000 - PLS_TITLE_BAR_HEIGHT});
 #endif
 	closeEventCallback = [this](QCloseEvent *e) { callBaseCloseEvent(e); };

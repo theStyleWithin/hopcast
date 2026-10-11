@@ -1961,7 +1961,7 @@ vector<pair<string, string>> GetLocaleNames()
 
 #if defined(Q_OS_WIN)
 	path = pls_get_app_dir().toStdString() + "/../../data/prism-studio/locale.ini";
-#elif defined(Q_OS_MACOS)
+#else // macOS and HopCast/Linux: <resources>/data/prism-studio/locale.ini
 	path = pls_get_app_resource_dir().toStdString() + "/data/prism-studio/locale.ini";
 #endif
 	ConfigFile ini;

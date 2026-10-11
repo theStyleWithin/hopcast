@@ -3,26 +3,26 @@
 # let it run for a while, take a screenshot, then stop it and collect logs.
 # GPL-2.0-or-later.
 #
-# Usage: hopcast/scripts/launch-test-app.sh [app-build-dir] [out-dir] [seconds]
+# Usage: hopcast/scripts/launch-test-app.sh [stage-dir] [out-dir] [seconds]
+# stage-dir is the installed tree from build-app.sh (bin/PRISMLiveStudio).
 # Exit status: 0 if the app was still running when the screenshot was taken
 # (i.e. it did not crash on startup), 1 otherwise.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-APP_BUILD="$(cd "${1:-$ROOT/build/app}" && pwd)"
+STAGE="$(cd "${1:-$ROOT/build/stage}" && pwd)"
 OUT="$(mkdir -p "${2:-$ROOT/build/launch-test}" && cd "${2:-$ROOT/build/launch-test}" && pwd)"
 SECS="${3:-30}"
 
-BIN="$(find "$APP_BUILD" -type f -name PRISMLiveStudio -perm -u+x | head -n1)"
-[[ -n "$BIN" ]] || { echo "PRISMLiveStudio binary not found under $APP_BUILD" >&2; exit 1; }
+BIN="$STAGE/bin/PRISMLiveStudio"
+[[ -x "$BIN" ]] || { echo "PRISMLiveStudio binary not found at $BIN" >&2; exit 1; }
 echo "Launching $BIN for ${SECS}s"
 
 export LIBGL_ALWAYS_SOFTWARE=1 QT_QPA_PLATFORM=xcb
 export XDG_CONFIG_HOME="$OUT/config" XDG_DATA_HOME="$OUT/data" XDG_CACHE_HOME="$OUT/cache"
 mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME"
 
-# Engine libraries + plugins live in the engine build/install trees.
-ENGINE_LIB="$ROOT/build/engine-install/lib"
-export LD_LIBRARY_PATH="$ENGINE_LIB:${LD_LIBRARY_PATH:-}"
+# Libraries resolve through RPATH ($ORIGIN/../lib); Qt comes from the environment.
+find "$STAGE" -maxdepth 3 -not -path '*/share/*' | sort > "$OUT/stage-tree.txt"
 ldd "$BIN" > "$OUT/ldd.txt" 2>&1 || true
 grep "not found" "$OUT/ldd.txt" && echo "::warning title=launch::unresolved libraries (see ldd.txt)"
 

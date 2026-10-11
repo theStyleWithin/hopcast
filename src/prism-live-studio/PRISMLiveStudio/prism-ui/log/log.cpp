@@ -262,6 +262,8 @@ bool log_init(const char *session_id, const std::chrono::steady_clock::time_poin
 	pls_add_global_field("OSType", "Windows");
 #elif defined(Q_OS_MACOS)
 	pls_add_global_field("OSType", "MAC");
+#else // HopCast
+	pls_add_global_field("OSType", "Linux");
 #endif
 	if (!pls_is_empty(sub_session_id)) {
 		pls_add_global_field("prismSubSession", sub_session_id);

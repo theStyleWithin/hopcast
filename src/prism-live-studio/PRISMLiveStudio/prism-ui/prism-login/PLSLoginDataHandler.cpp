@@ -240,6 +240,8 @@ void PLSLoginDataHandler::getAppInitDataFromRemote(const std::function<void()> &
 #elif defined(Q_OS_MACOS)
 	gpopQuery.addQueryItem("deviceType", "mac");
 	gpopPath = ":/Configs/resource/DefaultResources/mac/gpop.json";
+#else // HopCast: bundled defaults only (shared POSIX copy)
+	gpopPath = ":/Configs/resource/DefaultResources/mac/gpop.json";
 #endif
 	gpopQuery.addQueryItem("appVersion", PLSLoginFunc::getPrismVersion());
 	QUrl qpopUrl(PLSLoginFunc::getGpopUrl());
