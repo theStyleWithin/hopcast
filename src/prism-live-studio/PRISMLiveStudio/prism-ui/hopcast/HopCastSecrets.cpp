@@ -60,6 +60,8 @@ secure::KeyProvider &keys()
 	return secure::default_key_provider(keyFilePath().toStdString());
 }
 
+QString chosenFolder(); // stream-key folder choice, defined below
+
 QMutex g_mutex;
 std::map<QString, std::unique_ptr<secure::Store>> g_stores;
 bool g_warned = false;
