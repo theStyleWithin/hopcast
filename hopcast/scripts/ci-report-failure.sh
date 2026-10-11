@@ -22,7 +22,9 @@ if [[ -n "${GITHUB_TOKEN:-}" && -n "${GITHUB_REPOSITORY:-}" ]]; then
   git -C "$tmp" init -q -b ci-logs
   name="${GITHUB_RUN_ID:-local}-${LABEL}.log"
   cp "$LOG" "$tmp/$name"
-  [[ -f build/engine/CMakeFiles/CMakeConfigureLog.yaml ]] && cp build/engine/CMakeFiles/CMakeConfigureLog.yaml "$tmp/${GITHUB_RUN_ID:-local}-configure.yaml"
+  for d in engine app; do
+    [[ -f build/$d/CMakeFiles/CMakeConfigureLog.yaml ]] && cp build/$d/CMakeFiles/CMakeConfigureLog.yaml "$tmp/${GITHUB_RUN_ID:-local}-$d-configure.yaml"
+  done
   git -C "$tmp" add -A
   git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "logs for run ${GITHUB_RUN_ID:-local} ($LABEL)"
   git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ci-logs \

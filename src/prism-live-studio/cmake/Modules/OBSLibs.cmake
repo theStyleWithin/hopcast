@@ -205,4 +205,76 @@ elseif(OS_MACOS)
         IMPORTED_LOCATION_RELEASE "$ENV{OBS_BUILD_DIR}/build/aja-support.build/Release/libaja-support.a"
         IMPORTED_LOCATION_RELWITHDEBINFO "$ENV{OBS_BUILD_DIR}/build/aja-support.build/RelWithDebInfo/libaja-support.a"
         IMPORTED_LOCATION_MINSIZEREL "$ENV{OBS_BUILD_DIR}/build/aja-support.build/RelWithDebInfo/libaja-support.a")
+elseif(OS_LINUX)
+    # HopCast: Linux. libobs comes from the engine built by hopcast/scripts/build-engine.sh
+    # (OBS_BUILD_DIR). The small helper libraries that NAVER's Windows/macOS builds take
+    # from the engine's own UI build are compiled here straight from the engine sources,
+    # so the engine can stay a UI-less build.
+    file(GLOB _hopcast_libobs "$ENV{OBS_BUILD_DIR}/libobs/libobs.so.[0-9]*")
+    list(SORT _hopcast_libobs)
+    list(GET _hopcast_libobs 0 _hopcast_libobs)
+    if(NOT EXISTS "${_hopcast_libobs}")
+        message(FATAL_ERROR "HopCast: libobs not found in $ENV{OBS_BUILD_DIR}/libobs - run hopcast/scripts/build-engine.sh first")
+    endif()
+    message(STATUS "HopCast: using engine libobs ${_hopcast_libobs}")
+
+    add_library(OBS::libobs SHARED IMPORTED GLOBAL)
+    set_target_properties(
+        OBS::libobs PROPERTIES
+        IMPORTED_LOCATION "${_hopcast_libobs}"
+        INTERFACE_INCLUDE_DIRECTORIES "$ENV{OBS_SRC_DIR}/libobs;$ENV{OBS_BUILD_DIR}/config")
+    find_package(Threads REQUIRED)
+    set_property(TARGET OBS::libobs APPEND PROPERTY INTERFACE_LINK_LIBRARIES Threads::Threads)
+
+    # libcaption (static, from engine source)
+    add_library(hopcast-caption STATIC
+        "$ENV{OBS_SRC_DIR}/deps/libcaption/src/caption.c"
+        "$ENV{OBS_SRC_DIR}/deps/libcaption/src/cea708.c"
+        "$ENV{OBS_SRC_DIR}/deps/libcaption/src/eia608.c"
+        "$ENV{OBS_SRC_DIR}/deps/libcaption/src/eia608_charmap.c"
+        "$ENV{OBS_SRC_DIR}/deps/libcaption/src/eia608_from_utf8.c"
+        "$ENV{OBS_SRC_DIR}/deps/libcaption/src/mpeg.c"
+        "$ENV{OBS_SRC_DIR}/deps/libcaption/src/scc.c"
+        "$ENV{OBS_SRC_DIR}/deps/libcaption/src/srt.c"
+        "$ENV{OBS_SRC_DIR}/deps/libcaption/src/utf8.c"
+        "$ENV{OBS_SRC_DIR}/deps/libcaption/src/xds.c")
+    target_include_directories(hopcast-caption
+        PRIVATE "$ENV{OBS_SRC_DIR}/deps/libcaption/caption"
+        PUBLIC "$ENV{OBS_SRC_DIR}/deps/libcaption")
+    target_compile_definitions(hopcast-caption PRIVATE __STDC_CONSTANT_MACROS)
+    set_target_properties(hopcast-caption PROPERTIES POSITION_INDEPENDENT_CODE ON FOLDER hopcast/engine)
+    add_library(OBS::caption ALIAS hopcast-caption)
+
+    # bpm (static, from engine source)
+    add_library(hopcast-bpm STATIC "$ENV{OBS_SRC_DIR}/shared/bpm/bpm.c")
+    target_include_directories(hopcast-bpm PUBLIC "$ENV{OBS_SRC_DIR}/shared/bpm")
+    target_link_libraries(hopcast-bpm PUBLIC OBS::libobs OBS::caption)
+    set_target_properties(hopcast-bpm PROPERTIES POSITION_INDEPENDENT_CODE ON FOLDER hopcast/engine)
+    add_library(OBS::bpm ALIAS hopcast-bpm)
+
+    # blake2 (static, from engine source)
+    add_library(hopcast-blake2 STATIC "$ENV{OBS_SRC_DIR}/deps/blake2/src/blake2b-ref.c")
+    target_include_directories(hopcast-blake2 PUBLIC "$ENV{OBS_SRC_DIR}/deps/blake2/src")
+    set_target_properties(hopcast-blake2 PROPERTIES POSITION_INDEPENDENT_CODE ON FOLDER hopcast/engine)
+    add_library(OBS::blake2 ALIAS hopcast-blake2)
+    add_library(OBS::blake2_static ALIAS hopcast-blake2)
+
+    # obs-frontend-api (shared, from engine source incl. NAVER's pls-frontend-api)
+    add_library(obs-frontend-api SHARED
+        "$ENV{OBS_SRC_DIR}/UI/obs-frontend-api/obs-frontend-api.cpp"
+        "$ENV{OBS_SRC_DIR}/UI/obs-frontend-api/pls-frontend-api.cpp")
+    target_compile_definitions(obs-frontend-api PRIVATE OBS_FRONTEND_API_EXPORTS)
+    target_include_directories(obs-frontend-api PUBLIC "$ENV{OBS_SRC_DIR}/UI/obs-frontend-api")
+    target_link_libraries(obs-frontend-api PRIVATE OBS::libobs)
+    set_target_properties(obs-frontend-api PROPERTIES FOLDER hopcast/engine)
+    add_library(OBS::frontend-api ALIAS obs-frontend-api)
+
+    # Browser panel interface (headers only; CEF is loaded at runtime by obs-browser)
+    add_library(obs-browser-panels INTERFACE IMPORTED GLOBAL)
+    add_library(OBS::browser-panels ALIAS obs-browser-panels)
+    target_include_directories(
+        obs-browser-panels INTERFACE "$ENV{OBS_SRC_DIR}/plugins/obs-browser/panel")
+
+    # Not yet available on Linux: OBS::scripting (frontend-tools is skipped),
+    # OBS::aja-support (AJA is off in the engine). OBS::w32-pthreads is Windows-only.
 endif()

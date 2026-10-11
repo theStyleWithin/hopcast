@@ -42,10 +42,22 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(OS_MACOS OFF)
   set(OS_POSIX OFF)
   list(APPEND CMAKE_MODULE_PATH "$ENV{OBS_SRC_DIR}/cmake/windows")
+# HopCast: Linux support. The engine is built beforehand by
+# hopcast/scripts/build-engine.sh; dependencies come from the system / CI Qt.
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  set(OS_WINDOWS OFF)
+  set(OS_MACOS OFF)
+  set(OS_POSIX ON)
+  set(OS_LINUX ON)
+  set(OS_FREEBSD OFF)
+  set(OS_OPENBSD OFF)
+  list(APPEND CMAKE_MODULE_PATH "$ENV{OBS_SRC_DIR}/cmake/linux")
 endif()
 
+if(NOT OS_LINUX)
 message(STATUS "include OBS buildspec")
 include(buildspec)
+endif()
 message(STATUS "prism configure")
 
 if(OS_MACOS)

@@ -1,0 +1,82 @@
+# Phase 1 CI: build PRISM's own layer (common-libs + PRISMLiveStudio) on Linux
+# against the Phase 0 engine. Uses Qt 6.8 LTS (PRISM needs >= 6.6; Ubuntu 24.04 has 6.4).
+name: hopcast-app
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # ci-report-failure.sh pushes logs to the ci-logs branch
+
+jobs:
+  app-linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Fetch pinned engine (NAVER libobs fork)
+        run: |
+          git submodule update --init --depth 1 src/obs-studio
+          git -C src/obs-studio submodule update --init --depth 1 plugins/obs-browser plugins/obs-websocket
+
+      - name: Install dependencies
+        run: |
+          bash hopcast/scripts/deps-ubuntu.sh
+          sudo apt-get install -y --no-install-recommends \
+            libssl-dev libmosquitto-dev libmosquittopp-dev libzstd-dev libpng-dev \
+            libgl-dev libxcb-cursor0 libxkbcommon-x11-0 libfftw3-dev
+
+      - name: Install Qt 6.8
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          host: linux
+          target: desktop
+          arch: linux_gcc_64
+          modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats'
+          cache: true
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-app-${{ github.sha }}
+          restore-keys: |
+            ccache-app-
+            ccache-engine-
+
+      - name: Build engine
+        env:
+          CMAKE_C_COMPILER_LAUNCHER: ccache
+          CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        run: |
+          set -o pipefail
+          bash hopcast/scripts/build-engine.sh build/engine build/engine-install 2>&1 | tee build-engine.log
+
+      - name: Build PRISM layer (common-libs + app)
+        env:
+          CMAKE_C_COMPILER_LAUNCHER: ccache
+          CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        run: |
+          set -o pipefail
+          bash hopcast/scripts/build-app.sh build/engine build/app 2>&1 | tee build-app.log
+
+      - name: Count app warnings
+        if: success()
+        run: |
+          n=$(grep -c "warning:" build-app.log || true)
+          echo "::notice title=app warnings::$n compiler warnings in the PRISM layer"
+
+      - name: Report failure details
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          for f in build-engine.log build-app.log; do
+            if [ -f "$f" ]; then bash hopcast/scripts/ci-report-failure.sh "$f" "${f%.log}"; fi
+          done

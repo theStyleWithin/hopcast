@@ -28,6 +28,7 @@ add_subdirectory(prism-timer-source)
 add_subdirectory(obs-spout2-plugin)
 add_subdirectory(prism-chatv2-source)
 add_subdirectory(prism-chzzk-sponsor-source)
+# HopCast: Linux source plugins are added one by one as they are ported.
 endif()
 
 add_subdirectory(obs-composite-blur)
