@@ -15,7 +15,7 @@ menu-help | click 538 109; wait 1.5
 help-program-info | click 538 109; wait 1.5; click 580 152; wait 3
 my-channel-menu | click 127 62; wait 1.5
 custom-rtmp | click 216 62; wait 3
-custom-rtmp-url-types | click 216 62; wait 5; click 1111 224; wait 2
+custom-rtmp-url-types | wait 3; click 216 62; wait 6; click 1111 224; wait 2
 custom-rtmp-save | click 216 62; wait 3; click 880 273; type rtmp://live.example.com/app; click 880 323; type demo-stream-key-1234; click 880 445; type My Server; wait 1; shot custom-rtmp-filled; click 942 763; wait 3; shot storage-prompt; key Return; wait 3; shot folder-picker; key Escape; wait 3
 after-channel-added | wait 3
 channel-in-bar-menu | click 216 62; wait 2
@@ -35,4 +35,12 @@ settings-advanced | click 157 873; wait 3; click 406 402; wait 2
 performance | click 274 873; wait 2
 go-live | click 1328 873; wait 3
 record | click 1460 873; wait 4; shot record-running; key Escape; wait 1; click 1460 873; wait 3
-notifications | click 1572 820; wait 2
+notifications | click 1573 842; wait 2
+sidebar-studio-mode | click 1573 69; wait 3
+sidebar-dual-output | click 1573 112; wait 3
+sidebar-music | click 1573 173; wait 3
+sidebar-draw-pen | click 1573 217; wait 3
+sidebar-virtual-camera | click 1573 258; wait 3
+sidebar-resolution-guide | click 1573 331; wait 3
+sidebar-settings | click 1573 373; wait 3
+sidebar-help | click 1573 414; wait 2
