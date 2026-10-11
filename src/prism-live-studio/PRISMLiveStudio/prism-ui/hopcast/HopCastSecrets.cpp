@@ -6,13 +6,14 @@
 #include "secure_store.hpp"
 
 #include <libutils-api.h>
+#include <frontend-api.h>
 #include <liblog.h>
 #include <PLSAlertView.h>
 
 #include <QFileInfo>
-#include <QHash>
 #include <QMutex>
 
+#include <map>
 #include <memory>
 
 namespace hopcast {
@@ -31,22 +32,18 @@ secure::KeyProvider &keys()
 	return secure::default_key_provider(userFile(QStringLiteral(".hopcast-store.key")).toStdString());
 }
 
-struct Entry {
-	std::unique_ptr<secure::Store> store;
-};
-
 QMutex g_mutex;
-QHash<QString, Entry> g_stores;
+std::map<QString, std::unique_ptr<secure::Store>> g_stores;
 bool g_warned = false;
 
 secure::Store &storeFor(const QString &path, const QString &legacy)
 {
-	auto &entry = g_stores[path];
-	if (!entry.store) {
+	auto &store = g_stores[path];
+	if (!store) {
 		/* The file name is the store's purpose: a file can't be swapped for another one. */
-		entry.store = std::make_unique<secure::Store>(path.toStdString(), QFileInfo(path).fileName().toStdString(), keys(), legacy.toStdString());
+		store = std::make_unique<secure::Store>(path.toStdString(), QFileInfo(path).fileName().toStdString(), keys(), legacy.toStdString());
 	}
-	return *entry.store;
+	return *store;
 }
 
 void warnOnce(const QString &message)
