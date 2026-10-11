@@ -47,6 +47,14 @@ elseif(OS_MACOS)
 		mac/PLSAnalysisStack.mm)
 
 	target_link_libraries(libdump-analyzer common-libs::third-party::kscrash)
+elseif(OS_LINUX)
+	# HopCast: same API, no-op implementation (nothing captured or uploaded).
+	target_sources(
+		libdump-analyzer
+		PRIVATE PLSProcessInfo.h
+		PLSDumpAnalyzer.h
+		PLSAnalysisStack.h
+		linux/PLSDumpAnalyzer-linux.cpp)
 endif()
 
 target_link_libraries(libdump-analyzer Qt6::Core common-libs::utils-api common-libs::http-client common-libs::ui)
