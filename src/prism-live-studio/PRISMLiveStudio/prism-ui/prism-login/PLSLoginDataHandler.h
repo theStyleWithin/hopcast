@@ -40,6 +40,18 @@ struct PLSAppUpdateResult {
 class PLSLoginDataHandler : public QObject {
 	Q_OBJECT
 public:
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: no NAVER update/terms service - resolve the pending results locally
+	 * ("no update", no terms page) so nothing waits for them. */
+	void hopcastResolveWithoutServer()
+	{
+		PLSAppUpdateResult result;
+		result.m_updateResult = AppUpdateResult::AppNoUpdate;
+		m_appUpdataResult.setValue(result, true);
+		m_serviceTermsHtml.setValue(QString(), true);
+	}
+#endif
+
 	static PLSLoginDataHandler *instance();
 	QVariantMap getRequestApiDefaultHeader(bool hasGcc = true) const;
 	QMap<QString, QString> getBrowserDefaultHeader() const;

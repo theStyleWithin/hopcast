@@ -757,6 +757,20 @@ QList<PLSNoticeUpdateItem> PLSNoticeUpdateRepository::filterUnreadNoticeItems(co
 	return unreadItems;
 }
 
+#ifdef HOPCAST_NO_NAVER
+void PLSNoticeUpdateRepository::hopcastResolveEmpty()
+{
+	for (CenterCacheState *state : {&m_centerCacheState, &m_centerCacheStateB2B}) {
+		auto emptyMap = std::make_shared<QMap<int, PLSNoticeUpdateItem>>();
+		state->isFetching = false;
+		state->hasMoreRemote = false;
+		state->inflightItems = emptyMap;
+		state->items.setValue(emptyMap, true);
+		state->firstLoadCompleted = true;
+	}
+}
+#endif
+
 bool PLSNoticeUpdateRepository::hasUnreadNotice(bool forB2B)
 {
 	if (forB2B) {

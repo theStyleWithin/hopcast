@@ -7042,6 +7042,8 @@ void PLSInitApiFlow::startInitApisFlow()
 	/* HopCast: no PRISM token, app-init/gpop/update, notice or thumbnail calls to
 	 * NAVER. Use the bundled defaults (gpop) instead. */
 	PLSGpopData::instance()->getGpopData(QByteArray());
+	PLSLOGINDATAHANDLER->hopcastResolveWithoutServer();
+	PLSNoticeUpdateRepository::instance()->hopcastResolveEmpty();
 	m_sessionStatus = PLSInitApiFlow::SessionStatus::SessionApiFinished;
 	m_initStatus = PLSInitApiFlow::InitStatus::InitApiFinished;
 	return;

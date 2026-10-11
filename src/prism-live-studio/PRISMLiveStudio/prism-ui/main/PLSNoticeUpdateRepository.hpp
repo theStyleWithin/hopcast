@@ -18,6 +18,10 @@ class PLSNoticeUpdateRepository : public QObject {
 	Q_OBJECT
 
 public:
+#ifdef HOPCAST_NO_NAVER
+	void hopcastResolveEmpty(); // HopCast: no NAVER notice service - empty notice lists
+#endif
+
 	using ListCallback = std::function<void(const QList<PLSNoticeUpdateItem> &, const QString &)>;
 	using ItemCallback = std::function<void(const PLSNoticeUpdateItem &, const QString &)>;
 	struct FetchPageResult {
