@@ -93,25 +93,40 @@ Startup fixes made to get here (all marked `HopCast` in the source):
 | No Linux data layout | Generic install rules + `share/hopcast` data paths (`GetDataFilePath`, locale.ini, plugin path) |
 | Null `PLSBasic` in side-bar hide event during construction (X11 realizes docks early) | Guarded |
 
-### No accounts
+### No accounts, no NAVER services, no PRISM branding
 
-PRISM normally won't open its studio until you sign in with a PRISM account (Facebook, Google,
-Twitch, NAVER, Apple, LINE or e-mail), and that account system only works with NAVER's servers.
-HopCast removes it: the CMake option `HOPCAST_NO_ACCOUNT` (on by default) skips the login window,
-drops the File › Logout item and hides Settings › General › Account. The app opens straight into
-the studio:
+PRISM normally won't open its studio until you sign in with a PRISM account, and its account,
+update, notice, banner, resource and channel-sync features all run on NAVER's servers. HopCast has
+no right to use those servers (and the public source has none of their addresses or keys), so two
+CMake options, both on by default, remove them:
 
-![HopCast studio window, no sign-in (Xvfb, CI)](docs/phase1-studio-no-account.png)
+- `HOPCAST_NO_ACCOUNT` — no login window, no File › Logout, no Settings › General › Account.
+- `HOPCAST_NO_NAVER`
+  - **Hard network block:** `libhttp-client` refuses any request to a NAVER-operated host
+    (naver.com/.net, navercorp.com, pstatic.net, prismlive.com, NAVER Cloud, band.us, …) and any
+    unset endpoint, before a connection is made. The launch test reports blocked/leaked requests.
+  - **No NAVER calls at all at startup:** PRISM token, app-init, gpop, update check, notices,
+    thumbnails, banner and the resource CDN are skipped; bundled defaults are used.
+  - **Custom RTMP channels are saved locally** in
+    `~/.config/PRISMLiveStudio/user/hopcast-rtmp-channels.json` (owner-only; it contains stream
+    keys) instead of on NAVER's server.
+  - **Channels:** NAVER TV, BAND, Shopping Live, CHZZK, NCB2B, Whale and NOW removed.
+  - **Removed pop-ups:** welcome/banner window, PRISM Lens onboarding. Help menu keeps only Program Info.
+  - **Name:** title bar text "HopCast" with no logo image; window and tray title "HopCast" with
+    the desktop theme's generic camera icon.
 
-(The black rectangles in CI screenshots are translucent pop-ups — the welcome/notice dialogs and
-the chat panel — which need a compositor to draw; on a normal desktop they render normally.)
+![HopCast studio window (Xvfb, CI)](docs/phase1-studio-no-account.png)
+
+(The black area on the right in CI screenshots is the translucent chat panel, which needs a
+compositor to draw; on a normal desktop it renders normally.)
 
 ### Next in Phase 1
 
-- Channel bar: hide the NAVER-only services (NAVER TV, BAND, Shopping Live, CHZZK, SOOP) and
-  keep Custom RTMP, which streams to Twitch/YouTube/Kick/etc. with a stream key and no login.
-  Optional Twitch/YouTube sign-in (chat, titles) later, with HopCast's own registered app IDs.
-- Drop the welcome/notice pop-ups that fetch NAVER content.
+- Twitch / YouTube / Facebook / SOOP buttons still use PRISM's sign-in plugins (not built on Linux
+  yet, and they'd need HopCast's own registered app IDs). Until then, use **Custom RTMP** with a
+  stream key — it works for Twitch, YouTube, Kick, etc.
+- Remaining PRISM text in less visible places (dialog titles, translations, About box, the
+  `PRISMLiveStudio` config folder and binary name) — full rebrand pass.
 - PRISM source plugins (timer, text template, chat, sticker, …) on Linux.
 - Real-desktop test on CachyOS (X11 and Wayland).
 
