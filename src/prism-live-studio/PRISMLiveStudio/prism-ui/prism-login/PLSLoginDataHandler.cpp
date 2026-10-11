@@ -60,6 +60,8 @@ QString getUpdateFromRegister()
 #elif defined(Q_OS_MACOS)
 	QSettings settings("prismlive", "prismlivestudio");
 	return settings.value("UpdateSpecifyApi").toString();
+#else // HopCast: no NAVER update-API override on Linux
+	return QString();
 #endif
 }
 

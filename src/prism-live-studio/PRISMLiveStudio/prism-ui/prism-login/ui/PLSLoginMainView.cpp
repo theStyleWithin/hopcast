@@ -127,6 +127,10 @@ bool installUpdate(const QString &filePath)
 #elif defined(Q_OS_MACOS)
 	QString prismBundlePath = pls_get_bundle_dir();
 	return pls_install_mac_package(filePath, prismBundlePath, GlobalVars::prismSession, pls_get_gcc().toStdString(), PLS_VERSION);
+#else // HopCast: self-update isn't supported; new versions ship as AppImage releases
+	(void)filePathW;
+	PLS_WARN(UPDATE_MODULE, "%s", "in-app update installation is not supported on Linux");
+	return false;
 #endif
 }
 

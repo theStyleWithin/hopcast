@@ -28,6 +28,8 @@ static int getHeight(int windowsHeight)
 	return windowsHeight;
 #elif defined(Q_OS_MACOS)
 	return windowsHeight - PLS_TITLE_BAR_HEIGHT + s_topMargin;
+#else // HopCast: Linux (no custom title bar offset yet)
+	return windowsHeight;
 #endif
 }
 
