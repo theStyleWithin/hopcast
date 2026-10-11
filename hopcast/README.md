@@ -110,6 +110,12 @@ CMake options, both on by default, remove them:
   - **Custom RTMP channels are saved locally**, encrypted (see *Stream keys* below), instead of
     on NAVER's server.
   - **Channels:** NAVER TV, BAND, Shopping Live, CHZZK, NCB2B, Whale and NOW removed.
+- **No platform gets special treatment.** The channel bar has only **Custom RTMP**: Twitch,
+  YouTube, Facebook and SOOP buttons are gone, the Custom RTMP dialog has no list of suggested
+  platforms (just RTMP / SRT / RIST), it doesn't switch into Twitch/YouTube modes based on the
+  server address, and HopCast no longer contacts Twitch at startup. Any service that gives you a
+  server URL and stream key (Twitch, YouTube, Kick, Rumble, Odysee, Owncast, your own server…)
+  works the same way. HopCast makes no network requests at startup.
   - **Removed pop-ups:** welcome/banner window, PRISM Lens onboarding. Help menu keeps only Program Info.
   - **Name:** title bar text "HopCast" with no logo image; window and tray title "HopCast" with
     the desktop theme's generic camera icon.
@@ -159,9 +165,6 @@ Everything that holds a stream key or a platform token is encrypted on disk by H
 
 ### Next in Phase 1
 
-- Twitch / YouTube / Facebook / SOOP buttons still use PRISM's sign-in plugins (not built on Linux
-  yet, and they'd need HopCast's own registered app IDs). Until then, use **Custom RTMP** with a
-  stream key — it works for Twitch, YouTube, Kick, etc.
 - Remaining PRISM text in less visible places (dialog titles, translations, About box, the
   `PRISMLiveStudio` config folder and binary name) — full rebrand pass.
 - PRISM source plugins (timer, text template, chat, sticker, …) on Linux.
