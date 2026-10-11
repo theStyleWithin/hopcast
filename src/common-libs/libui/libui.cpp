@@ -3056,7 +3056,7 @@ LIBUI_API pls_process_t *pls_create_loading_app(const QString &prismSession, con
 {
 #if defined(Q_OS_WIN)
 	QString loadingAppPath = pls_get_app_dir() + "/PLSAppLoadingView.exe";
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	QString loadingAppPath = pls_get_app_dir() + "/PLSAppLoadingView";
 #endif
 	QStringList startParams;
@@ -3064,7 +3064,7 @@ LIBUI_API pls_process_t *pls_create_loading_app(const QString &prismSession, con
 	startParams.append(shared_values::k_launcher_command_log_prism_session + prismSession);
 	startParams.append(shared_values::k_launcher_command_log_sub_prism_session + prismSubSession);
 	startParams.append(shared_values::k_launcher_prism_version + pls_get_prism_version_string());
-#if defined(Q_OS_MACOS)
+#if !defined(Q_OS_WIN) // HopCast: macOS and Linux
 	startParams.append(shared_values::k_launcher_command_prism_pid + QString::number(pls_current_process_id()));
 #endif
 	auto loadingAppPro = pls_process_create(loadingAppPath, startParams);

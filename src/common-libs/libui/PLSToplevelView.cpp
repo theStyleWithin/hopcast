@@ -307,7 +307,7 @@ LIBUI_API void toplevelView_event(PLSToplevelWidget *widget, QEvent *event)
 	case QEvent::Show:
 		PLSToplevelWidgetAccess::show(widget);
 		break;
-#else
+#elif defined(Q_OS_MACOS)
 	case QEvent::Show: {
 		widget->customMacWindow()->initWinId(widget->self());
 		widget->customMacWindow()->setWidthResizeEnabled(widget->self(), widget->widthResizeEnabled());
@@ -318,6 +318,10 @@ LIBUI_API void toplevelView_event(PLSToplevelWidget *widget, QEvent *event)
 	case QEvent::UpdateRequest:
 	case QEvent::LayoutRequest:
 		widget->customMacWindow()->updateTrafficButtonUI();
+		break;
+#else // HopCast: Linux - plain show for now (frameless move/resize polish is a later phase)
+	case QEvent::Show:
+		PLSToplevelWidgetAccess::show(widget);
 		break;
 #endif
 	default:

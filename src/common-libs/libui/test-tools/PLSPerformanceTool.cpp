@@ -287,17 +287,17 @@ QJsonObject PLSPerformanceTool::save(pls::performance::PLSStatsDataPtr statsData
 	obj["file"] = QString::fromStdString(statsData->file);
 	obj["line"] = statsData->line;
 	if (statsData->elapsed >= 0) {
-		obj["count"] = statsData->count;
-		obj["minElapsed"] = statsData->getMinElapsed();
-		obj["maxElapsed"] = statsData->getMaxElapsed();
-		obj["averageElapsed"] = statsData->getAverageElapsed();
+		obj["count"] = static_cast<qint64>(statsData->count);
+		obj["minElapsed"] = static_cast<qint64>(statsData->getMinElapsed());
+		obj["maxElapsed"] = static_cast<qint64>(statsData->getMaxElapsed());
+		obj["averageElapsed"] = static_cast<qint64>(statsData->getAverageElapsed());
 	} else {
-		obj["count"] = statsData->count + 1;
+		obj["count"] = static_cast<qint64>(statsData->count + 1);
 		auto elapsed = statsData->getElapsed();
-		obj["minElapsed"] = qMin(elapsed, statsData->getMinElapsed());
-		obj["maxElapsed"] = qMax(elapsed, statsData->getMaxElapsed());
+		obj["minElapsed"] = static_cast<qint64>(qMin(elapsed, statsData->getMinElapsed()));
+		obj["maxElapsed"] = static_cast<qint64>(qMax(elapsed, statsData->getMaxElapsed()));
 		auto averageElapsed = statsData->getAverageElapsed();
-		obj["averageElapsed"] = averageElapsed + (elapsed - averageElapsed) / (statsData->count + 1);
+		obj["averageElapsed"] = static_cast<qint64>(averageElapsed + (elapsed - averageElapsed) / (statsData->count + 1));
 	}
 	QJsonArray array;
 	for (auto child : statsData->children)

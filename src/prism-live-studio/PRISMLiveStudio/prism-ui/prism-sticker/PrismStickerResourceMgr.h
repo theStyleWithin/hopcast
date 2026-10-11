@@ -1,5 +1,5 @@
 #pragma once
-#include <QObject.h>
+#include <QObject>
 #include <libresource.h>
 
 class CategoryPrismSticker : public QObject, public pls::rsm::ICategory {

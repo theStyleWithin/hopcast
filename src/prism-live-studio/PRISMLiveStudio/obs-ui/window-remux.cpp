@@ -39,7 +39,7 @@
 #include <cmath>
 #include "PLSAlertView.h"
 #include "platform.hpp"
-#include <QToolTip.h>
+#include <QToolTip>
 
 using namespace std;
 

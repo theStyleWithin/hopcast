@@ -10,7 +10,7 @@
 #include "PLSDialogButtonBox.h"
 
 #include <libutils-api.h>
-#include <QLineEdit.h>
+#include <QLineEdit>
 
 class PLSFontDialogImpl : public QFontDialog {
 public:
