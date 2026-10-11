@@ -1125,7 +1125,7 @@ elseif(OS_MACOS)
 elseif(OS_POSIX)
   # HopCast: path fixed (file lives in obs-ui/); LINUX_PORTABLE is the AppImage layout.
   option(LINUX_PORTABLE "Build portable version (Linux)" ON)
-  target_sources(PRISMLiveStudio PRIVATE obs-ui/platform-x11.cpp)
+  target_sources(PRISMLiveStudio PRIVATE obs-ui/platform-x11.cpp obs-ui/system-info-posix.cpp)
   target_link_libraries(PRISMLiveStudio PRIVATE Qt::GuiPrivate)
 
   if(TARGET obspython)

@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# HopCast - Phase 1 launch test: start the built app inside a virtual X server,
+# let it run for a while, take a screenshot, then stop it and collect logs.
+# GPL-2.0-or-later.
+#
+# Usage: hopcast/scripts/launch-test-app.sh [app-build-dir] [out-dir] [seconds]
+# Exit status: 0 if the app was still running when the screenshot was taken
+# (i.e. it did not crash on startup), 1 otherwise.
+set -uo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+APP_BUILD="$(cd "${1:-$ROOT/build/app}" && pwd)"
+OUT="$(mkdir -p "${2:-$ROOT/build/launch-test}" && cd "${2:-$ROOT/build/launch-test}" && pwd)"
+SECS="${3:-30}"
+
+BIN="$(find "$APP_BUILD" -type f -name PRISMLiveStudio -perm -u+x | head -n1)"
+[[ -n "$BIN" ]] || { echo "PRISMLiveStudio binary not found under $APP_BUILD" >&2; exit 1; }
+echo "Launching $BIN for ${SECS}s"
+
+export LIBGL_ALWAYS_SOFTWARE=1 QT_QPA_PLATFORM=xcb
+export XDG_CONFIG_HOME="$OUT/config" XDG_DATA_HOME="$OUT/data" XDG_CACHE_HOME="$OUT/cache"
+mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME"
+
+# Engine libraries + plugins live in the engine build/install trees.
+ENGINE_LIB="$ROOT/build/engine-install/lib"
+export LD_LIBRARY_PATH="$ENGINE_LIB:${LD_LIBRARY_PATH:-}"
+ldd "$BIN" > "$OUT/ldd.txt" 2>&1 || true
+grep "not found" "$OUT/ldd.txt" && echo "::warning title=launch::unresolved libraries (see ldd.txt)"
+
+Xvfb :99 -screen 0 1600x900x24 >/dev/null 2>&1 &
+XVFB=$!
+export DISPLAY=:99
+sleep 2
+
+( cd "$(dirname "$BIN")" && exec "$BIN" ) > "$OUT/stdout.txt" 2>&1 &
+APP=$!
+
+alive=1
+for ((i = 0; i < SECS; i++)); do
+  sleep 1
+  kill -0 "$APP" 2>/dev/null || { alive=0; break; }
+done
+
+xwd -root -display :99 -silent > "$OUT/screen.xwd" 2>/dev/null \
+  && convert "$OUT/screen.xwd" "$OUT/screen.png" 2>/dev/null && rm -f "$OUT/screen.xwd"
+xwininfo -root -tree -display :99 > "$OUT/windows.txt" 2>&1 || true
+
+if (( alive )); then
+  echo "App still running after ${SECS}s - stopping it"
+  kill -TERM "$APP" 2>/dev/null; sleep 3; kill -KILL "$APP" 2>/dev/null
+  status=0
+else
+  wait "$APP"; code=$?
+  echo "App exited early with status $code"
+  echo "$code" > "$OUT/exit-code.txt"
+  status=1
+fi
+kill "$XVFB" 2>/dev/null
+
+# PRISM/OBS write their own logs under the config dir.
+find "$XDG_CONFIG_HOME" -name '*.txt' -path '*log*' -exec cp {} "$OUT/" \; 2>/dev/null
+echo "--- stdout/stderr (tail) ---"; tail -n 80 "$OUT/stdout.txt"
+echo "--- top-level windows ---"; grep -E '^\s+0x[0-9a-f]+ "' "$OUT/windows.txt" | head -20
+exit $status

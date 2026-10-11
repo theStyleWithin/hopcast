@@ -254,6 +254,19 @@ void SetAlwaysOnTop(QWidget *window, bool enable)
 	window->show();
 }
 
+/* HopCast: Linux counterpart of the Windows/macOS helper PRISM uses to
+ * surface dialogs. Window managers decide focus policy; we ask politely. */
+void bringWindowToTop(const QWidget *window)
+{
+	if (!window)
+		return;
+	auto *w = const_cast<QWidget *>(window);
+	if (w->isMinimized())
+		w->showNormal();
+	w->raise();
+	w->activateWindow();
+}
+
 bool SetDisplayAffinitySupported(void)
 {
 	// Not implemented yet
