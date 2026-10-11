@@ -94,7 +94,7 @@ jobs:
         id: launch
         continue-on-error: true
         run: |
-          sudo apt-get install -y --no-install-recommends x11-apps x11-utils imagemagick
+          sudo apt-get install -y --no-install-recommends x11-apps x11-utils imagemagick gdb
           bash hopcast/scripts/launch-test-app.sh build/app build/launch-test 30
 
       - name: Publish launch results
@@ -103,11 +103,11 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           echo "::notice title=launch test::${{ steps.launch.outcome }}"
-          echo "::notice title=launch stdout::$(tail -n 60 build/launch-test/stdout.txt | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"}{print}')"
+          echo "::notice title=launch stdout::$( (sed -n '/CRASH BACKTRACE/,/ALL THREADS/p' build/launch-test/stdout.txt; tail -n 30 build/launch-test/stdout.txt) | head -c 30000 | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"}{print}')"
           tmp=$(mktemp -d)
           git -C "$tmp" init -q -b ci-logs
           mkdir -p "$tmp/launch-${GITHUB_RUN_ID}"
-          cp -r build/launch-test/*.txt build/launch-test/*.png "$tmp/launch-${GITHUB_RUN_ID}/" 2>/dev/null || true
+          cp build/launch-test/*.txt build/launch-test/*.log build/launch-test/*.png "$tmp/launch-${GITHUB_RUN_ID}/" 2>/dev/null || true
           git -C "$tmp" add -A
           git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "launch test ${GITHUB_RUN_ID}"
           git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ci-logs

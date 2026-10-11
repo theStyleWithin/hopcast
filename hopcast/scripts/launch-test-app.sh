@@ -31,7 +31,16 @@ XVFB=$!
 export DISPLAY=:99
 sleep 2
 
-( cd "$(dirname "$BIN")" && exec "$BIN" ) > "$OUT/stdout.txt" 2>&1 &
+# Run under gdb when available so a startup crash leaves a backtrace.
+if command -v gdb >/dev/null; then
+  ( cd "$(dirname "$BIN")" && exec gdb -q -batch -return-child-result \
+      -ex "set pagination off" -ex "handle SIGPIPE nostop noprint" -ex run \
+      -ex "echo \\n=== CRASH BACKTRACE ===\\n" -ex bt \
+      -ex "echo \\n=== ALL THREADS ===\\n" -ex "thread apply all bt 25" \
+      --args "$BIN" ) > "$OUT/stdout.txt" 2>&1 &
+else
+  ( cd "$(dirname "$BIN")" && exec "$BIN" ) > "$OUT/stdout.txt" 2>&1 &
+fi
 APP=$!
 
 alive=1
@@ -57,7 +66,9 @@ fi
 kill "$XVFB" 2>/dev/null
 
 # PRISM/OBS write their own logs under the config dir.
-find "$XDG_CONFIG_HOME" -name '*.txt' -path '*log*' -exec cp {} "$OUT/" \; 2>/dev/null
-echo "--- stdout/stderr (tail) ---"; tail -n 80 "$OUT/stdout.txt"
+find "$OUT/config" "$OUT/data" "$OUT/cache" -type f > "$OUT/files.txt" 2>/dev/null
+find "$OUT/config" "$OUT/data" -type f \( -name '*.txt' -o -name '*.log' \) -size -2M \
+  -exec sh -c 'cp "$1" "$2/applog-$(basename "$1")"' _ {} "$OUT" \; 2>/dev/null
+echo "--- stdout/stderr ---"; sed -n "/CRASH BACKTRACE/,/ALL THREADS/p" "$OUT/stdout.txt"; tail -n 40 "$OUT/stdout.txt"
 echo "--- top-level windows ---"; grep -E '^\s+0x[0-9a-f]+ "' "$OUT/windows.txt" | head -20
 exit $status
