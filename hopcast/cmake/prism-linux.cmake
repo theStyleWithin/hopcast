@@ -53,3 +53,8 @@ add_compile_definitions(__cdecl= __stdcall=)
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64|amd64")
   string(APPEND CMAKE_CXX_FLAGS " -include immintrin.h")
 endif()
+
+# Compile C++ as ISO C++17 (not gnu++17): in GNU mode GCC predefines the macro
+# `linux` as 1, which breaks e.g. `bool linux` in obs-ui/update/models/whatsnew.hpp.
+# Upstream OBS builds with extensions off as well.
+set(CMAKE_CXX_EXTENSIONS OFF)
