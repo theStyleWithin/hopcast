@@ -1477,7 +1477,10 @@ void PLSMainView::updateSideBarButtonStyle(ConfigId id, bool on)
 				break;
 			}
 		}
-		PLSBasic::instance()->getApi()->on_event(pls_frontend_event::PLS_FRONTEND_EVENT_SIDE_WINDOW_VISIBLE_CHANGED, {id, on});
+		/* HopCast: on X11 docks are realized early, so their hide events can
+		 * arrive while PLSBasic is still being constructed (instance() == null). */
+		if (auto basic = PLSBasic::instance(); basic && basic->getApi())
+			basic->getApi()->on_event(pls_frontend_event::PLS_FRONTEND_EVENT_SIDE_WINDOW_VISIBLE_CHANGED, {id, on});
 	}
 }
 void PLSMainView::updateSidebarButtonTips(ConfigId id, const QString &tips) const
