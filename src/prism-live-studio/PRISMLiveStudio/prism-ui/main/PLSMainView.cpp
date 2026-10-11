@@ -108,13 +108,15 @@ PLSMainView::PLSMainView(QWidget *parent) : PLSToplevelView<QFrame>(CreateWinId:
 
 	pls_set_main_view(this);
 #ifdef HOPCAST_NO_NAVER
-	setWindowTitle(QStringLiteral("HopCast")); // HopCast: no PRISM name or icon
 	setWindowIcon(QIcon::fromTheme(QStringLiteral("camera-video")));
 #else
 	setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico"));
 #endif
 	ui = pls_new<Ui::PLSMainView>();
 	ui->setupUi(this);
+#ifdef HOPCAST_NO_NAVER
+	setWindowTitle(QStringLiteral("HopCast")); // HopCast: after setupUi, which sets PRISM's title
+#endif
 	setupRightSidebarWidgets();
 	pls_set_css(this, {"PLSMainView", "HelpMenu"});
 	ui->logo_update->setAttribute(Qt::WA_NativeWindow);
@@ -1344,6 +1346,14 @@ void PLSMainView::initHelpMenu()
 	const QString joined = titleList.join(", ");
 	PLS_DEBUG(MAINMENU_MODULE, "initHelpMenu helpList size=%d, items=%s", titleList.size(), joined.toUtf8().constData());
 	for (const QString &title : titleList) {
+#ifdef HOPCAST_NO_NAVER
+		/* HopCast: User Guide, FAQ, Website, Discord, Contact Us and Notices are
+		 * PRISM/NAVER pages and services; keep only Program Info. */
+		if (index < titleList.size() - 1) {
+			index++;
+			continue;
+		}
+#endif
 		QListWidgetItem *item = pls_new<QListWidgetItem>();
 		item->setData(Qt::UserRole, UserGuide + index);
 		const QString iconPath = (index < kHelpMenuItemIconCount) ? QString::fromUtf8(kHelpMenuItemIconQrc[index]) : QString();

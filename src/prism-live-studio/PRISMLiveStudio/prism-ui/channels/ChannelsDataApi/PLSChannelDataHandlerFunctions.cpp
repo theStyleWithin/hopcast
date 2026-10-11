@@ -1,3 +1,6 @@
+#include <QFileInfo>
+#include <QDir>
+#include <QSaveFile>
 #include "PLSChannelDataHandlerFunctions.h"
 
 #include <QJsonArray>
@@ -155,11 +158,88 @@ QVariantMap createPrismHeader()
 	return headerMap;
 }
 
+#ifdef HOPCAST_NO_NAVER
+/* HopCast: PRISM saved Custom RTMP channels on NAVER's server (per PRISM account).
+ * HopCast keeps the same records - {customUserDataSeq, customData} - in a local file,
+ * so the rest of PRISM's channel code works unchanged. */
+namespace hopcast_rtmp {
+static QString storePath()
+{
+	return pls_get_user_path(QStringLiteral("PRISMLiveStudio/user/hopcast-rtmp-channels.json"));
+}
+static QJsonArray load()
+{
+	QFile file(storePath());
+	if (!file.open(QIODevice::ReadOnly))
+		return {};
+	return QJsonDocument::fromJson(file.readAll()).array();
+}
+static void save(const QJsonArray &records)
+{
+	QDir().mkpath(QFileInfo(storePath()).absolutePath());
+	QSaveFile file(storePath());
+	if (file.open(QIODevice::WriteOnly)) {
+		file.write(QJsonDocument(records).toJson());
+		if (!file.commit())
+			PLS_ERROR(CHANNELDATAHANDLER, "HopCast: saving RTMP channels failed");
+	}
+	QFile::setPermissions(storePath(), QFileDevice::ReadOwner | QFileDevice::WriteOwner); // stream keys
+}
+static QString nextSeq(const QJsonArray &records)
+{
+	qint64 maxSeq = 0;
+	for (const auto &record : records)
+		maxSeq = qMax(maxSeq, record.toObject().value(g_customUserDataSeq).toString().toLongLong());
+	return QString::number(maxSeq + 1);
+}
+static int indexOf(const QJsonArray &records, const QString &seq)
+{
+	for (int i = 0; i < records.size(); ++i)
+		if (records.at(i).toObject().value(g_customUserDataSeq).toString() == seq)
+			return i;
+	return -1;
+}
+static QJsonObject customDataOf(const QString &uuid)
+{
+	return createJsonArrayFromInfo(uuid).value(g_customData).toObject();
+}
+static QJsonObject record(const QString &seq, const QJsonObject &customData)
+{
+	QJsonObject obj;
+	obj.insert(g_customUserDataSeq, seq);
+	obj.insert(g_customData, customData);
+	return obj;
+}
+} // namespace hopcast_rtmp
+#endif
+
 bool RTMPAddToPrism(const QString &uuid)
 {
 	PRE_LOG_MSG_STEP("add rtmp begin", g_addChannelStep, INFO)
 	HolderReleaser releaser(&PLSChannelDataAPI::addingHold);
 
+#ifdef HOPCAST_NO_NAVER
+	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
+		PLSCHANNELS_API->release();
+		auto records = hopcast_rtmp::load();
+		const QString seq = hopcast_rtmp::nextSeq(records);
+		const QJsonObject customData = hopcast_rtmp::customDataOf(uuid);
+		records.append(hopcast_rtmp::record(seq, customData));
+		hopcast_rtmp::save(records);
+		QMetaObject::invokeMethod(
+			PLSCHANNELS_API,
+			[uuid, seq, customData]() {
+				PLSCHANNELS_API->acquire();
+				auto &lastInfo = PLSCHANNELS_API->getChanelInfoRef(uuid);
+				addToMap(lastInfo, customData.toVariantMap());
+				lastInfo[g_customUserDataSeq] = seq;
+				FinishTaskReleaser finishAdd(uuid);
+				PLS_INFO(CHANNELDATAHANDLER, "HopCast: RTMP channel saved locally, seq %s", qUtf8Printable(seq));
+			},
+			Qt::QueuedConnection);
+	}
+	return true;
+#endif
 	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
 
 		PLSCHANNELS_API->release();
@@ -215,6 +295,10 @@ bool RTMPAddToPrism(const QString &uuid)
 
 bool AddOrgDataToNewApi(const QString &uuid, bool bAddFlag)
 {
+#ifdef HOPCAST_NO_NAVER
+	pls_unused(uuid, bAddFlag);
+	return true; // HopCast: migration of old server records - nothing to migrate locally
+#endif
 	if (bAddFlag) {
 		PLS_INFO(CHANNELDATAHANDLER, "Add flag to new API");
 	} else {
@@ -292,6 +376,33 @@ bool RTMPUpdateToPrism(const QString &uuid)
 
 	PRE_LOG_MSG_STEP("Update RTMP Begin ", g_updateChannelStep, INFO)
 	HolderReleaser releaser(&PLSChannelDataAPI::holdOnChannelArea);
+#ifdef HOPCAST_NO_NAVER
+	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
+		PLSCHANNELS_API->release();
+		auto records = hopcast_rtmp::load();
+		QString seq = PLSCHANNELS_API->getValueOfChannel(uuid, g_customUserDataSeq, QString());
+		const QJsonObject customData = hopcast_rtmp::customDataOf(uuid);
+		if (int i = hopcast_rtmp::indexOf(records, seq); i >= 0) {
+			records.replace(i, hopcast_rtmp::record(seq, customData));
+		} else {
+			seq = hopcast_rtmp::nextSeq(records);
+			records.append(hopcast_rtmp::record(seq, customData));
+		}
+		hopcast_rtmp::save(records);
+		QMetaObject::invokeMethod(
+			PLSCHANNELS_API,
+			[uuid, seq, customData]() {
+				PLSCHANNELS_API->acquire();
+				auto &lastInfo = PLSCHANNELS_API->getChanelInfoRef(uuid);
+				addToMap(lastInfo, customData.toVariantMap());
+				lastInfo[g_customUserDataSeq] = seq;
+				PLSCHANNELS_API->clearBackup(uuid);
+				FinishTaskReleaser finishUpdate(uuid);
+			},
+			Qt::QueuedConnection);
+	}
+	return true;
+#endif
 
 	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
 		PLSCHANNELS_API->release();
@@ -352,6 +463,28 @@ bool RTMPDeleteToPrism(const QString &uuid)
 {
 
 	PRE_LOG_MSG_STEP("Remove RMP channel Begin", g_removeChannelStep, INFO)
+#ifdef HOPCAST_NO_NAVER
+	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
+		PLSCHANNELS_API->release();
+		auto records = hopcast_rtmp::load();
+		const QString seq = PLSCHANNELS_API->getValueOfChannel(uuid, g_customUserDataSeq, QString());
+		if (int i = hopcast_rtmp::indexOf(records, seq); i >= 0) {
+			records.removeAt(i);
+			hopcast_rtmp::save(records);
+		}
+		QMetaObject::invokeMethod(
+			PLSCHANNELS_API,
+			[uuid]() {
+				PLSCHANNELS_API->acquire();
+				PLSCHANNELS_API->removeChannelInfo(uuid, true, false);
+				FinishTaskReleaser finishUpdate(uuid);
+			},
+			Qt::QueuedConnection);
+	} else {
+		PLS_ERROR(CHANNELDATAHANDLER, "ChannelInfo not exist,uuid is %s", uuid.toUtf8().constData());
+	}
+	return true;
+#endif
 	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
 		PLSCHANNELS_API->release();
 		auto headerMap = createPrismHeader();
@@ -412,6 +545,11 @@ void updateAllRtmpsV1()
 	HolderReleaser releaser(&PLSChannelDataAPI::holdOnChannelArea);
 	PLSCHANNELS_API->release();
 
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: load the locally saved channels (same format the server returned). */
+	updateRTMPCallback(QJsonDocument(hopcast_rtmp::load()).toJson(QJsonDocument::Compact), true);
+	return;
+#endif
 	auto headerMap = createPrismHeader();
 	if (headerMap.isEmpty()) {
 		PRE_LOG("update all RTMPs error when prism token is not right", INFO)
