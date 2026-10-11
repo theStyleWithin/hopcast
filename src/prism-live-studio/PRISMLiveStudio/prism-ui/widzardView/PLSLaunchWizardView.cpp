@@ -169,6 +169,9 @@ void PLSLaunchWizardView::startUpdateBanner()
 
 void PLSLaunchWizardView::getBannerJson()
 {
+#ifdef HOPCAST_NO_NAVER
+	return; // HopCast: NAVER banner service
+#endif
 	pls::rsm::UrlAndHowSave downJsonUrl;
 	downJsonUrl.url(pls_http_api_func::getPrismSynGateWay() + QStringLiteral("/pc-banner"));
 	downJsonUrl.fileName(pls::rsm::FileName::FromUrl);
