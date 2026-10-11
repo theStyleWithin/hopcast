@@ -29,6 +29,9 @@ PLSAboutView::PLSAboutView(QWidget *parent) : PLSDialogView(parent)
 	ui->rightLabel->setWordWrap(true);
 	ui->rightLabel->setMinimumHeight(48);
 	ui->rightLabel->setText(QStringLiteral("Free software under the GNU GPL v2.\nBased on PRISM Live Studio (NAVER Corp.) and OBS Studio."));
+	ui->rightLabel->setAlignment(Qt::AlignCenter);
+	setFixedSize(342, 400); // room for the two-line credit (no update button)
+	initSize(342, 400);
 #endif
 
 #if defined(Q_OS_MACOS)
