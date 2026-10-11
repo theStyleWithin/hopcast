@@ -2,6 +2,8 @@
 #pragma once
 
 #include <QObject>
+#include <QUrl>
+#include <string>
 #include <qwindowdefs.h>
 
 struct pls_mac_ver_t {
@@ -105,7 +107,9 @@ bool pls_remove_all_downloaded_mac_app_small_equal_version(const QString &downlo
 
 void bring_mac_window_to_front(WId winId);
 
+#ifdef __OBJC__ // HopCast: Objective-C only
 NSString *getNSStringFromQString(const QString &qString);
+#endif
 
 MacHandle pls_process_create(const QString &program, const QStringList &arguments, const QString &work_dir);
 

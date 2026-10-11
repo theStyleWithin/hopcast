@@ -50,7 +50,7 @@ public:
 			      QNetworkInformation::loadDefaultBackend();
 		QNetworkInformation *info = loaded ? QNetworkInformation::instance() : nullptr;
 		if (!info) {
-			PLS_WARN(NETWORK_STATE_MODULE, "No network information backend available; assuming connected");
+			PLS_WARN(NETWORK_STATE_MODULE, "%s", "No network information backend available; assuming connected");
 			m_available = true;
 			return false;
 		}

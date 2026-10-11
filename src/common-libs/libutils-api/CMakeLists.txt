@@ -19,15 +19,16 @@ if(OS_MACOS)
     find_library(MacSecurity Security)
     find_library(APPKIT Appkit)
     list(REMOVE_ITEM ALL_FILES network-state.h network-state.cpp get_win_ver.cpp)
-    list(REMOVE_ITEM ALL_FILES network-state-linux.cpp libutils-gpu-cpu-monitor-info-linux.cpp) # HopCast
+    list(REMOVE_ITEM ALL_FILES network-state-linux.cpp libutils-gpu-cpu-monitor-info-linux.cpp libutils-api-linux.cpp) # HopCast
     file(GLOB_RECURSE SOURCES_MM_FILES *.mm *.m)
     set_source_files_properties(${SOURCES_MM_FILES} PROPERTIES COMPILE_FLAGS -fobjc-arc)
 elseif(OS_WINDOWS)
     list(REMOVE_ITEM ALL_FILES network-state-mac.h network-state-mac.mm libutils-api-mac.h libutils-api-mac.mm PLSMacFunction.h PLSMacFunction.m)
-    list(REMOVE_ITEM ALL_FILES network-state-linux.cpp libutils-gpu-cpu-monitor-info-linux.cpp) # HopCast
+    list(REMOVE_ITEM ALL_FILES network-state-linux.cpp libutils-gpu-cpu-monitor-info-linux.cpp libutils-api-linux.cpp) # HopCast
 elseif(OS_LINUX)
     # HopCast: Linux uses network-state-linux.cpp (QNetworkInformation) and
-    # libutils-gpu-cpu-monitor-info-linux.cpp (/proc, /sys, QScreen).
+    # libutils-gpu-cpu-monitor-info-linux.cpp (/proc, /sys, QScreen), and
+    # libutils-api-linux.cpp (POSIX/Qt implementation of the libutils-api-mac.h helpers).
     list(REMOVE_ITEM ALL_FILES network-state.cpp get_win_ver.cpp
         network-state-mac.h network-state-mac.mm libutils-api-mac.h libutils-api-mac.mm
         PLSMacFunction.h PLSMacFunction.m CrossProcessNotification.h CrossProcessNotification.m
@@ -43,7 +44,8 @@ target_compile_options(libutils-api PRIVATE -fobjc-arc)
 elseif(OS_WINDOWS)
 target_link_libraries(libutils-api Qt6::Core Qt6::Gui Qt6::Network)
 elseif(OS_LINUX)
-target_link_libraries(libutils-api Qt6::Core Qt6::Gui Qt6::Network)
+# GuiPrivate: QZipReader/QZipWriter used by libutils-api-linux.cpp
+target_link_libraries(libutils-api Qt6::Core Qt6::Gui Qt6::GuiPrivate Qt6::Network)
 endif()
 
 set_target_properties(libutils-api PROPERTIES FOLDER common-libs)

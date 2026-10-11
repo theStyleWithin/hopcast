@@ -52,6 +52,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(OS_FREEBSD OFF)
   set(OS_OPENBSD OFF)
   list(APPEND CMAKE_MODULE_PATH "$ENV{OBS_SRC_DIR}/cmake/linux")
+  # Static third-party libs (e.g. QtApng's libpng) end up in shared objects.
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
 if(NOT OS_LINUX)

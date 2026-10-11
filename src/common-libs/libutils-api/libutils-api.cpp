@@ -15,6 +15,12 @@
 #include <sys/sysctl.h>
 #include <pthread.h>
 #include <notify.h>
+#elif defined(Q_OS_LINUX) // HopCast
+#include <malloc.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <fstream>
 #endif
 
 #include <array>
@@ -54,6 +60,7 @@
 #include <dlfcn.h>
 #else
 #include <semaphore.h>
+#include <dlfcn.h> // HopCast: Linux
 #endif
 
 #if defined(Q_OS_WIN)
@@ -294,19 +301,19 @@ QString get_qsetting_product_name(pls_product_type_t product_type)
 	case pls_product_type_t::Prism:
 #if defined(Q_OS_WIN)
 		return QStringLiteral("Prism Live Studio");
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 		return QStringLiteral("prismlivestudio");
 #endif
 	case pls_product_type_t::Lens:
 #if defined(Q_OS_WIN)
 		return QStringLiteral("PRISM Lens");
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 		return QStringLiteral("camstudio");
 #endif
 	case pls_product_type_t::Installer:
 #if defined(Q_OS_WIN)
 		return QStringLiteral("PRISM Installer");
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 		return QString();
 #endif
 	default:
@@ -336,7 +343,7 @@ LIBUTILSAPI_API pls_product_type_t pls_product_type()
 				LocalGlobalVars::g_product_type = pls_product_type_t::Installer;
 			else
 				LocalGlobalVars::g_product_type = pls_product_type_t::Unknown;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 			if (QDir app_dir(pls_get_app_dir()); app_dir.exists(QStringLiteral("PRISMLiveStudio")))
 				LocalGlobalVars::g_product_type = pls_product_type_t::Prism;
 			else if (app_dir.exists(QStringLiteral("PRISMLens")))
@@ -370,7 +377,7 @@ LIBUTILSAPI_API pls_process_type_t pls_process_type()
 				LocalGlobalVars::g_process_type = pls_process_type_t::Installer;
 			else
 				LocalGlobalVars::g_process_type = pls_process_type_t::Unknown;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 			if (auto pn = pls_get_app_pn(); pn == QStringLiteral("PRISMLiveStudio"))
 				LocalGlobalVars::g_process_type = pls_process_type_t::Prism;
 			else if (pn == QStringLiteral("PRISMLens"))
@@ -1706,7 +1713,7 @@ LIBUTILSAPI_API QString pls_get_app_dir()
 	GetModuleFileNameW(nullptr, dir.data(), dir.size());
 	PathRemoveFileSpecW(dir.data());
 	return QString::fromWCharArray(dir.data());
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_get_app_executable_dir();
 #endif
 }
@@ -1719,7 +1726,7 @@ LIBUTILSAPI_API QString pls_get_app_data_path(const QString &name)
 		return pls_get_app_dir() + QStringLiteral("/../../data") + name;
 	else
 		return pls_get_app_dir() + QStringLiteral("/../../data/") + name;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	if (name.isEmpty())
 		return pls_get_app_resource_dir() + QStringLiteral("/data");
 	else if (name.startsWith('/'))
@@ -1734,7 +1741,7 @@ LIBUTILSAPI_API QString pls_get_app_data_path_pn(const QString &name)
 		return pls_get_app_data_path(pls_product_is_prism() ? QStringLiteral("/prism-studio") : QStringLiteral("/prism-lens"));
 #if defined(Q_OS_WIN)
 	else if (name.startsWith('/') || name.startsWith('\\'))
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	else if (name.startsWith('/'))
 #endif
 		return pls_get_app_data_path((pls_product_is_prism() ? QStringLiteral("/prism-studio") : QStringLiteral("/prism-lens")) + name);
@@ -1749,7 +1756,7 @@ static QString get_app_user_data_path(const QString &name)
 	memset(wpath, 0, sizeof(wpath));
 	SHGetFolderPathW(nullptr, CSIDL_APPDATA, nullptr, SHGFP_TYPE_CURRENT, wpath);
 	QString dirPath = QDir::fromNativeSeparators(QString::fromUtf8(pls_unicode_to_utf8(wpath)));
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	QString dirPath = pls_get_mac_app_data_dir();
 #endif
 
@@ -1757,7 +1764,7 @@ static QString get_app_user_data_path(const QString &name)
 		return dirPath;
 #if defined(Q_OS_WIN)
 	else if (name.startsWith('/') || name.startsWith('\\'))
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	else if (name.startsWith('/'))
 #endif
 		return dirPath + name;
@@ -1776,7 +1783,7 @@ LIBUTILSAPI_API QString pls_get_app_user_data_dir_path_pn(const QString &name, b
 		return pls_get_app_user_data_dir_path(get_user_data_product_name(), mkdir);
 #if defined(Q_OS_WIN)
 	else if (name.startsWith('/') || name.startsWith('\\'))
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	else if (name.startsWith('/'))
 #endif
 		return pls_get_app_user_data_dir_path(get_user_data_product_name() + name, mkdir);
@@ -1796,7 +1803,7 @@ LIBUTILSAPI_API QString pls_get_app_user_data_file_path_pn(const QString &name, 
 		return pls_get_app_user_data_file_path(get_user_data_product_name(), mkdir);
 #if defined(Q_OS_WIN)
 	else if (name.startsWith('/') || name.startsWith('\\'))
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	else if (name.startsWith('/'))
 #endif
 		return pls_get_app_user_data_file_path(get_user_data_product_name() + name, mkdir);
@@ -1809,7 +1816,7 @@ LIBUTILSAPI_API QString pls_get_app_pn()
 	pls::wchars<512> processName;
 	GetModuleFileNameW(nullptr, processName, (DWORD)processName.capacity());
 	return QString::fromWCharArray(PathFindFileNameW(processName));
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_get_app_pn();
 #endif
 }
@@ -1824,7 +1831,7 @@ LIBUTILSAPI_API QString pls_get_dll_dir(const QString &dll_name)
 		return QString::fromWCharArray(dir.data());
 	}
 	return QString();
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_get_dll_dir(dll_name);
 #endif
 }
@@ -2138,7 +2145,7 @@ public:
 	HANDLE m_process;
 	pls_process_t(HANDLE process) : m_process(process) {}
 	~pls_process_t() { pls_delete(m_process, CloseHandle, nullptr); }
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	MacHandle m_process;
 	pls_process_t(MacHandle process) : m_process(process) {}
 	~pls_process_t() { pls_delete(m_process, nullptr); }
@@ -2159,7 +2166,7 @@ static pls_process_t *new_process(HANDLE hProcess, bool terminate = true)
 	pls_delete(hProcess, CloseHandle);
 	return nullptr;
 }
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 static pls_process_t *new_process(MacHandle hProcess, bool terminate = true)
 {
 	if (hProcess->pid == 0) {
@@ -2254,7 +2261,7 @@ LIBUTILSAPI_API pls_process_t *pls_process_create(uint32_t process_id)
 		return new_process(hLimitedProcess, false);
 	}
 	return nullptr;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	MacHandle handle = pls_libutil_api_mac::pls_process_create(process_id);
 	pls_process_t *process = new_process(handle);
 	pls_add_monitor_process_exit_event(process);
@@ -2263,7 +2270,7 @@ LIBUTILSAPI_API pls_process_t *pls_process_create(uint32_t process_id)
 }
 LIBUTILSAPI_API void pls_process_destroy(pls_process_t *process)
 {
-#if defined(Q_OS_MACOS)
+#if defined(PLS_POSIX_API)
 	pls_remove_monitor_process_exit_event(process);
 #endif
 	pls_delete(process);
@@ -2276,7 +2283,7 @@ LIBUTILSAPI_API int pls_process_wait(pls_process_t *process, int timeout)
 		return WaitForSingleObject(process->m_process, (timeout >= 0) ? timeout : INFINITE) == WAIT_OBJECT_0 ? 1 : 0;
 	}
 	return -1;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	if (process && process->m_process) {
 		return pls_libutil_api_mac::pls_process_wait(process->m_process, timeout);
 	}
@@ -2290,7 +2297,7 @@ LIBUTILSAPI_API uint32_t pls_process_id(pls_process_t *process)
 		return GetProcessId(process->m_process);
 	}
 	return 0;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	if (process && process->m_process) {
 		return pls_libutil_api_mac::pls_process_id(process->m_process);
 	}
@@ -2318,7 +2325,7 @@ LIBUTILSAPI_API bool pls_process_exit_code(uint32_t *exit_code, pls_process_t *p
 		return false;
 	}
 	return false;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_process_exit_code(process->m_process, exit_code);
 #endif
 }
@@ -2335,7 +2342,7 @@ LIBUTILSAPI_API bool pls_process_terminate(pls_process_t *process, int exit_code
 		return false;
 	}
 	return false;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	if (process && process->m_process) {
 		return pls_libutil_api_mac::pls_process_destroy(process->m_process);
 	}
@@ -2347,7 +2354,7 @@ LIBUTILSAPI_API uint32_t pls_current_process_id()
 {
 #if defined(Q_OS_WIN)
 	return GetCurrentProcessId();
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_current_process_id();
 #endif
 }
@@ -2369,7 +2376,7 @@ LIBUTILSAPI_API bool pls_is_valid_process_id(uint32_t process_id)
 		CloseHandle(snapshot);
 	}
 	return is_valid;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_is_process_running(process_id);
 #endif
 }
@@ -2380,7 +2387,7 @@ LIBUTILSAPI_API bool pls_process_terminate(uint32_t process_id, int exit_code)
 		return TerminateProcess(hProcess, exit_code) ? true : false;
 	}
 	return false;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_process_force_terminte(process_id, exit_code);
 #endif
 }
@@ -2388,7 +2395,7 @@ LIBUTILSAPI_API bool pls_process_terminate(int exit_code)
 {
 #if defined(Q_OS_WIN)
 	return TerminateProcess(GetCurrentProcess(), exit_code) ? true : false;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_process_force_terminte(exit_code);
 #endif
 }
@@ -2399,6 +2406,8 @@ LIBUTILSAPI_API uint32_t pls_current_thread_id()
 	return GetCurrentThreadId();
 #elif defined(Q_OS_MACOS)
 	return pthread_mach_thread_np(pthread_self());
+#elif defined(Q_OS_LINUX) // HopCast
+	return static_cast<uint32_t>(gettid());
 #endif
 }
 
@@ -3503,6 +3512,12 @@ LIBUTILSAPI_API bool pls_is_debugger_present(int pid)
 	return IsDebuggerPresent();
 #elif defined(Q_OS_MACOS)
 	return projectIsDebugged(pid);
+#elif defined(Q_OS_LINUX) // HopCast: a non-zero TracerPid means a debugger is attached
+	std::ifstream status("/proc/" + (pid == -1 ? std::string("self") : std::to_string(pid)) + "/status");
+	for (std::string line; std::getline(status, line);)
+		if (line.rfind("TracerPid:", 0) == 0)
+			return std::stoi(line.substr(10)) != 0;
+	return false;
 #endif
 }
 
@@ -3514,7 +3529,7 @@ LIBUTILSAPI_API void pls_printf(const wchar_t *text)
 	} else {
 		std::wcout << text;
 	}
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	Q_ASSERT(false); //use pls_mac_printf instead
 	std::wcout << text;
 #endif
@@ -3542,7 +3557,7 @@ LIBUTILSAPI_API void pls_mac_printf(const char *format, ...)
 
 #if defined(Q_OS_WIN)
 	Q_ASSERT(false); //use pls_printf instead
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	va_list args;
 	va_start(args, format);
 	vprintf(format, args);
@@ -3595,7 +3610,7 @@ LIBUTILSAPI_API QVariant pls_get_qsetting_value(pls_product_type_t product_type,
 
 #if defined(Q_OS_WIN)
 	QSettings setting(QStringLiteral("NAVER Corporation"), product_name);
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	QSettings setting(QStringLiteral("prismlive"), product_name);
 #endif
 	return setting.value(key, defaultVal);
@@ -3608,7 +3623,7 @@ LIBUTILSAPI_API void pls_set_qsetting_value(pls_product_type_t product_type, con
 
 #if defined(Q_OS_WIN)
 	QSettings setting(QStringLiteral("NAVER Corporation"), product_name);
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	QSettings setting(QStringLiteral("prismlive"), product_name);
 #endif
 	setting.setValue(key, value);
@@ -3652,7 +3667,7 @@ static int locale2languageID(const QString &locale, int defaultLanguageID = 1033
 	}
 	return defaultLanguageID;
 }
-#if defined(Q_OS_MACOS)
+#if defined(PLS_POSIX_API)
 static QString findSystemMacthedlanguage(const QMap<QString /* en-US, ko-KR, pt-BR, ... */, QMap<pls_locale_attr_t, QVariant>> &locales)
 {
 	QString languageDesignator = pls_libutil_api_mac::pls_get_system_language().split("-").first();
@@ -3677,7 +3692,7 @@ static QString languageID2Locale(int languageID, const QString &defaultLanguage 
 		}
 	}
 
-#if defined(Q_OS_MACOS)
+#if defined(PLS_POSIX_API)
 	QString syslanguage = findSystemMacthedlanguage(locales);
 	if (!syslanguage.isEmpty()) {
 		pls_set_locale(syslanguage);
@@ -3716,7 +3731,7 @@ LIBUTILSAPI_API void pls_set_locale(const QString &locale)
 	int languageID = locale2languageID(locale);
 	settings.setValue("InstallLanguage", languageID);
 	settings.sync();
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	QSettings settings(QStringLiteral("prismlive"), pls_product_is_prism() ? QStringLiteral("prismlivestudio") : QStringLiteral("camstudio"));
 	int languageID = locale2languageID(locale);
 	settings.setValue("InstallLanguage", languageID);
@@ -3733,7 +3748,7 @@ LIBUTILSAPI_API QString pls_get_locale()
 			QSettings settings(QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\") + get_product_name(), QSettings::NativeFormat);
 			int languageID = settings.value("InstallLanguage").toInt();
 			LocalGlobalVars::g_locale = languageID2Locale(languageID);
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 			QSettings settings(QStringLiteral("prismlive"), pls_product_is_prism() ? QStringLiteral("prismlivestudio") : QStringLiteral("camstudio"));
 			int languageID = settings.value("InstallLanguage").toInt();
 			LocalGlobalVars::g_locale = languageID2Locale(languageID);
@@ -3895,12 +3910,12 @@ LIBUTILSAPI_API void pls_bring_window_to_front(WId winId)
 {
 #if defined(Q_OS_WIN)
 	pls_bring_win_window_to_front(winId);
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	pls_bring_mac_window_to_front(winId);
 #endif
 }
 
-#ifdef Q_OS_MACOS
+#ifdef PLS_POSIX_API
 LIBUTILSAPI_API pls_mac_ver_t pls_get_mac_systerm_ver()
 {
 	return pls_libutil_api_mac::pls_get_mac_systerm_ver();
@@ -4092,7 +4107,7 @@ LIBUTILSAPI_API std::wstring pls_utf8_to_unicode(const char *utf8)
 		return unicode;
 	}
 	return {};
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_utf8_to_unicode(utf8);
 #endif
 }
@@ -4109,7 +4124,7 @@ LIBUTILSAPI_API std::string pls_unicode_to_utf8(const wchar_t *unicode)
 		return utf8;
 	}
 	return {};
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_unicode_to_utf8(unicode);
 #endif
 }
@@ -4384,7 +4399,7 @@ LIBUTILSAPI_API bool pls_request_lens_show_settings()
 
 #endif
 
-#if defined(Q_OS_MACOS)
+#if defined(PLS_POSIX_API)
 #define PRISM_LENS_REQUEST_EXIT_NOTIFY "prism_request_exit"
 #define PRISM_LENS_REQUEST_SHOW_SETTINGS_NOTIFY "prism_request_show_settings"
 
@@ -4498,7 +4513,7 @@ LIBUTILSAPI_API int pls_get_platform_window_height_by_windows_height(int windows
 {
 #if defined(Q_OS_WIN)
 	return windowsHeight;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return windowsHeight - 40;
 #else
 	return windowsHeight;
@@ -4520,7 +4535,7 @@ bool pls_dlopen_i(pls_dl_t &dl, const QString &dl_path)
 	}
 	pls_set_last_error(GetLastError());
 	PLS_WARN(UTILS_API_MODULE, "load library failed, path: %s, error code: %u", pls_get_path_file_name(dl_path).toUtf8().constData(), GetLastError());
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	auto path = dl_path.toStdString();
 	if (auto handle = dlopen(path.c_str(), RTLD_LAZY | RTLD_FIRST); handle) {
 		dl.handle = handle;
@@ -4544,7 +4559,7 @@ LIBUTILSAPI_API bool pls_dlopen(pls_dl_t &dl, const QString &dl_path)
 	} else if (pls_dlopen_i(dl, dl_path + ".dll")) {
 		return true;
 	}
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	else if (dl_path.contains(QLatin1String(".framework"), Qt::CaseInsensitive) //
 		 || dl_path.contains(QLatin1String(".plugin"), Qt::CaseInsensitive) //
 		 || dl_path.contains(QLatin1String(".dylib"), Qt::CaseInsensitive)  //
@@ -4611,7 +4626,7 @@ LIBUTILSAPI_API pls_language_t pls_get_os_language()
 #if defined(Q_OS_WIN)
 	auto lid = GetUserDefaultUILanguage();
 	return pls_get_os_language_from_lid(lid);
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_language_t::NotImplement;
 #endif
 }
@@ -4671,7 +4686,7 @@ LIBUTILSAPI_API pls_language_t pls_get_os_language_from_lid(uint16_t lid)
 	}
 	return pls_language_t::Other;
 }
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 #endif
 
 LIBUTILSAPI_API bool pls_is_mouse_pressed(Qt::MouseButton button)
@@ -4687,12 +4702,12 @@ LIBUTILSAPI_API bool pls_is_mouse_pressed(Qt::MouseButton button)
 	default:
 		return false;
 	}
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_is_mouse_pressed_by_mac(button);
 #endif
 }
 
-#if defined(Q_OS_MACOS)
+#if defined(PLS_POSIX_API)
 LIBUTILSAPI_API void pls_set_current_lens(int index)
 {
 	pls_libutil_api_mac::pls_set_current_lens(index);
@@ -4715,7 +4730,7 @@ LIBUTILSAPI_API void pls_open_app(const QString &program, const QStringList &arg
 
 LIBUTILSAPI_API bool pls_is_os_sys_macos()
 {
-#if defined(Q_OS_MACOS)
+#if defined(PLS_POSIX_API)
 	return true;
 #else
 	return false;
@@ -4912,7 +4927,7 @@ LIBUTILSAPI_API bool pls_open_url(const QString &url)
 	sei.lpFile = browserPath.c_str();
 	bool ret = false;
 	return ShellExecuteEx(&sei);
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_open_url_mac(url);
 #endif
 }
@@ -4921,7 +4936,7 @@ LIBUTILSAPI_API bool pls_lens_needs_reboot()
 {
 #if defined(Q_OS_WIN)
 	return false;
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 	return pls_libutil_api_mac::pls_lens_needs_reboot();
 #endif
 }

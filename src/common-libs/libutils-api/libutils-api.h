@@ -37,10 +37,19 @@
 #include <qmetaobject.h>
 #include <qwindowdefs.h>
 
+// HopCast: Linux uses the same POSIX flavour of this API as macOS; the helper
+// interface in libutils-api-mac.h is implemented for Linux in libutils-api-linux.cpp.
+#if defined(Q_OS_MACOS) || defined(Q_OS_LINUX)
+#define PLS_POSIX_API 1
+#endif
+
 #if defined(Q_OS_WIN)
 #include <malloc.h>
 #elif defined(Q_OS_MACOS)
 #include <malloc/malloc.h>
+#include "libutils-api-mac.h"
+#elif defined(Q_OS_LINUX)
+#include <malloc.h>
 #include "libutils-api-mac.h"
 #endif
 #include "libutils-export.h"
@@ -564,7 +573,7 @@ LIBUTILSAPI_API bool pls_is_after_win10();
 LIBUTILSAPI_API QString pls_get_win_name();
 LIBUTILSAPI_API QString pls_get_win_name_with_arch();
 LIBUTILSAPI_API void pls_bring_win_window_to_front(WId winId);
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 LIBUTILSAPI_API pls_mac_ver_t pls_get_mac_systerm_ver();
 LIBUTILSAPI_API bool pls_unZipFile(const QString &dstDirPath, const QString &srcFilePath);
 LIBUTILSAPI_API bool pls_zipFile(const QString &destZipPath, const QString &sourceDirName, const QString &sourceFolderPath);
@@ -624,7 +633,7 @@ LIBUTILSAPI_API bool pls_is_process_running(const wchar_t *executableName, int &
 LIBUTILSAPI_API LENS_WINDOWS_STATUS pls_is_cam_window_visible(uint32_t processId);
 LIBUTILSAPI_API bool pls_request_lens_exit();
 LIBUTILSAPI_API bool pls_request_lens_show_settings();
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 LIBUTILSAPI_API bool pls_is_process_running(const char *executableName, int &pid);
 LIBUTILSAPI_API LENS_WINDOWS_STATUS pls_is_cam_window_visible();
 LIBUTILSAPI_API bool pls_active_cam_window();
@@ -701,12 +710,12 @@ LIBUTILSAPI_API QString pls_get_os_language(pls_language_t language);
 
 #if defined(Q_OS_WIN)
 LIBUTILSAPI_API pls_language_t pls_get_os_language_from_lid(uint16_t lid);
-#elif defined(Q_OS_MACOS)
+#elif defined(PLS_POSIX_API)
 #endif
 
 LIBUTILSAPI_API bool pls_is_mouse_pressed(Qt::MouseButton button);
 
-#if defined(Q_OS_MACOS)
+#if defined(PLS_POSIX_API)
 LIBUTILSAPI_API void pls_set_current_lens(int index);
 LIBUTILSAPI_API void pls_open_app(const QString &program, const QStringList &arguments, const std::function<void(const bool created, const bool launched)> &callback);
 struct pls_open_app_cb_t {
