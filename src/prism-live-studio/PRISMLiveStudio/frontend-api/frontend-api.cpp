@@ -1662,7 +1662,7 @@ template<class T> void onWriteClient(const QString &addr, T &&callback, QTcpSock
 	QUrlQuery query(url.query());
 #if defined(Q_OS_WIN)
 	QString htmlPath = pls_get_app_dir() + QString("/../../data/prism-studio/webpage/%1");
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	QString htmlPath = pls_get_app_resource_dir() + "/data/prism-studio/webpage/%1";
 #endif
 	if (auto code = query.queryItemValue("code", QUrl::FullyDecoded); code.isEmpty()) {
@@ -2118,6 +2118,16 @@ FRONTEND_API bool pls_register_mdns_service(const char *pszName, unsigned short 
 	}
 
 	return true;
+}
+
+#elif defined(Q_OS_LINUX)
+
+// HopCast: mDNS/Bonjour registration (PRISM mobile discovery) isn't implemented on
+// Linux yet (Avahi would be the equivalent). Report failure so callers fall back.
+FRONTEND_API void pls_register_mdns_service_ex(const char *, unsigned short, const ServiceRecord &, bool bRegister, void *context, void (*completion)(void *context, bool success))
+{
+	if (completion)
+		completion(context, !bRegister);
 }
 
 #else

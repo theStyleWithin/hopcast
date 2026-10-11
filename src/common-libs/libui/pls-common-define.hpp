@@ -716,6 +716,15 @@ constexpr auto GAME_SOURCE_ID = "syphon-input";
 constexpr auto OBS_MACOS_AUDIO_CAPTURE_SOURCE_ID = "sck_audio_capture";
 constexpr auto OBS_MACOS_VIDEO_CAPTURE_SOURCE_ID = "macos-avcapture";
 constexpr auto OBS_MACOS_CAPTURE_CARD_SOURCE_ID = "macos-avcapture-fast";
+#else // HopCast: Linux source types from the engine's Linux plugins
+constexpr auto OBS_DSHOW_SOURCE_ID = "v4l2_input";
+constexpr auto AUDIO_INPUT_SOURCE_ID = "pulse_input_capture";
+constexpr auto AUDIO_OUTPUT_SOURCE_ID = "pulse_output_capture";
+constexpr auto AUDIO_OUTPUT_SOURCE_ID_V2 = "pulse_output_capture";
+constexpr auto PRISM_MONITOR_SOURCE_ID = "pipewire-screen-capture-source"; // Wayland + X11 via xdg-desktop-portal
+constexpr auto GDIP_TEXT_SOURCE_ID = "text_ft2_source";
+constexpr auto GDIP_TEXT_SOURCE_ID_V2 = "text_ft2_source_v2";
+constexpr auto GAME_SOURCE_ID = "game_capture"; // no game capture on Linux; not registered, so hidden
 #endif
 
 constexpr auto WAVEFORM_SOURCE_ID = "phandasm_waveform_source";

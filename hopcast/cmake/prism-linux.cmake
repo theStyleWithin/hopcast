@@ -38,3 +38,7 @@ function(hopcast_exclude_objc_everywhere)
 endfunction()
 
 cmake_language(DEFER DIRECTORY "${CMAKE_SOURCE_DIR}" CALL hopcast_exclude_objc_everywhere)
+
+# MSVC calling-convention keywords used in shared PRISM headers (clang on macOS
+# accepts them; GCC doesn't). x86-64 Linux has a single calling convention.
+add_compile_definitions(__cdecl= __stdcall=)
