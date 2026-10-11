@@ -12,6 +12,8 @@ using namespace common;
 #define PLATFORM_VIDEO_CAPTURE_SOURCE_ID OBS_DSHOW_SOURCE_ID
 #elif defined(Q_OS_MACOS)
 #define PLATFORM_VIDEO_CAPTURE_SOURCE_ID OBS_MACOS_VIDEO_CAPTURE_SOURCE_ID
+#else // HopCast: Linux webcam (v4l2_input)
+#define PLATFORM_VIDEO_CAPTURE_SOURCE_ID OBS_DSHOW_SOURCE_ID
 #endif
 
 // Get canvas aspect ratio category from current video settings

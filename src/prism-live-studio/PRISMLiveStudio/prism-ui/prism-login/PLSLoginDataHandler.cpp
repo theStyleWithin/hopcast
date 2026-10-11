@@ -117,7 +117,7 @@ QVariantMap PLSLoginDataHandler::getRequestApiDefaultHeader(bool hasGcc) const
 	}
 #if defined(Q_OS_WIN)
 	pls_win_ver_t ver = pls_get_win_ver();
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 	pls_mac_ver_t ver = pls_get_mac_systerm_ver();
 #endif
 	headMap[pls_launcher_const::HEADER_PRISM_LANGUAGE] = QString(pls_get_locale());
@@ -126,6 +126,8 @@ QVariantMap PLSLoginDataHandler::getRequestApiDefaultHeader(bool hasGcc) const
 	headMap[pls_launcher_const::HEADER_PRISM_DEVICE] = QStringLiteral("Windows OS");
 #elif defined(Q_OS_MACOS)
 	headMap[pls_launcher_const::HEADER_PRISM_DEVICE] = QStringLiteral("Mac OS");
+#else // HopCast
+	headMap[pls_launcher_const::HEADER_PRISM_DEVICE] = QStringLiteral("Linux");
 #endif
 	headMap[pls_launcher_const::HEADER_PRISM_IP] = pls_get_local_ip();
 #ifdef Q_OS_WIN64

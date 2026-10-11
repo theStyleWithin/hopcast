@@ -636,7 +636,7 @@ void PLSApp::clearNaverShoppingConfig()
 }
 void PLSApp::InitCrashConfigDefaults() const
 {
-#if defined(Q_OS_MACOS)
+#if !defined(Q_OS_WIN) && !defined(MAX_PATH) // HopCast: macOS and Linux
 #define MAX_PATH PATH_MAX
 #endif
 

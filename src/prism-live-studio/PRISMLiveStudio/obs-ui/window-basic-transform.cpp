@@ -61,11 +61,8 @@ OBSBasicTransform::OBSBasicTransform(OBSSceneItem item, OBSBasic *parent)
 	HookWidget(ui->cropRight, ISCROLL_CHANGED, &OBSBasicTransform::OnCropChanged);
 	HookWidget(ui->cropTop, ISCROLL_CHANGED, &OBSBasicTransform::OnCropChanged);
 	HookWidget(ui->cropBottom, ISCROLL_CHANGED, &OBSBasicTransform::OnCropChanged);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
-	HookWidget(ui->cropToBounds, &PLSCheckBox::checkStateChanged, &OBSBasicTransform::OnControlChanged);
-#else
+	// HopCast: PLSCheckBox (a QWidget, not QCheckBox) only has stateChanged, on any Qt version.
 	HookWidget(ui->cropToBounds, &PLSCheckBox::stateChanged, &OBSBasicTransform::OnControlChanged);
-#endif
 
 	ui->buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
 

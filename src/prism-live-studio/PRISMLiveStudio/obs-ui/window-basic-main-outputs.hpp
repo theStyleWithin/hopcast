@@ -118,7 +118,7 @@ protected:
 	OBSDataAutoRelease GenerateMultitrackVideoStreamDumpConfig();
 
 public: //--------------------------------------------- prism code -------------------------------------------
-	PLSOutputHandler *manager = __nullptr;
+	PLSOutputHandler *manager = nullptr; // HopCast: was MSVC __nullptr
 	size_t outputIndex = 0;
 	bool vertical = false;
 

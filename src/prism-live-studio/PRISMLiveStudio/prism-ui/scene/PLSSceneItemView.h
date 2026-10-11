@@ -2,6 +2,7 @@
 #define PLSSCENEITEMVIEW_H
 
 #include "qt-display.hpp"
+#include "PLSPreviewMaskWidget.h" // HopCast: Qt >= 6.8 QPointer<T> needs the complete type
 #include "PLSLabel.h"
 
 #include <QFrame>

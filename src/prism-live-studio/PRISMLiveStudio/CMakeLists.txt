@@ -965,8 +965,9 @@ if(TARGET OBS::browser-panels)
       ON
       CACHE INTERNAL "Enable WhatsNew dialog")
   elseif(OS_LINUX)
-    # HopCast: WhatsNew shows OBS Project announcements fetched from OBS servers; off.
-    option(ENABLE_WHATSNEW "Enable WhatsNew dialog" OFF)
+    # HopCast: keep ON like Windows/macOS. NAVER guards OBS's WhatsNew code with
+    # '#ifndef WHATSNEW_ENABLED', so defining it is what *disables* that code.
+    set(ENABLE_WHATSNEW ON CACHE INTERNAL "Enable WhatsNew dialog")
   endif()
 
   if(ENABLE_WHATSNEW)
@@ -1204,6 +1205,14 @@ elseif(OS_MACOS)
     DL_D3D11="libobs-d3d11.dll"
     DL_OPENGL="libobs-opengl.dylib"
     DL_D3D9="")
+elseif(OS_LINUX) # HopCast: OpenGL renderer from the engine; prefix used by obs-ui/platform-x11.cpp
+  target_compile_definitions(
+    PRISMLiveStudio PRIVATE
+    DL_METAL=""
+    DL_D3D11=""
+    DL_OPENGL="libobs-opengl"
+    DL_D3D9=""
+    OBS_INSTALL_PREFIX="/usr")
 endif()
 
 get_property(obs_module_list GLOBAL PROPERTY OBS_MODULES_ENABLED)

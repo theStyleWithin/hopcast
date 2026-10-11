@@ -1781,7 +1781,7 @@ bool PLSMainView::isMatchOBSSupportPluginVersion(const QString &winObsPath)
 	QString obsVer;
 	auto verSuccessed = false;
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__linux__) // HopCast: Linux reports no installed OBS version
 	obsVer = pls_get_installed_obs_version();
 	auto versionList = obsVer.split(".");
 	verSuccessed = versionList.size() >= 2;

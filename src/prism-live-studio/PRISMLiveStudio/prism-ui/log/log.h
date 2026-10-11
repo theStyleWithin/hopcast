@@ -229,7 +229,7 @@ void pls_flow2_ui(bool kr, const char *module_name, const char *flow, const char
   */
 #define PLS_LIVE_UI_STEP(module_name, controls, action) pls_flow2_ui(false, module_name, "LiveStatus", VideoSequence, controls, action, __FILE__, __LINE__)
 #define PLS_LIVE_UI_STEP_KR(module_name, controls, action) pls_flow2_ui(true, module_name, "LiveStatus", VideoSequence, controls, action, __FILE__, __LINE__)
-#elif defined(Q_OS_MACOS)
+#else // HopCast: GNU-style variadic macros, macOS and Linux
 /**
   * print error log
   * param:

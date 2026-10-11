@@ -486,7 +486,7 @@ void PLSBasicStatusBar::UploadStatus() const
 	//-----------------------------------------------------------------
 	QJsonObject obj;
 	obj["unixTime"] = unixTime;
-	obj["memory"] = memoryUsing;
+	obj["memory"] = static_cast<qint64>(memoryUsing);
 	obj["prismCpu"] = cpuUsagePrism;
 	obj["systemCpu"] = cpuUsageTotal;
 	obj["prismGpu"] = (int)get<0>(m_dataStatus.gpu);
@@ -546,7 +546,7 @@ void PLSBasicStatusBar::UploadStatus() const
 
 	const QString vcamHostDir = pls_get_app_user_data_dir_path_pn(VIRTUAL_CAM_HOST_PROC_FOLDER_NAME);
 	vcamHostThreadPool.start(new VcamHostFileScanRunnable(vcamHostDir, &vcamHostScanRunning));
-#else
+#elif defined(__APPLE__) // HopCast: macOS system-extension vcam; nothing to scan on Linux
 	RequestExtensionClientInfo([](int pid, const std::string &signingId, const std::string &clientId, const std::string &date) {
 		if (!signingId.empty()) {
 			PLS_LOG(PLS_LOG_INFO, "vcam", "pid %d, signingId %s, clientId %s, date %s using prism vcam", pid, signingId.c_str(), clientId.c_str(), date.c_str());

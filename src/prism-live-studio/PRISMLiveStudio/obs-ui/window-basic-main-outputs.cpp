@@ -1563,7 +1563,7 @@ void SimpleOutput::SetupVodTrack(obs_service_t *service)
 
 static bool is_hw_codec(const char *codec, const char *id)
 {
-#ifdef __APPLE__
+#if !defined(_WIN32) && !defined(stricmp) // HopCast: macOS and Linux
 #define stricmp strcasecmp
 #endif
 	if (stricmp(codec, "AAC") == 0) {

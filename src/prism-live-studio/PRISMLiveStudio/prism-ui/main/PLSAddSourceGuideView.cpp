@@ -21,6 +21,9 @@ constexpr auto guideTooltipMac = "Source.Guide.ToolTip.%1.Mac";
 #elif defined(Q_OS_MACOS)
 #define PLATFORM_VIDEO_CAPTURE_SOURCE_ID OBS_MACOS_VIDEO_CAPTURE_SOURCE_ID
 #define GAME_SHOW_TOOLTIP false
+#else // HopCast: Linux webcam (v4l2_input); no game capture
+#define PLATFORM_VIDEO_CAPTURE_SOURCE_ID OBS_DSHOW_SOURCE_ID
+#define GAME_SHOW_TOOLTIP false
 #endif
 
 extern QString GetIconKey(obs_icon_type type);

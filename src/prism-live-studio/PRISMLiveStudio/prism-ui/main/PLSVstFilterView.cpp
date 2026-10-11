@@ -66,7 +66,7 @@ void PLSVstFilterView::onVstStateChanged(void *param, calldata_t *data)
 		return;
 	obs_source_t *source = nullptr;
 	const char *vst_path = nullptr;
-	int64_t state;
+	long long state; // HopCast: calldata_get_int takes long long* (int64_t is long on Linux)
 	calldata_get_ptr(data, "source", &source);
 	calldata_get_string(data, "vst_path", &vst_path);
 	calldata_get_int(data, "vst_state", &state);

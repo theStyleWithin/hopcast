@@ -18,7 +18,7 @@ extern const QString g_onlyDisplayWin;
 extern const QString g_bothDisplay;
 #if defined(Q_OS_WIN)
 #define RegisterJsonPath QCoreApplication::applicationDirPath() + QDir::separator() + "../../data/prism-studio" + QDir::separator() + "newInfo.json"
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 #define RegisterJsonPath pls_get_app_resource_dir() + "/data/prism-studio/newInfo.json"
 
 #endif

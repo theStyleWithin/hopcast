@@ -353,7 +353,7 @@
   <customwidget>
    <class>PLSSearchLineEdit</class>
    <extends>QWidget</extends>
-   <header>plssearchlineedit.h</header>
+   <header>PLSSearchLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

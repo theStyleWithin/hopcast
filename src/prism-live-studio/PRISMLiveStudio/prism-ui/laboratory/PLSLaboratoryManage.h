@@ -32,7 +32,7 @@ const QString g_laboratoryOpenRestart = "openRestart";
 const QString g_laboratoryCloseRestart = "closeRestart";
 #if defined(Q_OS_WIN)
 const QString g_laboratoryPrismVersion = "prismVersion";
-#elif defined(Q_OS_MACOS)
+#else // HopCast: macOS and Linux
 const QString g_laboratoryPrismVersion = "prismMacVersion";
 #endif
 const QString g_settingsDownloadUrl = "downloadUrl";

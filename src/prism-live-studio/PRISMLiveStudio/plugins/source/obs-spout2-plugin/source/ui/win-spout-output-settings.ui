@@ -346,7 +346,7 @@
   <customwidget>
    <class>PLSCheckBox</class>
    <extends>QCheckBox</extends>
-   <header>plscheckbox.h</header>
+   <header>PLSCheckBox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
