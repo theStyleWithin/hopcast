@@ -54,6 +54,12 @@ xwd -root -display :99 -silent > "$OUT/screen.xwd" 2>/dev/null \
 xwininfo -root -tree -display :99 > "$OUT/windows.txt" 2>&1 || true
 
 if (( alive )); then
+  # Interrupt the app under gdb: gdb then prints every thread's stack (a hang shows up here).
+  if inferior=$(pgrep -P "$APP" | head -n1) && [[ -n "$inferior" ]]; then
+    echo "still running after ${SECS}s; interrupted pid $inferior for stacks" > "$OUT/hang.txt"
+    kill -INT "$inferior" 2>/dev/null
+    for ((i = 0; i < 20; i++)); do sleep 1; kill -0 "$APP" 2>/dev/null || break; done
+  fi
   echo "App still running after ${SECS}s - stopping it"
   kill -TERM "$APP" 2>/dev/null; sleep 3; kill -KILL "$APP" 2>/dev/null
   status=0
