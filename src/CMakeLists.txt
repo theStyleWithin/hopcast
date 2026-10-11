@@ -54,6 +54,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   list(APPEND CMAKE_MODULE_PATH "$ENV{OBS_SRC_DIR}/cmake/linux")
   # Static third-party libs (e.g. QtApng's libpng) end up in shared objects.
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  include("${CMAKE_SOURCE_DIR}/../hopcast/cmake/prism-linux.cmake")
 endif()
 
 if(NOT OS_LINUX)

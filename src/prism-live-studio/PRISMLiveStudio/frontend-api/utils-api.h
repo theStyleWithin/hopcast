@@ -6,6 +6,8 @@
 
 #ifdef Q_OS_WIN
 #include <malloc.h>
+#elif defined(Q_OS_LINUX) // HopCast
+#include <malloc.h>
 #else
 #include <sys/malloc.h>
 #endif

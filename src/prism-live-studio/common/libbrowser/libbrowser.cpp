@@ -732,6 +732,9 @@ static bool loadObsBrwoser(CreateQCef &create_qcef)
 #elif defined(Q_OS_MACOS)
 	QString pluginDir = pls_get_app_plugin_dir();
 	obs_add_module_path((pluginDir + "/%module%.plugin/Contents/MacOS").toUtf8().constData(), (pluginDir + "/%module%.plugin/Contents/Resources").toUtf8().constData());
+#else // HopCast: Linux layout <prefix>/lib/hopcast/plugins, data in <prefix>/share/hopcast/data/prism-plugins
+	obs_add_module_path(pls_get_app_plugin_dir().toUtf8().constData(),
+			    (pls_get_app_resource_dir() + "/data/prism-plugins/%module%").toUtf8().constData());
 #endif
 	pls_load_all_modules(
 		[](const char *binPath) {
@@ -739,6 +742,8 @@ static bool loadObsBrwoser(CreateQCef &create_qcef)
 			return _stricmp(binPath, "../../obs-plugins/64bit/obs-browser.dll") == 0;
 #elif defined(Q_OS_MACOS)
 			return strstr(binPath, "obs-browser.plugin") != nullptr;
+#else // HopCast
+			return strstr(binPath, "obs-browser.so") != nullptr;
 #endif
 		},
 		nullptr);
