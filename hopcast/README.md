@@ -107,9 +107,8 @@ CMake options, both on by default, remove them:
     unset endpoint, before a connection is made. The launch test reports blocked/leaked requests.
   - **No NAVER calls at all at startup:** PRISM token, app-init, gpop, update check, notices,
     thumbnails, banner and the resource CDN are skipped; bundled defaults are used.
-  - **Custom RTMP channels are saved locally** in
-    `~/.config/PRISMLiveStudio/user/hopcast-rtmp-channels.json` (owner-only; it contains stream
-    keys) instead of on NAVER's server.
+  - **Custom RTMP channels are saved locally**, encrypted (see *Stream keys* below), instead of
+    on NAVER's server.
   - **Channels:** NAVER TV, BAND, Shopping Live, CHZZK, NCB2B, Whale and NOW removed.
   - **Removed pop-ups:** welcome/banner window, PRISM Lens onboarding. Help menu keeps only Program Info.
   - **Name:** title bar text "HopCast" with no logo image; window and tray title "HopCast" with
@@ -119,6 +118,38 @@ CMake options, both on by default, remove them:
 
 (The black area on the right in CI screenshots is the translucent chat panel, which needs a
 compositor to draw; on a normal desktop it renders normally.)
+
+### Stream keys are encrypted
+
+Everything that holds a stream key or a platform token is encrypted on disk by HopCast
+(`hopcast/securestore`, tests in `hopcast/tests/secure_store_test.cpp`):
+
+| File (under `~/.config/PRISMLiveStudio/`) | Contents |
+|---|---|
+| `user/hopcast-rtmp-channels.enc` | your Custom RTMP channels (server + stream key) |
+| `Cache/channel_cache.dat.enc` | PRISM's channel cache (all channels, keys, tokens) |
+
+- **AES-256-GCM.** The files can't be read without the key, and any change made outside HopCast
+  is detected: the file is not loaded, it's set aside as `….unreadable-<time>`, and HopCast tells
+  you to re-enter your keys. Only HopCast, when you change a key in the app, writes these files
+  (atomically, mode 0600).
+- **The key lives in your desktop keyring** (Secret Service: KWallet on Plasma, GNOME Keyring,
+  KeePassXC…), protected by your login password, under "HopCast secure store key".
+  If no keyring is running, or it refuses to store the key, HopCast uses an owner-only key file
+  (`user/.hopcast-store.key`) instead and says so in its log. That still keeps the data safe from
+  other users and from someone copying the data file alone, but not from anyone who can read
+  your whole home folder.
+- **Keyring locked or missing later?** HopCast won't overwrite data it can't read: your saved
+  channels stay untouched, HopCast tells you, and saving is paused until the keyring is available.
+- **No plaintext copies:** older plaintext files (`hopcast-rtmp-channels.json`, `channel_cache.dat`)
+  are encrypted and then overwritten and deleted on first start. `service.json` no longer stores
+  the key (it's re-applied from your channel at every Go Live), and PRISM's unmasked "KR" log
+  lines — which printed keys and tokens — are dropped.
+- **Limits, honestly:** while your keyring is unlocked, any program running as *you* can ask it
+  for secrets (Linux keyrings have no per-app access control; KWallet may ask first). HopCast has
+  to decrypt a key in memory to stream with it, and the key is sent to your streaming platform
+  when you go live — that's how RTMP works. On SSDs, overwritten old plaintext files may still
+  physically linger until the drive reuses those blocks.
 
 ### Next in Phase 1
 
