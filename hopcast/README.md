@@ -124,11 +124,16 @@ compositor to draw; on a normal desktop it renders normally.)
 Everything that holds a stream key or a platform token is encrypted on disk by HopCast
 (`hopcast/securestore`, tests in `hopcast/tests/secure_store_test.cpp`):
 
-| File (under `~/.config/PRISMLiveStudio/`) | Contents |
+| File | Contents |
 |---|---|
-| `user/hopcast-rtmp-channels.enc` | your Custom RTMP channels (server + stream key) |
-| `Cache/channel_cache.dat.enc` | PRISM's channel cache (all channels, keys, tokens) |
+| `hopcast-rtmp-channels.enc` — **in the folder you choose** | your Custom RTMP channels (server + stream key) |
+| `~/.config/PRISMLiveStudio/Cache/channel_cache.dat.enc` | PRISM's channel cache (all channels, keys, tokens) |
 
+- **You choose where the stream-key file lives.** The first time you save a stream key, HopCast
+  asks and opens a folder picker (your Documents folder is suggested); "Use HopCast's Folder"
+  keeps it in `~/.config/PRISMLiveStudio/user/`. HopCast remembers the choice; **Tools › Stream Key
+  Storage…** shows where it is and moves it to another folder (it never overwrites a file that's
+  already there).
 - **AES-256-GCM.** The files can't be read without the key, and any change made outside HopCast
   is detected: the file is not loaded, it's set aside as `….unreadable-<time>`, and HopCast tells
   you to re-enter your keys. Only HopCast, when you change a key in the app, writes these files
