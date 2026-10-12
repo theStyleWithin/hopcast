@@ -1126,7 +1126,8 @@ elseif(OS_POSIX)
   # HopCast: path fixed (file lives in obs-ui/); LINUX_PORTABLE is the AppImage layout.
   option(LINUX_PORTABLE "Build portable version (Linux)" ON)
   target_sources(PRISMLiveStudio PRIVATE obs-ui/platform-x11.cpp obs-ui/system-info-posix.cpp
-    prism-ui/hopcast/HopCastSecrets.cpp prism-ui/hopcast/HopCastSecrets.h) # HopCast: encrypted secrets
+    prism-ui/hopcast/HopCastSecrets.cpp prism-ui/hopcast/HopCastSecrets.h # HopCast: encrypted secrets
+    prism-ui/hopcast/HopCastLinkGuard.cpp prism-ui/hopcast/HopCastLinkGuard.h) # HopCast: no PRISM/NAVER links
   target_link_libraries(PRISMLiveStudio PRIVATE hopcast::securestore)
   target_link_libraries(PRISMLiveStudio PRIVATE Qt::GuiPrivate)
 

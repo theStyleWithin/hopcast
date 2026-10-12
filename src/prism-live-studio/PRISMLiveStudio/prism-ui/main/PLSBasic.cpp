@@ -3,6 +3,7 @@
 #include "pls-gpop-data.hpp"
 #ifdef HOPCAST_NO_NAVER
 #include "../hopcast/HopCastSecrets.h"
+#include "../hopcast/HopCastLinkGuard.h"
 #endif
 #include "pls-common-define.hpp"
 #include "pls-common-language.hpp"
@@ -1273,6 +1274,7 @@ void PLSBasic::PLSInit()
 	initLabMenu();
 #ifdef HOPCAST_NO_NAVER
 	hopcast::addStreamKeyStorageMenu(ui->menuTools); // HopCast: where the encrypted stream-key file lives
+	hopcast::LinkGuard::install(); // HopCast: never open PRISM/NAVER pages in the browser
 	/* HopCast: the platform chat panel has nothing to show for Custom RTMP and its
 	 * "Add PRISM Chat Source" button crashed - keep it hidden and out of the Docks menu. */
 	ui->menuDocks->removeAction(ui->chatDock->toggleViewAction());

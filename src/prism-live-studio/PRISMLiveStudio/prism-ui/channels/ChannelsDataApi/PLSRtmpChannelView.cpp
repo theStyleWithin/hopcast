@@ -80,6 +80,9 @@ void PLSRtmpChannelView::initUi()
 #endif
 	PLS_PERFORMANCE_END(createResolutionButtonsFrame);
 
+#ifdef HOPCAST_NO_NAVER
+	ui->OpenLink->hide();
+#endif
 	languageChange();
 	updateRtmpInfos();
 	initCommbox();
@@ -475,6 +478,9 @@ void PLSRtmpChannelView::on_ServerComboBox_currentTextChanged(const QString &tex
 
 void PLSRtmpChannelView::on_OpenLink_clicked() const
 {
+#ifdef HOPCAST_NO_NAVER
+	return;
+#endif
 	if (!QDesktopServices::openUrl(g_streamKeyPrismHelper)) {
 		PRE_LOG(" error open url " + g_streamKeyPrismHelper, ERROR)
 	}
@@ -583,6 +589,9 @@ void PLSRtmpChannelView::IsHideSomeFrame(bool bShow)
 		ui->StreamKeyLabel->setText(QString(common::LIVEINFO_STAR_HTML_TEMPLATE).arg(tr("setting.channel.rtmp.streamkey")));
 		ui->OpenLink->show();
 	}
+#ifdef HOPCAST_NO_NAVER
+	ui->OpenLink->hide(); // HopCast: the link pointed at PRISM's online guide
+#endif
 }
 
 bool PLSRtmpChannelView::isInfoValid()
