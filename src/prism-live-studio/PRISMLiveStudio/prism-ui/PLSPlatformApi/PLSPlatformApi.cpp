@@ -833,7 +833,9 @@ void PLSPlatformApi::onPrepareLive()
 			 qUtf8Printable(PLSServerStreamHandler::instance()->getOutputFps()), BOOL2STR(isRecording()));
 		prepareLiveCallback(false);
 		if (QDialogButtonBox::Ok == alertResult) {
-			ResolutionGuidePage::setVisibleOfGuide(PLSBasic::Get());
+	#ifndef HOPCAST_NO_NAVER
+		ResolutionGuidePage::setVisibleOfGuide(PLSBasic::Get());
+#endif
 		}
 		return;
 	}
@@ -953,7 +955,9 @@ void PLSPlatformApi::showMultiplePlatformGreater1080pAlert()
 	PLS_INFO(MODULE_PlatformService, "%s %s present 1080p alert isRecording(%s)", PrepareInfoPrefix, __FUNCTION__, BOOL2STR(isRecording()));
 	prepareLiveCallback(false);
 	if (QDialogButtonBox::Ok == alertResult) {
+#ifndef HOPCAST_NO_NAVER
 		ResolutionGuidePage::setVisibleOfGuide(PLSBasic::Get());
+#endif
 	}
 }
 

@@ -39,7 +39,5 @@ sidebar-dual-output | click 1573 112; wait 3
 sidebar-music | click 1573 173; wait 3
 sidebar-draw-pen | click 1573 217; wait 3
 sidebar-virtual-camera | click 1573 258; wait 3
-sidebar-resolution-guide | click 1573 331; wait 3
-sidebar-settings | click 1573 373; wait 3
-sidebar-help | click 1573 414; wait 2
+sidebar-settings | click 1573 331; wait 3
 notifications | click 1573 842; wait 2

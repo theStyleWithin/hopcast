@@ -73,9 +73,11 @@ void PLSRtmpChannelView::initUi()
 	setFixedSize(720, 710);
 	setResizeEnabled(false);
 	PLS_PERFORMANCE_START(createResolutionButtonsFrame);
+#ifndef HOPCAST_NO_NAVER // HopCast: no PRISM output setting guide
 	auto btnsWidget = ResolutionGuidePage::createResolutionButtonsFrame(this);
 	ui->horizontalLayout_8->addWidget(btnsWidget);
 	ui->horizontalLayout_8->setAlignment(btnsWidget, Qt::AlignRight);
+#endif
 	PLS_PERFORMANCE_END(createResolutionButtonsFrame);
 
 	languageChange();
@@ -226,7 +228,9 @@ void PLSRtmpChannelView::loadFromData(const QVariantMap &oldData)
 	ui->UserIDEdit->setText(userID);
 	QString password = getInfo(oldData, g_password);
 	ui->UserPasswordEdit->setText(password);
+#ifndef HOPCAST_NO_NAVER
 	pls_async_call_mt([this, oldData]() { ResolutionGuidePage::checkResolution(this, getInfo(oldData, g_channelUUID)); });
+#endif
 }
 
 void PLSRtmpChannelView::showResolutionGuide()
@@ -375,7 +379,9 @@ void PLSRtmpChannelView::on_PlatformCombbox_currentTextChanged(const QString &sh
 	QString platForm = ui->PlatformCombbox->currentData().toString();
 	UpdateServerList(platForm);
 	PRE_LOG_UI_MSG(QString("PlatformCombbox clicked to:" + platForm).toUtf8().constData(), PLSRtmpChannelView)
+#ifndef HOPCAST_NO_NAVER
 	ResolutionGuidePage::checkResolutionForPlatform(this, platForm, channel_data::ChannelDataType::RTMPType);
+#endif
 	if (platForm == CHANNELS_TR(UserInputRTMP) || platForm == CHANNELS_TR(UserInputSRT) || ui->PlatformCombbox->currentIndex() == 0 || platForm == CHANNELS_TR(UserInputRIST)) {
 
 		ui->RTMPUrlEdit->setEnabled(true);

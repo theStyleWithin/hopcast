@@ -174,7 +174,8 @@ come from the automated UI tour: run the `hopcast-app` workflow with **ui_tour**
 Also removed in the cleanup pass: PRISM/NAVER/OBS links in Help (only Program Info and Open
 Source License remain), the PRISM logo and update check in Program Info (now "HopCast" with the
 GPL credit), the account avatar, PRISM Lens, PRISM/GIPHY stickers, scene templates and NAVER
-business settings in the sidebar, the platform chat panel (whose "Add PRISM Chat Source" button
+business settings in the sidebar, the sidebar's output setting guide (!) and help (⋯) buttons
+(plus the guide link in the Custom RTMP dialog), the platform chat panel (whose "Add PRISM Chat Source" button
 crashed), the "recommended sources" upsell in Add Source, and the "DialogView" placeholder title.
 
 ### Next in Phase 1

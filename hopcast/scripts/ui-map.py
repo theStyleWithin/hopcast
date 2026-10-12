@@ -24,7 +24,7 @@ H, C = "hopcast", "change"  # flags: HopCast-specific screen
 SECTIONS = [
     ("start", "Opening HopCast", "What you see the moment the app starts.", [
         ("main", ["Open HopCast"], "The studio, straight away",
-         "No sign-in screen. The channel bar holds only Custom RTMP. The sidebar on the right has studio mode, dual output, music, draw pen, virtual camera, the resolution guide, settings, help and notifications.", [H]),
+         "No sign-in screen. The channel bar holds only Custom RTMP. The sidebar on the right has studio mode, dual output, music, draw pen, virtual camera, settings and notifications.", [H]),
     ]),
     ("channels", "Channels and stream keys", "Adding a Custom RTMP channel, from the first click to where the key is stored.", [
         ("my-channel-menu", ["My Channel ⋮"], "Channel menu", "Add channels · Reset live info.", []),
@@ -99,10 +99,7 @@ SIDEBAR = [
      "A drawing toolbar appears under the preview (pens, shapes, colours, undo, clear).", []),
     ("sidebar-virtual-camera", ["Virtual camera button"], "Virtual camera",
      "Starts the virtual camera; with an empty scene it first asks whether to continue.", []),
-    ("sidebar-resolution-guide", ["Resolution guide (!)"], "Output setting guide",
-     "A per-platform table of recommended resolutions, empty in HopCast because no platforms are built in, plus the 1080p multi-streaming limit.", []),
     ("sidebar-settings", ["Settings (gear)"], "Settings", "Opens Settings on the General page.", []),
-    ("sidebar-help", ["Help (⋯)"], "Help menu", "Program Info only.", [H]),
     ("notifications", ["Bell"], "Notifications", "“No Alert.”", []),
 ]
 

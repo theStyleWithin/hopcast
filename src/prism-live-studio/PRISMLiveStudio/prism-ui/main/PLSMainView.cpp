@@ -589,6 +589,11 @@ void PLSMainView::on_user_clicked()
 }
 void PLSMainView::showResolutionTips(const QString &platform)
 {
+#ifdef HOPCAST_NO_NAVER
+	// The tip points at the output setting guide button, which HopCast removed.
+	Q_UNUSED(platform)
+	return;
+#endif
 	static QPointer<ResolutionTipFrame> last = nullptr;
 	if (last != nullptr) {
 		last->on_CloseBtn_clicked();
@@ -1322,9 +1327,20 @@ void PLSMainView::initSideBarButtons()
 		auto *lay = m_sideBarLayout;
 		addSideBarSeparator();
 		lay->addSpacing(10);
+#ifdef HOPCAST_NO_NAVER
+		// HopCast: the output setting guide ("!") reads PRISM's per-platform
+		// resolution tables, and the help menu (⋯) lists PRISM's guides,
+		// website and update checks. Neither applies here, so only the
+		// settings button stays. The widgets still exist (hidden) because
+		// other code holds pointers to them.
+		m_resolutionBtn->hide();
+		m_helpBtn->hide();
+		lay->addWidget(m_settingsBtn, 0, Qt::AlignHCenter | Qt::AlignTop);
+#else
 		lay->addWidget(m_resolutionBtn, 0, Qt::AlignHCenter | Qt::AlignTop);
 		lay->addWidget(m_settingsBtn, 0, Qt::AlignHCenter | Qt::AlignTop);
 		lay->addWidget(m_helpBtn, 0, Qt::AlignHCenter | Qt::AlignTop);
+#endif
 	}
 
 	addSideBarStretch();
