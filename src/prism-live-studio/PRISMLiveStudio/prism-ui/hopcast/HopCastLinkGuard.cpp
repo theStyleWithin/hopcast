@@ -24,7 +24,7 @@ void LinkGuard::install()
 
 void LinkGuard::openUrl(const QUrl &url)
 {
-	if (pls_hopcast_is_blocked_url(url)) {
+	if (pls::http::pls_hopcast_is_blocked_url(url)) {
 		PLS_INFO(MODULE, "HopCast: not opening PRISM/NAVER page (%s)", qUtf8Printable(url.host()));
 		return;
 	}
