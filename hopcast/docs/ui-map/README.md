@@ -16,7 +16,7 @@ What you see the moment the app starts.
 
 **Click:** `Open HopCast`
 
-No sign-in screen. The channel bar holds only Custom RTMP. The sidebar on the right has studio mode, dual output, music, draw pen, virtual camera, the resolution guide, settings, help and notifications.
+No sign-in screen. The channel bar holds only Custom RTMP. The sidebar on the right has studio mode, dual output, music, draw pen, virtual camera, settings and notifications.
 
 ![The studio, straight away](start/main.webp)
 
@@ -33,11 +33,11 @@ Add channels · Reset live info.
 
 ![Channel menu](channels/my-channel-menu.webp)
 
-### Custom Channel form
+### Custom Channel form *(HopCast change)*
 
 **Click:** `Custom RTMP`
 
-URL, Stream Key and Stream Name. “Auto-paste stream key only” is on by default.
+URL, Stream Key and Stream Name. “Auto-paste stream key only” is on by default. No links to PRISM’s output guide or help pages.
 
 ![Custom Channel form](channels/custom-rtmp-form.webp)
 
@@ -325,14 +325,6 @@ Starts the virtual camera; with an empty scene it first asks whether to continue
 
 ![Virtual camera](sidebar/sidebar-virtual-camera.webp)
 
-### Output setting guide
-
-**Click:** `Resolution guide (!)`
-
-A per-platform table of recommended resolutions, empty in HopCast because no platforms are built in, plus the 1080p multi-streaming limit.
-
-![Output setting guide](sidebar/sidebar-resolution-guide.webp)
-
 ### Settings
 
 **Click:** `Settings (gear)`
@@ -340,14 +332,6 @@ A per-platform table of recommended resolutions, empty in HopCast because no pla
 Opens Settings on the General page.
 
 ![Settings](sidebar/sidebar-settings.webp)
-
-### Help menu *(HopCast change)*
-
-**Click:** `Help (⋯)`
-
-Program Info only.
-
-![Help menu](sidebar/sidebar-help.webp)
 
 ### Notifications
 

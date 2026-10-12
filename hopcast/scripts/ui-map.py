@@ -29,7 +29,7 @@ SECTIONS = [
     ("channels", "Channels and stream keys", "Adding a Custom RTMP channel, from the first click to where the key is stored.", [
         ("my-channel-menu", ["My Channel ⋮"], "Channel menu", "Add channels · Reset live info.", []),
         ("custom-rtmp-form", ["Custom RTMP"], "Custom Channel form",
-         "URL, Stream Key and Stream Name. “Auto-paste stream key only” is on by default.", []),
+         "URL, Stream Key and Stream Name. “Auto-paste stream key only” is on by default. No links to PRISM’s output guide or help pages.", [H]),
         ("custom-rtmp", ["Custom RTMP", "URL dropdown"], "Connection type",
          "Only User Input (RTMP), (SRT) and (RIST). No list of platforms.", [H]),
         ("custom-rtmp-filled", ["Custom RTMP", "Fill in the form"], "Filled-in form",
