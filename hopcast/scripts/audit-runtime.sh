@@ -58,6 +58,23 @@ if command -v pulseaudio >/dev/null; then
   pactl info > "$OUT/pulse-info.txt" 2>&1 && info "PulseAudio running (null speakers + virtual mic)" || fail "PulseAudio did not start (pulse.log)"
 fi
 
+# Wrap the recording helper so its arguments, error output and exit code are kept
+# (libobs only shows its stderr when a pipe write fails).
+MUX="$STAGE/bin/obs-ffmpeg-mux"
+if [[ -x "$MUX" && ! -e "$MUX.real" ]]; then
+  mv "$MUX" "$MUX.real"
+  cat > "$MUX" <<WRAP
+#!/usr/bin/env bash
+log="$OUT/ffmpeg-mux-\$(date +%H%M%S)-\$\$.log"
+{ echo "argc=\$#"; for a in "\$@"; do printf '[%s]\\n' "\$a"; done; } > "\$log"
+"$MUX.real" "\$@" 2>>"\$log"
+code=\$?
+echo "exit=\$code" >> "\$log"
+exit \$code
+WRAP
+  chmod +x "$MUX"
+fi
+
 APPLOG="$OUT/app.log"
 GDB=0; [[ "${AUDIT_GDB:-1}" == 1 ]] && command -v gdb >/dev/null && GDB=1
 start_app() { # $1 = label; app output goes to $OUT/app-<label>.log
@@ -126,6 +143,13 @@ grep -rl "$RTMP_KEY" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" 2>/dev/null > "$OUT/pla
 
 # Mixer should list audio devices now that a sound server runs.
 shot 05-mixer
+
+# Record 8 s before any streaming (compared with the recording after the stream).
+click 1460 873; w 3; click 724 557; w 8; click 1460 873; w 5; shot 05b-record-before-live
+click 798 527; w 2
+pre=$(find "$HOME" -maxdepth 1 -type f -name '*.mkv' -newer "$START_MARK" 2>/dev/null | head -1)
+[[ -n "$pre" ]] && pass "recording before going live: file written" || fail "recording before going live: no file"
+touch "$START_MARK"
 
 # Go live.
 click 1328 873; w 3; shot 06-go-live-1
