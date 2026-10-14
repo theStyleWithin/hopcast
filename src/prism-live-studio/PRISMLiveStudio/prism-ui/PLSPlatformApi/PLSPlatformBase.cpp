@@ -193,6 +193,15 @@ void PLSPlatformBase::liveEndedCallback()
 
 void PLSPlatformBase::startMaxLiveTimer(int minutes, const QStringList &intervalList)
 {
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: the per-platform live-time limits came from NAVER's policy file,
+	 * which is empty here, so the limit read as 0 minutes and the stream was ended
+	 * ("continuous broadcasting time was exceeded") the moment it started. Your
+	 * own server decides how long you can stream. */
+	pls_unused(intervalList);
+	PLS_INFO(MODULE_PlatformService, "HopCast: no live-time limit (was %d min from PRISM policy)", minutes);
+	return;
+#endif
 	if (minutes < 0) {
 		PLS_INFO(MODULE_PlatformService, "mqtt max live time status: not need max live timer, minutes is %d , channel name is %s", minutes, getNameForChannelType());
 		return;

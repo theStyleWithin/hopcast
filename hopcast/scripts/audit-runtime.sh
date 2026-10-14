@@ -130,6 +130,9 @@ shot 05-mixer
 click 1328 873; w 3; shot 06-go-live-1
 click 724 557; w 6; shot 07-go-live-2       # "no video sources" -> Yes
 w 15; shot 08-live
+grep -rl "$RTMP_KEY" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME" 2>/dev/null > "$OUT/plaintext-key-files-live.txt"
+[[ -s "$OUT/plaintext-key-files-live.txt" ]] && fail "while live, stream key in plain text: $(sed "s|$HOME/||" "$OUT/plaintext-key-files-live.txt" | tr '\n' ' ')" || pass "while live, stream key not in plain text anywhere in the profile"
+grep -l "$RTMP_KEY" "$OUT/app-first.log" >/dev/null 2>&1 && info "stream key appears in the app's own log output (check log masking)"
 for _ in $(seq 1 $((30 * SLOW))); do kill -0 "$RTMP" 2>/dev/null || break; sleep 1; done  # server stops after 25 s of input
 kill -INT "$RTMP" 2>/dev/null; sleep 2; kill "$RTMP" 2>/dev/null
 if [[ -s "$OUT/received.flv" ]]; then

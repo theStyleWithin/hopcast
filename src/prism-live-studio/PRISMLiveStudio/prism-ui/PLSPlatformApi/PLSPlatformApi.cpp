@@ -60,6 +60,40 @@ const QString LIVE_ABORT_ERROR_CODE_KEY = "errorCode";
 const QString LIVE_ABORT_REQUEST_URL_KEY = "requestURL";
 const QString LIVE_ABORT_JSON_TEXT_KEY = "jsonText";
 
+
+/* Crash-recovery state (streaming_state.json) holds every live channel's stream key.
+ * Upstream's pls_encrypt_json() only writes plain JSON in the public source, so
+ * HopCast stores it with the AES-256-GCM secure store instead. */
+#ifdef HOPCAST_NO_NAVER
+#include "../hopcast/HopCastSecrets.h"
+static bool streamingStateWrite(const QString &path, const QJsonObject &obj)
+{
+	return hopcast::secureWrite(path, QJsonDocument(obj).toJson(QJsonDocument::Compact));
+}
+static bool streamingStateRead(QJsonObject &obj, const QString &path)
+{
+	// A plaintext file from earlier builds is encrypted in place and securely removed.
+	const QString legacy = pls_get_app_user_data_file_path_pn(QStringLiteral("streaming_state.json"));
+	auto data = hopcast::secureRead(path, legacy);
+	if (!data)
+		return false;
+	auto doc = QJsonDocument::fromJson(*data);
+	if (!doc.isObject())
+		return false;
+	obj = doc.object();
+	return true;
+}
+#else
+static bool streamingStateWrite(const QString &path, const QJsonObject &obj)
+{
+	return pls_encrypt_json(path, obj);
+}
+static bool streamingStateRead(QJsonObject &obj, const QString &path)
+{
+	return pls_decrypt_json(obj, path);
+}
+#endif
+
 PLSPlatformApi *PLSPlatformApi::instance()
 {
 	static PLSPlatformApi *_instance = nullptr;
@@ -1553,7 +1587,14 @@ void PLSPlatformApi::onLiveStarted()
 	clearLiveStatisticsInfo();
 
 	//Register for MQTT messages without Rehearsal live broadcast
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: MQTT was NAVER's live-status channel. It uses libmosquitto directly,
+	 * outside the Qt network block, so it is never started. stopMqtt() handles the
+	 * null clients. */
+	if (false) {
+#else
 	if (!PLSCHANNELS_API->isRehearsaling()) {
+#endif
 		auto runMqtt = [this](DualOutputType outputType, int iVideoSeq) {
 			m_pMQTT[outputType] = new PLSMosquitto(outputType);
 			connect(m_pMQTT[outputType], &PLSMosquitto::onMessage, this, &PLSPlatformApi::onMqttMessage);
@@ -3288,7 +3329,11 @@ bool PLSPlatformApi::getResumeStreamingFlag() const
 
 QString PLSPlatformApi::getStreamingStateFilePath()
 {
+#ifdef HOPCAST_NO_NAVER
+	return pls_get_app_user_data_file_path_pn(QStringLiteral("streaming_state.json.enc"));
+#else
 	return pls_get_app_user_data_file_path_pn(QStringLiteral("streaming_state.json"));
+#endif
 }
 
 PLSPlatformApi::StreamingMode PLSPlatformApi::getCurrentStreamingMode() const
@@ -3384,7 +3429,7 @@ void PLSPlatformApi::saveStreamingState()
 
 	// Save with SHA256 signature verification
 	QString filePath = getStreamingStateFilePath();
-	if (pls_encrypt_json(filePath, root)) {
+	if (streamingStateWrite(filePath, root)) {
 		PLS_INFO(MODULE_PlatformService, "Saved streaming state to %s", filePath.toUtf8().constData());
 	} else {
 		PLS_ERROR(MODULE_PlatformService, "Failed to save streaming state to %s", filePath.toUtf8().constData());
@@ -3401,6 +3446,9 @@ void PLSPlatformApi::clearStreamingState()
 			PLS_ERROR(MODULE_PlatformService, "Failed to remove streaming state file: %s", filePath.toUtf8().constData());
 		}
 	}
+#ifdef HOPCAST_NO_NAVER
+	QFile::remove(pls_get_app_user_data_file_path_pn(QStringLiteral("streaming_state.json"))); // plaintext from older builds
+#endif
 	setResumeStreamingFlag(false);
 	m_resumeStreamingState = QJsonObject();
 	m_resumeStartTime = 0;
@@ -3414,7 +3462,7 @@ void PLSPlatformApi::markChannelLiveEndInStreamingState(const QString &channelUu
 		PLS_ERROR(MODULE_PlatformService, "markChannelLiveEndInStreamingState: streaming state file not exists, skip. uuid=%s", channelUuid.toUtf8().constData());
 		return;
 	}
-	if (!pls_decrypt_json(stateJson, filePath)) {
+	if (!streamingStateRead(stateJson, filePath)) {
 		PLS_ERROR(MODULE_PlatformService, "markChannelLiveEndInStreamingState: decrypt streaming state failed, skip. uuid=%s", channelUuid.toUtf8().constData());
 		return;
 	}
@@ -3428,7 +3476,7 @@ void PLSPlatformApi::markChannelLiveEndInStreamingState(const QString &channelUu
 		}
 	}
 	stateJson[QStringLiteral("platforms")] = platformsArray;
-	if (pls_encrypt_json(filePath, stateJson)) {
+	if (streamingStateWrite(filePath, stateJson)) {
 		PLS_INFO(MODULE_PlatformService, "markChannelLiveEndInStreamingState: marked liveEnd for uuid=%s, reason=%s", channelUuid.toUtf8().constData(), liveEndReason.toUtf8().constData());
 	} else {
 		PLS_ERROR(MODULE_PlatformService, "markChannelLiveEndInStreamingState: save streaming state failed after marking liveEnd. uuid=%s", channelUuid.toUtf8().constData());
@@ -3437,6 +3485,11 @@ void PLSPlatformApi::markChannelLiveEndInStreamingState(const QString &channelUu
 
 bool PLSPlatformApi::hasPendingStreamingState() const
 {
+#ifdef HOPCAST_NO_NAVER
+	// Also an old plaintext file, so it gets encrypted (or removed) instead of lingering.
+	if (QFile::exists(pls_get_app_user_data_file_path_pn(QStringLiteral("streaming_state.json"))))
+		return true;
+#endif
 	return QFile::exists(getStreamingStateFilePath());
 }
 
@@ -3451,7 +3504,7 @@ void PLSPlatformApi::checkStreamingState()
 	// Load the streaming state file (with SHA256 signature verification)
 	QString filePath = getStreamingStateFilePath();
 	QJsonObject stateJson;
-	if (!pls_decrypt_json(stateJson, filePath)) {
+	if (!streamingStateRead(stateJson, filePath)) {
 		PLS_ERROR(MODULE_PlatformService, "Failed to read or verify streaming state file: %s", filePath.toUtf8().constData());
 		clearStreamingState();
 		return;
