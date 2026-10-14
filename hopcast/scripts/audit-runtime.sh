@@ -127,6 +127,8 @@ ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f f
 start_app first
 if wait_window; then pass "first start: main window shown"; else fail "first start: main window never appeared"; fi
 w 5; shot 01-first-start
+fdsnap() { local pid; pid=$(pgrep -x PRISMLiveStudio | head -1); [[ -n "$pid" ]] && ls -l /proc/$pid/fd 2>/dev/null | awk '{print $9, $10, $11}' | sort -n > "$OUT/fds-$1.txt"; }
+fdsnap start
 
 # Add a Custom RTMP channel pointing at the local server (same clicks as the UI tour).
 click 216 62; w 3
@@ -177,6 +179,11 @@ grep -q "\[ALERT\] Failed to start live" "$OUT/app-first.log" && fail "\"Failed 
 grep -q "Reconnecting in" "$OUT/app-first.log" && pass "dropped connection: HopCast tried to reconnect"
 click 1328 873; w 5; shot 09-end-live-1      # End
 click 798 564; w 2; shot 10-end-live-2       # "Live Has Ended" -> OK
+fdsnap after-live
+for n in 0 1 2; do
+  a=$(awk -v n=$n '$1==n{print $3}' "$OUT/fds-start.txt"); b=$(awk -v n=$n '$1==n{print $3}' "$OUT/fds-after-live.txt")
+  [[ "$a" == "$b" ]] || fail "standard descriptor $n changed during the stream: '${a:-closed}' -> '${b:-closed}'"
+done
 
 # Record 10 s.
 click 1460 873; w 3; shot 11-record-1

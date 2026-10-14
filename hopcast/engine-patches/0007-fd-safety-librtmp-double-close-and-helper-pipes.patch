@@ -1,0 +1,49 @@
+diff --git a/libobs/util/pipe-posix.c b/libobs/util/pipe-posix.c
+index 86fd06c..0952db2 100644
+--- a/libobs/util/pipe-posix.c
++++ b/libobs/util/pipe-posix.c
+@@ -67,6 +67,23 @@ os_process_pipe_t *os_process_pipe_create_internal(const char *bin, char **argv,
+ 		return NULL;
+ 	}
+ 
++	/* HopCast: if the process had a standard descriptor (0-2) closed, pipe() can
++	 * return it. Upstream then skips the dup2 below while the descriptor is
++	 * close-on-exec, so the helper starts with no stdin (recordings silently
++	 * produced no file). Move every pipe end to 3 or above first. */
++	{
++		int *fds[4] = {&mainfds[0], &mainfds[1], &errfds[0], &errfds[1]};
++		for (int i = 0; i < 4; i++) {
++			if (*fds[i] <= STDERR_FILENO) {
++				int moved = fcntl(*fds[i], F_DUPFD_CLOEXEC, STDERR_FILENO + 1);
++				if (moved >= 0) {
++					close(*fds[i]);
++					*fds[i] = moved;
++				}
++			}
++		}
++	}
++
+ 	fcntl(mainfds[0], F_SETFD, FD_CLOEXEC);
+ 	fcntl(mainfds[1], F_SETFD, FD_CLOEXEC);
+ 	fcntl(errfds[0], F_SETFD, FD_CLOEXEC);
+diff --git a/plugins/obs-outputs/librtmp/rtmp.c b/plugins/obs-outputs/librtmp/rtmp.c
+index 302f908..78cd0c3 100644
+--- a/plugins/obs-outputs/librtmp/rtmp.c
++++ b/plugins/obs-outputs/librtmp/rtmp.c
+@@ -4698,8 +4698,14 @@ RTMPSockBuf_Close(RTMPSockBuf *sb)
+         sb->sb_ssl = NULL;
+     }
+ #endif
+-    if (sb->sb_socket != INVALID_SOCKET)
+-        return closesocket(sb->sb_socket);
++    /* HopCast: mark it closed. WriteN() closes the socket and then calls
++     * RTMP_Close(), which closed the same descriptor number a second time; if
++     * another thread had opened a file or pipe in between, that got closed. */
++    if (sb->sb_socket != INVALID_SOCKET) {
++        int rc = closesocket(sb->sb_socket);
++        sb->sb_socket = INVALID_SOCKET;
++        return rc;
++    }
+     return 0;
+ }
+ 
