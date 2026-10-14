@@ -2064,6 +2064,9 @@ void PLSBasic::CreatePreviewTitle()
 
 void PLSBasic::checkNoticeAndForceUpdate()
 {
+#ifdef HOPCAST_NO_NAVER
+	return; // HopCast: notices and updates came from NAVER's servers. This ran after every stream/recording and on a timer.
+#endif
 	if (isAppUpadting()) {
 
 		return;

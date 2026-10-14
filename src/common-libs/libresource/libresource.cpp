@@ -68,7 +68,7 @@ State loadState(State state)
 }
 bool setState(State &state1, State &state2, State value, bool retval)
 {
-	state2 = state2 = value;
+	state1 = state2 = value; // HopCast: upstream assigned state2 twice and never set state1
 	return retval;
 }
 std::vector<std::pair<const char *, const char *>> &neloFields(std::vector<std::pair<const char *, const char *>> &fields)

@@ -92,7 +92,8 @@ quit_app() { # Ctrl+Q on the main window; returns the exit status (124 = did not
   fi
   wait "$APP"; return $?
 }
-crashed() { grep -q "=== CRASH BACKTRACE ===" "$1" && grep -A3 "=== CRASH BACKTRACE ===" "$1" | grep -q "^#0"; }
+# A real crash: the app stopped on a fatal signal (our own SIGINT for hang stacks does not count).
+crashed() { grep -qE "received signal SIG(SEGV|ABRT|BUS|FPE|ILL|TRAP)" "$1"; }
 
 Xvfb :97 -screen 0 1600x900x24 >/dev/null 2>&1 & XVFB=$!
 export DISPLAY=:97 QT_QPA_PLATFORM=xcb
@@ -141,12 +142,17 @@ else
   fail "nothing arrived at the RTMP server (rtmp-server.log, shots 06-08)"
 fi
 # End the stream (may ask to confirm).
-click 1328 873; w 3; shot 09-end-live-1; xdotool key Return; w 4; shot 10-end-live-2
+grep -q "HopCast: streaming directly" "$OUT/app-first.log" && info "Go Live used the direct path (no PRISM registration)"
+grep -q "\[ALERT\] Failed to start live" "$OUT/app-first.log" && fail "\"Failed to start live\" alert shown"
+click 1328 873; w 3; shot 09-end-live-1      # End (may ask to confirm)
+xdotool key Return; w 5; shot 10-end-live-2  # confirm
+xdotool key Escape; w 2; shot 10-end-live-3  # close an end-of-live summary if one opened
 
 # Record 10 s.
 click 1460 873; w 3; shot 11-record-1
 click 724 557; w 12; shot 12-recording       # "no video sources" -> Yes
 click 1460 873; w 5; shot 13-record-stopped
+click 798 527; w 2; shot 14-record-summary-closed   # "Recording Has Ended" -> OK
 rec=$(find "$HOME" -type f \( -name '*.mkv' -o -name '*.mp4' -o -name '*.flv' -o -name '*.mov' \) -newer "$SUMMARY" 2>/dev/null | grep -v received.flv | head -1)
 if [[ -n "$rec" ]]; then
   d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$rec" 2>/dev/null)

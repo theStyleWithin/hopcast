@@ -194,6 +194,35 @@ void PLSPlatformPrism::onPrepareLive(bool value)
 		return;
 	}
 
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: PRISM registered every broadcast with NAVER's server first
+	 * (/live/direct/v2/start) and, with several channels on, sent one stream to
+	 * NAVER's relay which forwarded it to each platform (/live/start). Neither
+	 * exists here, so Go Live always failed. Stream directly instead: one
+	 * channel per output (horizontal, and vertical with dual output). No server
+	 * session means the video sequence stays 0, so every stop/end path finishes
+	 * locally without contacting anything. */
+	{
+		const auto tooMany = [](const std::list<PLSPlatformBase *> &l) { return l.size() > 1; };
+		const bool multi = pls_is_dual_output_on() ? (tooMany(PLS_PLATFORM_HORIZONTAL) || tooMany(PLS_PLATFORM_VERTICAL)) : tooMany(PLS_PLATFORM_ACTIVIED);
+		if (multi) {
+			PLS_WARN(MODULE_PlatformService, "HopCast: more than one channel switched on for one output; streaming to several servers at once is not supported yet");
+			pls_async_call_mt(this, [] {
+				PLSAlertView::warning(pls_get_main_view(), QTStr("Alert.Title"),
+						      QObject::tr("HopCast can stream to one channel at a time (one for horizontal and one for vertical with dual output).\n\n"
+								  "Switch off the other channels, then go live again."));
+			});
+			prepareLiveCallback(false);
+			return;
+		}
+		m_iVideoSeq[DualOutputType::Horizontal] = 0;
+		m_iVideoSeq[DualOutputType::Vertical] = 0;
+		PLS_INFO(MODULE_PlatformService, "HopCast: streaming directly to the channel's server (no PRISM broadcast registration)");
+		pls_async_call_mt(this, [this] { prepareLiveCallback(true); });
+		return;
+	}
+#endif
+
 	bool bContainDirect = false;
 	pls::http::Requests requests;
 	if (pls_is_dual_output_on()) {

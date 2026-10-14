@@ -694,6 +694,9 @@ OBSBasic::OBSBasic(PLSMainView *mainView_)
 
 #ifdef __linux__
 	ui->actionE_xit->setShortcut(Qt::CTRL | Qt::Key_Q);
+	// HopCast: upstream only connects Exit on macOS, so on Linux Settings > Exit
+	// and Ctrl+Q did nothing.
+	connect(ui->actionE_xit, &QAction::triggered, this, &OBSBasic::on_actionQuitApp_triggered);
 #endif
 	addNudgeFunc(ui->preview);
 
