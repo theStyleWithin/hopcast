@@ -79,12 +79,20 @@ fi
 APPLOG="$OUT/app.log"
 GDB=0; [[ "${AUDIT_GDB:-1}" == 1 ]] && command -v gdb >/dev/null && GDB=1
 start_app() { # $1 = label; app output goes to $OUT/app-<label>.log
-  local log="$OUT/app-$1.log"
+  local log="$OUT/app-$1.log" gs="$OUT/.gdb-$1"
   if (( GDB )); then
-    ( cd "$STAGE/bin" && exec gdb -q -batch -return-child-result -ex "set pagination off" \
-        -ex "handle SIGPIPE nostop noprint" -ex "handle SIG32 nostop noprint" -ex "handle SIG34 nostop noprint" -ex run \
-        -ex "echo \\n=== CRASH BACKTRACE ===\\n" -ex bt -ex "echo \\n=== ALL THREADS ===\\n" -ex "thread apply all bt 20" \
-        --args "$BIN" ) > "$log" 2>&1 &
+    {
+      echo "set pagination off"
+      echo "handle SIGPIPE nostop noprint"; echo "handle SIG32 nostop noprint"; echo "handle SIG34 nostop noprint"
+      if [[ "$1" == first ]]; then # who closes the app's stdin? (stack for every close(0))
+        echo "catch syscall close"; echo 'condition 1 $rdi == 0'
+        printf 'commands 1\nsilent\nprintf "=== close(0) ===\\n"\nbt 25\ncontinue\nend\n'
+      fi
+      echo "run"
+      echo 'echo \n=== CRASH BACKTRACE ===\n'; echo "bt"
+      echo 'echo \n=== ALL THREADS ===\n'; echo "thread apply all bt 20"
+    } > "$gs"
+    ( cd "$STAGE/bin" && exec gdb -q -batch -return-child-result -x "$gs" --args "$BIN" ) > "$log" 2>&1 &
   else
     ( cd "$STAGE/bin" && exec "$BIN" ) > "$log" 2>&1 &
   fi
