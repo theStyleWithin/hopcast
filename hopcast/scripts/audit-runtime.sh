@@ -147,9 +147,10 @@ fi
 # End the stream (may ask to confirm).
 grep -q "HopCast: streaming directly" "$OUT/app-first.log" && info "Go Live used the direct path (no PRISM registration)"
 grep -q "\[ALERT\] Failed to start live" "$OUT/app-first.log" && fail "\"Failed to start live\" alert shown"
-click 1328 873; w 3; shot 09-end-live-1      # End (may ask to confirm)
-xdotool key Return; w 5; shot 10-end-live-2  # confirm
-xdotool key Escape; w 2; shot 10-end-live-3  # close an end-of-live summary if one opened
+# The test server stops after 25 s; HopCast tries to reconnect, then End stops it.
+grep -q "Reconnecting in" "$OUT/app-first.log" && pass "dropped connection: HopCast tried to reconnect"
+click 1328 873; w 5; shot 09-end-live-1      # End
+click 798 564; w 2; shot 10-end-live-2       # "Live Has Ended" -> OK
 
 # Record 10 s.
 click 1460 873; w 3; shot 11-record-1

@@ -1,0 +1,40 @@
+diff --git a/plugins/obs-outputs/librtmp/rtmp.c b/plugins/obs-outputs/librtmp/rtmp.c
+index d38a8dc..d25f0d0 100644
+--- a/plugins/obs-outputs/librtmp/rtmp.c
++++ b/plugins/obs-outputs/librtmp/rtmp.c
+@@ -3200,6 +3200,26 @@ HandleInvoke(RTMP *r, const char *body, unsigned int nBodySize)
+     AMFProp_GetString(AMF_GetProp(&obj2, &av_level, -1), &level);
+     AMFProp_GetString(AMF_GetProp(&obj2, &av_description, -1), &description);
+     if (code.av_val) {
++        /* HopCast: servers often echo the stream name, i.e. the stream key, in the
++         * description ("<key> is now published"); never write it to the log. */
++        char descSafe[512];
++        const char *desc = description.av_val ? description.av_val : "noDesc";
++        const char *key = r->Link.playpath.av_val;
++        int keyLen = r->Link.playpath.av_len;
++        if (description.av_val && key && keyLen > 0) {
++            size_t o = 0;
++            for (const char *c = description.av_val; *c && o + 4 < sizeof(descSafe);) {
++                if (strncmp(c, key, (size_t)keyLen) == 0) {
++                    memcpy(descSafe + o, "***", 3);
++                    o += 3;
++                    c += keyLen;
++                } else {
++                    descSafe[o++] = *c++;
++                }
++            }
++            descSafe[o] = '\0';
++            desc = descSafe;
++        }
+         RTMP_Log(RTMP_LOGINFO, "[rtmp io] server->client 0x%X method=%s \n" \
+             "\t level:%s \n"\
+             "\t code:%s \n"\
+@@ -3207,7 +3227,7 @@ HandleInvoke(RTMP *r, const char *body, unsigned int nBodySize)
+             , RTMP_PACKET_TYPE_INVOKE, method.av_val ? method.av_val : "unknown",
+             level.av_val?level.av_val:"noLevel",
+             code.av_val?code.av_val:"noCode",
+-            description.av_val?description.av_val:"noDesc");
++            desc);
+     }
+     else {
+         RTMP_Log(RTMP_LOGINFO, "[rtmp io] server->client 0x%X method=%s", RTMP_PACKET_TYPE_INVOKE, method.av_val ? method.av_val : "unknown");
