@@ -1,5 +1,5 @@
 diff --git a/plugins/obs-ffmpeg/obs-ffmpeg-mux.c b/plugins/obs-ffmpeg/obs-ffmpeg-mux.c
-index a779cdd..2daea25 100644
+index a779cdd..dbf68ac 100644
 --- a/plugins/obs-ffmpeg/obs-ffmpeg-mux.c
 +++ b/plugins/obs-ffmpeg/obs-ffmpeg-mux.c
 @@ -712,12 +712,21 @@ bool write_packet(struct ffmpeg_muxer *stream, struct encoder_packet *packet)
@@ -39,3 +39,25 @@ index a779cdd..2daea25 100644
  	return write_packet(stream, &packet);
  }
  
+@@ -846,8 +859,12 @@ static void ffmpeg_mux_data(void *data, struct encoder_packet *packet)
+ {
+ 	struct ffmpeg_muxer *stream = data;
+ 
+-	if (!active(stream))
++	if (!active(stream)) {
++		if (hopcast_header_warnings++ < 5)
++			warn("HopCast: packet for muxer %p ignored: not active (capturing=%d stopping=%d pipe=%p)", stream,
++			     capturing(stream), stopping(stream), (void *)stream->pipe);
+ 		return;
++	}
+ 
+ 	/* encoder failure */
+ 	if (!packet) {
+@@ -886,6 +903,7 @@ static void ffmpeg_mux_data(void *data, struct encoder_packet *packet)
+ 			return;
+ 
+ 		stream->sent_headers = true;
++		info("HopCast: muxer %p sent codec headers", stream);
+ 
+ 		if (stream->split_file)
+ 			stream->cur_time = packet->dts_usec;
