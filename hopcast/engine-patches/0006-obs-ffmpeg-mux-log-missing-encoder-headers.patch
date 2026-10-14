@@ -1,0 +1,41 @@
+diff --git a/plugins/obs-ffmpeg/obs-ffmpeg-mux.c b/plugins/obs-ffmpeg/obs-ffmpeg-mux.c
+index a779cdd..2daea25 100644
+--- a/plugins/obs-ffmpeg/obs-ffmpeg-mux.c
++++ b/plugins/obs-ffmpeg/obs-ffmpeg-mux.c
+@@ -712,12 +712,21 @@ bool write_packet(struct ffmpeg_muxer *stream, struct encoder_packet *packet)
+ 	return true;
+ }
+ 
++/* HopCast: when an encoder has no header yet, every packet is dropped silently and
++ * the recording never starts (the helper waits for headers, then fails at stop).
++ * Say so in the log, a few times per process. */
++static int hopcast_header_warnings = 0;
++
+ static bool send_audio_headers(struct ffmpeg_muxer *stream, obs_encoder_t *aencoder, size_t idx)
+ {
+ 	struct encoder_packet packet = {.type = OBS_ENCODER_AUDIO, .timebase_den = 1, .track_idx = idx};
+ 
+-	if (!obs_encoder_get_extra_data(aencoder, &packet.data, &packet.size))
++	if (!obs_encoder_get_extra_data(aencoder, &packet.data, &packet.size)) {
++		if (hopcast_header_warnings++ < 5)
++			warn("HopCast: audio encoder '%s' (track %zu, active=%d) has no header yet; packets dropped",
++			     obs_encoder_get_name(aencoder), idx, obs_encoder_active(aencoder));
+ 		return false;
++	}
+ 	return write_packet(stream, &packet);
+ }
+ 
+@@ -727,8 +736,12 @@ static bool send_video_headers(struct ffmpeg_muxer *stream)
+ 
+ 	struct encoder_packet packet = {.type = OBS_ENCODER_VIDEO, .timebase_den = 1};
+ 
+-	if (!obs_encoder_get_extra_data(vencoder, &packet.data, &packet.size))
++	if (!obs_encoder_get_extra_data(vencoder, &packet.data, &packet.size)) {
++		if (hopcast_header_warnings++ < 5)
++			warn("HopCast: video encoder '%s' (active=%d) has no header yet; packets dropped",
++			     vencoder ? obs_encoder_get_name(vencoder) : "(none)", vencoder ? obs_encoder_active(vencoder) : 0);
+ 		return false;
++	}
+ 	return write_packet(stream, &packet);
+ }
+ 
