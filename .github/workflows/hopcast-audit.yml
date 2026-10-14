@@ -174,8 +174,12 @@ jobs:
           cp -r build/audit/asan "$d/" 2>/dev/null || true
           mkdir -p "$d/tour" && cp build/audit/tour/*.png "$d/tour/" 2>/dev/null || true
           grep -E "warning:" build-app.log | sort -u | head -3000 > "$d/all-build-warnings.txt" 2>/dev/null || true
+          for f in build-engine.log build-app.log; do
+            [ -f "$f" ] && grep -nE "error:|Error [0-9]|undefined reference|FAILED:|ninja: build stopped" "$f" | head -200 > "$d/${f%.log}-errors.txt" || true
+            [ -f "$f" ] && tail -c 200000 "$f" > "$d/${f%.log}-tail.log" || true
+          done
           find "$d" -name '*.log' -size +20M -exec sh -c 'tail -c 20000000 "$1" > "$1.tail" && mv "$1.tail" "$1"' _ {} \;
           git -C "$tmp" add -A
-          git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "audit ${{ matrix.variant }} ${GITHUB_RUN_ID}"
+          git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -q --allow-empty -m "audit ${{ matrix.variant }} ${GITHUB_RUN_ID}"
           git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:ci-logs-audit-${{ matrix.variant }}
           [ -f build/audit/summary.txt ] && { echo "::notice title=audit ${{ matrix.variant }}::$(grep -c '^PASS' build/audit/summary.txt) pass, $(grep -c '^FAIL' build/audit/summary.txt) fail"; }

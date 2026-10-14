@@ -1,25 +1,32 @@
 diff --git a/plugins/obs-outputs/librtmp/rtmp.c b/plugins/obs-outputs/librtmp/rtmp.c
-index d38a8dc..d0ede73 100644
+index d38a8dc..302f908 100644
 --- a/plugins/obs-outputs/librtmp/rtmp.c
 +++ b/plugins/obs-outputs/librtmp/rtmp.c
-@@ -3200,6 +3200,27 @@ HandleInvoke(RTMP *r, const char *body, unsigned int nBodySize)
+@@ -3200,6 +3200,34 @@ HandleInvoke(RTMP *r, const char *body, unsigned int nBodySize)
      AMFProp_GetString(AMF_GetProp(&obj2, &av_level, -1), &level);
      AMFProp_GetString(AMF_GetProp(&obj2, &av_description, -1), &description);
      if (code.av_val) {
 +        /* HopCast: servers often echo the stream name, i.e. the stream key, in the
-+         * description ("<key> is now published"); never write it to the log. */
++         * description ("<key> is now published"); never write it to the log.
++         * (curStreamIdx has already moved past the stream being published here,
++         * so check every stream's playpath.) */
 +        char descSafe[512];
 +        const char *desc = description.av_val ? description.av_val : "noDesc";
-+        const AVal *pp = &r->Link.streams[r->Link.curStreamIdx].playpath;
-+        const char *key = pp->av_val;
-+        int keyLen = pp->av_len;
-+        if (description.av_val && key && keyLen > 0) {
++        if (description.av_val && r->Link.nStreams > 0) {
 +            size_t o = 0;
 +            for (const char *c = description.av_val; *c && o + 4 < sizeof(descSafe);) {
-+                if (strncmp(c, key, (size_t)keyLen) == 0) {
++                int skip = 0;
++                for (int si = 0; si < r->Link.nStreams && si < RTMP_MAX_STREAMS; si++) {
++                    const AVal *pp = &r->Link.streams[si].playpath;
++                    if (pp->av_val && pp->av_len > 0 && strncmp(c, pp->av_val, (size_t)pp->av_len) == 0) {
++                        skip = pp->av_len;
++                        break;
++                    }
++                }
++                if (skip) {
 +                    memcpy(descSafe + o, "***", 3);
 +                    o += 3;
-+                    c += keyLen;
++                    c += skip;
 +                } else {
 +                    descSafe[o++] = *c++;
 +                }
@@ -30,7 +37,7 @@ index d38a8dc..d0ede73 100644
          RTMP_Log(RTMP_LOGINFO, "[rtmp io] server->client 0x%X method=%s \n" \
              "\t level:%s \n"\
              "\t code:%s \n"\
-@@ -3207,7 +3228,7 @@ HandleInvoke(RTMP *r, const char *body, unsigned int nBodySize)
+@@ -3207,7 +3235,7 @@ HandleInvoke(RTMP *r, const char *body, unsigned int nBodySize)
              , RTMP_PACKET_TYPE_INVOKE, method.av_val ? method.av_val : "unknown",
              level.av_val?level.av_val:"noLevel",
              code.av_val?code.av_val:"noCode",

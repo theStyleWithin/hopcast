@@ -19,6 +19,7 @@ BIN="$STAGE/bin/PRISMLiveStudio"
 SLOW="${AUDIT_SLOW:-1}"
 SUMMARY="$OUT/summary.txt"
 : > "$SUMMARY"
+START_MARK="$OUT/.start-marker"; touch "$START_MARK"
 
 note() { echo "$*" | tee -a "$SUMMARY"; }
 pass() { note "PASS  $*"; }
@@ -157,7 +158,7 @@ click 1460 873; w 3; shot 11-record-1
 click 724 557; w 12; shot 12-recording       # "no video sources" -> Yes
 click 1460 873; w 5; shot 13-record-stopped
 click 798 527; w 2; shot 14-record-summary-closed   # "Recording Has Ended" -> OK
-rec=$(find "$HOME" -type f \( -name '*.mkv' -o -name '*.mp4' -o -name '*.flv' -o -name '*.mov' \) -newer "$SUMMARY" 2>/dev/null | grep -v received.flv | head -1)
+rec=$(find "$HOME" -type f \( -name '*.mkv' -o -name '*.mp4' -o -name '*.flv' -o -name '*.mov' \) -newer "$START_MARK" 2>/dev/null | grep -v received.flv | head -1)
 if [[ -n "$rec" ]]; then
   d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$rec" 2>/dev/null)
   info "recording written to ${rec#$HOME/} (${d:-?} s)"
