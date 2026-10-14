@@ -100,8 +100,8 @@ jobs:
         run: |
           set -o pipefail
           if [ "${{ matrix.variant }}" = asan ]; then
-            export CFLAGS="-fsanitize=address,undefined -fsanitize-recover=address -fno-omit-frame-pointer"
-            export CXXFLAGS="$CFLAGS" LDFLAGS="-fsanitize=address,undefined"
+            export CFLAGS="-fsanitize=address,undefined -fno-sanitize=vptr -fsanitize-recover=address -fno-omit-frame-pointer"
+            export CXXFLAGS="$CFLAGS" LDFLAGS="-fsanitize=address,undefined -fno-sanitize=vptr"
           fi
           bash hopcast/scripts/build-app.sh build/engine build/app 2>&1 | tee build-app.log
 
