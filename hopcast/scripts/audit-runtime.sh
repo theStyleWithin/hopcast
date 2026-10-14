@@ -67,8 +67,9 @@ if [[ -x "$MUX" && ! -e "$MUX.real" ]]; then
 #!/usr/bin/env bash
 log="$OUT/ffmpeg-mux-\$(date +%H%M%S)-\$\$.log"
 { echo "argc=\$#"; for a in "\$@"; do printf '[%s]\\n' "\$a"; done; } > "\$log"
-"$MUX.real" "\$@" 2>>"\$log"
-code=\$?
+# keep the first 256 KB of what OBS sends (packet framing + codec headers)
+tee -p >(head -c 262144 > "\$log.stdin") | "$MUX.real" "\$@" 2>>"\$log"
+code=\${PIPESTATUS[1]}
 echo "exit=\$code" >> "\$log"
 exit \$code
 WRAP

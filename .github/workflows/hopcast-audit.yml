@@ -170,7 +170,7 @@ jobs:
           tmp=$(mktemp -d); d="$tmp/${{ matrix.variant }}-${GITHUB_RUN_ID}"
           git -C "$tmp" init -q -b main; mkdir -p "$d"
           cp -r build/audit/shots "$d/" 2>/dev/null || true
-          cp build/audit/*.txt build/audit/*.log "$d/" 2>/dev/null || true
+          cp build/audit/*.txt build/audit/*.log build/audit/*.stdin "$d/" 2>/dev/null || true
           cp -r build/audit/asan "$d/" 2>/dev/null || true
           mkdir -p "$d/tour" && cp build/audit/tour/*.png "$d/tour/" 2>/dev/null || true
           grep -E "warning:" build-app.log | sort -u | head -3000 > "$d/all-build-warnings.txt" 2>/dev/null || true
