@@ -76,6 +76,10 @@ WRAP
   chmod +x "$MUX"
 fi
 
+# Detector for code that closes the app's stdin/stdout/stderr (first run only).
+command -v gcc >/dev/null && gcc -shared -fPIC -O1 -o "$OUT/fd0-guard.so" "$ROOT/hopcast/tests/fd0-guard.c" -ldl 2>"$OUT/fd0-guard-build.txt" || true
+rm -f "$OUT/fd-guard.log"
+
 APPLOG="$OUT/app.log"
 GDB=0; [[ "${AUDIT_GDB:-1}" == 1 ]] && command -v gdb >/dev/null && GDB=1
 start_app() { # $1 = label; app output goes to $OUT/app-<label>.log
@@ -84,13 +88,18 @@ start_app() { # $1 = label; app output goes to $OUT/app-<label>.log
     {
       echo "set pagination off"
       echo "handle SIGPIPE nostop noprint"; echo "handle SIG32 nostop noprint"; echo "handle SIG34 nostop noprint"
-      if [[ "$1" == first ]]; then # who closes the app's stdin? (stack for every close(0))
-        echo "catch syscall close"; echo 'condition 1 $rdi == 0'
-        printf 'commands 1\nsilent\nprintf "=== close(0) ===\\n"\nbt 25\ncontinue\nend\n'
+      if [[ "$1" == first && -f "$OUT/fd0-guard.so" ]]; then # who closes the app's stdin/stdout/stderr?
+        echo "set environment LD_PRELOAD $OUT/fd0-guard.so"
+        echo "set environment HOPCAST_FD_GUARD_LOG $OUT/fd-guard.log"
       fi
       echo "run"
-      echo 'echo \n=== CRASH BACKTRACE ===\n'; echo "bt"
-      echo 'echo \n=== ALL THREADS ===\n'; echo "thread apply all bt 20"
+      # Only after a crash or an interrupt: a normal exit leaves no stack, and 'bt' would make gdb exit 1.
+      echo 'if $_isvoid($_exitcode)'
+      echo '  echo \n=== CRASH BACKTRACE ===\n'
+      echo '  bt'
+      echo '  echo \n=== ALL THREADS ===\n'
+      echo '  thread apply all bt 20'
+      echo 'end'
     } > "$gs"
     ( cd "$STAGE/bin" && exec gdb -q -batch -return-child-result -x "$gs" --args "$BIN" ) > "$log" 2>&1 &
   else
@@ -209,6 +218,22 @@ else
 fi
 
 quit_app first; code=$?
+if [[ -s "$OUT/fd-guard.log" ]]; then
+  # turn "lib.so(+0xOFF)[addr]" frames into function and source line
+  while IFS= read -r l; do
+    if [[ "$l" =~ ^(/[^\(]+)\(([^\)]*)\)\[ ]]; then
+      lib="${BASH_REMATCH[1]}"; loc="${BASH_REMATCH[2]}"
+      if [[ "$loc" == +0x* ]]; then
+        echo "$(basename "$lib") $(addr2line -f -C -i -e "$lib" "${loc#+}" 2>/dev/null | paste -sd' ' | sed "s|$ROOT/||g")"
+      else
+        echo "$(basename "$lib") $loc"
+      fi
+    else
+      echo "$l"
+    fi
+  done < "$OUT/fd-guard.log" > "$OUT/fd-guard-resolved.txt"
+  fail "the app closed a standard descriptor (0-2) $(grep -c '^=== close' "$OUT/fd-guard.log") time(s): see fd-guard-resolved.txt"
+fi
 crashed "$OUT/app-first.log" && fail "first run crashed (backtrace in app-first.log)"
 if (( code == 0 )); then pass "Ctrl+Q quits cleanly (exit 0)"; elif (( code == 124 )); then fail "app did not exit within 70 s of Ctrl+Q (hang on exit)"; else fail "app exited with status $code after Ctrl+Q"; fi
 rm -f "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel" 2>/dev/null
