@@ -178,6 +178,39 @@ business settings in the sidebar, the sidebar's output setting guide (!) and hel
 (plus the guide link in the Custom RTMP dialog), the platform chat panel (whose "Add PRISM Chat Source" button
 crashed), the "recommended sources" upsell in Add Source, and the "DialogView" placeholder title.
 
+### Runtime audit (what a real desktop would hit)
+
+The `hopcast-audit` workflow (run it manually) builds the app normally and with
+AddressSanitizer/UBSan, then runs [`hopcast/scripts/audit-runtime.sh`](scripts/audit-runtime.sh).
+Results go to the `ci-logs-audit-normal` / `ci-logs-audit-asan` branches (`summary.txt` first). It:
+
+- starts a sound server (PulseAudio null sink, like PipeWire on a desktop);
+- adds a Custom RTMP channel, **streams to a real RTMP server** (ffmpeg on 127.0.0.1) and checks
+  the video and audio that arrive, then drops the connection to check reconnecting;
+- records before and after streaming and plays the files back;
+- checks the stream key is never in plain text in the profile or logs, including while live;
+- quits with Ctrl+Q, starts again on the same profile, then starts and quits 8 more times;
+- starts on Wayland (weston, headless); checks every binary resolves its libraries;
+- watches for the app closing its own stdin/stdout/stderr (`hopcast/tests/fd0-guard.c`);
+- runs static analysis (compiler warnings + cppcheck) on the files HopCast changed.
+
+Fixed because of it (2026-10-14):
+
+| Problem on a real desktop | Cause | Fix |
+|---|---|---|
+| Go Live always failed | PRISM registered each broadcast with NAVER's server first | stream directly to the channel's server |
+| Stream ended right after starting | live-time limit read from NAVER's (empty) policy file = 0 min | no limit |
+| Settings › Exit / Ctrl+Q did nothing | Exit only connected on macOS | connected on Linux |
+| App sometimes hung on its loading screen | engine fork()ed the threaded app to inspect plugins (deadlock) | read the plugin's ELF header instead (engine patch 0004) |
+| Recording after a stream produced no file | virtual camera output closed fd 0 it didn't own on every output reset; helper then started without stdin | patches 0007, 0008 |
+| Stream key written in plain text while live | crash-recovery file; upstream `pls_encrypt_json` is a plain write | stored with the secure store |
+| Stream key in the system journal | RTMP server echo logged verbatim | masked (patch 0005) |
+| Background NAVER activity | notice/update polling, MQTT (outside the network block), Lens IPC retry every 3 s, 9 sign-in plugins loaded | removed |
+
+Multi-channel streaming (one stream to several servers) went through NAVER's relay. HopCast
+streams to one channel per output (horizontal, plus vertical with dual output) and says so if
+more are switched on.
+
 ### Next in Phase 1
 
 - Remaining PRISM naming under the hood: translations, the `PRISMLiveStudio` config folder and
