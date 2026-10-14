@@ -183,6 +183,25 @@ crashed "$OUT/app-second.log" && fail "second run crashed (backtrace in app-seco
 # Did the first run's quit leave the crash marker (makes PRISM think it crashed)?
 [[ -e "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel" ]] && info "crash marker (.sentinel) present after clean quit"
 
+# ---------------------------------------------------------------- 3b. repeated starts
+# Intermittent startup hangs (e.g. fork/lock deadlocks) only show up over several starts.
+RUNS="${AUDIT_RESTARTS:-8}"; hung=0; badexit=0
+for i in $(seq 1 "$RUNS"); do
+  rm -f "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel"
+  start_app "restart-$i"
+  if ! wait_window; then
+    hung=$((hung + 1)); shot "30-restart-$i-no-window"
+    inf=$(pgrep -P "$APP" | head -1); [[ -n "$inf" ]] && kill -INT "$inf" 2>/dev/null; sleep 5
+    pkill -KILL -f "$STAGE/bin/" 2>/dev/null; wait "$APP" 2>/dev/null; continue
+  fi
+  w 3
+  quit_app "restart-$i"; code=$?
+  (( code != 0 )) && badexit=$((badexit + 1))
+  crashed "$OUT/app-restart-$i.log" && fail "start $i crashed (app-restart-$i.log)"
+done
+(( hung == 0 )) && pass "$RUNS starts in a row, all reached the main window" || fail "$hung of $RUNS starts never showed the main window (app-restart-*.log has stacks)"
+(( badexit == 0 )) && pass "$RUNS quits in a row, all clean" || fail "$badexit of $RUNS quits did not exit cleanly"
+
 kill "$COMP" "$XVFB" 2>/dev/null
 
 # ---------------------------------------------------------------- 4. Wayland

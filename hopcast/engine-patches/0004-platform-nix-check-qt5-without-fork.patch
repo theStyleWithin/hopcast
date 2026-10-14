@@ -1,0 +1,78 @@
+diff --git a/libobs/util/platform-nix.c b/libobs/util/platform-nix.c
+index 1799327..0534e1e 100644
+--- a/libobs/util/platform-nix.c
++++ b/libobs/util/platform-nix.c
+@@ -131,20 +131,63 @@ int module_has_qt5_check(const char *path)
+ 	return 1;
+ }
+ 
+-bool has_qt5_dependency(const char *path)
+-{
+-	pid_t pid = fork();
+-	if (pid == 0) {
+-		_exit(module_has_qt5_check(path));
+-	}
+-	if (pid < 0) {
++/* HopCast: upstream forks the (already multi-threaded) app and dlopen()s the
++ * plugin in the child. If another thread holds the malloc or dynamic-linker lock
++ * at fork time, the child deadlocks and startup hangs forever in waitpid() - seen
++ * in CI on roughly 1 start in 4. Instead, read the plugin's ELF dynamic section and
++ * look for a libQt5 entry in its DT_NEEDED list. No child process, nothing loaded.
++ * (Only direct dependencies are checked; Qt 5 plugins link libQt5* directly.) */
++#include <elf.h>
++#include <fcntl.h>
++#include <sys/mman.h>
++#include <string.h>
++
++static bool elf_needs_qt5(const unsigned char *b, size_t size)
++{
++	if (size < sizeof(Elf64_Ehdr) || memcmp(b, ELFMAG, SELFMAG) != 0 || b[EI_CLASS] != ELFCLASS64)
++		return false;
++	const Elf64_Ehdr *eh = (const Elf64_Ehdr *)b;
++	if (eh->e_shoff == 0 || eh->e_shentsize != sizeof(Elf64_Shdr) || eh->e_shoff > size ||
++	    (size - eh->e_shoff) / sizeof(Elf64_Shdr) < eh->e_shnum)
+ 		return false;
++	const Elf64_Shdr *sh = (const Elf64_Shdr *)(b + eh->e_shoff);
++	for (unsigned i = 0; i < eh->e_shnum; i++) {
++		if (sh[i].sh_type != SHT_DYNAMIC || sh[i].sh_link >= eh->e_shnum)
++			continue;
++		const Elf64_Shdr *str = &sh[sh[i].sh_link];
++		if (sh[i].sh_offset > size || sh[i].sh_size > size - sh[i].sh_offset || str->sh_offset > size ||
++		    str->sh_size > size - str->sh_offset)
++			return false;
++		const Elf64_Dyn *dyn = (const Elf64_Dyn *)(b + sh[i].sh_offset);
++		size_t n = sh[i].sh_size / sizeof(Elf64_Dyn);
++		for (size_t j = 0; j < n && dyn[j].d_tag != DT_NULL; j++) {
++			if (dyn[j].d_tag != DT_NEEDED || dyn[j].d_un.d_val >= str->sh_size)
++				continue;
++			const char *name = (const char *)(b + str->sh_offset + dyn[j].d_un.d_val);
++			size_t max = str->sh_size - dyn[j].d_un.d_val;
++			if (strnlen(name, max) < max && strncmp(name, "libQt5", 6) == 0)
++				return true;
++		}
+ 	}
+-	int status;
+-	if (waitpid(pid, &status, 0) < 0) {
++	return false;
++}
++
++bool has_qt5_dependency(const char *path)
++{
++	int fd = open(path, O_RDONLY | O_CLOEXEC);
++	if (fd < 0)
+ 		return false;
++	struct stat st;
++	bool qt5 = false;
++	if (fstat(fd, &st) == 0 && st.st_size > 0) {
++		void *map = mmap(NULL, (size_t)st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
++		if (map != MAP_FAILED) {
++			qt5 = elf_needs_qt5(map, (size_t)st.st_size);
++			munmap(map, (size_t)st.st_size);
++		}
+ 	}
+-	return WIFEXITED(status) && WEXITSTATUS(status) == 0;
++	close(fd);
++	return qt5;
+ }
+ #endif
+ 
