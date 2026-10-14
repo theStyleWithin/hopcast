@@ -1,0 +1,43 @@
+diff --git a/plugins/linux-v4l2/v4l2-output.c b/plugins/linux-v4l2/v4l2-output.c
+index 366fc47..86e216f 100644
+--- a/plugins/linux-v4l2/v4l2-output.c
++++ b/plugins/linux-v4l2/v4l2-output.c
+@@ -26,7 +26,13 @@ static const char *virtualcam_name(void *unused)
+ static void virtualcam_destroy(void *data)
+ {
+ 	struct virtualcam_data *vcam = (struct virtualcam_data *)data;
+-	close(vcam->device);
++	/* HopCast: device is 0 (from bzalloc) when the camera was never started, and
++	 * still holds the old number after stop or a failed start. Upstream closed it
++	 * anyway, i.e. closed the app's stdin or whatever file had that number now.
++	 * PRISM recreates outputs often, so this hit recording pipes, sockets and the
++	 * secure store. Only close a descriptor this output still owns. */
++	if (vcam->device >= 0)
++		close(vcam->device);
+ 	bfree(data);
+ }
+ 
+@@ -104,6 +110,7 @@ static int loopback_module_load()
+ static void *virtualcam_create(obs_data_t *settings, obs_output_t *output)
+ {
+ 	struct virtualcam_data *vcam = (struct virtualcam_data *)bzalloc(sizeof(*vcam));
++	vcam->device = -1; /* HopCast: not open */
+ 	vcam->output = output;
+ 
+ 	UNUSED_PARAMETER(settings);
+@@ -177,6 +184,7 @@ static bool try_connect(void *data, const char *device)
+ 
+ fail_close_device:
+ 	close(vcam->device);
++	vcam->device = -1;
+ 	return false;
+ }
+ 
+@@ -246,6 +254,7 @@ static void virtualcam_stop(void *data, uint64_t ts)
+ 	}
+ 
+ 	close(vcam->device);
++	vcam->device = -1;
+ 	blog(LOG_INFO, "Virtual camera stopped");
+ 
+ 	UNUSED_PARAMETER(ts);

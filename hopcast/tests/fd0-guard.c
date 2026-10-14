@@ -13,10 +13,25 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 
+static int is_target(void)
+{
+	/* Only the app itself (children such as /bin/sh inherit LD_PRELOAD). */
+	static int cached = -1;
+	if (cached < 0) {
+		char exe[4096];
+		ssize_t n = readlink("/proc/self/exe", exe, sizeof exe - 1);
+		exe[n > 0 ? n : 0] = 0;
+		const char *want = getenv("HOPCAST_FD_GUARD_EXE");
+		const char *base = strrchr(exe, '/');
+		cached = !want || (base && strcmp(base + 1, want) == 0);
+	}
+	return cached;
+}
+
 static void report(const char *what, int fd)
 {
 	const char *path = getenv("HOPCAST_FD_GUARD_LOG");
-	if (!path)
+	if (!path || !is_target())
 		return;
 	int out = open(path, O_WRONLY | O_CREAT | O_APPEND | O_CLOEXEC, 0644);
 	if (out < 0)

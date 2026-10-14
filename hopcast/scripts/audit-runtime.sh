@@ -91,6 +91,7 @@ start_app() { # $1 = label; app output goes to $OUT/app-<label>.log
       if [[ "$1" == first && -f "$OUT/fd0-guard.so" ]]; then # who closes the app's stdin/stdout/stderr?
         echo "set environment LD_PRELOAD $OUT/fd0-guard.so"
         echo "set environment HOPCAST_FD_GUARD_LOG $OUT/fd-guard.log"
+        echo "set environment HOPCAST_FD_GUARD_EXE PRISMLiveStudio"
       fi
       echo "run"
       # Only after a crash or an interrupt: a normal exit leaves no stack, and 'bt' would make gdb exit 1.
