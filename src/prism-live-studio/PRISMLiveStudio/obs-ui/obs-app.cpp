@@ -1197,6 +1197,8 @@ static void move_basic_to_scene_collections(void)
 	}
 
 	const std::filesystem::path sourceFile = basicPath / std::filesystem::u8path("scenes.json");
+	if (!std::filesystem::exists(sourceFile))
+		return; // HopCast: fresh install, nothing to migrate (was logged as an error)
 	const std::filesystem::path destinationFile =
 		(sceneCollectionPath / std::filesystem::u8path(Str("Untitled"))).replace_extension(".json");
 

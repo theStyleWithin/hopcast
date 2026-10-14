@@ -110,6 +110,16 @@ PLSSyncServerManager::PLSSyncServerManager(QObject *parent) : QObject(parent)
 
 void PLSSyncServerManager::updatePolicyPublishByteArray()
 {
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: these policy files only ever came from NAVER's download service, so
+	 * they stay empty. The lazy getters re-ran this (4 file reads + ~30 log lines)
+	 * on every call because "empty" looked like "not loaded yet" - 79 times in the
+	 * first 30 s, and on hot paths while live. Load once. */
+	static bool hopcastLoaded = false;
+	if (hopcastLoaded)
+		return;
+	hopcastLoaded = true;
+#endif
 	PLS_INFO("SyncServer", "sync server status: start update policy publish and policy platform json object");
 	QJsonObject policyPublishObject;
 	getSyncServerJsonObject(POLICY_PUBLISH_JSON_NAME, policyPublishObject);

@@ -1,0 +1,181 @@
+# HopCast audit: hunt for problems a person would hit on a real desktop.
+#  normal: regular build + runtime audit (sound server, real RTMP stream, recording,
+#          Ctrl+Q exit, second start, Wayland) + static analysis of HopCast-changed files.
+#  asan:   the app built with AddressSanitizer/UBSan, then the same runtime audit and the
+#          full UI tour, collecting every memory/undefined-behaviour report.
+# Results go to the ci-logs-audit-<variant> branch.
+name: hopcast-audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      variants:
+        description: "Which audits (normal, asan, or both)"
+        type: choice
+        options: [both, normal, asan]
+        default: both
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [normal, asan]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - name: Skip?
+        id: gate
+        run: |
+          v="${{ inputs.variants }}"
+          if [ "$v" = both ] || [ "$v" = "${{ matrix.variant }}" ]; then echo run=1 >> "$GITHUB_OUTPUT"; else echo run=0 >> "$GITHUB_OUTPUT"; fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.run == '1'
+        with:
+          submodules: false
+          fetch-depth: 0   # static analysis compares against the unmodified upstream import
+
+      - name: Fetch pinned engine (NAVER libobs fork)
+        if: steps.gate.outputs.run == '1'
+        run: |
+          git submodule update --init --depth 1 src/obs-studio
+          git -C src/obs-studio submodule update --init --depth 1 plugins/obs-browser plugins/obs-websocket
+
+      - name: Install dependencies
+        if: steps.gate.outputs.run == '1'
+        run: |
+          bash hopcast/scripts/deps-ubuntu.sh
+          sudo apt-get install -y --no-install-recommends \
+            libssl-dev libmosquitto-dev libmosquittopp-dev libzstd-dev libpng-dev \
+            libgl-dev libxcb-cursor0 libxkbcommon-x11-0 libfftw3-dev \
+            xvfb xdotool xcompmgr imagemagick x11-utils gdb ffmpeg \
+            pulseaudio pulseaudio-utils weston cppcheck
+
+      - name: Install Qt 6.8
+        if: steps.gate.outputs.run == '1'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          host: linux
+          target: desktop
+          arch: linux_gcc_64
+          modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats'
+          cache: true
+
+      - name: Restore ccache
+        if: steps.gate.outputs.run == '1'
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-${{ matrix.variant == 'asan' && 'asan' || 'app' }}-${{ github.sha }}
+          restore-keys: |
+            ccache-${{ matrix.variant == 'asan' && 'asan' || 'app' }}-
+            ccache-app-
+            ccache-engine-
+
+      - name: Configure ccache
+        if: steps.gate.outputs.run == '1'
+        run: |
+          ccache --max-size=${{ matrix.variant == 'asan' && '4G' || '2G' }}
+          ccache --zero-stats
+
+      - name: Build engine
+        if: steps.gate.outputs.run == '1'
+        env:
+          CMAKE_C_COMPILER_LAUNCHER: ccache
+          CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        run: |
+          set -o pipefail
+          bash hopcast/scripts/build-engine.sh build/engine build/engine-install 2>&1 | tee build-engine.log
+
+      - name: Build app${{ matrix.variant == 'asan' && ' (AddressSanitizer + UBSan)' || '' }}
+        if: steps.gate.outputs.run == '1'
+        env:
+          CMAKE_C_COMPILER_LAUNCHER: ccache
+          CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        run: |
+          set -o pipefail
+          if [ "${{ matrix.variant }}" = asan ]; then
+            export CFLAGS="-fsanitize=address,undefined -fsanitize-recover=address -fno-omit-frame-pointer"
+            export CXXFLAGS="$CFLAGS" LDFLAGS="-fsanitize=address,undefined"
+          fi
+          bash hopcast/scripts/build-app.sh build/engine build/app 2>&1 | tee build-app.log
+
+      - name: Save ccache
+        if: always() && steps.gate.outputs.run == '1'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-${{ matrix.variant == 'asan' && 'asan' || 'app' }}-${{ github.sha }}
+
+      - name: Static analysis of HopCast-changed files
+        if: matrix.variant == 'normal' && steps.gate.outputs.run == '1'
+        continue-on-error: true
+        run: |
+          mkdir -p build/audit
+          base=$(git rev-list --max-parents=0 HEAD | tail -1)
+          git diff --name-only "$base" HEAD -- src hopcast | grep -E '\.(c|cc|cpp|h|hpp)$' | while read -r f; do [ -f "$f" ] && echo "$f"; done > build/audit/changed-files.txt
+          echo "::notice title=changed files::$(wc -l < build/audit/changed-files.txt) C/C++ files changed by HopCast"
+          # Compiler warnings that point into files HopCast changed.
+          grep -E "warning:" build-app.log | grep -F -f <(sed 's|^|/|' build/audit/changed-files.txt) | sort -u > build/audit/warnings-in-changed-files.txt || true
+          # cppcheck: real-bug classes only (no style), Qt-aware.
+          timeout 2400 cppcheck -j "$(nproc)" --enable=warning,performance,portability --inconclusive --library=qt --std=c++17 \
+            --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unknownMacro \
+            -I src/common-libs/libutils-api -I src/common-libs/libhttp-client \
+            --template='{file}:{line}: {severity}/{id}: {message}' \
+            $(cat build/audit/changed-files.txt | grep -vE '\.h(pp)?$') 2> build/audit/cppcheck.txt > /dev/null || true
+          echo "::notice title=static analysis::$(wc -l < build/audit/warnings-in-changed-files.txt) compiler warnings, $(grep -c ': ' build/audit/cppcheck.txt || true) cppcheck findings in HopCast-changed files"
+
+      - name: Runtime audit
+        if: steps.gate.outputs.run == '1'
+        continue-on-error: true
+        run: |
+          mkdir -p build/audit/asan
+          if [ "${{ matrix.variant }}" = asan ]; then
+            export AUDIT_SLOW=2 AUDIT_GDB=0
+            export ASAN_OPTIONS="detect_leaks=0:halt_on_error=0:abort_on_error=0:alloc_dealloc_mismatch=0:detect_odr_violation=0:log_path=$PWD/build/audit/asan/asan"
+            export UBSAN_OPTIONS="print_stacktrace=1:halt_on_error=0:log_path=$PWD/build/audit/asan/ubsan"
+          fi
+          bash hopcast/scripts/audit-runtime.sh build/stage build/audit 2>&1 | tee build/audit/audit.log
+
+      - name: UI tour under sanitizers
+        if: matrix.variant == 'asan' && steps.gate.outputs.run == '1'
+        continue-on-error: true
+        run: |
+          export ASAN_OPTIONS="detect_leaks=0:halt_on_error=0:abort_on_error=0:alloc_dealloc_mismatch=0:detect_odr_violation=0:log_path=$PWD/build/audit/asan/tour-asan"
+          export UBSAN_OPTIONS="print_stacktrace=1:halt_on_error=0:log_path=$PWD/build/audit/asan/tour-ubsan"
+          bash hopcast/scripts/ui-tour.sh build/stage build/audit/tour 2>&1 | tail -5
+
+      - name: Summarise sanitizer reports
+        if: matrix.variant == 'asan' && steps.gate.outputs.run == '1'
+        continue-on-error: true
+        run: |
+          cd build/audit/asan
+          ls | head -50 > files.txt
+          # One line per distinct report: kind + first frame inside our code.
+          for f in $(ls | grep -E '^(asan|ubsan|tour-asan|tour-ubsan)\.' ); do
+            awk '/ERROR: AddressSanitizer|runtime error:/{k=$0} /#[0-9]+ .* in .*\/src\//{ if(k!=""){print k " @ " $NF; k=""} }' "$f"
+          done | sed -E 's/==[0-9]+==//; s/0x[0-9a-f]+/0x…/g' | sort | uniq -c | sort -rn > distinct-reports.txt
+          echo "::notice title=sanitizers::$(wc -l < distinct-reports.txt) distinct sanitizer reports"
+
+      - name: Publish results
+        if: always() && steps.gate.outputs.run == '1'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          tmp=$(mktemp -d); d="$tmp/${{ matrix.variant }}-${GITHUB_RUN_ID}"
+          git -C "$tmp" init -q -b main; mkdir -p "$d"
+          cp -r build/audit/shots "$d/" 2>/dev/null || true
+          cp build/audit/*.txt build/audit/*.log "$d/" 2>/dev/null || true
+          cp -r build/audit/asan "$d/" 2>/dev/null || true
+          mkdir -p "$d/tour" && cp build/audit/tour/*.png "$d/tour/" 2>/dev/null || true
+          grep -E "warning:" build-app.log | sort -u | head -3000 > "$d/all-build-warnings.txt" 2>/dev/null || true
+          find "$d" -name '*.log' -size +20M -exec sh -c 'tail -c 20000000 "$1" > "$1.tail" && mv "$1.tail" "$1"' _ {} \;
+          git -C "$tmp" add -A
+          git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "audit ${{ matrix.variant }} ${GITHUB_RUN_ID}"
+          git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:ci-logs-audit-${{ matrix.variant }}
+          [ -f build/audit/summary.txt ] && { echo "::notice title=audit ${{ matrix.variant }}::$(grep -c '^PASS' build/audit/summary.txt) pass, $(grep -c '^FAIL' build/audit/summary.txt) fail"; }

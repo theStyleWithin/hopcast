@@ -128,6 +128,12 @@ void PLSUiApp::setAppState(bool actived)
 
 void PLSUiApp::initIpc()
 {
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: this pipe only talks to NAVER's PRISM Lens app, which doesn't exist
+	 * on Linux. Left on, it retried every 3 s for the whole session. Every
+	 * pls_ipc_* call is a no-op on a null handle. */
+	return;
+#endif
 #if defined(PRODUCT_PRISM)
 	m_betweenPrismLens = pls_ipc_connect(QStringLiteral("IPC_Between_PRISM_Lens"));
 #elif defined(PRODUCT_LENS)
