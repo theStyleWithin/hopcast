@@ -145,6 +145,14 @@ quit_app() { # Ctrl+Q on the main window; returns the exit status (124 = did not
   wait "$APP"; return $?
 }
 # A real crash: the app stopped on a fatal signal (our own SIGINT for hang stacks does not count).
+# When the app hangs without gdb attached, attach afterwards and save every thread's stack.
+dump_stacks() {
+  local pid; pid=$(pgrep -x PRISMLiveStudio | head -1)
+  [[ -n "$pid" ]] || return 0
+  (( GDB )) && return 0  # under gdb the hang handler already prints stacks
+  sudo -n gdb -p "$pid" -batch -ex "set pagination off" -ex "thread apply all bt 25" > "$OUT/hang-$1.txt" 2>&1 \
+    || gdb -p "$pid" -batch -ex "thread apply all bt 25" > "$OUT/hang-$1.txt" 2>&1 || true
+}
 crashed() { grep -qE "received signal SIG(SEGV|ABRT|BUS|FPE|ILL|TRAP)" "$1"; }
 
 Xvfb :97 -screen 0 1600x900x24 >/dev/null 2>&1 & XVFB=$!
@@ -158,7 +166,7 @@ ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f f
   -i "$RTMP_URL/$RTMP_KEY" -c copy -t 25 -y "$OUT/received.flv" > "$OUT/rtmp-server.log" 2>&1 & RTMP=$!
 
 start_app first
-if wait_window; then pass "first start: main window shown"; else fail "first start: main window never appeared"; fi
+if wait_window; then pass "first start: main window shown"; else dump_stacks first; fail "first start: main window never appeared (hang-first.txt)"; fi
 w 5; shot 01-first-start
 fdsnap() { local pid; pid=$(pgrep -x PRISMLiveStudio | head -1); [[ -n "$pid" ]] && ls -l /proc/$pid/fd 2>/dev/null | awk '{print $9, $10, $11}' | sort -n > "$OUT/fds-$1.txt"; }
 fdsnap start
@@ -256,7 +264,7 @@ rm -f "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel" 2>/dev/null
 
 # ---------------------------------------------------------------- 3. second run on the same profile
 start_app second
-if wait_window; then pass "second start (same profile): main window shown"; else fail "second start: main window never appeared"; fi
+if wait_window; then pass "second start (same profile): main window shown"; else dump_stacks second; fail "second start: main window never appeared (hang-second.txt)"; fi
 w 6; shot 20-second-start
 grep -qiE "tamper|key file is missing|KeyMissing" "$OUT/app-second.log" && fail "secure store reported a problem on second start" || pass "saved channel loaded without secure-store errors"
 grep -q "Audit Server\|hopcast_rtmp.*load" "$OUT/app-second.log" && info "channel load logged"
@@ -274,7 +282,7 @@ for i in $(seq 1 "$RUNS"); do
   rm -f "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel"
   start_app "restart-$i"
   if ! wait_window; then
-    hung=$((hung + 1)); shot "30-restart-$i-no-window"
+    hung=$((hung + 1)); shot "30-restart-$i-no-window"; dump_stacks "restart-$i"
     inf=$(pgrep -P "$APP" | head -1); [[ -n "$inf" ]] && kill -INT "$inf" 2>/dev/null; sleep 5
     pkill -KILL -f "$STAGE/bin/" 2>/dev/null; wait "$APP" 2>/dev/null; continue
   fi
