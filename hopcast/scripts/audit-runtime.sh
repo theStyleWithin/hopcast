@@ -88,7 +88,13 @@ start_app() { # $1 = label; app output goes to $OUT/app-<label>.log
     {
       echo "set pagination off"
       echo "handle SIGPIPE nostop noprint"; echo "handle SIG32 nostop noprint"; echo "handle SIG34 nostop noprint"
-      if [[ "$1" == first && -f "$OUT/fd0-guard.so" ]]; then # who closes the app's stdin/stdout/stderr?
+      # Who forks the (multi-threaded) app? fork() there can deadlock in the child.
+      if [[ "$1" == first || "$1" == second ]]; then
+        echo "catch fork"; echo "catch vfork"
+        printf 'commands 1 2\nsilent\nprintf "=== fork ===\\n"\nbt 20\ncontinue\nend\n'
+      fi
+      # The close() guard can't be preloaded ahead of the ASan runtime.
+      if [[ "$1" == first && -f "$OUT/fd0-guard.so" && -z "${ASAN_OPTIONS:-}" ]]; then # who closes the app's stdin/stdout/stderr?
         echo "set environment LD_PRELOAD $OUT/fd0-guard.so"
         echo "set environment HOPCAST_FD_GUARD_LOG $OUT/fd-guard.log"
         echo "set environment HOPCAST_FD_GUARD_EXE PRISMLiveStudio"
@@ -301,6 +307,10 @@ fi
 pulseaudio --kill 2>/dev/null
 
 # ---------------------------------------------------------------- 5. log review
+# Was anything killed for running out of memory (sanitizer builds use a lot)?
+sudo -n dmesg 2>/dev/null | grep -iE "out of memory|oom-kill|killed process" | tail -20 > "$OUT/oom.txt" || true
+[[ -s "$OUT/oom.txt" ]] && fail "the kernel killed a process for lack of memory (oom.txt)"
+free -m > "$OUT/memory.txt" 2>/dev/null || true
 cat "$OUT"/app-*.log > "$APPLOG" 2>/dev/null
 grep -E " (ERROR|WARN) |\[QT::(Warning|Critical)\]|runtime error:|AddressSanitizer|LeakSanitizer|QObject::connect|QLayout|Segmentation|terminate called" "$APPLOG" \
   | sed -E 's/^[0-9-]+ [0-9:.+]+ //; s/0x[0-9a-f]+/0x…/g; s/[0-9]{3,}/N/g' | sort | uniq -c | sort -rn > "$OUT/log-problems.txt"
