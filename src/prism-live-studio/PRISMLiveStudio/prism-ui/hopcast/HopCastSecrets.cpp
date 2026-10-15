@@ -162,9 +162,21 @@ QString defaultFolder()
 	return QFileInfo(userFile(QString::fromLatin1(FILE_NAME))).absolutePath();
 }
 
+/* The folder setting is read from worker threads (saves) and written from the GUI
+ * thread; one QSettings object isn't safe to share without a lock. */
+QMutex g_settingsMutex;
+
 QString chosenFolder()
 {
+	QMutexLocker lock(&g_settingsMutex);
 	return settings().value(SETTING_FOLDER).toString();
+}
+
+void setChosenFolder(const QString &folder)
+{
+	QMutexLocker lock(&g_settingsMutex);
+	settings().setValue(SETTING_FOLDER, folder);
+	settings().sync();
 }
 
 /* The folder must exist and be writable by us; checked with a real temp file. */
@@ -258,8 +270,7 @@ bool ensureStreamKeyFolderChosen(QWidget *parent)
 		PLSAlertView::warning(parent, QStringLiteral("HopCast"), why);
 		folder = defaultFolder();
 	}
-	settings().setValue(SETTING_FOLDER, folder);
-	settings().sync();
+	setChosenFolder(folder);
 	PLS_INFO(MODULE, "HopCast: stream-key file folder set (%s)", folder == defaultFolder() ? "HopCast's folder" : "user-chosen folder");
 	return true;
 }
@@ -271,16 +282,21 @@ void changeStreamKeyFolder(QWidget *parent)
 	if (picked.isEmpty())
 		return;
 	QString why;
-	if (!folderUsable(picked, why) || !moveStreamKeyFile(current, picked, why)) {
+	bool moved = folderUsable(picked, why);
+	if (moved) {
+		/* Move, forget the old store and switch the setting in one step, so a save
+		 * running at the same time can't write to the old location. */
+		QMutexLocker lock(&g_mutex);
+		moved = moveStreamKeyFile(current, picked, why);
+		if (moved) {
+			g_stores.erase(QDir(current).filePath(QString::fromLatin1(FILE_NAME))); // reopen at the new place
+			setChosenFolder(picked);
+		}
+	}
+	if (!moved) {
 		PLSAlertView::warning(parent, QStringLiteral("HopCast"), why);
 		return;
 	}
-	{
-		QMutexLocker lock(&g_mutex);
-		g_stores.erase(QDir(current).filePath(QString::fromLatin1(FILE_NAME))); // reopen at the new place
-	}
-	settings().setValue(SETTING_FOLDER, picked);
-	settings().sync();
 	PLSAlertView::information(parent, QStringLiteral("HopCast"),
 				  QStringLiteral("Your stream keys are now kept in:\n%1").arg(QDir(picked).filePath(QString::fromLatin1(FILE_NAME))));
 }
