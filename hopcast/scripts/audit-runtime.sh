@@ -49,6 +49,15 @@ mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$HOME/Documents"
 mkdir -m 0700 -p "$XDG_RUNTIME_DIR"
 SHOTS="$OUT/shots"; mkdir -p "$SHOTS"
 
+# A session message bus, as on any desktop. Without one, GLib forks dbus-launch from
+# inside the app (portals, sleep inhibitor) - CI-only behaviour that can deadlock a
+# sanitizer build.
+if command -v dbus-daemon >/dev/null && [[ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+  DBUS_SESSION_BUS_ADDRESS=$(dbus-daemon --session --fork --print-address=1 2>>"$OUT/dbus.log" | head -1)
+  export DBUS_SESSION_BUS_ADDRESS
+  [[ -n "$DBUS_SESSION_BUS_ADDRESS" ]] && info "session D-Bus running" || info "session D-Bus failed to start (dbus.log)"
+fi
+
 # A sound server, as on any desktop (PipeWire answers the same PulseAudio protocol).
 if command -v pulseaudio >/dev/null; then
   pulseaudio -n --daemonize=yes --exit-idle-time=-1 --log-target=file:"$OUT/pulse.log" \

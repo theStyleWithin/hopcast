@@ -1422,6 +1422,8 @@ void PLSBasic::PLSInit()
 	 * and the open-source license list. Hidden actions also lose their shortcuts. */
 	for (QAction *action : {ui->actionUserGuide, ui->actionHelpPortal, ui->actionWebsite, ui->actionPrismPolicy, ui->actionPrismDiscord,
 				ui->actionContactUs, actionNoticeAndUpdate, ui->actionRepair, ui->actionCheckForUpdates}) {
+		if (!action) // created at runtime; may not exist in every build
+			continue;
 		action->setVisible(false);
 		action->setEnabled(false);
 	}

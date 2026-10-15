@@ -53,7 +53,7 @@ jobs:
             libssl-dev libmosquitto-dev libmosquittopp-dev libzstd-dev libpng-dev \
             libgl-dev libxcb-cursor0 libxkbcommon-x11-0 libfftw3-dev \
             xvfb xdotool xcompmgr imagemagick x11-utils gdb ffmpeg \
-            pulseaudio pulseaudio-utils weston cppcheck
+            pulseaudio pulseaudio-utils weston cppcheck dbus dbus-x11
 
       - name: Install Qt 6.8
         if: steps.gate.outputs.run == '1'
