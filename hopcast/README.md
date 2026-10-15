@@ -182,7 +182,7 @@ crashed), the "recommended sources" upsell in Add Source, and the "DialogView" p
 
 The `hopcast-audit` workflow (run it manually) builds the app normally and with
 AddressSanitizer/UBSan, then runs [`hopcast/scripts/audit-runtime.sh`](scripts/audit-runtime.sh).
-Results go to the `ci-logs-audit-normal` / `ci-logs-audit-asan` branches (`summary.txt` first). It:
+Results go to the `dev-logs-audit-normal` / `dev-logs-audit-asan` branches (`summary.txt` first). It:
 
 - starts a sound server (PulseAudio null sink, like PipeWire on a desktop);
 - adds a Custom RTMP channel, **streams to a real RTMP server** (ffmpeg on 127.0.0.1) and checks

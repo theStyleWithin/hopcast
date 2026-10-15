@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # On CI failure: surface the important lines of a build log as GitHub annotations
-# (readable through the REST API) and push the full log to the `ci-logs` branch.
+# (readable through the REST API) and push the full log to the `dev-logs` branch.
 # Usage: ci-report-failure.sh <log-file> [label]
 set -uo pipefail
 LOG="${1:?log file}"
@@ -16,10 +16,10 @@ errs=$(grep -nE -B2 -A6 "CMake Error|CMake Warning \(dev\) at|error:|Error [0-9]
 # 2) Tail of the log.
 echo "::error title=$LABEL tail::$(tail -n 120 "$LOG" | head -c 60000 | enc)"
 
-# 3) Full log to the ci-logs branch (needs `permissions: contents: write`).
+# 3) Full log to the dev-logs branch (needs `permissions: contents: write`).
 if [[ -n "${GITHUB_TOKEN:-}" && -n "${GITHUB_REPOSITORY:-}" ]]; then
   tmp=$(mktemp -d)
-  git -C "$tmp" init -q -b ci-logs
+  git -C "$tmp" init -q -b dev-logs
   name="${GITHUB_RUN_ID:-local}-${LABEL}.log"
   cp "$LOG" "$tmp/$name"
   for d in engine app; do
@@ -27,7 +27,7 @@ if [[ -n "${GITHUB_TOKEN:-}" && -n "${GITHUB_REPOSITORY:-}" ]]; then
   done
   git -C "$tmp" add -A
   git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "logs for run ${GITHUB_RUN_ID:-local} ($LABEL)"
-  git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ci-logs \
-    && echo "Full log pushed to branch ci-logs as $name"
+  git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" dev-logs \
+    && echo "Full log pushed to branch dev-logs as $name"
 fi
 exit 0

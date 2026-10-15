@@ -18,7 +18,7 @@ on:
         default: ""
 
 permissions:
-  contents: write   # ci-report-failure.sh pushes logs to the ci-logs branch
+  contents: write   # ci-report-failure.sh pushes logs to the dev-logs branch
 
 jobs:
   app-linux:
@@ -120,13 +120,13 @@ jobs:
           sudo apt-get install -y --no-install-recommends xdotool xcompmgr imagemagick x11-utils
           TOUR_ONLY="${{ inputs.tour_only }}" bash hopcast/scripts/ui-tour.sh build/stage build/ui-tour 2>&1 | tee build/ui-tour.log
           tmp=$(mktemp -d)
-          git -C "$tmp" init -q -b ci-logs
+          git -C "$tmp" init -q -b dev-logs
           mkdir -p "$tmp/tour-${GITHUB_RUN_ID}"
           cp build/ui-tour/*.png build/ui-tour/*.windows.txt build/ui-tour.log "$tmp/tour-${GITHUB_RUN_ID}/" 2>/dev/null || true
           tail -c 200000 build/ui-tour/app.log > "$tmp/tour-${GITHUB_RUN_ID}/app.log" 2>/dev/null || true
           git -C "$tmp" add -A
           git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "ui tour ${GITHUB_RUN_ID}"
-          git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:ci-logs-tour
+          git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:dev-logs-tour
 
       - name: Publish launch results
         if: always() && hashFiles('build/launch-test/stdout.txt') != ''
@@ -136,12 +136,12 @@ jobs:
           echo "::notice title=launch test::${{ steps.launch.outcome }}"
           echo "::notice title=launch stdout::$( (sed -n '/CRASH BACKTRACE/,/ALL THREADS/p' build/launch-test/stdout.txt; tail -n 30 build/launch-test/stdout.txt) | head -c 30000 | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"}{print}')"
           tmp=$(mktemp -d)
-          git -C "$tmp" init -q -b ci-logs
+          git -C "$tmp" init -q -b dev-logs
           mkdir -p "$tmp/launch-${GITHUB_RUN_ID}"
           cp build/launch-test/*.txt build/launch-test/*.log build/launch-test/*.png "$tmp/launch-${GITHUB_RUN_ID}/" 2>/dev/null || true
           git -C "$tmp" add -A
           git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "launch test ${GITHUB_RUN_ID}"
-          git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ci-logs
+          git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" dev-logs
 
       - uses: actions/upload-artifact@v4
         if: always() && hashFiles('build/launch-test/stdout.txt') != ''
