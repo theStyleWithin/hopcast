@@ -13,7 +13,7 @@ A Linux port of [PRISM Live Studio](https://github.com/naver/prism-live-studio),
 - The engine is NAVER's fork of OBS Studio (`src/obs-studio`, GPL-2.0-or-later), pinned at `a357328` (libobs 31.0.3).
 - Not affiliated with or endorsed by NAVER Corp. or the OBS Project. "PRISM", "PRISM Live Studio" and "OBS"
   are their owners' marks. We don't use them as our name and won't ship their logos.
-- No NAVER backend services, telemetry, or credentials. Streaming-platform logins use our own OAuth apps.
+- No NAVER backend services, telemetry, or credentials. No account logins: HopCast streams to any RTMP/SRT/RIST server you enter.
 
 ## Layout
 

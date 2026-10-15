@@ -1,78 +1,51 @@
-# PRISM Live Studio
+# HopCast
 
-**Visit [our official web site](http://prismlive.com) for more information and [Latest updates on PRISM Live Studio](http://prismlive.com/ko_kr/pcapp/)**.
+> [!WARNING]
+> **HopCast is in early development and is not ready for use. Please don't download, build or install it yet.**
+> There are no releases. It has only been tested on automated build machines, not on a real desktop,
+> and things will change or break without notice.
 
-## Releases
+HopCast is a free, open-source live-streaming and recording studio for Linux.
 
-### PRISM Live Studio 5.1.3
+It is built from the open-source code of [PRISM Live Studio](https://github.com/naver/prism-live-studio)
+(GPL-2.0) and [OBS Studio](https://obsproject.com) (GPL-2.0). HopCast keeps PRISM's studio layout and
+adds a Linux port. It removes accounts, online services, platform advertising and PRISM branding.
 
-[Download PRISM Live Studio 5.1.3 for Windows](https://resource-prismlive.pstatic.net/202607072241/PrismLiveStudio_Setup_x64_5.1.3.719.exe)
+HopCast is an independent project. It is **not affiliated with, endorsed by or supported by NAVER Corp.,
+PRISM Live Studio or the OBS Project**.
 
-- 5.1.3 New Features
- 
-  - Added [feature description].
-  - Added [feature description].
- 
-    
-- Improvements
-  - Improved streaming stability.
-  - Improved application performance and usability.
-  - Improved compatibility with supported streaming platforms.
+## What makes it different
 
-- Bug Fixes
+- **No account.** It opens straight into the studio.
+- **No company servers.** HopCast never contacts NAVER/PRISM services, and has no telemetry or update pings.
+- **No platform favoritism.** It streams to any RTMP, SRT or RIST server you enter, with no built-in buttons for particular platforms.
+- **Your stream keys stay yours.** They are stored encrypted (AES-256-GCM), in a folder you choose.
+- **Linux first.** Works on X11 and Wayland, and will be shipped as a single AppImage.
 
-  - Fixed an issue where [problem description].
-  - Fixed an issue where [problem description]. 
-  - Fixed several crashes and stability issues.
+See **[SPECS.md](SPECS.md)** for the full description of what HopCast is and isn't.
 
+## Status
 
+| Area | State |
+|---|---|
+| Builds on Linux (engine + studio) | ✅ in automated builds (Ubuntu 24.04) |
+| Studio interface, PRISM branding removed | ✅ |
+| Streaming to an RTMP server, recording | ✅ in automated tests |
+| Real-desktop testing (GPU encoders, webcams, screen capture) | ⏳ not yet |
+| AppImage download | ⏳ not yet, no releases |
 
-## Overview
-![PRISM Live Studio](https://resource-prismlive.pstatic.net/20231221002/pc/img/live_stream_img1.png)
+Developer notes, build steps and test details are in [`hopcast/README.md`](hopcast/README.md).
+Screenshots of every screen are in [`hopcast/docs/ui-map/`](hopcast/docs/ui-map/README.md).
 
-This application currently only supports 64-bit Windows.
+## License
 
-## Build on Windows
-Before build, please prepare install Visual Studio 2022 and QT 6.3.1 version first and set the enviroment variables as:
-```
-QT631: QT install directory/6.3.1/msvc2019_64
-```
+HopCast is free software under the **GNU General Public License v2** ([`COPYING`](COPYING)).
+Third-party components and their licenses are listed in [`LICENSES`](LICENSES).
 
-1. Please enter in build/windows directory and config project:
-```
-> configure.cmd
-```
+- Based on PRISM Live Studio © NAVER Corp. and OBS Studio © the OBS Project contributors, both GPL-2.0.
+  HopCast's own changes are GPL-2.0-or-later.
+- "PRISM", "PRISM Live Studio", "NAVER" and "OBS" are trademarks of their owners. HopCast doesn't use them as its name or branding.
+- HopCast comes with **no warranty**.
 
-2. Please enter in src/prism-live-studio/build, and use VS2022 to open the solution under:
-```
-> open prism-live-studio.sln
-```
-
-Then, you could find a bin/prism/windows/Debug or bin/prism/windows/Release directory generated under root.
-And please find the file PRISMLiveStudio.exe in bin/64bit
-which is the main program file of PRISM Live Studio
-
-## Build on Macos
-Before build, please prepare install XCode and QT 6.3.1 version first and set the enviroment variables as:
-```
-QTDIR: QT install directory/6.3.1/macos
-```
-
-1. Please enter in build/mac directory and config project:
-```
-> ./01_configure.sh
-```
-
-2. Please enter in src/prism-live-studio/build, and use XCode to open the solution under:
-```
-> open prism-live-studio.xcodeproj
-```
-
-Then, you could find a src/prism-live-studio/build/prism-live-studio/PRISMLiveStudio/Debug/PRISMLiveStudio.app or src/prism-live-studio/build/prism-live-studio/PRISMLiveStudio/Release/PRISMLiveStudio.app,
-which is the bundle file of PRISM Live Studio
-
-## Community
-
-[Github issues](https://github.com/naver/prismlivestudio/issues)  
-[Blog](https://blog.naver.com/prismlivestudio)  
-If you have any question, please contact us by [mail:prismlive@navercorp.com](mailto://prismlive@navercorp.com)
+The original PRISM Live Studio README is kept for reference in
+[`hopcast/docs/upstream/PRISM-README.md`](hopcast/docs/upstream/PRISM-README.md).
