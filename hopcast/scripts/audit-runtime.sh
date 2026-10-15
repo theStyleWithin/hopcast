@@ -49,6 +49,15 @@ mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$HOME/Documents"
 mkdir -m 0700 -p "$XDG_RUNTIME_DIR"
 SHOTS="$OUT/shots"; mkdir -p "$SHOTS"
 
+# A session message bus, as on any desktop. Without one, GLib forks dbus-launch from
+# inside the app (portals, sleep inhibitor) - CI-only behaviour that can deadlock a
+# sanitizer build.
+if command -v dbus-daemon >/dev/null && [[ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+  DBUS_SESSION_BUS_ADDRESS=$(dbus-daemon --session --fork --print-address=1 2>>"$OUT/dbus.log" | head -1)
+  export DBUS_SESSION_BUS_ADDRESS
+  [[ -n "$DBUS_SESSION_BUS_ADDRESS" ]] && info "session D-Bus running" || info "session D-Bus failed to start (dbus.log)"
+fi
+
 # A sound server, as on any desktop (PipeWire answers the same PulseAudio protocol).
 if command -v pulseaudio >/dev/null; then
   pulseaudio -n --daemonize=yes --exit-idle-time=-1 --log-target=file:"$OUT/pulse.log" \
@@ -88,7 +97,17 @@ start_app() { # $1 = label; app output goes to $OUT/app-<label>.log
     {
       echo "set pagination off"
       echo "handle SIGPIPE nostop noprint"; echo "handle SIG32 nostop noprint"; echo "handle SIG34 nostop noprint"
-      if [[ "$1" == first && -f "$OUT/fd0-guard.so" ]]; then # who closes the app's stdin/stdout/stderr?
+      # Who forks the (multi-threaded) app? fork() there can deadlock in the child.
+      if [[ "$1" == first || "$1" == second ]]; then
+        echo "catch fork"; echo "catch vfork"
+        printf 'commands 1 2\nsilent\nprintf "=== fork ===\\n"\nbt 20\ncontinue\nend\n'
+        # PRISM's startup catch(...) kills its own process (SIGKILL) on any unexpected
+        # exception, losing buffered log lines: record every C++ throw.
+        echo "catch throw"
+        printf 'commands 3\nsilent\nprintf "=== throw ===\\n"\nbt 25\ncontinue\nend\n'
+      fi
+      # The close() guard can't be preloaded ahead of the ASan runtime.
+      if [[ "$1" == first && -f "$OUT/fd0-guard.so" && -z "${ASAN_OPTIONS:-}" ]]; then # who closes the app's stdin/stdout/stderr?
         echo "set environment LD_PRELOAD $OUT/fd0-guard.so"
         echo "set environment HOPCAST_FD_GUARD_LOG $OUT/fd-guard.log"
         echo "set environment HOPCAST_FD_GUARD_EXE PRISMLiveStudio"
@@ -130,6 +149,14 @@ quit_app() { # Ctrl+Q on the main window; returns the exit status (124 = did not
   wait "$APP"; return $?
 }
 # A real crash: the app stopped on a fatal signal (our own SIGINT for hang stacks does not count).
+# When the app hangs without gdb attached, attach afterwards and save every thread's stack.
+dump_stacks() {
+  local pid; pid=$(pgrep -x PRISMLiveStudio | head -1)
+  [[ -n "$pid" ]] || return 0
+  (( GDB )) && return 0  # under gdb the hang handler already prints stacks
+  sudo -n gdb -p "$pid" -batch -ex "set pagination off" -ex "thread apply all bt 25" > "$OUT/hang-$1.txt" 2>&1 \
+    || gdb -p "$pid" -batch -ex "thread apply all bt 25" > "$OUT/hang-$1.txt" 2>&1 || true
+}
 crashed() { grep -qE "received signal SIG(SEGV|ABRT|BUS|FPE|ILL|TRAP)" "$1"; }
 
 Xvfb :97 -screen 0 1600x900x24 >/dev/null 2>&1 & XVFB=$!
@@ -143,7 +170,7 @@ ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f f
   -i "$RTMP_URL/$RTMP_KEY" -c copy -t 25 -y "$OUT/received.flv" > "$OUT/rtmp-server.log" 2>&1 & RTMP=$!
 
 start_app first
-if wait_window; then pass "first start: main window shown"; else fail "first start: main window never appeared"; fi
+if wait_window; then pass "first start: main window shown"; else dump_stacks first; fail "first start: main window never appeared (hang-first.txt)"; fi
 w 5; shot 01-first-start
 fdsnap() { local pid; pid=$(pgrep -x PRISMLiveStudio | head -1); [[ -n "$pid" ]] && ls -l /proc/$pid/fd 2>/dev/null | awk '{print $9, $10, $11}' | sort -n > "$OUT/fds-$1.txt"; }
 fdsnap start
@@ -241,7 +268,7 @@ rm -f "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel" 2>/dev/null
 
 # ---------------------------------------------------------------- 3. second run on the same profile
 start_app second
-if wait_window; then pass "second start (same profile): main window shown"; else fail "second start: main window never appeared"; fi
+if wait_window; then pass "second start (same profile): main window shown"; else dump_stacks second; fail "second start: main window never appeared (hang-second.txt)"; fi
 w 6; shot 20-second-start
 grep -qiE "tamper|key file is missing|KeyMissing" "$OUT/app-second.log" && fail "secure store reported a problem on second start" || pass "saved channel loaded without secure-store errors"
 grep -q "Audit Server\|hopcast_rtmp.*load" "$OUT/app-second.log" && info "channel load logged"
@@ -259,7 +286,7 @@ for i in $(seq 1 "$RUNS"); do
   rm -f "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel"
   start_app "restart-$i"
   if ! wait_window; then
-    hung=$((hung + 1)); shot "30-restart-$i-no-window"
+    hung=$((hung + 1)); shot "30-restart-$i-no-window"; dump_stacks "restart-$i"
     inf=$(pgrep -P "$APP" | head -1); [[ -n "$inf" ]] && kill -INT "$inf" 2>/dev/null; sleep 5
     pkill -KILL -f "$STAGE/bin/" 2>/dev/null; wait "$APP" 2>/dev/null; continue
   fi
@@ -301,6 +328,10 @@ fi
 pulseaudio --kill 2>/dev/null
 
 # ---------------------------------------------------------------- 5. log review
+# Was anything killed for running out of memory (sanitizer builds use a lot)?
+sudo -n dmesg 2>/dev/null | grep -iE "out of memory|oom-kill|killed process" | tail -20 > "$OUT/oom.txt" || true
+[[ -s "$OUT/oom.txt" ]] && fail "the kernel killed a process for lack of memory (oom.txt)"
+free -m > "$OUT/memory.txt" 2>/dev/null || true
 cat "$OUT"/app-*.log > "$APPLOG" 2>/dev/null
 grep -E " (ERROR|WARN) |\[QT::(Warning|Critical)\]|runtime error:|AddressSanitizer|LeakSanitizer|QObject::connect|QLayout|Segmentation|terminate called" "$APPLOG" \
   | sed -E 's/^[0-9-]+ [0-9:.+]+ //; s/0x[0-9a-f]+/0x…/g; s/[0-9]{3,}/N/g' | sort | uniq -c | sort -rn > "$OUT/log-problems.txt"

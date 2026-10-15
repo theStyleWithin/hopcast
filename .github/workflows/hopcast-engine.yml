@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   # lets ci-report-failure.sh push logs to the ci-logs branch
+  contents: write   # lets ci-report-failure.sh push logs to the dev-logs branch
 
 jobs:
   engine-linux:

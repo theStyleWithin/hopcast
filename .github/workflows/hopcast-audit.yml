@@ -3,7 +3,7 @@
 #          Ctrl+Q exit, second start, Wayland) + static analysis of HopCast-changed files.
 #  asan:   the app built with AddressSanitizer/UBSan, then the same runtime audit and the
 #          full UI tour, collecting every memory/undefined-behaviour report.
-# Results go to the ci-logs-audit-<variant> branch.
+# Results go to the dev-logs-audit-<variant> branch.
 name: hopcast-audit
 
 on:
@@ -53,7 +53,7 @@ jobs:
             libssl-dev libmosquitto-dev libmosquittopp-dev libzstd-dev libpng-dev \
             libgl-dev libxcb-cursor0 libxkbcommon-x11-0 libfftw3-dev \
             xvfb xdotool xcompmgr imagemagick x11-utils gdb ffmpeg \
-            pulseaudio pulseaudio-utils weston cppcheck
+            pulseaudio pulseaudio-utils weston cppcheck dbus dbus-x11
 
       - name: Install Qt 6.8
         if: steps.gate.outputs.run == '1'
@@ -181,5 +181,5 @@ jobs:
           find "$d" -name '*.log' -size +20M -exec sh -c 'tail -c 20000000 "$1" > "$1.tail" && mv "$1.tail" "$1"' _ {} \;
           git -C "$tmp" add -A
           git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -q --allow-empty -m "audit ${{ matrix.variant }} ${GITHUB_RUN_ID}"
-          git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:ci-logs-audit-${{ matrix.variant }}
+          git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:dev-logs-audit-${{ matrix.variant }}
           [ -f build/audit/summary.txt ] && { echo "::notice title=audit ${{ matrix.variant }}::$(grep -c '^PASS' build/audit/summary.txt) pass, $(grep -c '^FAIL' build/audit/summary.txt) fail"; }

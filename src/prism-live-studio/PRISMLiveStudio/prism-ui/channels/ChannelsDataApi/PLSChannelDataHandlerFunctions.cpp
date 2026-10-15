@@ -1,4 +1,6 @@
+#include <QFile>
 #include <QFileInfo>
+#include <QMutex>
 #include <QDir>
 #include <QSaveFile>
 #ifdef HOPCAST_NO_NAVER
@@ -166,11 +168,27 @@ QVariantMap createPrismHeader()
  * HopCast keeps the same records - {customUserDataSeq, customData} - in a local,
  * encrypted file, so the rest of PRISM's channel code works unchanged. */
 namespace hopcast_rtmp {
-/* Encrypted with AES-256-GCM, key in the desktop keyring - see prism-ui/hopcast/HopCastSecrets. */
-static QJsonArray load()
+/* Encrypted with AES-256-GCM, key in an owner-only key file - see prism-ui/hopcast/HopCastSecrets. */
+static QMutex g_lock; /* one load-modify-save at a time */
+
+/* False when a channel file exists but couldn't be read (key missing, read error):
+ * callers must not save then, or the other channels would be overwritten. */
+static bool load(QJsonArray &out)
 {
-	auto data = hopcast::secureRead(hopcast::rtmpChannelsPath(), hopcast::rtmpChannelsLegacyPath());
-	return data ? QJsonDocument::fromJson(*data).array() : QJsonArray();
+	const QString path = hopcast::rtmpChannelsPath();
+	auto data = hopcast::secureRead(path, hopcast::rtmpChannelsLegacyPath());
+	if (data) {
+		out = QJsonDocument::fromJson(*data).array();
+		return true;
+	}
+	out = QJsonArray();
+	return !QFile::exists(path); /* nothing saved yet (or a damaged file was set aside) */
+}
+static QJsonArray loadForDisplay()
+{
+	QJsonArray records;
+	load(records);
+	return records;
 }
 static void save(const QJsonArray &records)
 {
@@ -212,11 +230,17 @@ bool RTMPAddToPrism(const QString &uuid)
 #ifdef HOPCAST_NO_NAVER
 	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
 		PLSCHANNELS_API->release();
-		auto records = hopcast_rtmp::load();
+		hopcast::ensureStreamKeyFolderChosen(nullptr); // ask first, never while holding the lock
+		QMutexLocker lock(&hopcast_rtmp::g_lock);
+		QJsonArray records;
+		const bool readable = hopcast_rtmp::load(records);
 		const QString seq = hopcast_rtmp::nextSeq(records);
 		const QJsonObject customData = hopcast_rtmp::customDataOf(uuid);
 		records.append(hopcast_rtmp::record(seq, customData));
-		hopcast_rtmp::save(records);
+		if (readable)
+			hopcast_rtmp::save(records);
+		else
+			PLS_ERROR(CHANNELDATAHANDLER, "HopCast: saved channels couldn't be read; not saving, so they aren't overwritten");
 		QMetaObject::invokeMethod(
 			PLSCHANNELS_API,
 			[uuid, seq, customData]() {
@@ -370,7 +394,10 @@ bool RTMPUpdateToPrism(const QString &uuid)
 #ifdef HOPCAST_NO_NAVER
 	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
 		PLSCHANNELS_API->release();
-		auto records = hopcast_rtmp::load();
+		hopcast::ensureStreamKeyFolderChosen(nullptr);
+		QMutexLocker lock(&hopcast_rtmp::g_lock);
+		QJsonArray records;
+		const bool readable = hopcast_rtmp::load(records);
 		QString seq = PLSCHANNELS_API->getValueOfChannel(uuid, g_customUserDataSeq, QString());
 		const QJsonObject customData = hopcast_rtmp::customDataOf(uuid);
 		if (int i = hopcast_rtmp::indexOf(records, seq); i >= 0) {
@@ -379,7 +406,10 @@ bool RTMPUpdateToPrism(const QString &uuid)
 			seq = hopcast_rtmp::nextSeq(records);
 			records.append(hopcast_rtmp::record(seq, customData));
 		}
-		hopcast_rtmp::save(records);
+		if (readable)
+			hopcast_rtmp::save(records);
+		else
+			PLS_ERROR(CHANNELDATAHANDLER, "HopCast: saved channels couldn't be read; not saving, so they aren't overwritten");
 		QMetaObject::invokeMethod(
 			PLSCHANNELS_API,
 			[uuid, seq, customData]() {
@@ -457,9 +487,11 @@ bool RTMPDeleteToPrism(const QString &uuid)
 #ifdef HOPCAST_NO_NAVER
 	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
 		PLSCHANNELS_API->release();
-		auto records = hopcast_rtmp::load();
+		QMutexLocker lock(&hopcast_rtmp::g_lock);
+		QJsonArray records;
+		const bool readable = hopcast_rtmp::load(records);
 		const QString seq = PLSCHANNELS_API->getValueOfChannel(uuid, g_customUserDataSeq, QString());
-		if (int i = hopcast_rtmp::indexOf(records, seq); i >= 0) {
+		if (int i = hopcast_rtmp::indexOf(records, seq); readable && i >= 0) {
 			records.removeAt(i);
 			hopcast_rtmp::save(records);
 		}
@@ -585,7 +617,7 @@ void updateAllRtmps()
 
 #ifdef HOPCAST_NO_NAVER
 	/* HopCast: load the locally saved channels (same format the server returned). */
-	updateRTMPCallback(QJsonDocument(hopcast_rtmp::load()).toJson(QJsonDocument::Compact), true);
+	updateRTMPCallback(QJsonDocument(hopcast_rtmp::loadForDisplay()).toJson(QJsonDocument::Compact), true);
 	return;
 #endif
 
