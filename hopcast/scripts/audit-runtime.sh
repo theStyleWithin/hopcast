@@ -101,6 +101,10 @@ start_app() { # $1 = label; app output goes to $OUT/app-<label>.log
       if [[ "$1" == first || "$1" == second ]]; then
         echo "catch fork"; echo "catch vfork"
         printf 'commands 1 2\nsilent\nprintf "=== fork ===\\n"\nbt 20\ncontinue\nend\n'
+        # PRISM's startup catch(...) kills its own process (SIGKILL) on any unexpected
+        # exception, losing buffered log lines: record every C++ throw.
+        echo "catch throw"
+        printf 'commands 3\nsilent\nprintf "=== throw ===\\n"\nbt 25\ncontinue\nend\n'
       fi
       # The close() guard can't be preloaded ahead of the ASan runtime.
       if [[ "$1" == first && -f "$OUT/fd0-guard.so" && -z "${ASAN_OPTIONS:-}" ]]; then # who closes the app's stdin/stdout/stderr?
