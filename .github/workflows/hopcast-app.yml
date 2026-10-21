@@ -16,6 +16,14 @@ on:
         description: "Only these UI tour scenarios (comma-separated names; empty = all)"
         type: string
         default: ""
+      package:
+        description: "Build the release and debug AppImages and smoke-test them"
+        type: boolean
+        default: false
+      release_tag:
+        description: "Publish the AppImages as a pre-release with this tag (e.g. v0.1.0-alpha1); empty = no release"
+        type: string
+        default: ""
 
 permissions:
   contents: write   # ci-report-failure.sh pushes logs to the dev-logs branch
@@ -148,6 +156,58 @@ jobs:
         with:
           name: launch-test
           path: build/launch-test/
+
+      - name: Package AppImages (release + debug)
+        id: pkg
+        if: inputs.package || inputs.release_tag != ''
+        run: |
+          sudo apt-get install -y --no-install-recommends imagemagick libfuse2t64 xdotool x11-utils xcompmgr
+          export QMAKE="$QT_ROOT_DIR/bin/qmake"
+          for v in release debug; do bash hopcast/scripts/package-appimage.sh build/stage build/appimage $v 2>&1 | tee build/package-$v.log; done
+
+      - name: Smoke-test the AppImages
+        if: steps.pkg.outcome == 'success'
+        run: |
+          cd build/appimage
+          for v in release debug; do
+            f=$(ls HopCast-$v-*.AppImage); chmod +x "$f"
+            rm -rf "x-$v" && mkdir "x-$v" && (cd "x-$v" && APPIMAGE_EXTRACT_AND_RUN=1 ../"$f" --appimage-extract >/dev/null)
+            HOPCAST_NO_GDB=1 HOPCAST_LAUNCH_BIN="$PWD/x-$v/squashfs-root/AppRun" \
+              bash ../../hopcast/scripts/launch-test-app.sh "$PWD/x-$v/squashfs-root/usr" "$PWD/smoke-$v" 25 || echo "::error title=AppImage $v::did not stay running"
+          done
+          cd ../..
+          for v in release debug; do test -s build/appimage/smoke-$v/screen.png || exit 1; done
+          ls -la build/appimage/*.AppImage
+
+      - uses: actions/upload-artifact@v4
+        if: steps.pkg.outcome != 'skipped'
+        with:
+          name: appimages
+          path: |
+            build/appimage/*.AppImage
+            build/appimage/smoke-*/*.png
+            build/appimage/smoke-*/stdout.txt
+            build/package-*.log
+
+      - name: Publish pre-release
+        if: inputs.release_tag != '' && steps.pkg.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v=$(tr -d '[:space:]' < hopcast/VERSION)
+          tar --exclude=./build --exclude=./.git -czf "build/appimage/hopcast-source-$v.tar.gz" .
+          cat > notes.md <<N
+          **Early test build - for testing only. Expect bugs.**
+
+          - \`HopCast-release-*.AppImage\` - the normal build.
+          - \`HopCast-debug-*.AppImage\` - writes a log and crash report to \`~/.local/share/hopcast/crash-logs/\`. Logs mask stream keys, but don't type anything sensitive into the debug build and review a log before sharing it.
+          - \`hopcast-source-*.tar.gz\` - complete corresponding source (GPL-2.0).
+
+          Run: \`chmod +x HopCast-*.AppImage && ./HopCast-release-*.AppImage\`. Needs glibc 2.39+ (Ubuntu 24.04, Fedora 40, Arch/CachyOS). Not affiliated with NAVER Corp. or the OBS Project.
+          N
+          gh release create "${{ inputs.release_tag }}" --prerelease --target "$GITHUB_SHA" \
+            --title "HopCast ${{ inputs.release_tag }} (test build)" --notes-file notes.md \
+            build/appimage/*.AppImage "build/appimage/hopcast-source-$v.tar.gz"
 
       - name: Report failure details
         if: failure()
