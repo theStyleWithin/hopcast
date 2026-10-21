@@ -275,7 +275,7 @@ QString get_product_name()
 	switch (pls_product_type()) {
 	case pls_product_type_t::Prism:
 #ifdef HOPCAST_NO_NAVER
-		return QStringLiteral("HopperCast");
+		return QStringLiteral("HopCast");
 #else
 		return QStringLiteral("PRISM Live Studio");
 #endif

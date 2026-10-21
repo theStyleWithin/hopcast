@@ -23,7 +23,7 @@ PLSLogo::PLSLogo(QWidget *parent) : QPushButton(parent)
 	setVisableTips(false);
 #ifdef HOPCAST_NO_NAVER
 	/* HopCast: plain name, no PRISM logo image. */
-	ui->logo->setText(QStringLiteral("HopperCast"));
+	ui->logo->setText(QStringLiteral("HopCast"));
 	ui->logo->setStyleSheet(QStringLiteral("color: #ffffff; font-weight: bold; font-size: 15px;"));
 #else
 	QPixmap pix;

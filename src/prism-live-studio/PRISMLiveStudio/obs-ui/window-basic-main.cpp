@@ -12275,7 +12275,7 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 
 #ifdef HOPCAST_NO_NAVER // HopCast: generic theme icon, no PRISM logo
 	trayIcon = new QSystemTrayIcon(QIcon::fromTheme("camera-video"), this);
-	trayIcon->setToolTip("HopperCast");
+	trayIcon->setToolTip("HopCast");
 #else
 	trayIcon = new QSystemTrayIcon(QIcon::fromTheme("obs-tray", trayIconFile), this);
 	trayIcon->setToolTip("PRISM Live Studio");

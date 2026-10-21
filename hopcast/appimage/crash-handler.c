@@ -1,4 +1,4 @@
-/* HopperCast debug builds: write a backtrace to the session log when the app crashes.
+/* HopCast debug builds: write a backtrace to the session log when the app crashes.
  * Records only module names and code offsets - no memory contents, so no stream keys.
  * GPL-2.0-or-later. */
 #define _GNU_SOURCE
@@ -11,7 +11,7 @@
 
 static void on_crash(int sig)
 {
-	static const char head[] = "\n=== HOPPERCAST CRASH ===\nsignal: ";
+	static const char head[] = "\n=== HOPCAST CRASH ===\nsignal: ";
 	char num[16];
 	void *frames[64];
 	int fd = 2, n, i = 0, v = sig;

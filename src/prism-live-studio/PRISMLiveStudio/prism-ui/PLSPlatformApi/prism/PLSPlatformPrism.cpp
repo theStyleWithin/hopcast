@@ -209,7 +209,7 @@ void PLSPlatformPrism::onPrepareLive(bool value)
 			PLS_WARN(MODULE_PlatformService, "HopCast: more than one channel switched on for one output; streaming to several servers at once is not supported yet");
 			pls_async_call_mt(this, [] {
 				PLSAlertView::warning(pls_get_main_view(), QTStr("Alert.Title"),
-						      QObject::tr("HopperCast can stream to one channel at a time (one for horizontal and one for vertical with dual output).\n\n"
+						      QObject::tr("HopCast can stream to one channel at a time (one for horizontal and one for vertical with dual output).\n\n"
 								  "Switch off the other channels, then go live again."));
 			});
 			prepareLiveCallback(false);

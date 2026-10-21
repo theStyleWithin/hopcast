@@ -1,4 +1,4 @@
-pkgbase = hoppercast-bin
+pkgbase = hopcast-bin
 	pkgdesc = Live streaming and recording studio for Linux: no account, no telemetry, any RTMP/SRT/RIST server
 	pkgver = @PKGVER@
 	pkgrel = 1
@@ -10,12 +10,12 @@ pkgbase = hoppercast-bin
 	optdepends = pipewire: screen capture on Wayland
 	optdepends = xdg-desktop-portal: screen capture on Wayland
 	optdepends = v4l2loopback-dkms: virtual camera
-	provides = hoppercast
-	conflicts = hoppercast
-	noextract = HopperCast-release-@PKGVER@-x86_64.AppImage
+	provides = hopcast
+	conflicts = hopcast
+	noextract = HopCast-release-@PKGVER@-x86_64.AppImage
 	options = !strip
 	options = !debug
-	source = HopperCast-release-@PKGVER@-x86_64.AppImage::https://github.com/theStyleWithin/hoppercast/releases/download/@TAG@/HopperCast-release-@PKGVER@-x86_64.AppImage
+	source = HopCast-release-@PKGVER@-x86_64.AppImage::https://github.com/theStyleWithin/hoppercast/releases/download/@TAG@/HopCast-release-@PKGVER@-x86_64.AppImage
 	sha256sums = @SHA256@
 
-pkgname = hoppercast-bin
+pkgname = hopcast-bin
