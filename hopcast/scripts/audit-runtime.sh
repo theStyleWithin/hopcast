@@ -253,7 +253,7 @@ grep -q "\[ALERT\] Failed to start live" "$OUT/app-first.log" && fail "\"Failed 
 # The test server stops after 25 s; HopCast tries to reconnect, then End stops it.
 grep -q "Reconnecting in" "$OUT/app-first.log" && pass "dropped connection: HopCast tried to reconnect"
 click 1328 873; w 5; shot 09-end-live-1      # End
-click 798 564; w 2; shot 10-end-live-2       # "Live Has Ended" -> OK
+click 798 602; w 2; shot 10-end-live-2       # "Live Has Ended" (two channels: taller dialog) -> OK
 fdsnap after-live
 for n in 0 1 2; do
   a=$(awk -v n=$n '$1==n{print $3}' "$OUT/fds-start.txt"); b=$(awk -v n=$n '$1==n{print $3}' "$OUT/fds-after-live.txt")
