@@ -29,6 +29,7 @@ Exec=PRISMLiveStudio
 Icon=hopcast
 Categories=AudioVideo;Video;Recorder;
 Terminal=false
+StartupWMClass=PRISMLiveStudio
 D
 ICON="$ROOT/hopcast/appimage/hopcast.png"
 if [[ ! -f $ICON ]]; then
