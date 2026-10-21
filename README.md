@@ -67,6 +67,7 @@ Third-party components and their licenses are listed in [`LICENSES`](LICENSES).
 - Based on PRISM Live Studio © NAVER Corp. and OBS Studio © the OBS Project contributors, both GPL-2.0.
   HopCast's own changes are GPL-2.0-or-later.
 - "PRISM", "PRISM Live Studio", "NAVER" and "OBS" are trademarks of their owners. HopCast doesn't use them as its name or branding.
+- The HopCast icon is original artwork made for this project (a camera with a record dot), free to use under GPL-2.0-or-later like the code. HopCast ships no PRISM or NAVER logos.
 - HopCast comes with **no warranty**.
 
 The original PRISM Live Studio README is kept for reference in

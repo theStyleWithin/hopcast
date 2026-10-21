@@ -55,6 +55,7 @@
 #include "window-namedialog.hpp"
 #include "window-basic-source-select.hpp"
 #include "window-basic-main.hpp"
+#include "../prism-ui/hopcast/HopCastScreenshot.h" // HopCast: tray screenshots
 #include "window-basic-stats.hpp"
 #include "PLSBasicStatusBar.hpp"
 #include "window-basic-main-outputs.hpp"
@@ -9026,9 +9027,9 @@ inline void OBSBasic::OnActivate(bool force)
 #ifdef __APPLE__
 		QIcon trayMask = QIcon(":/resource/images/logo/PrismActive_Mac.png");
 		trayMask.setIsMask(false);
-		trayIcon->setIcon(QIcon::fromTheme("obs-tray", trayMask));
+		trayIcon->setIcon(trayMask);
 #else
-		trayIcon->setIcon(QIcon::fromTheme("obs-tray-active", QIcon(":/resource/images/logo/PrismActive.ico")));
+		trayIcon->setIcon(QIcon(":/resource/images/logo/PrismActive.ico"));
 #endif
 	}
 
@@ -9059,7 +9060,7 @@ inline void OBSBasic::OnDeactivate(bool force)
 #else
 			QIcon trayIconFile = QIcon(":/resource/images/logo/PRISMLiveStudio.ico");
 #endif
-			trayIcon->setIcon(QIcon::fromTheme("obs-tray", trayIconFile));
+			trayIcon->setIcon(trayIconFile);
 		}
 		return;
 	}
@@ -9077,7 +9078,7 @@ inline void OBSBasic::OnDeactivate(bool force)
 #else
 			QIcon trayIconFile = QIcon(":/resource/images/logo/PRISMLiveStudio.ico");
 #endif
-			trayIcon->setIcon(QIcon::fromTheme("obs-tray", trayIconFile));
+			trayIcon->setIcon(trayIconFile);
 		}
 	} else if (outputHandler.Active() && trayIcon && trayIcon->isVisible()) {
 		if (os_atomic_load_bool(&recording_paused)) {
@@ -9089,7 +9090,7 @@ inline void OBSBasic::OnDeactivate(bool force)
 #else
 				QIcon trayIconFile = QIcon(":/resource/images/logo/PrismActive.ico");
 #endif
-				trayIcon->setIcon(QIcon::fromTheme("obs-tray-paused", trayIconFile));
+				trayIcon->setIcon(trayIconFile);
 				TaskbarOverlaySetStatus(TaskbarOverlayStatusActive);
 			} else {
 #ifdef __APPLE__
@@ -9098,7 +9099,7 @@ inline void OBSBasic::OnDeactivate(bool force)
 #else
 				QIcon trayIconFile = QIcon(":/resource/images/logo/PRISMLiveStudio.ico");
 #endif
-				trayIcon->setIcon(QIcon::fromTheme("obs-tray-paused", trayIconFile));
+				trayIcon->setIcon(trayIconFile);
 				TaskbarOverlaySetStatus(TaskbarOverlayStatusInactive);
 			}
 		} else {
@@ -9108,7 +9109,7 @@ inline void OBSBasic::OnDeactivate(bool force)
 #else
 			QIcon trayIconFile = QIcon(":/resource/images/logo/PrismActive.ico");
 #endif
-			trayIcon->setIcon(QIcon::fromTheme("obs-tray-active", trayIconFile));
+			trayIcon->setIcon(trayIconFile);
 			TaskbarOverlaySetStatus(TaskbarOverlayStatusActive);
 		}
 	}
@@ -12276,10 +12277,10 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 	QIcon trayIconFile = QIcon(logoPath);
 
 #ifdef HOPCAST_NO_NAVER // HopCast: generic theme icon, no PRISM logo
-	trayIcon = new QSystemTrayIcon(QIcon::fromTheme("camera-video"), this);
+	trayIcon = new QSystemTrayIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico"), this);
 	trayIcon->setToolTip("HopCast");
 #else
-	trayIcon = new QSystemTrayIcon(QIcon::fromTheme("obs-tray", trayIconFile), this);
+	trayIcon = new QSystemTrayIcon(trayIconFile, this);
 	trayIcon->setToolTip("PRISM Live Studio");
 #endif
 
@@ -12333,6 +12334,22 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 	trayMenu->addAction(sysTrayRecord);
 	trayMenu->addAction(sysTrayReplayBuffer);
 	trayMenu->addAction(sysTrayVirtualCam);
+#ifdef HOPCAST_NO_NAVER // HopCast: screenshots from the tray menu
+	trayMenu->addSeparator();
+	auto shotDesktop = new QAction(QStringLiteral("Screenshot of my screen"), trayIcon.data());
+	connect(shotDesktop, &QAction::triggered, this, [this]() {
+		hopcast::takeDesktopScreenshot([this](const QString &path, const QString &error) {
+			if (error.isEmpty())
+				SysTrayNotify(QStringLiteral("Screenshot saved: ") + path, QSystemTrayIcon::Information);
+			else
+				SysTrayNotify(error, QSystemTrayIcon::Warning);
+		});
+	});
+	trayMenu->addAction(shotDesktop);
+	auto shotStream = new QAction(QStringLiteral("Screenshot of the stream preview"), trayIcon.data());
+	connect(shotStream, &QAction::triggered, this, &OBSBasic::ScreenshotScene);
+	trayMenu->addAction(shotStream);
+#endif
 	sysTrayBanner = addSysTrayAction(QTStr("Basic.Main.Wizard"), "sysTrayBanner",
 					 []() { PLSLaunchWizardView::instance()->singletonWakeup(); });
 	trayMenu->addSeparator();
@@ -13212,7 +13229,7 @@ void OBSBasic::PauseRecording()
 #else
 				QIcon trayIconFile = QIcon(":/resource/images/logo/PrismActive.ico");
 #endif
-				trayIcon->setIcon(QIcon::fromTheme("obs-tray-paused", trayIconFile));
+				trayIcon->setIcon(trayIconFile);
 			}
 		} else {
 			TaskbarOverlaySetStatus(TaskbarOverlayStatusInactive);
@@ -13223,7 +13240,7 @@ void OBSBasic::PauseRecording()
 #else
 				QIcon trayIconFile = QIcon(":/resource/images/logo/PRISMLiveStudio.ico");
 #endif
-				trayIcon->setIcon(QIcon::fromTheme("obs-tray-paused", trayIconFile));
+				trayIcon->setIcon(trayIconFile);
 			}
 		}
 		os_atomic_set_bool(&recording_paused, true);
@@ -13258,7 +13275,7 @@ void OBSBasic::UnpauseRecording()
 #else
 			QIcon trayIconFile = QIcon(":/resource/images/logo/PrismActive.ico");
 #endif
-			trayIcon->setIcon(QIcon::fromTheme("obs-tray-active", trayIconFile));
+			trayIcon->setIcon(trayIconFile);
 		}
 
 		os_atomic_set_bool(&recording_paused, false);

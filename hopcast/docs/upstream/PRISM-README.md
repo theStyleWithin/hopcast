@@ -28,7 +28,6 @@
 
 
 ## Overview
-![PRISM Live Studio](https://resource-prismlive.pstatic.net/20231221002/pc/img/live_stream_img1.png)
 
 This application currently only supports 64-bit Windows.
 

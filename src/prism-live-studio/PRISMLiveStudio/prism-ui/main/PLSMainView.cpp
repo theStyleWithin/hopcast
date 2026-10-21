@@ -107,11 +107,7 @@ PLSMainView::PLSMainView(QWidget *parent) : PLSToplevelView<QFrame>(CreateWinId:
 #endif
 
 	pls_set_main_view(this);
-#ifdef HOPCAST_NO_NAVER
-	setWindowIcon(QIcon::fromTheme(QStringLiteral("camera-video")));
-#else
-	setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico"));
-#endif
+	setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico")); // HopCast: own icon, never a system theme lookup
 	ui = pls_new<Ui::PLSMainView>();
 	ui->setupUi(this);
 #ifdef HOPCAST_NO_NAVER

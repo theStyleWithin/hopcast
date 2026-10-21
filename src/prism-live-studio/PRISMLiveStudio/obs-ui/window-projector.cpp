@@ -45,9 +45,9 @@ OBSProjector::OBSProjector(QWidget *widget, obs_source_t *source_, int monitor, 
 
 	type = type_;
 #ifdef __APPLE__
-	setWindowIcon(QIcon::fromTheme("obs", QIcon(":/res/images/obs_256x256.png")));
+	setWindowIcon(QGuiApplication::windowIcon());
 #else
-	setWindowIcon(QIcon::fromTheme("obs", QIcon(":/res/images/obs.png")));
+	setWindowIcon(QGuiApplication::windowIcon());
 #endif
 
 	if (monitor == -1)
@@ -759,7 +759,7 @@ void OBSProjector::setParentDialogTitleBarButtons(PLSDialogView *parentDialg, bo
 		parentDialg->setEscapeCloseEnabled(true);
 		parentDialg->setHasCaption(false);
 	} else {
-		parentDialg->setWindowIcon(QIcon::fromTheme("obs", QIcon(":/res/images/PRISMLiveStudio.ico")));
+		parentDialg->setWindowIcon(QGuiApplication::windowIcon());
 		parentDialg->setHasMinButton(true);
 		parentDialg->setHasMaxResButton(true);
 		parentDialg->setHasCaption(true);
