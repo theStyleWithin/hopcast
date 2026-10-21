@@ -530,6 +530,9 @@ void OBSApp::InitUserConfigDefaults()
 	config_set_default_bool(appConfig, "BasicWindow", "KeepRecordingWhenStreamStops", false);
 	config_set_default_bool(appConfig, "BasicWindow", "SysTrayEnabled", true);
 	config_set_default_bool(appConfig, "BasicWindow", "SysTrayWhenStarted", false);
+#ifdef HOPCAST_NO_NAVER // HopCast: minimizing sends the window to the tray
+	config_set_default_bool(appConfig, "BasicWindow", "SysTrayMinimizeToTray", true);
+#endif
 	config_set_default_bool(appConfig, "BasicWindow", "SaveProjectors", false);
 	config_set_default_bool(appConfig, "BasicWindow", "ShowTransitions", true);
 	config_set_default_bool(appConfig, "BasicWindow", "ShowListboxToolbars", true);
@@ -1051,11 +1054,7 @@ OBSApp::OBSApp(int &argc, char **argv, profiler_name_store_t *store) : PLSUiApp(
 	sleepInhibitor = os_inhibit_sleep_create("OBS Video/audio");
 
 #ifndef __APPLE__
-#ifdef HOPCAST_NO_NAVER
-	setWindowIcon(QIcon::fromTheme(QStringLiteral("camera-video"))); // HopCast: no PRISM icon
-#else
-	setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico"));
-#endif
+setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico")); // HopCast: own icon, never a system theme lookup
 #endif
 
 	//setDesktopFileName("com.obsproject.Studio");

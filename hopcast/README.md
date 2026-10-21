@@ -74,7 +74,6 @@ AJA/DeckLink, and the **VST host** (NAVER rewrote it for Windows/macOS only).
 
 ### Status: ✅ builds, links and launches in CI (2026-10-11)
 
-![PRISM's login window running on Linux (Xvfb, CI)](docs/phase1-first-launch.png)
 
 - All of PRISM's common-libs and the PRISMLiveStudio app compile and link on Ubuntu 24.04 with Qt 6.8.3.
 - `build-app.sh` stages a runnable tree in `build/stage` (engine install + app on top):

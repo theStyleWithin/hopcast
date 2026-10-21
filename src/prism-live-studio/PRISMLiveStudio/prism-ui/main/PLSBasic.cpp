@@ -595,11 +595,7 @@ PLSBasic::PLSBasic(PLSMainView *mainView) : OBSBasic(mainView)
 	ui->actionRemoveScene->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	ui->scenesFrame->addAction(ui->actionRemoveScene);
 	ui->sources->addAction(ui->actionRemoveSource);
-#ifdef HOPCAST_NO_NAVER
-	setWindowIcon(QIcon::fromTheme(QStringLiteral("camera-video"))); // HopCast: no PRISM icon
-#else
-	setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico"));
-#endif
+setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico")); // HopCast: own icon, never a system theme lookup
 
 	connect(ui->sources, &SourceTree::SelectItemChanged, this, &OBSBasic::OnSelectItemChanged, Qt::QueuedConnection);
 	connect(ui->sources, &SourceTree::VisibleItemChanged, this, &OBSBasic::OnVisibleItemChanged, Qt::QueuedConnection);

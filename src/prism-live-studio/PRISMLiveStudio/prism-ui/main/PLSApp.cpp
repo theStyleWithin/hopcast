@@ -502,7 +502,8 @@ PLSApp::PLSApp(int &argc, char **argv, profiler_name_store_t *store) : OBSApp(ar
 	qInstallMessageHandler(QtMessageCallback);
 	installEventFilter(this);
 
-	setWindowIcon(QIcon::fromTheme("obs", QIcon(":/res/images/PRISMLiveStudio.ico")));
+	setWindowIcon(QIcon(":/resource/images/logo/PRISMLiveStudio.ico"));
+	QGuiApplication::setDesktopFileName(QStringLiteral("hopcast")); // HopCast: matches hopcast.desktop
 
 	parseOpenFilePath([](const QStringList &cmdlines) {
 		for (const auto &arg : cmdlines) {
