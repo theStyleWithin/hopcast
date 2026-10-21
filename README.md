@@ -38,6 +38,11 @@ See **[SPECS.md](SPECS.md)** for the full description of what HopCast is and isn
 
 ## Trying a test build
 
+> [!CAUTION]
+> **Install and use at your own risk.** Test builds are early, untested on real desktops and may crash, lose
+> settings or recordings, or misbehave. HopCast comes with no warranty (see [License](#license)). Back up anything
+> important and don't rely on it for a stream or recording that matters.
+
 Download `HopCast-release-<version>-x86_64.AppImage` from [Releases](https://github.com/theStyleWithin/hoppercast/releases), then:
 
 ```sh
