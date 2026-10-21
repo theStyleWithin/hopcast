@@ -49,7 +49,7 @@ LIBS=(); while IFS= read -r f; do LIBS+=(--library "$f"); done < <(find "$APPDIR
 export PATH="$TOOLS:$PATH" QMAKE="${QMAKE:-$(command -v qmake6 || command -v qmake)}"
 export EXTRA_PLATFORM_PLUGINS="libqwayland-generic.so;libqwayland-egl.so"
 export EXTRA_QT_PLUGINS="svg;imageformats;tls;networkinformation;wayland-decoration-client;wayland-graphics-integration-client;wayland-shell-integration;xcbglintegrations;platformthemes;multimedia"
-export LDAI_OUTPUT="$OUT/HopCast-$VARIANT-$VERSION-x86_64.AppImage" LDAI_UPDATE_INFORMATION=""
+export LDAI_OUTPUT="$OUT/HopCast-$VARIANT-$VERSION-x86_64.AppImage"
 cd "$OUT"
 linuxdeploy --appdir "$APPDIR" "${LIBS[@]}" \
   --executable "$APPDIR/usr/bin/PRISMLiveStudio" \

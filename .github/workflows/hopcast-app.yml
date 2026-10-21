@@ -241,6 +241,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          for f in securestore.log build-engine.log build-app.log; do
-            if [ -f "$f" ]; then bash hopcast/scripts/ci-report-failure.sh "$f" "${f%.log}"; fi
+          for f in securestore.log build-engine.log build-app.log build/package-release.log build/package-debug.log; do
+            if [ -f "$f" ]; then bash hopcast/scripts/ci-report-failure.sh "$f" "$(basename "${f%.log}")"; fi
           done
