@@ -13,7 +13,9 @@ const int TOAST_DISAPPEAR = 5 * 1000;
 
 PLSToastMsgFrame::PLSToastMsgFrame(QWidget *parent) : QFrame(parent)
 {
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	timerDisappear.setSingleShot(true);
 	connect(&timerDisappear, &QTimer::timeout, this, &QFrame::hide);
 	this->setCursor(Qt::ArrowCursor);

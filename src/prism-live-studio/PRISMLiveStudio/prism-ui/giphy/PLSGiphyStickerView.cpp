@@ -1602,7 +1602,9 @@ void MovieLabel::downloadCallback(const TaskResponData &responData)
 
 NoDataPage::NoDataPage(QWidget *parent) : QFrame(parent)
 {
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	this->setCursor(Qt::ArrowCursor);
 	QVBoxLayout *layout_main = pls_new<QVBoxLayout>(this);
 	layout_main->setContentsMargins(0, 0, 0, 0);
@@ -1668,7 +1670,9 @@ void NoDataPage::SetNoDataTipText(const QString &tipText)
 
 ScrollAreaWithNoDataTip::ScrollAreaWithNoDataTip(QWidget *parent) : PLSFloatScrollBarScrollArea(parent)
 {
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	this->setCursor(Qt::ArrowCursor);
 	pageNoData = pls_new<NoDataPage>(this);
 	connect(pageNoData, &NoDataPage::retryClicked, this, &ScrollAreaWithNoDataTip::retryClicked);

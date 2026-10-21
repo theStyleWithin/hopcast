@@ -719,7 +719,9 @@ void ResolutionGuidePage::showIntroduceTip(QWidget *parent, const QString &platf
 {
 	auto frame = new QFrame(parent, Qt::SubWindow);
 #if defined(Q_OS_MACOS)
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	frame->setAttribute(Qt::WA_NativeWindow);
+#endif
 	frame->setAttribute(Qt::WA_DontCreateNativeAncestors);
 #endif
 	frame->setObjectName("CheckInvalidTipFrame");

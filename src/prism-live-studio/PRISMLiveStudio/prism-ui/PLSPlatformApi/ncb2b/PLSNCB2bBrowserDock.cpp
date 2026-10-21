@@ -4,7 +4,9 @@
 
 PLSNCB2bBrowserDock::PLSNCB2bBrowserDock(const QString &title, const QString &selectedTitle, QWidget *parent) : OBSDock(title, parent)
 {
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	setObjectName("ncb2bDock");
 	setAllowedAreas(Qt::AllDockWidgetAreas);
 	content = pls_new<PLSNCB2bBrowserDockContent>(this);

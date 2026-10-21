@@ -207,7 +207,9 @@ void PLSBasicProperties::ShowLoading()
 	m_pWidgetLoadingBG->resize(content()->frameSize());
 #if defined(Q_OS_MACOS)
 	m_pWidgetLoadingBG->setAttribute(Qt::WA_DontCreateNativeAncestors);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	m_pWidgetLoadingBG->setAttribute(Qt::WA_NativeWindow);
+#endif
 #endif
 	m_pWidgetLoadingBG->show();
 

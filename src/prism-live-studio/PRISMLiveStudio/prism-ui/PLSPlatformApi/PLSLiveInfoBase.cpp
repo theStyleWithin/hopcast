@@ -75,7 +75,9 @@ void PLSLiveInfoBase::showLoading(QWidget *parent, int maskHeight)
 	pls_uistep_v2_set_custom_show_hide_name(m_pWidgetLoadingBG, QByteArrayLiteral("LiveInfo loadingBtn"));
 #if defined(Q_OS_MACOS)
 	m_pWidgetLoadingBG->setAttribute(Qt::WA_DontCreateNativeAncestors);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	m_pWidgetLoadingBG->setAttribute(Qt::WA_NativeWindow);
+#endif
 #endif
 
 	int height = (maskHeight >= 0) ? maskHeight : parent->geometry().size().height();

@@ -14,7 +14,9 @@
 PLSSearchPopupMenu::PLSSearchPopupMenu(QWidget *parent) : QFrame(parent)
 {
 	pls_uistep_v2_set_custom_show_hide_name(this, "Search Popup Menu");
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	ui = pls_new<Ui::PLSSearchPopupMenu>();
 	ui->setupUi(this);
 	this->setCursor(Qt::ArrowCursor);

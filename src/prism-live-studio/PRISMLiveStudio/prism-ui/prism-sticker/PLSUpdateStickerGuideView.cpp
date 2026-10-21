@@ -6,7 +6,9 @@
 PLSUpdateStickerGuideView::PLSUpdateStickerGuideView(QWidget *buddy) : QFrame(buddy)
 {
 	pls_uistep_v2_set_custom_show_hide_name(this, "Update Sticker Source Guide View");
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	ui = pls_new<Ui::PLSUpdateStickerGuideView>();
 	ui->setupUi(this);
 	pls_add_css(this, {"PLSUpdateStickerGuideView"});

@@ -261,7 +261,9 @@ PLSTakeCameraSnapshot::PLSTakeCameraSnapshot(QString &camera_, QWidget *parent) 
 	cameraUninitMask->setObjectName("cameraUninitMask");
 
 #if defined(Q_OS_MACOS)
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	cameraUninitMask->setAttribute(Qt::WA_NativeWindow);
+#endif
 #endif
 
 	QVBoxLayout *cameraUninitMaskLayout = pls_new<QVBoxLayout>(cameraUninitMask);

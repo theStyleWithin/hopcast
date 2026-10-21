@@ -22,7 +22,9 @@ PLSEndTipView::PLSEndTipView(QWidget *parent) : PLSDialogView(parent)
 
 	PLS_INFO(END_MODULE, "PLSEndTipView Show");
 	setWindowTitle(tr("TransitionInProgress.Title"));
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	this->setAttribute(Qt::WA_NativeWindow);
+#endif
 
 	ui->topTitle->setText(tr("nshopping.end.alert.title"));
 

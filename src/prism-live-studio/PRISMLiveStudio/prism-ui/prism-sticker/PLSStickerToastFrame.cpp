@@ -14,7 +14,9 @@ const int STICKER_TOAST_DISAPPEAR = 3 * 1000;
 PLSStickerToastFrame::PLSStickerToastFrame(QWidget *parent) : QFrame(parent)
 {
 	pls_uistep_v2_set_custom_show_hide_name(this, "Sticker Toast View");
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	timerDisappear.setSingleShot(true);
 	setAttribute(Qt::WA_DeleteOnClose, true);
 	connect(&timerDisappear, &QTimer::timeout, this, &QFrame::close);

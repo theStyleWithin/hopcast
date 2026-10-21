@@ -119,9 +119,13 @@ PLSMainView::PLSMainView(QWidget *parent) : PLSToplevelView<QFrame>(CreateWinId:
 #endif
 	setupRightSidebarWidgets();
 	pls_set_css(this, {"PLSMainView", "HelpMenu"});
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	ui->logo_update->setAttribute(Qt::WA_NativeWindow);
+#endif
 #if defined(Q_OS_WIN)
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 #endif
 
 #if defined(Q_OS_MACOS)
@@ -144,6 +148,11 @@ PLSMainView::PLSMainView(QWidget *parent) : PLSToplevelView<QFrame>(CreateWinId:
 		pls_flush_style(ui->maxres);
 	});
 	QObject::connect(ui->close, &QToolButton::clicked, this, [this]() { close(); });
+#if defined(Q_OS_LINUX) // HopCast: the desktop's own title bar already has these buttons
+	ui->min->hide();
+	ui->maxres->hide();
+	ui->close->hide();
+#endif
 #endif
 
 	setMinimumSize({975, 633});
@@ -717,7 +726,9 @@ ResolutionTipFrame *PLSMainView::createSidebarTipFrame(const QString &txt, QWidg
 	lb->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 #else
 	lb->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	lb->setAttribute(Qt::WA_NativeWindow);
+#endif
 	lb->setAttribute(Qt::WA_DontCreateNativeAncestors);
 	connect(
 		this, &PLSMainView::isshowSignal, lb,

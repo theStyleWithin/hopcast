@@ -65,7 +65,9 @@ void PLSPreviewMaskWidget::resizeEvent(QResizeEvent *event)
 
 void PLSPreviewMaskWidget::initUi()
 {
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	if (m_display) {
 		auto layout = new QVBoxLayout(this);

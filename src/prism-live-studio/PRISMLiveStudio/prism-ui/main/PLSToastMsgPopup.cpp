@@ -10,7 +10,9 @@ constexpr int TOAST_CONTENT_HEIGHT_MARGIN = 4;
 PLSToastMsgPopup::PLSToastMsgPopup(QWidget *parent) : QLabel(parent)
 {
 	ui = pls_new<Ui::PLSToastMsgPopup>();
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	m_timer = pls_new<QTimer>(this);
 	ui->setupUi(this);
 	setFixedWidth(325);

@@ -77,7 +77,9 @@ PLSSelectImageButton::PLSSelectImageButton(QWidget *parent) : QLabel(parent)
 	pls_add_css(this, {"PLSSelectImageButton"});
 	setAttribute(Qt::WA_Hover);
 #if defined(Q_OS_WIN)
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 #endif
 
 	setAttribute(Qt::WA_TranslucentBackground);

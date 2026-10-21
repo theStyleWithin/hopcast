@@ -15,7 +15,9 @@ using namespace common;
 PLSScrollAreaContent::PLSScrollAreaContent(QWidget *parent) : QWidget(parent)
 {
 	this->setAcceptDrops(true);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	pls_scroll_area_clips_to_bounds(this);
 
 	timerAutoScroll.setInterval(50);
