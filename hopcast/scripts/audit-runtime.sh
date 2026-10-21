@@ -202,7 +202,8 @@ fi
 w 4; shot 04c-second-form
 click 880 273; xdotool type --delay 20 "$RTMP_URL2"
 click 880 323; xdotool type --delay 20 "$RTMP_KEY2"
-click 880 445; xdotool type --delay 20 "Audit Server 2"
+# The name box is pre-filled and limited to 20 characters: replace it, don't append (both channels would get the same name)
+click 880 445; xdotool key ctrl+a; xdotool type --delay 20 "Audit Two"
 w 1; click 942 763; w 6; shot 04d-two-channels
 ls "$XDG_CONFIG_HOME"/PRISMLiveStudio/user/hopcast-rtmp-channels.enc >/dev/null 2>&1 \
   && pass "stream key saved encrypted" || fail "encrypted stream-key file not written"
