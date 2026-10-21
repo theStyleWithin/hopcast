@@ -876,10 +876,12 @@ void PLSPlatformApi::onPrepareLive()
 		return;
 	}
 
+#ifndef HOPCAST_NO_NAVER // HopCast: no relay, so no relay bitrate cap
 	//Check whether the bit rate of the multi - platform live broadcast output is valid
 	if ((PLS_PLATFORM_HORIZONTAL.size() > 1 || PLS_PLATFORM_VERTICAL.size() > 1) && !checkOutputBitrateValid()) {
 		return;
 	}
+#endif
 
 	//Check if the network is connected
 	if (!checkNetworkConnected()) {
@@ -901,8 +903,13 @@ void PLSPlatformApi::onPrepareLive()
 
 	bool bResum = getResumeStreamingFlag();
 	if (bDualOutput) {
+#ifdef HOPCAST_NO_NAVER // HopCast: extra channels are separate outputs, never a PRISM relay
+		m_bPrismLive[DualOutputType::Horizontal] = false;
+		m_bPrismLive[DualOutputType::Vertical] = false;
+#else
 		m_bPrismLive[DualOutputType::Horizontal] = platformsHorizontal.size() > 1;
 		m_bPrismLive[DualOutputType::Vertical] = platformVertical.size() > 1;
+#endif
 
 		if (!bResum && (platformsHorizontal.empty() || platformVertical.empty())) {
 			PLSErrorHandler::ExtraData dualExtra("Prepare live dual output missing orientation");
@@ -919,7 +926,11 @@ void PLSPlatformApi::onPrepareLive()
 			return;
 		}
 	} else {
+#ifdef HOPCAST_NO_NAVER
+		m_bPrismLive[DualOutputType::Horizontal] = false;
+#else
 		m_bPrismLive[DualOutputType::Horizontal] = platformActived.size() > 1;
+#endif
 	}
 
 	m_listFailedPlatform.clear();
