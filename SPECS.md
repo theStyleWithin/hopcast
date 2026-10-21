@@ -42,7 +42,7 @@ than OBS's, and makes four changes:
 | Feature | Notes |
 |---|---|
 | Studio interface | PRISM's layout: channel bar, preview, scenes, sources, audio mixer, sidebar tools |
-| Streaming | Custom RTMP, SRT or RIST; one destination per output (horizontal, plus vertical with dual output); reconnects automatically |
+| Streaming | Custom RTMP, SRT or RIST. Switch on as many channels as you like and Go Live sends to all of them at once: the picture is encoded once and shared, so there is no relay and no extra CPU load. A destination that fails doesn't stop the others. Reconnects automatically |
 | Recording | MKV/MP4 to a folder of your choice; works before, during and after streaming |
 | Sources | Video capture (V4L2), screen capture (PipeWire/X11), audio (PulseAudio/PipeWire/ALSA), images, media files, text, color |
 | Encoders | x264 (software). NVENC and VAAPI need real-desktop testing |
@@ -61,7 +61,6 @@ than OBS's, and makes four changes:
 - AppImage release and real-desktop testing.
 - Remaining internal renaming (config folder, program name, leftover images).
 - PRISM's local source plugins on Linux (timer, text templates, background music, effects).
-- Streaming to several servers at once without a relay (a single encode sent to multiple outputs).
 
 ## 5. How it works
 

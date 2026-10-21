@@ -818,6 +818,7 @@ void PLSPlatformApi::onPrepareLive()
 	auto out_cx = config_get_uint(PLSBasic::Get()->Config(), "Video", "OutputCX");
 	auto out_cy = config_get_uint(PLSBasic::Get()->Config(), "Video", "OutputCY");
 
+#ifndef HOPCAST_NO_NAVER // HopCast: no relay, so no relay resolution limit
 	// Multi-push: each channel has MaxResolution (W x H); take min(W*H) and compare with horizontal (and vertical if dual output) W*H
 	if (getActivePlatforms().size() > 1) {
 		const qint64 minAllowedPixels = multiPushMinAllowedOutputPixelProduct();
@@ -834,6 +835,7 @@ void PLSPlatformApi::onPrepareLive()
 			return;
 		}
 	}
+#endif
 
 	//Sort platform pointer objects
 	sortPlatforms();

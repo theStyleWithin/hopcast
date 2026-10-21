@@ -1128,7 +1128,8 @@ elseif(OS_POSIX)
   target_sources(PRISMLiveStudio PRIVATE obs-ui/platform-x11.cpp obs-ui/system-info-posix.cpp
     prism-ui/hopcast/HopCastSecrets.cpp prism-ui/hopcast/HopCastSecrets.h # HopCast: encrypted secrets
     prism-ui/hopcast/HopCastLinkGuard.cpp prism-ui/hopcast/HopCastLinkGuard.h # HopCast: no PRISM/NAVER links
-    prism-ui/hopcast/HopCastScreenshot.cpp prism-ui/hopcast/HopCastScreenshot.h)
+    prism-ui/hopcast/HopCastScreenshot.cpp prism-ui/hopcast/HopCastScreenshot.h
+    prism-ui/hopcast/HopCastMultiStream.cpp prism-ui/hopcast/HopCastMultiStream.h)
   target_link_libraries(PRISMLiveStudio PRIVATE hopcast::securestore)
   target_link_libraries(PRISMLiveStudio PRIVATE Qt::GuiPrivate)
 
