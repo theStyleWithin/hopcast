@@ -172,7 +172,7 @@ jobs:
           cd build/appimage
           failed=0
           for v in release debug; do
-            f=$(ls HopCast-$v-*.AppImage); chmod +x "$f"
+            f=$(ls HopperCast-$v-*.AppImage); chmod +x "$f"
             rm -rf "x-$v" && mkdir "x-$v" && (cd "x-$v" && APPIMAGE_EXTRACT_AND_RUN=1 ../"$f" --appimage-extract >/dev/null)
             HOPCAST_NO_GDB=1 HOPCAST_LAUNCH_BIN="$PWD/x-$v/squashfs-root/AppRun" \
               bash ../../hopcast/scripts/launch-test-app.sh "$PWD/x-$v/squashfs-root/usr" "$PWD/smoke-$v" 25 \
@@ -189,7 +189,7 @@ jobs:
             x-debug/squashfs-root/AppRun >/dev/null 2>&1 & app=$!
           sleep 20; kill -SEGV "$app" 2>/dev/null; wait "$app" || true; kill "$xv" 2>/dev/null
           cp crash-test/data/hopcast/crash-logs/session-*.log crash-test/ 2>/dev/null || true
-          grep -q "=== HOPCAST CRASH ===" crash-test/data/hopcast/crash-logs/session-*.log \
+          grep -q "=== HOPPERCAST CRASH ===" crash-test/data/hopcast/crash-logs/session-*.log \
             || { echo "::error title=Debug AppImage::crash produced no crash report"; failed=1; }
 
           for v in release debug; do test -s smoke-$v/screen.png || failed=1; done
@@ -214,27 +214,27 @@ jobs:
           TAG: ${{ inputs.release_tag }}
         run: |
           v=$(tr -d '[:space:]' < hopcast/VERSION)
-          tar --exclude=./build --exclude=./.git -czf "build/appimage/hopcast-source-$v.tar.gz" .
-          sum=$(sha256sum "build/appimage/HopCast-release-$v-x86_64.AppImage" | cut -d' ' -f1)
+          tar --exclude=./build --exclude=./.git -czf "build/appimage/hoppercast-source-$v.tar.gz" .
+          sum=$(sha256sum "build/appimage/HopperCast-release-$v-x86_64.AppImage" | cut -d' ' -f1)
           mkdir -p build/aur
           for f in PKGBUILD SRCINFO; do
             sed -e "s|@PKGVER@|$v|g" -e "s|@TAG@|$TAG|g" -e "s|@SHA256@|$sum|g" hopcast/packaging/aur/$f.in > build/aur/$f
           done
           mv build/aur/SRCINFO build/aur/.SRCINFO
-          tar -C build/aur -czf "build/appimage/hopcast-bin-aur-$v.tar.gz" PKGBUILD .SRCINFO
+          tar -C build/aur -czf "build/appimage/hoppercast-bin-aur-$v.tar.gz" PKGBUILD .SRCINFO
           cat > notes.md <<N
           **Early test build - for testing only. Expect bugs.**
 
-          - \`HopCast-release-*.AppImage\` - the normal build.
-          - \`HopCast-debug-*.AppImage\` - writes a log and crash report to \`~/.local/share/hopcast/crash-logs/\`. Logs mask stream keys, but don't type anything sensitive into the debug build and review a log before sharing it.
-          - \`hopcast-source-*.tar.gz\` - complete corresponding source (GPL-2.0).
-          - \`hopcast-bin-aur-*.tar.gz\` - PKGBUILD and .SRCINFO for the AUR package \`hopcast-bin\`.
+          - \`HopperCast-release-*.AppImage\` - the normal build.
+          - \`HopperCast-debug-*.AppImage\` - writes a log and crash report to \`~/.local/share/hopcast/crash-logs/\`. Logs mask stream keys, but don't type anything sensitive into the debug build and review a log before sharing it.
+          - \`hoppercast-source-*.tar.gz\` - complete corresponding source (GPL-2.0).
+          - \`hoppercast-bin-aur-*.tar.gz\` - PKGBUILD and .SRCINFO for the AUR package \`hoppercast-bin\`.
 
-          Run: \`chmod +x HopCast-*.AppImage && ./HopCast-release-*.AppImage\`. Needs glibc 2.39+ (Ubuntu 24.04, Fedora 40, Arch/CachyOS). Not affiliated with NAVER Corp. or the OBS Project.
+          Run: \`chmod +x HopperCast-*.AppImage && ./HopperCast-release-*.AppImage\`. Needs glibc 2.39+ (Ubuntu 24.04, Fedora 40, Arch/CachyOS). Not affiliated with NAVER Corp. or the OBS Project.
           N
           gh release create "$TAG" --prerelease --target "$GITHUB_SHA" \
-            --title "HopCast $TAG (test build)" --notes-file notes.md \
-            build/appimage/*.AppImage "build/appimage/hopcast-source-$v.tar.gz" "build/appimage/hopcast-bin-aur-$v.tar.gz"
+            --title "HopperCast $TAG (test build)" --notes-file notes.md \
+            build/appimage/*.AppImage "build/appimage/hoppercast-source-$v.tar.gz" "build/appimage/hoppercast-bin-aur-$v.tar.gz"
 
       - name: Report failure details
         if: failure()

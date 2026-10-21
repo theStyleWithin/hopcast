@@ -20,10 +20,10 @@ PLSAboutView::PLSAboutView(QWidget *parent) : PLSDialogView(parent)
 	pls_uistep_v2_set_title(this, QStringLiteral("About"));
 #ifdef HOPCAST_NO_NAVER
 	/* HopCast: no PRISM logo or update check; GPL attribution instead of NAVER's copyright line. */
-	setWindowTitle(QStringLiteral("About HopCast"));
+	setWindowTitle(QStringLiteral("About HopperCast"));
 	ui->logoLabel->setStyleSheet(QStringLiteral("image: none; color: #ffffff; font-size: 30px; font-weight: bold;"));
 	ui->logoLabel->setAlignment(Qt::AlignCenter);
-	ui->logoLabel->setText(QStringLiteral("HopCast"));
+	ui->logoLabel->setText(QStringLiteral("HopperCast"));
 	ui->logoInfoLabel->setText(QString());
 	ui->checkUpdateButton->setVisible(false);
 	/* The credit goes under the version: the stylesheet pins the bottom label's height. */

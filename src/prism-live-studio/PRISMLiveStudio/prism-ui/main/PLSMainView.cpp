@@ -115,7 +115,7 @@ PLSMainView::PLSMainView(QWidget *parent) : PLSToplevelView<QFrame>(CreateWinId:
 	ui = pls_new<Ui::PLSMainView>();
 	ui->setupUi(this);
 #ifdef HOPCAST_NO_NAVER
-	setWindowTitle(QStringLiteral("HopCast")); // HopCast: after setupUi, which sets PRISM's title
+	setWindowTitle(QStringLiteral("HopperCast")); // HopCast: after setupUi, which sets PRISM's title
 #endif
 	setupRightSidebarWidgets();
 	pls_set_css(this, {"PLSMainView", "HelpMenu"});

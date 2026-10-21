@@ -1,15 +1,15 @@
-# HopCast: Specification
+# HopperCast: Specification
 
 **Status:** in development, no releases · **Version:** 0.1.0 · **License:** GPL-2.0
 
-## 1. What HopCast is
+## 1. What HopperCast is
 
-HopCast is a desktop app for live streaming and recording on Linux. You build scenes from sources such
+HopperCast is a desktop app for live streaming and recording on Linux. You build scenes from sources such
 as cameras, screen capture, images, media and text. You can stream them live to a server of your choice
 and record them to disk at the same time.
 
 It is a modified version of the GPL-licensed source code of **PRISM Live Studio** (NAVER Corp.). That code
-is itself built on **OBS Studio**. HopCast keeps PRISM's studio interface, which many people find friendlier
+is itself built on **OBS Studio**. HopperCast keeps PRISM's studio interface, which many people find friendlier
 than OBS's, and makes four changes:
 
 1. it runs natively on Linux;
@@ -23,14 +23,14 @@ than OBS's, and makes four changes:
 - **Private by default.**
   - No sign-in and no telemetry.
   - No network traffic except the stream you start.
-- **Neutral.** You enter your own server address and stream key. HopCast doesn't recommend, rank or advertise any platform.
+- **Neutral.** You enter your own server address and stream key. HopperCast doesn't recommend, rank or advertise any platform.
 - **Safe with secrets.** Stream keys are encrypted at rest and never written to logs.
 - **Easy to install.** One AppImage that runs on current distributions (glibc 2.39 or newer: CachyOS, Arch, Fedora 40+, Ubuntu 24.04+).
 - **Open.** GPL-2.0, with full source for every release.
 
 ## 3. Non-goals
 
-- Accounts, cloud sync or anything that needs a HopCast or NAVER server.
+- Accounts, cloud sync or anything that needs a HopperCast or NAVER server.
 - Built-in platform integrations (sign-in with Twitch/YouTube/Facebook, platform chat, viewer counts).
 - Windows or macOS builds. Use PRISM Live Studio or OBS Studio there.
 - Re-adding PRISM's online extras (PRISM Lens, sticker and template stores, notices, update checks).
@@ -66,13 +66,13 @@ than OBS's, and makes four changes:
 ## 5. How it works
 
 ```
-HopCast app (Qt 6)            PRISM's studio UI, Linux-ported, with NAVER services removed
+HopperCast app (Qt 6)            PRISM's studio UI, Linux-ported, with NAVER services removed
   ├─ hopcast/securestore      AES-256-GCM storage for stream keys (OpenSSL)
   └─ engine (libobs 31)       NAVER's OBS fork: video/audio pipeline, encoders, outputs, Linux plugins
 ```
 
 - The source is organized as upstream PRISM (`src/prism-live-studio`), the pinned engine (`src/obs-studio`, with
-  HopCast patches in `hopcast/engine-patches/`) and HopCast's own tooling in `hopcast/`.
+  HopperCast patches in `hopcast/engine-patches/`) and HopperCast's own tooling in `hopcast/`.
 - Changes are switched on by build options: `HOPCAST_NO_ACCOUNT` and `HOPCAST_NO_NAVER` are on by default.
 - A network guard refuses any request to NAVER/PRISM domains, and a link guard stops the app from opening their web pages.
 

@@ -1,10 +1,10 @@
-# HopCast
+# HopperCast
 
 A Linux port of [PRISM Live Studio](https://github.com/naver/prism-live-studio), with a portable **AppImage** as the target.
 
-> **Name note.** "HOPCAST" is a registered US mark (Reg. 6425832, John I. Haas, Inc.) limited to podcasts about hops and beer,
-> a different market from streaming software. Low conflict risk; get a quick professional clearance before any commercial use.
-> (The earlier codename "Hopper" was dropped: DISH Network owns and enforces it for TV-streaming products.)
+> **Name note.** The app is called HopperCast (previously HopCast). DISH Network owns and enforces "Hopper" for
+> TV-streaming products, which is close to this market. Get a professional trademark clearance before any commercial use
+> or wider promotion. Internal names (`hopcast/` folders, `HOPCAST_*` options, `~/.local/share/hopcast/`) are unchanged.
 
 ## Legal
 
@@ -13,7 +13,7 @@ A Linux port of [PRISM Live Studio](https://github.com/naver/prism-live-studio),
 - The engine is NAVER's fork of OBS Studio (`src/obs-studio`, GPL-2.0-or-later), pinned at `a357328` (libobs 31.0.3).
 - Not affiliated with or endorsed by NAVER Corp. or the OBS Project. "PRISM", "PRISM Live Studio" and "OBS"
   are their owners' marks. We don't use them as our name and won't ship their logos.
-- No NAVER backend services, telemetry, or credentials. No account logins: HopCast streams to any RTMP/SRT/RIST server you enter.
+- No NAVER backend services, telemetry, or credentials. No account logins: HopperCast streams to any RTMP/SRT/RIST server you enter.
 
 ## Layout
 
@@ -96,7 +96,7 @@ Startup fixes made to get here (all marked `HopCast` in the source):
 ### No accounts, no NAVER services, no PRISM branding
 
 PRISM normally won't open its studio until you sign in with a PRISM account, and its account,
-update, notice, banner, resource and channel-sync features all run on NAVER's servers. HopCast has
+update, notice, banner, resource and channel-sync features all run on NAVER's servers. HopperCast has
 no right to use those servers (and the public source has none of their addresses or keys), so two
 CMake options, both on by default, remove them:
 
@@ -113,21 +113,21 @@ CMake options, both on by default, remove them:
 - **No platform gets special treatment.** The channel bar has only **Custom RTMP**: Twitch,
   YouTube, Facebook and SOOP buttons are gone, the Custom RTMP dialog has no list of suggested
   platforms (just RTMP / SRT / RIST), it doesn't switch into Twitch/YouTube modes based on the
-  server address, and HopCast no longer contacts Twitch at startup. Any service that gives you a
+  server address, and HopperCast no longer contacts Twitch at startup. Any service that gives you a
   server URL and stream key (Twitch, YouTube, Kick, Rumble, Odysee, Owncast, your own server…)
-  works the same way. HopCast makes no network requests at startup.
+  works the same way. HopperCast makes no network requests at startup.
   - **Removed pop-ups:** welcome/banner window, PRISM Lens onboarding. Help menu keeps only Program Info.
-  - **Name:** title bar text "HopCast" with no logo image; window and tray title "HopCast" with
+  - **Name:** title bar text "HopperCast" with no logo image; window and tray title "HopperCast" with
     the desktop theme's generic camera icon.
 
-![HopCast studio window (Xvfb, CI)](docs/phase1-studio-no-account.png)
+![HopperCast studio window (Xvfb, CI)](docs/phase1-studio-no-account.png)
 
 (The black area on the right in CI screenshots is the translucent chat panel, which needs a
 compositor to draw; on a normal desktop it renders normally.)
 
 ### Stream keys are encrypted
 
-Everything that holds a stream key or a platform token is encrypted on disk by HopCast
+Everything that holds a stream key or a platform token is encrypted on disk by HopperCast
 (`hopcast/securestore`, tests in `hopcast/tests/secure_store_test.cpp`):
 
 | File | Contents |
@@ -135,31 +135,31 @@ Everything that holds a stream key or a platform token is encrypted on disk by H
 | `hopcast-rtmp-channels.enc` — **in the folder you choose** | your Custom RTMP channels (server + stream key) |
 | `~/.config/PRISMLiveStudio/Cache/channel_cache.dat.enc` | PRISM's channel cache (all channels, keys, tokens) |
 
-- **You choose where the stream-key file lives.** The first time you save a stream key, HopCast
-  asks and opens a folder picker (your Documents folder is suggested); "Use HopCast's Folder"
-  keeps it in `~/.config/PRISMLiveStudio/user/`. HopCast remembers the choice; **Tools › Stream Key
+- **You choose where the stream-key file lives.** The first time you save a stream key, HopperCast
+  asks and opens a folder picker (your Documents folder is suggested); "Use HopperCast's Folder"
+  keeps it in `~/.config/PRISMLiveStudio/user/`. HopperCast remembers the choice; **Tools › Stream Key
   Storage…** shows where it is and moves it to another folder (it never overwrites a file that's
   already there).
-- **AES-256-GCM.** The files can't be read without the key, and any change made outside HopCast
-  is detected: the file is not loaded, it's set aside as `….unreadable-<time>`, and HopCast tells
-  you to re-enter your keys. Only HopCast, when you change a key in the app, writes these files
+- **AES-256-GCM.** The files can't be read without the key, and any change made outside HopperCast
+  is detected: the file is not loaded, it's set aside as `….unreadable-<time>`, and HopperCast tells
+  you to re-enter your keys. Only HopperCast, when you change a key in the app, writes these files
   (atomically, mode 0600).
 - **The key is a separate owner-only file**, `~/.local/share/hopcast/secure-store.key` (mode 0600),
   kept apart from the encrypted data in `~/.config` — so a copy or dotfile backup of `~/.config`
   alone holds only locked data. **No keyring is used** (no KWallet / GNOME Keyring; decided
-  2026-10-11). Keep that key file if you back up or move your HopCast data — without it the
+  2026-10-11). Keep that key file if you back up or move your HopperCast data — without it the
   encrypted files can't be opened. (A keyring-backed key is still in the code behind the CMake
   option `HOPCAST_USE_KEYRING`, off by default.)
-- **Key file missing later?** HopCast won't overwrite data it can't read: your saved channels stay
-  untouched, HopCast tells you, and saving is paused until the key file is back.
+- **Key file missing later?** HopperCast won't overwrite data it can't read: your saved channels stay
+  untouched, HopperCast tells you, and saving is paused until the key file is back.
 - **No plaintext copies:** older plaintext files (`hopcast-rtmp-channels.json`, `channel_cache.dat`)
   are encrypted and then overwritten and deleted on first start. `service.json` no longer stores
   the key (it's re-applied from your channel at every Go Live), and PRISM's unmasked "KR" log
   lines — which printed keys and tokens — are dropped.
 - **Limits, honestly:** the key file protects against other users on the PC, against someone who
   only gets the data file or your `~/.config`, and against edits — but anyone or any program that
-  can read your *whole* home folder as you can read both files. (An optional HopCast master
-  password could close that gap later.) HopCast has to decrypt a key in memory to stream with it,
+  can read your *whole* home folder as you can read both files. (An optional HopperCast master
+  password could close that gap later.) HopperCast has to decrypt a key in memory to stream with it,
   and the key is sent to your streaming platform when you go live — that's how RTMP works. On SSDs, overwritten old plaintext files may still
   physically linger until the drive reuses those blocks.
 
@@ -172,7 +172,7 @@ come from the automated UI tour: run the `hopcast-app` workflow with **ui_tour**
 `hopcast/scripts/ui-map.py <tour-dir>`.
 
 Also removed in the cleanup pass: PRISM/NAVER/OBS links in Help (only Program Info and Open
-Source License remain), the PRISM logo and update check in Program Info (now "HopCast" with the
+Source License remain), the PRISM logo and update check in Program Info (now "HopperCast" with the
 GPL credit), the account avatar, PRISM Lens, PRISM/GIPHY stickers, scene templates and NAVER
 business settings in the sidebar, the sidebar's output setting guide (!) and help (⋯) buttons
 (plus the guide link in the Custom RTMP dialog), the platform chat panel (whose "Add PRISM Chat Source" button
@@ -192,7 +192,7 @@ Results go to the `dev-logs-audit-normal` / `dev-logs-audit-asan` branches (`sum
 - quits with Ctrl+Q, starts again on the same profile, then starts and quits 8 more times;
 - starts on Wayland (weston, headless); checks every binary resolves its libraries;
 - watches for the app closing its own stdin/stdout/stderr (`hopcast/tests/fd0-guard.c`);
-- runs static analysis (compiler warnings + cppcheck) on the files HopCast changed.
+- runs static analysis (compiler warnings + cppcheck) on the files HopperCast changed.
 
 Fixed because of it (2026-10-14):
 
@@ -207,7 +207,7 @@ Fixed because of it (2026-10-14):
 | Stream key in the system journal | RTMP server echo logged verbatim | masked (patch 0005) |
 | Background NAVER activity | notice/update polling, MQTT (outside the network block), Lens IPC retry every 3 s, 9 sign-in plugins loaded | removed |
 
-Multi-channel streaming (one stream to several servers) went through NAVER's relay. HopCast
+Multi-channel streaming (one stream to several servers) went through NAVER's relay. HopperCast
 streams to one channel per output (horizontal, plus vertical with dual output) and says so if
 more are switched on.
 

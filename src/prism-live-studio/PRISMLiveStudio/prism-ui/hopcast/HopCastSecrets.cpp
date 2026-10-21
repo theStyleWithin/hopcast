@@ -82,7 +82,7 @@ void warnOnce(const QString &message)
 		return;
 	g_warned = true;
 	pls_async_call_mt([message]() {
-		PLSAlertView::warning(nullptr, QStringLiteral("HopCast"), message);
+		PLSAlertView::warning(nullptr, QStringLiteral("HopperCast"), message);
 	});
 }
 
@@ -102,14 +102,14 @@ std::optional<QByteArray> secureRead(const QString &path, const QString &legacyP
 		break;
 	case secure::LoadStatus::KeyMissing:
 		PLS_ERROR(MODULE, "HopCast: cannot unlock %s: %s", qUtf8Printable(QFileInfo(path).fileName()), store.last_error().c_str());
-		warnOnce(QStringLiteral("HopCast couldn't unlock your saved stream keys because their key file (~/.local/share/hopcast/secure-store.key) is missing or unreadable.\n\n"
+		warnOnce(QStringLiteral("HopperCast couldn't unlock your saved stream keys because their key file (~/.local/share/hopcast/secure-store.key) is missing or unreadable.\n\n"
 					"Your saved channels are kept and won't be overwritten, but they can't be shown or changed. "
-					"Restore the key file (for example from a backup) and restart HopCast."));
+					"Restore the key file (for example from a backup) and restart HopperCast."));
 		return std::nullopt;
 	case secure::LoadStatus::Tampered:
 		PLS_ERROR(MODULE, "HopCast: %s failed integrity check: %s", qUtf8Printable(QFileInfo(path).fileName()), store.last_error().c_str());
-		warnOnce(QStringLiteral("HopCast's encrypted stream-key file was changed outside HopCast or is damaged, so it was not loaded.\n\n"
-					"It has been set aside (\"%1.unreadable-…\") and HopCast starts with an empty list. "
+		warnOnce(QStringLiteral("HopperCast's encrypted stream-key file was changed outside HopperCast or is damaged, so it was not loaded.\n\n"
+					"It has been set aside (\"%1.unreadable-…\") and HopperCast starts with an empty list. "
 					"Please re-enter your stream keys.")
 				 .arg(QFileInfo(path).fileName()));
 		return std::nullopt;
@@ -189,7 +189,7 @@ bool folderUsable(const QString &folder, QString &why)
 	}
 	QTemporaryFile probe(dir.filePath(QStringLiteral(".hopcast-write-test-XXXXXX")));
 	if (!probe.open()) {
-		why = QStringLiteral("HopCast can't write to this folder.");
+		why = QStringLiteral("HopperCast can't write to this folder.");
 		return false;
 	}
 	return true;
@@ -222,7 +222,7 @@ bool onGuiThread()
 /* Shows the folder picker; returns the chosen folder or an empty string. */
 QString pickFolder(QWidget *parent, const QString &startFolder)
 {
-	return QFileDialog::getExistingDirectory(parent, QStringLiteral("Choose where HopCast keeps your stream keys"), startFolder,
+	return QFileDialog::getExistingDirectory(parent, QStringLiteral("Choose where HopperCast keeps your stream keys"), startFolder,
 						 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 }
 
@@ -241,14 +241,14 @@ bool ensureStreamKeyFolderChosen(QWidget *parent)
 	const QString documents = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 	const QString suggested = documents.isEmpty() ? QDir::homePath() : documents;
 	const auto answer = PLSAlertView::question(
-		parent, QStringLiteral("Where should HopCast keep your stream keys?"),
-		QStringLiteral("HopCast saves your stream keys in one encrypted file (%1). Only HopCast can open or change it.\n\n"
+		parent, QStringLiteral("Where should HopperCast keep your stream keys?"),
+		QStringLiteral("HopperCast saves your stream keys in one encrypted file (%1). Only HopperCast can open or change it.\n\n"
 			       "Choose the folder for it, for example your Documents folder. The key that unlocks it stays separately in "
 			       "~/.local/share/hopcast, so the folder you pick only ever holds locked data.\n\n"
 			       "You can change this later under Tools > Stream Key Storage…")
 			.arg(QString::fromLatin1(FILE_NAME)),
 		QMap<PLSAlertView::Button, pls_text_t>{{PLSAlertView::Button::Yes, pls_text_t(QStringLiteral("Choose Folder…"))},
-						       {PLSAlertView::Button::No, pls_text_t(QStringLiteral("Use HopCast's Folder"))}},
+						       {PLSAlertView::Button::No, pls_text_t(QStringLiteral("Use HopperCast's Folder"))}},
 		PLSAlertView::Button::Yes);
 
 	QString folder = defaultFolder();
@@ -262,12 +262,12 @@ bool ensureStreamKeyFolderChosen(QWidget *parent)
 				folder = picked;
 				break;
 			}
-			PLSAlertView::warning(parent, QStringLiteral("HopCast"), why + QStringLiteral("\nPlease choose another folder."));
+			PLSAlertView::warning(parent, QStringLiteral("HopperCast"), why + QStringLiteral("\nPlease choose another folder."));
 		}
 	}
 	QString why;
 	if (!moveStreamKeyFile(defaultFolder(), folder, why)) {
-		PLSAlertView::warning(parent, QStringLiteral("HopCast"), why);
+		PLSAlertView::warning(parent, QStringLiteral("HopperCast"), why);
 		folder = defaultFolder();
 	}
 	setChosenFolder(folder);
@@ -294,10 +294,10 @@ void changeStreamKeyFolder(QWidget *parent)
 		}
 	}
 	if (!moved) {
-		PLSAlertView::warning(parent, QStringLiteral("HopCast"), why);
+		PLSAlertView::warning(parent, QStringLiteral("HopperCast"), why);
 		return;
 	}
-	PLSAlertView::information(parent, QStringLiteral("HopCast"),
+	PLSAlertView::information(parent, QStringLiteral("HopperCast"),
 				  QStringLiteral("Your stream keys are now kept in:\n%1").arg(QDir(picked).filePath(QString::fromLatin1(FILE_NAME))));
 }
 
