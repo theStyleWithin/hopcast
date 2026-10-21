@@ -230,7 +230,7 @@ bool RTMPAddToPrism(const QString &uuid)
 #ifdef HOPCAST_NO_NAVER
 	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
 		PLSCHANNELS_API->release();
-		hopcast::ensureStreamKeyFolderChosen(nullptr); // ask first, never while holding the lock
+		hopcast::prepareKeyStorage();
 		QMutexLocker lock(&hopcast_rtmp::g_lock);
 		QJsonArray records;
 		const bool readable = hopcast_rtmp::load(records);
@@ -394,7 +394,7 @@ bool RTMPUpdateToPrism(const QString &uuid)
 #ifdef HOPCAST_NO_NAVER
 	if (PLSCHANNELS_API->isChannelInfoExists(uuid)) {
 		PLSCHANNELS_API->release();
-		hopcast::ensureStreamKeyFolderChosen(nullptr);
+		hopcast::prepareKeyStorage();
 		QMutexLocker lock(&hopcast_rtmp::g_lock);
 		QJsonArray records;
 		const bool readable = hopcast_rtmp::load(records);

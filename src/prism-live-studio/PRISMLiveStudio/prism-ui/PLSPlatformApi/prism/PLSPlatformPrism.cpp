@@ -480,7 +480,7 @@ QString PLSPlatformPrism::getPublishingTitle(list<PLSPlatformBase *> platforms) 
 		}
 	}
 
-	return "PRISM Live";
+	return "HopCast";
 }
 
 pls::http::Request PLSPlatformPrism::requestStartSimulcastLive(bool bPrism, list<PLSPlatformBase *> platformList, DualOutputType outputType)

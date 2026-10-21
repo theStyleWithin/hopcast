@@ -4,6 +4,7 @@
 #ifdef HOPCAST_NO_NAVER
 #include "../hopcast/HopCastSecrets.h"
 #include "../hopcast/HopCastLinkGuard.h"
+#include "../hopcast/HopCastScreenshot.h" // HopCast: Tools > Screenshot
 #endif
 #include "pls-common-define.hpp"
 #include "pls-common-language.hpp"
@@ -1269,7 +1270,15 @@ void PLSBasic::PLSInit()
 	initVirtualCamMenu();
 	initLabMenu();
 #ifdef HOPCAST_NO_NAVER
-	hopcast::addStreamKeyStorageMenu(ui->menuTools); // HopCast: where the encrypted stream-key file lives
+	/* HopCast: Tools > Screenshot of my screen (the tray menu has the same entry). */
+	connect(ui->menuTools->addAction(QStringLiteral("Screenshot of my screen")), &QAction::triggered, this, [this]() {
+		hopcast::takeDesktopScreenshot([this](const QString &path, const QString &error) {
+			if (error.isEmpty())
+				PLSAlertView::information(this, QStringLiteral("HopCast"), QStringLiteral("Screenshot saved:\n") + path);
+			else
+				PLSAlertView::warning(this, QStringLiteral("HopCast"), error);
+		});
+	});
 	hopcast::LinkGuard::install(); // HopCast: never open PRISM/NAVER pages in the browser
 	/* HopCast: the platform chat panel has nothing to show for Custom RTMP and its
 	 * "Add PRISM Chat Source" button crashed - keep it hidden and out of the Docks menu. */

@@ -34,16 +34,12 @@ SECTIONS = [
          "Only User Input (RTMP), (SRT) and (RIST). No list of platforms.", [H]),
         ("custom-rtmp-filled", ["Custom RTMP", "Fill in the form"], "Filled-in form",
          "Example values: rtmp://live.example.com/app and a made-up key. RTMP also offers optional ID and password fields.", []),
-        ("storage-prompt", ["Save (first stream key)"], "Where to keep your stream keys",
-         "Asked once: Choose Folder… or Use HopCast’s Folder. The unlock key always stays in ~/.local/share/hopcast.", [H]),
-        ("folder-picker", ["Choose Folder…"], "Folder picker",
-         "Pick any folder; it starts in Documents. In this test the picker was cancelled, so HopCast’s own folder was used.", [H]),
         ("after-channel-added", ["After saving"], "Channel in the bar",
          "The saved channel appears next to My Channel. It reads “Custom RT…” here because the name field already said “Custom RTMP”.", []),
         ("channel-in-bar-menu", ["Click the saved channel"], "Channel controls",
          "An on/off switch for including it when you go live, a share button and a ⋮ menu.", []),
-        ("tools-stream-key-storage", ["Tools", "Stream Key Storage…"], "Stream key file location",
-         "Shows where the encrypted file is and offers to move it: Choose Folder… or Close.", [H]),
+        ("tools-screenshot", ["Tools", "Screenshot of my screen"], "Screenshot",
+         "Saves a picture of the whole screen to Pictures/HopCast and tells you where it went.", [H]),
     ]),
     ("menus", "Menu bar", "The eight menus under the channel bar.", [
         ("menu-settings", ["Settings"], "Settings menu",
@@ -56,7 +52,7 @@ SECTIONS = [
         ("menu-docks", ["Docks"], "Docks menu",
          "Lock Docks · Full-Height Docks · Reset Docks, plus show/hide for Scenes, Sources, Audio Mixer and Music Playlist.", []),
         ("menu-profile", ["Profile"], "Profile menu", "New · Export · Import, and the current profile (Untitled).", []),
-        ("menu-tools", ["Tools"], "Tools menu", "Stream Key Storage… is the only entry.", [H]),
+        ("menu-tools", ["Tools"], "Tools menu", "Screenshot of my screen is the only entry.", [H]),
         ("menu-help", ["Help"], "Help menu", "Program Info · Open Source License. No links to outside websites.", [H]),
         ("help-program-info", ["Help", "Program Info"], "About HopCast",
          "Name, version and the GPL notice crediting PRISM Live Studio and OBS Studio. No update check.", [H]),
@@ -122,9 +118,6 @@ def scenario_clicks():
     # sub-shots of the Custom RTMP save scenario: mark only the click that led there
     if "custom-rtmp-filled" in clicks:
         clicks["custom-rtmp-filled"] = clicks["custom-rtmp-filled"][:1]
-    if "storage-prompt" in clicks:
-        clicks["storage-prompt"] = clicks["storage-prompt"][-1:]
-    clicks["folder-picker"] = []
     return clicks
 
 

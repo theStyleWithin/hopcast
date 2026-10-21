@@ -2,6 +2,12 @@
 
 #include "../PLSPlatformApi.h"
 #include "PLSChannelDataAPI.h"
+#ifdef HOPCAST_NO_NAVER
+#include <liblog.h>
+#include <frontend-api.h>
+#include <PLSAlertView.h>
+#include <QUrl>
+#endif
 
 PLSServiceType PLSPlatformRtmp::getServiceType() const
 {
@@ -15,6 +21,27 @@ void PLSPlatformRtmp::onPrepareLive(bool value)
 		return;
 	}
 
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: say so plainly when the channel has no server address or stream key (instead of
+	 * the server's confusing "could not access the channel or stream key"), and log what is
+	 * used - the host and the key's length, never the key itself. */
+	{
+		const QString server = getInitData().value(ChannelData::g_channelRtmpUrl).toString().trimmed();
+		const QString key = getInitData().value(ChannelData::g_streamKey).toString();
+		PLS_INFO(MODULE_PlatformService, "HopCast: going live with '%s': server host=%s, stream key length=%d", qUtf8Printable(getChannelName()),
+			 qUtf8Printable(QUrl(server).host()), static_cast<int>(key.size()));
+		if (server.isEmpty() || key.isEmpty()) {
+			PLS_ERROR(MODULE_PlatformService, "HopCast: channel has no %s saved; not going live", server.isEmpty() ? "server address" : "stream key");
+			pls_async_call_mt(this, [] {
+				PLSAlertView::warning(pls_get_main_view(), QTStr("Alert.Title"),
+						      QObject::tr("This channel has no stream key (or server address) saved.\n\n"
+								  "Open the channel, enter the server address and stream key again, then save it."));
+			});
+			prepareLiveCallback(false);
+			return;
+		}
+	}
+#endif
 	setStreamServer(getInitData().value(ChannelData::g_channelRtmpUrl).toString().toStdString());
 	setStreamKey(getInitData().value(ChannelData::g_streamKey).toString().toStdString());
 
