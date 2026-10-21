@@ -13,7 +13,7 @@ STAGE="$(cd "${1:-$ROOT/build/stage}" && pwd)"
 OUT="$(mkdir -p "${2:-$ROOT/build/launch-test}" && cd "${2:-$ROOT/build/launch-test}" && pwd)"
 SECS="${3:-30}"
 
-BIN="$STAGE/bin/PRISMLiveStudio"
+BIN="${HOPCAST_LAUNCH_BIN:-$STAGE/bin/PRISMLiveStudio}"
 [[ -x "$BIN" ]] || { echo "PRISMLiveStudio binary not found at $BIN" >&2; exit 1; }
 echo "Launching $BIN for ${SECS}s"
 
@@ -32,7 +32,7 @@ export DISPLAY=:99
 sleep 2
 
 # Run under gdb when available so a startup crash leaves a backtrace.
-if command -v gdb >/dev/null; then
+if [[ -z "${HOPCAST_NO_GDB:-}" ]] && command -v gdb >/dev/null; then
   ( cd "$(dirname "$BIN")" && exec gdb -q -batch -return-child-result \
       -ex "set pagination off" -ex "handle SIGPIPE nostop noprint" -ex run \
       -ex "echo \\n=== CRASH BACKTRACE ===\\n" -ex bt \

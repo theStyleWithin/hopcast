@@ -1,9 +1,9 @@
 # HopCast
 
 > [!WARNING]
-> **HopCast is in early development and is not ready for use. Please don't download, build or install it yet.**
-> There are no releases. It has only been tested on automated build machines, not on a real desktop,
-> and things will change or break without notice.
+> **HopCast is in early development.** Test builds are on the [Releases](https://github.com/theStyleWithin/hoppercast/releases)
+> page for people who want to help test. It has only been tested on automated build machines so far, not on a
+> real desktop, and things will change or break without notice. Don't rely on it for a stream that matters yet.
 
 HopCast is a free, open-source live-streaming and recording studio for Linux.
 
@@ -20,7 +20,7 @@ PRISM Live Studio or the OBS Project**.
 - **No company servers.** HopCast never contacts NAVER/PRISM services, and has no telemetry or update pings.
 - **No platform favoritism.** It streams to any RTMP, SRT or RIST server you enter, with no built-in buttons for particular platforms.
 - **Your stream keys stay yours.** They are stored encrypted (AES-256-GCM), in a folder you choose.
-- **Linux first.** Works on X11 and Wayland, and will be shipped as a single AppImage.
+- **Linux first.** Works on X11 and Wayland, and ships as a single AppImage.
 
 See **[SPECS.md](SPECS.md)** for the full description of what HopCast is and isn't.
 
@@ -32,7 +32,29 @@ See **[SPECS.md](SPECS.md)** for the full description of what HopCast is and isn
 | Studio interface, PRISM branding removed | ✅ |
 | Streaming to an RTMP server, recording | ✅ in automated tests |
 | Real-desktop testing (GPU encoders, webcams, screen capture) | ⏳ not yet |
-| AppImage download | ⏳ not yet, no releases |
+| AppImage download | 🧪 test builds (normal + debug) on the Releases page |
+| AUR (`hopcast-bin`) | 🧪 PKGBUILD attached to each release |
+| Flathub | ⏳ later, once real-desktop testing is done |
+
+## Trying a test build
+
+> [!CAUTION]
+> **Install and use at your own risk.** Test builds are early, untested on real desktops and may crash, lose
+> settings or recordings, or misbehave. HopCast comes with no warranty (see [License](#license)). Back up anything
+> important and don't rely on it for a stream or recording that matters.
+
+Download `HopCast-release-<version>-x86_64.AppImage` from [Releases](https://github.com/theStyleWithin/hoppercast/releases), then:
+
+```sh
+chmod +x HopCast-release-*.AppImage
+./HopCast-release-*.AppImage
+```
+
+It needs glibc 2.39 or newer (Ubuntu 24.04+, Fedora 40+, Arch, CachyOS).
+
+If it crashes or misbehaves, run `HopCast-debug-*.AppImage` instead. It writes a session log, and a
+backtrace if it crashes, to `~/.local/share/hopcast/crash-logs/`. Stream keys are masked in the log, but
+don't type anything sensitive into the debug build, and read a log before you share it.
 
 Developer notes, build steps and test details are in [`hopcast/README.md`](hopcast/README.md).
 Screenshots of every screen are in [`hopcast/docs/ui-map/`](hopcast/docs/ui-map/README.md).
