@@ -1,3 +1,4 @@
+#include <cstdio> // HopCast: startup-failure message
 #ifdef _WIN32
 #include "windows/PLSSoftStatistic.h"
 #include <VersionHelpers.h>
@@ -1014,7 +1015,23 @@ int PLSApp::runProgram(PLSApp &program, int argc, char *argv[], ScopeProfiler &p
 		pls_set_obs_exiting(true);
 
 		return static_cast<int>(code);
+	} catch (const char *error) {
+		/* HopCast: OBS throws plain strings ("Failed to load basic.ini", "Failed to
+		 * initialize video: ..."). The catch-all below dropped them, so a failed start
+		 * left no reason anywhere. Print it straight to stderr (the async log is lost
+		 * when the process terminates itself) and to the log, then exit as before. */
+		fprintf(stderr, "HopCast: startup failed: %s\n", error ? error : "(no reason)");
+		fflush(stderr);
+		auto code = init_exception_code::failed_unknow_exception;
+		PLS_ERROR(MAINFRAME_MODULE, "failed to initialize: %s", error ? error : "(no reason)");
+		pls_set_app_exiting(true);
+		pls_set_obs_exiting(true);
+		doLogBlacklistSoftware("PrismInitFailed");
+		pls_process_terminate(static_cast<int>(code));
+		return static_cast<int>(code);
 	} catch (...) {
+		fprintf(stderr, "HopCast: startup failed with an unknown exception\n");
+		fflush(stderr);
 		auto code = init_exception_code::failed_unknow_exception;
 		QString codeStr = getExceptionAlertString(code);
 		PLS_LOGEX(PLS_LOG_ERROR, MAINFRAME_MODULE, {{"launchFailed", QString("0x%1%2").arg(static_cast<int>(code), 0, 16).arg(pls_get_init_exit_code_str(code)).toUtf8().constData()}},
