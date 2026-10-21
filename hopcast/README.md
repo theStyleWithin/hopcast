@@ -131,7 +131,7 @@ Everything that holds a stream key or a platform token is encrypted on disk by H
 
 | File | Contents |
 |---|---|
-| `hopcast-rtmp-channels.enc` — **in the folder you choose** | your Custom RTMP channels (server + stream key) |
+| `hopcast-rtmp-channels.enc` — in HopCast's own folder (`~/.config/PRISMLiveStudio/user`; earlier builds let you pick a folder, and a picked one is moved here automatically) | your Custom RTMP channels (server + stream key) |
 | `~/.config/PRISMLiveStudio/Cache/channel_cache.dat.enc` | PRISM's channel cache (all channels, keys, tokens) |
 
 - **You choose where the stream-key file lives.** The first time you save a stream key, HopCast

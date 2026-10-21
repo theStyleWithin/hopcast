@@ -19,7 +19,7 @@ PRISM Live Studio or the OBS Project**.
 - **No account.** It opens straight into the studio.
 - **No company servers.** HopCast never contacts NAVER/PRISM services, and has no telemetry or update pings.
 - **No platform favoritism.** It streams to any RTMP, SRT or RIST server you enter, with no built-in buttons for particular platforms.
-- **Your stream keys stay yours.** They are stored encrypted (AES-256-GCM), in a folder you choose.
+- **Your stream keys stay yours.** They are stored encrypted (AES-256-GCM), inside HopCast's own storage on your computer, with no account and no folder to manage.
 - **Linux first.** Works on X11 and Wayland, and ships as a single AppImage.
 
 See **[SPECS.md](SPECS.md)** for the full description of what HopCast is and isn't.

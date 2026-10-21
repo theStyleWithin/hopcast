@@ -46,7 +46,7 @@ than OBS's, and makes four changes:
 | Recording | MKV/MP4 to a folder of your choice; works before, during and after streaming |
 | Sources | Video capture (V4L2), screen capture (PipeWire/X11), audio (PulseAudio/PipeWire/ALSA), images, media files, text, color |
 | Encoders | x264 (software). NVENC and VAAPI need real-desktop testing |
-| Stream-key storage | One encrypted file in a folder you pick; managed under Tools › Stream Key Storage… |
+| Stream-key storage | Kept inside HopCast's own storage, encrypted; no prompt and no folder to manage |
 | Display servers | X11 and Wayland (native Qt) |
 
 ### Removed from PRISM
@@ -80,7 +80,7 @@ HopCast app (Qt 6)            PRISM's studio UI, Linux-ported, with NAVER servic
 
 | What | Where | Protection |
 |---|---|---|
-| Stream keys and channels | `hopcast-rtmp-channels.enc` in your chosen folder | AES-256-GCM; key file is owner-only (0600) |
+| Stream keys and channels | `hopcast-rtmp-channels.enc` in HopCast's own folder (`~/.config/PRISMLiveStudio/user`) | AES-256-GCM; key file is owner-only (0600) |
 | Encryption key | `~/.local/share/hopcast/secure-store.key` | owner-only; kept apart from the data |
 | Crash-recovery state while live | `streaming_state.json.enc` | AES-256-GCM |
 | Settings, scenes, logs | `~/.config/PRISMLiveStudio/` (to be renamed) | stream keys are masked in logs |

@@ -90,7 +90,7 @@
          </size>
         </property>
         <property name="text">
-         <string>PRISM Live Studio</string>
+         <string>HopCast</string>
         </property>
         <property name="checkable">
          <bool>true</bool>

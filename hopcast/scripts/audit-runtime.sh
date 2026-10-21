@@ -181,8 +181,7 @@ click 880 273; xdotool type --delay 20 "$RTMP_URL"
 click 880 323; xdotool type --delay 20 "$RTMP_KEY"
 click 880 445; xdotool type --delay 20 "Audit Server"
 w 1; shot 02-channel-form
-click 942 763; w 3; shot 03-storage-prompt
-xdotool key Return; w 3; xdotool key Escape; w 3   # "Choose Folder…" then cancel = HopCast's folder
+click 942 763; w 6; shot 03-channel-saved   # no folder prompt: keys live in HopCast's own storage
 shot 04-channel-added
 ls "$XDG_CONFIG_HOME"/PRISMLiveStudio/user/hopcast-rtmp-channels.enc >/dev/null 2>&1 \
   && pass "stream key saved encrypted" || fail "encrypted stream-key file not written"
