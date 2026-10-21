@@ -36,9 +36,13 @@ PLSSceneListView::PLSSceneListView(QWidget *parent) : QFrame(parent)
 	ui->setupUi(this);
 	pls_add_css(this, {"PLSScene"});
 
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 #ifdef Q_OS_MACOS
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	ui->scrollArea->VerticalScrollBar()->setAttribute(Qt::WA_NativeWindow);
+#endif
 	pls_scroll_area_clips_to_bounds(this);
 #endif // Q_OS_MACOS
 

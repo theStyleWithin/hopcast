@@ -2950,7 +2950,9 @@ void PLSBasic::initConnect()
 	ui->chatDock->titleWidget()->setAdvButtonActions({actionSeperateChat});
 	ui->chatDock->titleWidget()->setHasCloseButton(true);
 	ui->chatDock->titleWidget()->setCloseButtonVisible(true);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	ui->chatDock->setAttribute(Qt::WA_NativeWindow);
+#endif
 	connect(ui->chatDock, &QDockWidget::topLevelChanged, this, &PLSBasic::OnChatDockTopLevelChanged);
 
 	actionSeperateBgm = pls_new<QAction>(ui->bgmDock);

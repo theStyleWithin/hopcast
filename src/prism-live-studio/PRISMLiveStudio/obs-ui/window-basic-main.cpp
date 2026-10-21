@@ -419,7 +419,9 @@ OBSBasic::OBSBasic(PLSMainView *mainView_)
 	PLS_PERFORMANCE_FUNCTION();
 
 	setWindowFlags(Qt::SubWindow);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 
 #ifdef TWITCH_ENABLED
 	RegisterTwitchAuth();

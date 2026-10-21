@@ -21,9 +21,13 @@ on:
         type: boolean
         default: false
       release_tag:
-        description: "Publish the AppImages as a pre-release with this tag (e.g. v0.1.0-alpha1); empty = no release"
+        description: "Publish the AppImages as a release with this tag (e.g. v0.1.1); empty = no release"
         type: string
         default: ""
+      prerelease:
+        description: "Mark the release as a pre-release"
+        type: boolean
+        default: false
 
 permissions:
   contents: write   # ci-report-failure.sh pushes logs to the dev-logs branch
@@ -223,7 +227,7 @@ jobs:
           mv build/aur/SRCINFO build/aur/.SRCINFO
           tar -C build/aur -czf "build/appimage/hopcast-bin-aur-$v.tar.gz" PKGBUILD .SRCINFO
           cat > notes.md <<N
-          **Early test build - for testing only. Expect bugs.**
+          **Early build - install and use at your own risk. Expect bugs.**
 
           - \`HopCast-release-*.AppImage\` - the normal build.
           - \`HopCast-debug-*.AppImage\` - writes a log and crash report to \`~/.local/share/hopcast/crash-logs/\`. Logs mask stream keys, but don't type anything sensitive into the debug build and review a log before sharing it.
@@ -232,8 +236,8 @@ jobs:
 
           Run: \`chmod +x HopCast-*.AppImage && ./HopCast-release-*.AppImage\`. Needs glibc 2.39+ (Ubuntu 24.04, Fedora 40, Arch/CachyOS). Not affiliated with NAVER Corp. or the OBS Project.
           N
-          gh release create "$TAG" --prerelease --target "$GITHUB_SHA" \
-            --title "HopCast $TAG (test build)" --notes-file notes.md \
+          gh release create "$TAG" ${{ inputs.prerelease && '--prerelease' || '' }} --target "$GITHUB_SHA" \
+            --title "HopCast $TAG" --notes-file notes.md \
             build/appimage/*.AppImage "build/appimage/hopcast-source-$v.tar.gz" "build/appimage/hopcast-bin-aur-$v.tar.gz"
 
       - name: Report failure details

@@ -45,7 +45,9 @@ PLSBasicStatusPanel::PLSBasicStatusPanel(QWidget *parent) : QDialog(parent, Qt::
 	ui = pls_new<Ui::PLSBasicStatusPanel>();
 	ui->setupUi(this);
 	pls_set_css(this, {"PLSBasicStatusPanel"});
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 
 #ifndef _WIN32
 	ui->gridLayout->removeWidget(ui->gpuUsageLabel);

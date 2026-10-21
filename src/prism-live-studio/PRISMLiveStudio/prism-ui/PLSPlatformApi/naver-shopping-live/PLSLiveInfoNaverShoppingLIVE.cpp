@@ -1318,7 +1318,9 @@ void PLSLiveInfoNaverShoppingLIVE::createToastWidget()
 		m_pLabelToast = pls_new<QLabel>(this, Qt::SubWindow | Qt::FramelessWindowHint);
 #if defined(Q_OS_MACOS)
 		m_pLabelToast->setAttribute(Qt::WA_DontCreateNativeAncestors);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 		m_pLabelToast->setAttribute(Qt::WA_NativeWindow);
+#endif
 #endif
 		m_pLabelToast->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 		m_pLabelToast->setObjectName("labelToast");

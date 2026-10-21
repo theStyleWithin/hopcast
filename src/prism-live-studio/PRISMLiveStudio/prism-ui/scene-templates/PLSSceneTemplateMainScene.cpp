@@ -126,7 +126,9 @@ void PLSSceneTemplateMainScene::showLoading(QWidget *parent, const char *loading
 
 #if defined(Q_OS_MACOS)
 	m_pWidgetLoadingBG->setAttribute(Qt::WA_DontCreateNativeAncestors);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	m_pWidgetLoadingBG->setAttribute(Qt::WA_NativeWindow);
+#endif
 #endif
 
 	m_pWidgetLoadingBG->setGeometry(0, getMarginTopAndBottom(), width(), height() - getMarginTopAndBottom());
@@ -319,7 +321,9 @@ void PLSSceneTemplateMainScene::showRetry()
 		m_pWidgetRetryContainer = pls_new<QWidget>(this);
 #if defined(Q_OS_MACOS)
 		m_pWidgetRetryContainer->setAttribute(Qt::WA_DontCreateNativeAncestors);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 		m_pWidgetRetryContainer->setAttribute(Qt::WA_NativeWindow);
+#endif
 #endif
 		m_pWidgetRetryContainer->setGeometry(0, getMarginTopAndBottom(), width(), height() - getMarginTopAndBottom());
 		m_pWidgetRetryContainer->setStyleSheet("background-color: #272727;");

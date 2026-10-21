@@ -710,7 +710,9 @@ void PLSChatDialog::createToastWidget()
 {
 	if (m_pTestFrame.isNull()) {
 		auto frame = pls_new<QFrame>(this);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 		frame->setAttribute(Qt::WA_NativeWindow);
+#endif
 		frame->setObjectName("CheckInvalidTipFrame");
 		auto lay = pls_new<QHBoxLayout>(frame);
 

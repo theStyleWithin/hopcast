@@ -38,7 +38,9 @@ PLSDialogView::PLSDialogView(QWidget *parent, Qt::WindowFlags f, CreateWinId cre
 	ui->setupUi(this);
 #if defined(Q_OS_WIN)
 	ui->titleBar->installEventFilter(this);
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	ui->content->setAttribute(Qt::WA_NativeWindow);
+#endif
 #endif
 	closeEventCallback = [this](QCloseEvent *e) {
 		callBaseCloseEvent(e);

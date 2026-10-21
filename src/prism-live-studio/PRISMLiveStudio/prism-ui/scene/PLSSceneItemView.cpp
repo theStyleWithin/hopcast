@@ -892,7 +892,9 @@ PLSSceneItemView::PLSSceneItemView(const QString &name_, OBSScene scene_, Displa
 	ui = pls_new<Ui::PLSSceneItemView>();
 	ui->setupUi(this);
 
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 
 	this->setAcceptDrops(true);
 	setProperty("showHandCursor", true);

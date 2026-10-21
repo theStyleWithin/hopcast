@@ -148,7 +148,9 @@ void PLSBasicStatusBarFrameDropState::paintEvent(QPaintEvent *)
 
 PLSBasicStatusBarButtonFrame::PLSBasicStatusBarButtonFrame(QWidget *parent, Qt::WindowFlags f) : QFrame(parent, f)
 {
+#if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
+#endif
 	setProperty("ui-step.customButton", true);
 	setProperty("showHandCursor", true);
 	setMouseTracking(true);
