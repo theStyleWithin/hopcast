@@ -162,6 +162,7 @@ jobs:
         if: inputs.package || inputs.release_tag != ''
         run: |
           sudo apt-get install -y --no-install-recommends imagemagick libfuse2t64 xdotool x11-utils xcompmgr
+          set -o pipefail
           export QMAKE="$QT_ROOT_DIR/bin/qmake"
           for v in release debug; do bash hopcast/scripts/package-appimage.sh build/stage build/appimage $v 2>&1 | tee build/package-$v.log; done
 
@@ -169,15 +170,31 @@ jobs:
         if: steps.pkg.outcome == 'success'
         run: |
           cd build/appimage
+          failed=0
           for v in release debug; do
             f=$(ls HopCast-$v-*.AppImage); chmod +x "$f"
             rm -rf "x-$v" && mkdir "x-$v" && (cd "x-$v" && APPIMAGE_EXTRACT_AND_RUN=1 ../"$f" --appimage-extract >/dev/null)
             HOPCAST_NO_GDB=1 HOPCAST_LAUNCH_BIN="$PWD/x-$v/squashfs-root/AppRun" \
-              bash ../../hopcast/scripts/launch-test-app.sh "$PWD/x-$v/squashfs-root/usr" "$PWD/smoke-$v" 25 || echo "::error title=AppImage $v::did not stay running"
+              bash ../../hopcast/scripts/launch-test-app.sh "$PWD/x-$v/squashfs-root/usr" "$PWD/smoke-$v" 25 \
+              || { echo "::error title=AppImage $v::did not stay running or contacted NAVER"; failed=1; }
           done
-          cd ../..
-          for v in release debug; do test -s build/appimage/smoke-$v/screen.png || exit 1; done
-          ls -la build/appimage/*.AppImage
+          ls smoke-debug/data/hopcast/crash-logs/session-*.log >/dev/null 2>&1 \
+            || { echo "::error title=Debug AppImage::no session log written"; failed=1; }
+
+          # The debug build must leave a crash report when the app crashes.
+          rm -rf crash-test && mkdir -p crash-test/config crash-test/data
+          Xvfb :98 -screen 0 1600x900x24 >/dev/null 2>&1 & xv=$!; sleep 2
+          DISPLAY=:98 LIBGL_ALWAYS_SOFTWARE=1 QT_QPA_PLATFORM=xcb \
+            XDG_CONFIG_HOME="$PWD/crash-test/config" XDG_DATA_HOME="$PWD/crash-test/data" \
+            x-debug/squashfs-root/AppRun >/dev/null 2>&1 & app=$!
+          sleep 20; kill -SEGV "$app" 2>/dev/null; wait "$app" || true; kill "$xv" 2>/dev/null
+          cp crash-test/data/hopcast/crash-logs/session-*.log crash-test/ 2>/dev/null || true
+          grep -q "=== HOPCAST CRASH ===" crash-test/data/hopcast/crash-logs/session-*.log \
+            || { echo "::error title=Debug AppImage::crash produced no crash report"; failed=1; }
+
+          for v in release debug; do test -s smoke-$v/screen.png || failed=1; done
+          ls -la *.AppImage
+          exit $failed
 
       - uses: actions/upload-artifact@v4
         if: steps.pkg.outcome != 'skipped'
@@ -187,27 +204,37 @@ jobs:
             build/appimage/*.AppImage
             build/appimage/smoke-*/*.png
             build/appimage/smoke-*/stdout.txt
+            build/appimage/crash-test/*.log
             build/package-*.log
 
       - name: Publish pre-release
         if: inputs.release_tag != '' && steps.pkg.outcome == 'success'
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.release_tag }}
         run: |
           v=$(tr -d '[:space:]' < hopcast/VERSION)
           tar --exclude=./build --exclude=./.git -czf "build/appimage/hopcast-source-$v.tar.gz" .
+          sum=$(sha256sum "build/appimage/HopCast-release-$v-x86_64.AppImage" | cut -d' ' -f1)
+          mkdir -p build/aur
+          for f in PKGBUILD SRCINFO; do
+            sed -e "s|@PKGVER@|$v|g" -e "s|@TAG@|$TAG|g" -e "s|@SHA256@|$sum|g" hopcast/packaging/aur/$f.in > build/aur/$f
+          done
+          mv build/aur/SRCINFO build/aur/.SRCINFO
+          tar -C build/aur -czf "build/appimage/hopcast-bin-aur-$v.tar.gz" PKGBUILD .SRCINFO
           cat > notes.md <<N
           **Early test build - for testing only. Expect bugs.**
 
           - \`HopCast-release-*.AppImage\` - the normal build.
           - \`HopCast-debug-*.AppImage\` - writes a log and crash report to \`~/.local/share/hopcast/crash-logs/\`. Logs mask stream keys, but don't type anything sensitive into the debug build and review a log before sharing it.
           - \`hopcast-source-*.tar.gz\` - complete corresponding source (GPL-2.0).
+          - \`hopcast-bin-aur-*.tar.gz\` - PKGBUILD and .SRCINFO for the AUR package \`hopcast-bin\`.
 
           Run: \`chmod +x HopCast-*.AppImage && ./HopCast-release-*.AppImage\`. Needs glibc 2.39+ (Ubuntu 24.04, Fedora 40, Arch/CachyOS). Not affiliated with NAVER Corp. or the OBS Project.
           N
-          gh release create "${{ inputs.release_tag }}" --prerelease --target "$GITHUB_SHA" \
-            --title "HopCast ${{ inputs.release_tag }} (test build)" --notes-file notes.md \
-            build/appimage/*.AppImage "build/appimage/hopcast-source-$v.tar.gz"
+          gh release create "$TAG" --prerelease --target "$GITHUB_SHA" \
+            --title "HopCast $TAG (test build)" --notes-file notes.md \
+            build/appimage/*.AppImage "build/appimage/hopcast-source-$v.tar.gz" "build/appimage/hopcast-bin-aur-$v.tar.gz"
 
       - name: Report failure details
         if: failure()

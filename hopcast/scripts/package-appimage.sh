@@ -10,7 +10,7 @@ TOOLS="$OUT/tools"; mkdir -p "$TOOLS"
 export APPIMAGE_EXTRACT_AND_RUN=1 ARCH=x86_64
 
 get() { [[ -x "$TOOLS/$1" ]] || { curl -fsSL -o "$TOOLS/$1" "$2" && chmod +x "$TOOLS/$1"; }; }
-get linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/2.0.0-alpha-1-20241106/linuxdeploy-x86_64.AppImage
+get linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
 get linuxdeploy-plugin-qt https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
 
 APPDIR="$OUT/HopCast-$VARIANT.AppDir"; rm -rf "$APPDIR"; mkdir -p "$APPDIR/usr"
