@@ -1,5 +1,6 @@
 // HopCast: stream to several servers at once, without a relay. GPL-2.0-or-later.
 #include "HopCastMultiStream.h"
+#include "HopCastNetLog.h"
 
 #include <obs.hpp>
 #include <util/base.h>
@@ -20,6 +21,7 @@ using Notify = std::function<void(const QString &)>;
 
 struct Extra {
 	QString name;
+	qint64 startedMs = 0; // when it was started, to pick out the connection lines that belong to its failure
 	Notify notify;
 	OBSService service;
 	OBSOutput output;
@@ -93,8 +95,16 @@ void finish(Extra *raw, long long code, const QString &detail)
 		st.running.erase(it);
 	}
 	blog(LOG_INFO, "HopCast: extra destination '%s' stopped (code %lld)", qUtf8Printable(owned->name), code);
-	if (code != OBS_OUTPUT_SUCCESS && owned->notify)
-		owned->notify(QStringLiteral("%1 stopped: %2.").arg(owned->name, describe(code, detail)));
+	if (code != OBS_OUTPUT_SUCCESS && owned->notify) {
+		QString text = QStringLiteral("%1 stopped: %2.").arg(owned->name, describe(code, detail));
+		// What the connection did, so a refused key can be told from a refused address (keys are hidden).
+		QStringList seen = hopcast::recentConnectionLogSince(owned->startedMs, 3);
+		for (QString &line : seen)
+			line = line.mid(line.indexOf(QLatin1Char(' '), 24) + 1).left(120);
+		if (!seen.isEmpty())
+			text += QStringLiteral(" What HopCast saw: ") + seen.join(QStringLiteral(" | "));
+		owned->notify(text);
+	}
 }
 
 void onStop(void *data, calldata_t *params)
@@ -184,6 +194,7 @@ void startExtraDestinations(bool vertical, obs_output_t *mainOutput, int maxRetr
 
 		auto extra = std::make_unique<Extra>();
 		extra->name = d.name;
+		extra->startedMs = hopcast::nowMs();
 		extra->notify = notify;
 		extra->service = service.Get();
 		extra->output = output.Get();

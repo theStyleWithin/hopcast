@@ -218,7 +218,10 @@ void PLSPlatformPrism::onPrepareLive(bool value)
 					continue;
 				}
 				const QVariantMap &data = channel->getInitData();
-				out.push_back({channel->getChannelName(), QString::fromStdString(channel->getStreamServer()), QString::fromStdString(channel->getStreamKey()),
+				QString label = data.value(ChannelData::g_nickName).toString(); // the name the user gave it ("Odysee"), not "Custom RTMP"
+				if (label.isEmpty())
+					label = channel->getChannelName();
+				out.push_back({label, QString::fromStdString(channel->getStreamServer()), QString::fromStdString(channel->getStreamKey()),
 					       data.value(ChannelData::g_rtmpUserID).toString(), data.value(ChannelData::g_password).toString()});
 			}
 		};

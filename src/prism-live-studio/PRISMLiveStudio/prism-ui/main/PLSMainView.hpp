@@ -150,6 +150,7 @@ public:
 	Q_INVOKABLE void toastMessage(pls_toast_info_type type, const QString &message, const QString &url, const QString &replaceStr, int autoClose);
 	int getToastMessageCount() const;
 	Q_INVOKABLE void toastClear();
+	void placeToast(); // HopCast: where the notice box goes (own window on Linux)
 
 	void setUserButtonIcon(const QIcon &icon);
 	void initToastMsgView(bool isInitShow = true);
