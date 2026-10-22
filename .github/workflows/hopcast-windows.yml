@@ -118,6 +118,8 @@ jobs:
             echo "app output:"; for d in build/app/output/*; do [ -d "$d" ] && cp -r "$d"/. "$S/" && echo "copied $d"; done
             echo "app exe:"; EXE=$(find build/app -name obs64.exe -not -path '*CMakeFiles*' | head -1); echo "$EXE"; [ -n "$EXE" ] && cp "$EXE" "$S/bin/64bit/obs64.exe"
             echo "PRISM libraries:"; find build/app -name '*.dll' -not -path '*CMakeFiles*' -not -path '*/output/*' | while read f; do cp -n "$f" "$S/bin/64bit/" && echo "$f"; done
+            echo "leave out PRISM's platform-tied source plugins (viewer count, chat, sponsor, stickers, Lens), as on Linux:"
+            find "$S" \( -iname 'prism-viewer-count-source*' -o -iname 'prism-chat-source*' -o -iname 'prism-chatv2-source*' -o -iname 'prism-chzzk-sponsor-source*' -o -iname 'prism-sticker-source*' -o -iname 'prism-lens-v2*' \) -print -exec rm -rf {} + 2>/dev/null
             echo "drop NAVER's prebuilt OpenSSL 1.1 / mosquitto:"; rm -fv "$S"/bin/64bit/mosquitto.dll "$S"/bin/64bit/mosquittopp.dll "$S"/bin/64bit/libssl-1_1-x64.dll "$S"/bin/64bit/libcrypto-1_1-x64.dll
             echo "dependency libraries:"; cp -n src/obs-studio/.deps/obs-deps-*-x64/bin/*.dll "$S/bin/64bit/" 2>&1 | tail -2; cp -n "$VC"/bin/*.dll "$S/bin/64bit/" 2>&1 | tail -2
             echo "Qt:"; "$Q/bin/windeployqt.exe" --release --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw "$S/bin/64bit/obs64.exe" 2>&1 | tail -15

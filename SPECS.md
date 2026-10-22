@@ -34,6 +34,7 @@ than OBS's, and makes four changes:
 - Accounts, cloud sync or anything that needs a HopCast or NAVER server.
 - Built-in platform integrations (sign-in with Twitch/YouTube/Facebook, platform chat, viewer counts).
 - Quick links, recommendations, community or social invitations, or anything else that steers people toward a platform.
+- Viewer counts, follower numbers, rankings or any other metric that compares how a stream is doing.
 - Windows or macOS builds. Use PRISM Live Studio or OBS Studio there.
 - Re-adding PRISM's online extras (PRISM Lens, sticker and template stores, notices, update checks).
 
