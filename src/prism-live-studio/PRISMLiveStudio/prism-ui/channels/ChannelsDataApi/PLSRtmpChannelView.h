@@ -10,6 +10,7 @@ class RtmpChannelView;
 }
 
 class PLSLoginInfo;
+class QLabel;
 
 class PLSRtmpChannelView : public PLSDialogView {
 	Q_OBJECT
@@ -68,6 +69,16 @@ private:
 
 	void handleContextMenu(QContextMenuEvent *event);
 	void handlePasteOperation();
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: an optional picture for the channel (PNG, JPG, WebP or GIF, animated too). */
+	void initIconRow();
+	void refreshIconPreview();
+	void applyIcon(QVariantMap &data) const;
+	QLabel *m_iconPreview = nullptr;
+	mutable QString m_iconCurrent;       // the copy kept in HopCast's folder (empty = default circle)
+	mutable QString m_iconChosenSource;  // picked in this dialog, copied in when saving
+	mutable bool m_iconCleared = false;
+#endif
 	//private:
 	Ui::RtmpChannelView *ui;
 	QVariantMap mOldData;

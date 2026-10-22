@@ -343,6 +343,11 @@ QPixmap PLSChannelDataAPI::updateImage(const QString &srcPath, const QSize &size
 	if (srcPath.contains(tmpPath, Qt::CaseInsensitive) || srcPath.contains(imagePath, Qt::CaseInsensitive)) {
 		bRemove = false;
 	}
+#ifdef HOPCAST_NO_NAVER
+	if (srcPath.contains(QStringLiteral("/channel-icons/"))) {
+		bRemove = false; // HopCast: a picture the user chose for a channel is kept
+	}
+#endif
 
 	auto ite = mImagesCache.find(fInfo.fileName());
 	if (ite != mImagesCache.end()) {

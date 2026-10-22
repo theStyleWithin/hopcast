@@ -1,5 +1,15 @@
 #include "PLSRtmpChannelView.h"
 #include <QClipboard>
+#include "PLSAlertView.h"
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QHBoxLayout>
+#include <QImageReader>
+#include <QLabel>
+#include <QPainter>
+#include <QPainterPath>
+#include <QPushButton>
+#include <QUuid>
 #include <QComboBox>
 #include <QListView>
 #include <QRegularExpression>
@@ -55,6 +65,9 @@ PLSRtmpChannelView::PLSRtmpChannelView(const QVariantMap &oldData, QWidget *pare
 	pls_uistep_v2_custom(ui->PasswordVisible, PLS_UI_STEPS_V2_SIGNAL_TOGGLED, PLS_UI_STEPS_V2_ACTION_CLICK, QStringLiteral("button"),
 			     [PasswordVisible = ui->PasswordVisible]() { return !PasswordVisible->isChecked() ? QStringLiteral("Show Password") : QStringLiteral("Hide Password"); });
 	PLS_PERFORMANCE_END(pls_uistep);
+#ifdef HOPCAST_NO_NAVER
+	initIconRow();
+#endif
 }
 
 PLSRtmpChannelView::~PLSRtmpChannelView()
@@ -70,7 +83,11 @@ void PLSRtmpChannelView::initUi()
 	PLS_PERFORMANCE_END(setupUi);
 	ui->MenuFrame->hide();
 	this->setHasCloseButton(false);
+#ifdef HOPCAST_NO_NAVER
+	setFixedSize(720, 770); // room for the picture row
+#else
 	setFixedSize(720, 710);
+#endif
 	setResizeEnabled(false);
 	PLS_PERFORMANCE_START(createResolutionButtonsFrame);
 #ifndef HOPCAST_NO_NAVER // HopCast: no PRISM output setting guide
@@ -127,6 +144,9 @@ QVariantMap PLSRtmpChannelView::SaveResult() const
 		tmpData[g_rtmpUserID] = userID;
 		QString password = ui->UserPasswordEdit->text();
 		tmpData[g_password] = password;
+#ifdef HOPCAST_NO_NAVER
+		applyIcon(tmpData);
+#endif
 		return tmpData;
 	}
 	auto tmpData = mOldData;
@@ -157,6 +177,9 @@ QVariantMap PLSRtmpChannelView::SaveResult() const
 		}
 	}
 
+#ifdef HOPCAST_NO_NAVER
+	applyIcon(tmpData);
+#endif
 	return tmpData;
 }
 
@@ -194,6 +217,9 @@ void PLSRtmpChannelView::loadFromData(const QVariantMap &oldData)
 	PLS_PERFORMANCE_FUNCTION();
 	auto uuid = getInfo(oldData, g_channelUUID);
 	ui->CategoryLabel->setText(tr("Channels.RTMadd.Catogry"))->setUUID(uuid);
+#ifdef HOPCAST_NO_NAVER
+	m_iconCurrent = getInfo(oldData, g_userIconCachePath, QString());
+#endif
 	isEdit = getInfo(oldData, g_isUpdated, false);
 	this->setWindowTitle(isEdit ? CHANNELS_TR(RTMPEdit) : CHANNELS_TR(RTMPadd.titlebar));
 	if (!isEdit) {
@@ -690,3 +716,126 @@ void PLSRtmpChannelView::setServerUI(const QString &channelName)
 		ui->ServerComboBox->hide();
 	}
 }
+
+#ifdef HOPCAST_NO_NAVER
+namespace {
+constexpr qint64 kMaxIconBytes = 20 * 1024 * 1024; // keeps animated pictures from being huge
+
+QString iconDir()
+{
+	return pls_get_user_path(QStringLiteral("PRISMLiveStudio/user/channel-icons/"));
+}
+
+// Only ever delete a picture that HopCast itself copied in.
+void removeOwnedIcon(const QString &path)
+{
+	if (!path.isEmpty() && path.contains(QStringLiteral("/channel-icons/")))
+		QFile::remove(path);
+}
+} // namespace
+
+void PLSRtmpChannelView::initIconRow()
+{
+	auto *label = new QLabel(QStringLiteral("Icon"), this);
+	label->setObjectName(QStringLiteral("NameLabel")); // same look as the other labels in this form
+	label->setFont(ui->NameLabel->font());
+
+	auto *row = new QWidget(this);
+	auto *layout = new QHBoxLayout(row);
+	layout->setContentsMargins(0, 0, 0, 0);
+	layout->setSpacing(10);
+
+	m_iconPreview = new QLabel(row);
+	m_iconPreview->setFixedSize(44, 44);
+	m_iconPreview->setAlignment(Qt::AlignCenter);
+	layout->addWidget(m_iconPreview);
+
+	auto *choose = new QPushButton(QStringLiteral("Choose a picture..."), row);
+	choose->setObjectName(QStringLiteral("CancelBtn")); // same look as the grey buttons here
+	auto *clear = new QPushButton(QStringLiteral("Use the default"), row);
+	clear->setObjectName(QStringLiteral("CancelBtn"));
+	layout->addWidget(choose);
+	layout->addWidget(clear);
+	layout->addStretch(1);
+
+	ui->gridLayout->addWidget(label, 6, 0);
+	ui->gridLayout->addWidget(row, 6, 2);
+
+	connect(choose, &QPushButton::clicked, this, [this]() {
+		const QString file = QFileDialog::getOpenFileName(this, QStringLiteral("Choose a picture for this channel"), QDir::homePath(),
+								  QStringLiteral("Pictures (*.png *.jpg *.jpeg *.gif *.webp *.bmp);;All files (*)"));
+		if (file.isEmpty())
+			return;
+		QImageReader reader(file);
+		if (!reader.canRead() || QFileInfo(file).size() > kMaxIconBytes) {
+			PLSAlertView::warning(this, QStringLiteral("HopCast"),
+					      QStringLiteral("That file can't be used as a picture (it must be a PNG, JPG, WebP or GIF, 20 MB or smaller)."));
+			return;
+		}
+		m_iconChosenSource = file;
+		m_iconCleared = false;
+		refreshIconPreview();
+		updateSaveBtnAvailable();
+	});
+	connect(clear, &QPushButton::clicked, this, [this]() {
+		m_iconChosenSource.clear();
+		m_iconCleared = true;
+		refreshIconPreview();
+		updateSaveBtnAvailable();
+	});
+	refreshIconPreview();
+}
+
+void PLSRtmpChannelView::refreshIconPreview()
+{
+	if (!m_iconPreview)
+		return;
+	QString path = m_iconCleared ? QString() : (!m_iconChosenSource.isEmpty() ? m_iconChosenSource : m_iconCurrent);
+	QPixmap shown;
+	if (!path.isEmpty() && QFileInfo::exists(path)) {
+		QPixmap pix(path); // a still picture, or the first frame of an animated one
+		if (!pix.isNull()) {
+			const int side = 44 * devicePixelRatio();
+			pix = pix.scaled(side, side, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+			shown = QPixmap(side, side);
+			shown.fill(Qt::transparent);
+			QPainter painter(&shown);
+			painter.setRenderHint(QPainter::Antialiasing);
+			QPainterPath circle;
+			circle.addEllipse(0, 0, side, side);
+			painter.setClipPath(circle);
+			painter.drawPixmap((side - pix.width()) / 2, (side - pix.height()) / 2, pix);
+			shown.setDevicePixelRatio(devicePixelRatio());
+		}
+	}
+	if (shown.isNull()) {
+		m_iconPreview->setPixmap(QPixmap());
+		m_iconPreview->setText(QStringLiteral("R")); // what the default circle shows
+	} else {
+		m_iconPreview->setText(QString());
+		m_iconPreview->setPixmap(shown);
+	}
+}
+
+// Copies a newly chosen picture into HopCast's own folder (once) and records which one the channel uses.
+void PLSRtmpChannelView::applyIcon(QVariantMap &data) const
+{
+	if (!m_iconChosenSource.isEmpty()) {
+		QDir().mkpath(iconDir());
+		const QString dest = iconDir() + QUuid::createUuid().toString(QUuid::WithoutBraces) + QLatin1Char('.') + QFileInfo(m_iconChosenSource).suffix().toLower();
+		if (QFile::copy(m_iconChosenSource, dest)) {
+			removeOwnedIcon(m_iconCurrent);
+			m_iconCurrent = dest;
+			m_iconChosenSource.clear();
+		}
+	} else if (m_iconCleared) {
+		removeOwnedIcon(m_iconCurrent);
+		m_iconCurrent.clear();
+		m_iconCleared = false;
+	}
+	if (m_iconCurrent.isEmpty())
+		data.remove(g_userIconCachePath);
+	else
+		data[g_userIconCachePath] = m_iconCurrent;
+}
+#endif

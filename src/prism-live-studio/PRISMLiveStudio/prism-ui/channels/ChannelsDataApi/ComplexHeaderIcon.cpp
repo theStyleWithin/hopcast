@@ -1,4 +1,5 @@
 #include "ComplexHeaderIcon.h"
+#include <QFileInfo>
 #include <QImageReader>
 #include <QPaintEvent>
 #include <QPainterPath>
@@ -96,7 +97,15 @@ void ComplexHeaderIcon::delayDraw()
 void ComplexHeaderIcon::updateBixPix(PaintObject &painterObj)
 {
 	auto newSize = painterObj.mPixSize * 4;
-	painterObj.mBigPix = PLSCHANNELS_API->updateImage(painterObj.mPixPath, newSize);
+	QImage frame;
+	{
+		QMutexLocker lock(&m_frameMutex);
+		frame = m_frame;
+	}
+	if (!frame.isNull())
+		painterObj.mBigPix = QPixmap::fromImage(frame); // the current frame of an animated picture
+	else
+		painterObj.mBigPix = PLSCHANNELS_API->updateImage(painterObj.mPixPath, newSize);
 	if (painterObj.mBigPix.isNull()) {
 		loadPixmap(painterObj.mBigPix, painterObj.mDefaultIconPath, newSize);
 	}
@@ -112,8 +121,44 @@ void ComplexHeaderIcon::setMainPixmap(const QString &pix, const QSize &pixSize, 
 	mPaintObj.mPixPath = pix;
 	mPaintObj.mPixSize = pixSize;
 	mPaintObj.mPixSharp = sharp;
+#ifdef HOPCAST_NO_NAVER
+	resetAnimation(pix);
+#endif
 
 	mDelayTimer->start();
+}
+
+void ComplexHeaderIcon::resetAnimation(const QString &path)
+{
+	if (m_movie) {
+		m_movie->stop();
+		delete m_movie;
+		m_movie = nullptr;
+	}
+	{
+		QMutexLocker lock(&m_frameMutex);
+		m_frame = QImage();
+	}
+	if (path.isEmpty() || !QFileInfo::exists(path))
+		return;
+	QImageReader reader(path);
+	if (!reader.supportsAnimation() || reader.imageCount() <= 1)
+		return; // a still picture goes the normal way
+	m_movie = new QMovie(path, QByteArray(), this);
+	if (!m_movie->isValid()) {
+		delete m_movie;
+		m_movie = nullptr;
+		return;
+	}
+	connect(m_movie, &QMovie::frameChanged, this, [this]() {
+		{
+			QMutexLocker lock(&m_frameMutex);
+			m_frame = m_movie->currentImage();
+		}
+		if (mDelayTimer && !mDelayTimer->isActive())
+			mDelayTimer->start(); // at most about 10 redraws a second
+	});
+	m_movie->start();
 }
 
 void ComplexHeaderIcon::setDefaultIconPath(const QString &pix)

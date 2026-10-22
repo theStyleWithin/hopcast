@@ -2,6 +2,9 @@
 #define COMPLEXHEADERICON_H
 
 #include <QLabel>
+#include <QImage>
+#include <QMovie>
+#include <QMutex>
 
 /* this is a complex UI for user profile header */
 class ComplexHeaderIcon : public QLabel {
@@ -58,11 +61,15 @@ protected:
 private:
 	void delayDraw();
 	void updateBixPix(PaintObject &painterObj);
+	void resetAnimation(const QString &path); // HopCast: GIF / animated WebP pictures
 	void updateSmallPix(PaintObject &painterObj);
 
 	//private:
 	PaintObject mPaintObj;
 	QTimer *mDelayTimer{nullptr};
+	QMovie *m_movie{nullptr}; // HopCast: animated picture, if the channel has one
+	QImage m_frame;           // its current frame (guarded by m_frameMutex; painted from a worker thread)
+	QMutex m_frameMutex;
 	QPixmap m_ActiveImage;
 	std::atomic<bool> m_destroying = false;
 	std::atomic<int> m_using = 0;
