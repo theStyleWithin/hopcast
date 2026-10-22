@@ -1,6 +1,6 @@
-# HopCast: on Linux these are added back as they are ported
-# (frontend-tools needs the engine's scripting library; DeckLink/AJA are off in the engine).
-if(OS_LINUX)
+# HopCast: on Linux and Windows these are left out (frontend-tools needs the engine's scripting
+# library; DeckLink/AJA capture-card support is off in the engine).
+if(OS_LINUX OR OS_WINDOWS)
   return()
 endif()
 

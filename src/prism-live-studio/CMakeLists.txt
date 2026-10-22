@@ -38,7 +38,7 @@ set(OBS_ENV_PRISM_COMMENTS ${PRISM_COMMENTS})
 set(OBS_ENV_PERFORMANCE_STATS ${PERFORMANCE_STATS})
 set(OBS_ENV_UI_ACTION_STATS ${UI_ACTION_STATS})
 
-if(OS_WINDOWS)
+if(OS_WINDOWS AND NOT HOPCAST_PREBUILT_ENGINE)
 
 	file(GENERATE
 		 OUTPUT "${CMAKE_BINARY_DIR}/ALL_BUILD.vcxproj.user"
@@ -58,7 +58,7 @@ endif()
 add_executable(obs-build cmake/build.cpp)
 set_target_properties(obs-build PROPERTIES FOLDER "prism/obs")
 
-if(OS_WINDOWS)
+if(OS_WINDOWS AND NOT HOPCAST_PREBUILT_ENGINE)
 add_custom_command(TARGET obs-build
 	PRE_BUILD
 	COMMAND $ENV{ComSpec} /c

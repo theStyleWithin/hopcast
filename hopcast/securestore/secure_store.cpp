@@ -14,9 +14,14 @@
 #include <memory>
 #include <string>
 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#endif
 
 namespace hopcast::secure {
 
@@ -139,9 +144,35 @@ std::optional<std::string> open(const std::string &key, const std::string &purpo
 
 /* ------------------------------------------------------------------ files */
 
+#ifdef _WIN32
+std::wstring to_wide(const std::string &utf8)
+{
+	if (utf8.empty())
+		return {};
+	int n = MultiByteToWideChar(CP_UTF8, 0, utf8.data(), static_cast<int>(utf8.size()), nullptr, 0);
+	std::wstring out(static_cast<size_t>(n), L'\0');
+	MultiByteToWideChar(CP_UTF8, 0, utf8.data(), static_cast<int>(utf8.size()), out.data(), n);
+	return out;
+}
+#endif
+
+// Rename that also works for non-ASCII Windows paths (user names, folders).
+bool rename_path(const std::string &from, const std::string &to)
+{
+#ifdef _WIN32
+	return MoveFileExW(to_wide(from).c_str(), to_wide(to).c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH) != 0;
+#else
+	return std::rename(from.c_str(), to.c_str()) == 0;
+#endif
+}
+
 std::optional<std::string> read_file(const std::string &path)
 {
+#ifdef _WIN32
+	FILE *f = _wfopen(to_wide(path).c_str(), L"rb");
+#else
 	FILE *f = std::fopen(path.c_str(), "rb");
+#endif
 	if (!f)
 		return std::nullopt;
 	std::string data;
@@ -156,6 +187,60 @@ std::optional<std::string> read_file(const std::string &path)
 	return data;
 }
 
+#ifdef _WIN32
+/* Windows: the file lives in the user's own profile folder (per-user permissions); written to a
+ * temporary file, flushed, then moved over the target in one step. */
+bool write_file_private_atomic(const std::string &path, const std::string &data, std::string &error)
+{
+	const std::wstring target = to_wide(path);
+	const std::wstring tmp = target + L".tmp-" + std::to_wstring(GetCurrentProcessId()) + L"-" + std::to_wstring(GetTickCount64());
+	HANDLE h = CreateFileW(tmp.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, nullptr);
+	if (h == INVALID_HANDLE_VALUE) {
+		error = "cannot create temporary file for " + path + " (error " + std::to_string(GetLastError()) + ")";
+		return false;
+	}
+	size_t off = 0;
+	while (off < data.size()) {
+		DWORD written = 0;
+		if (!WriteFile(h, data.data() + off, static_cast<DWORD>(std::min<size_t>(data.size() - off, 1u << 20)), &written, nullptr) || written == 0) {
+			error = "write failed (error " + std::to_string(GetLastError()) + ")";
+			CloseHandle(h);
+			DeleteFileW(tmp.c_str());
+			return false;
+		}
+		off += written;
+	}
+	const bool flushed = FlushFileBuffers(h) != 0;
+	CloseHandle(h);
+	if (!flushed || !MoveFileExW(tmp.c_str(), target.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
+		error = "cannot move the new file into place (error " + std::to_string(GetLastError()) + ")";
+		DeleteFileW(tmp.c_str());
+		return false;
+	}
+	return true;
+}
+
+void scrub_and_remove(const std::string &path)
+{
+	const std::wstring w = to_wide(path);
+	HANDLE h = CreateFileW(w.c_str(), GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	if (h != INVALID_HANDLE_VALUE) {
+		LARGE_INTEGER size{};
+		if (GetFileSizeEx(h, &size)) {
+			std::string zeros(4096, '\0');
+			for (LONGLONG left = size.QuadPart; left > 0;) {
+				DWORD written = 0;
+				if (!WriteFile(h, zeros.data(), static_cast<DWORD>(std::min<LONGLONG>(left, static_cast<LONGLONG>(zeros.size()))), &written, nullptr) || written == 0)
+					break;
+				left -= written;
+			}
+			FlushFileBuffers(h);
+		}
+		CloseHandle(h);
+	}
+	DeleteFileW(w.c_str());
+}
+#else
 bool write_file_private_atomic(const std::string &path, const std::string &data, std::string &error)
 {
 	const std::string dir = path.substr(0, path.find_last_of('/'));
@@ -214,6 +299,7 @@ void scrub_and_remove(const std::string &path)
 	}
 	::unlink(path.c_str());
 }
+#endif
 
 /* ------------------------------------------------------------------ store */
 
@@ -234,7 +320,7 @@ LoadStatus Store::load(std::string &plaintext)
 			std::time_t now = std::time(nullptr);
 			std::strftime(stamp, sizeof stamp, "%Y%m%d-%H%M%S", std::localtime(&now));
 			const std::string aside = m_path + ".unreadable-" + stamp;
-			std::rename(m_path.c_str(), aside.c_str());
+			rename_path(m_path, aside);
 			m_error = why + "; moved to " + aside;
 			m_sourceKnown = false;
 			m_writable = true;

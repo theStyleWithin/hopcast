@@ -1,10 +1,12 @@
 // HopCast: desktop screenshots for the system tray menu. GPL-2.0-or-later.
 #include "HopCastScreenshot.h"
 
+#ifdef Q_OS_LINUX
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
 #include <QDBusPendingCallWatcher>
+#endif
 #include <QDateTime>
 #include <QDir>
 #include <QFileInfo>
@@ -38,11 +40,13 @@ QString newScreenshotPath()
 	       QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd hh-mm-ss")) + QStringLiteral(".png");
 }
 
+#ifdef Q_OS_LINUX
 bool x11Available()
 {
 	return QGuiApplication::platformName() == QLatin1String("xcb") &&
 	       qgetenv("XDG_SESSION_TYPE") != "wayland" && qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY");
 }
+#endif
 
 bool grabAllScreens(const QString &path)
 {
@@ -73,6 +77,7 @@ bool grabAllScreens(const QString &path)
 	return any && out.save(path, "PNG");
 }
 
+#ifdef Q_OS_LINUX
 // Waits for the portal's answer to one Screenshot request, then reports it and deletes itself.
 class PortalWaiter : public QObject {
 	Q_OBJECT
@@ -218,6 +223,7 @@ void toolScreenshot(const QString &path, Done done, std::function<void()> fallba
 	}
 	fallback();
 }
+#endif // Q_OS_LINUX
 
 } // namespace
 
@@ -226,6 +232,17 @@ namespace hopcast {
 void takeDesktopScreenshot(std::function<void(const QString &path, const QString &error)> done)
 {
 	const QString path = newScreenshotPath();
+
+#ifndef Q_OS_LINUX
+	// Windows and others: read the screens directly (after the tray menu has closed).
+	QTimer::singleShot(400, qApp, [path, done]() {
+		if (grabAllScreens(path))
+			done(path, QString());
+		else
+			done(QString(), QStringLiteral("Couldn't take a screenshot of the screen."));
+	});
+	return;
+#else
 
 	if (x11Available()) {
 		// Give the tray menu a moment to disappear so it isn't in the picture.
@@ -238,8 +255,11 @@ void takeDesktopScreenshot(std::function<void(const QString &path, const QString
 		return;
 	}
 	toolScreenshot(path, done, [path, done]() { portalScreenshot(path, done); });
+#endif
 }
 
 } // namespace hopcast
 
+#ifdef Q_OS_LINUX
 #include "HopCastScreenshot.moc"
+#endif

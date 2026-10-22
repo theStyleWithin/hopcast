@@ -44,16 +44,24 @@ if(OS_WINDOWS)
         IMPORTED_LOCATION_RELWITHDEBINFO "$ENV{OBS_BUILD_DIR}/deps/w32-pthreads/RelWithDebInfo/w32-pthreads.dll"
         IMPORTED_LOCATION_MINSIZEREL "$ENV{OBS_BUILD_DIR}/deps/w32-pthreads/RelWithDebInfo/w32-pthreads.dll")
 
-    add_library(OBS::blake2 STATIC IMPORTED GLOBAL)
-    set_target_properties(
-        OBS::blake2 PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES "$ENV{OBS_SRC_DIR}/deps/blake2/src")
-    set_target_properties(
-        OBS::blake2 PROPERTIES
-        IMPORTED_LOCATION_DEBUG "$ENV{OBS_BUILD_DIR}/deps/blake2/blake2.dir/Debug/blake2.lib"
-        IMPORTED_LOCATION_RELEASE "$ENV{OBS_BUILD_DIR}/deps/blake2/blake2.dir/Release/blake2.lib"
-        IMPORTED_LOCATION_RELWITHDEBINFO "$ENV{OBS_BUILD_DIR}/deps/blake2/blake2.dir/RelWithDebInfo/blake2.lib"
-        IMPORTED_LOCATION_MINSIZEREL "$ENV{OBS_BUILD_DIR}/deps/blake2/blake2.dir/RelWithDebInfo/blake2.lib")
+    if(HOPCAST_PREBUILT_ENGINE)
+        # HopCast: compile blake2 here from the engine source (the engine's is an object library).
+        add_library(hopcast-blake2 STATIC "$ENV{OBS_SRC_DIR}/deps/blake2/src/blake2b-ref.c")
+        target_include_directories(hopcast-blake2 PUBLIC "$ENV{OBS_SRC_DIR}/deps/blake2/src")
+        set_target_properties(hopcast-blake2 PROPERTIES FOLDER hopcast/engine)
+        add_library(OBS::blake2 ALIAS hopcast-blake2)
+    else()
+        add_library(OBS::blake2 STATIC IMPORTED GLOBAL)
+        set_target_properties(
+            OBS::blake2 PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "$ENV{OBS_SRC_DIR}/deps/blake2/src")
+        set_target_properties(
+            OBS::blake2 PROPERTIES
+            IMPORTED_LOCATION_DEBUG "$ENV{OBS_BUILD_DIR}/deps/blake2/blake2.dir/Debug/blake2.lib"
+            IMPORTED_LOCATION_RELEASE "$ENV{OBS_BUILD_DIR}/deps/blake2/blake2.dir/Release/blake2.lib"
+            IMPORTED_LOCATION_RELWITHDEBINFO "$ENV{OBS_BUILD_DIR}/deps/blake2/blake2.dir/RelWithDebInfo/blake2.lib"
+            IMPORTED_LOCATION_MINSIZEREL "$ENV{OBS_BUILD_DIR}/deps/blake2/blake2.dir/RelWithDebInfo/blake2.lib")
+    endif()
 
     add_library(obs-browser-panels INTERFACE IMPORTED GLOBAL)
     add_library(OBS::browser-panels ALIAS obs-browser-panels)
@@ -86,16 +94,27 @@ if(OS_WINDOWS)
         IMPORTED_LOCATION_RELWITHDEBINFO "$ENV{OBS_BUILD_DIR}/deps/libcaption/RelWithDebInfo/caption.lib"
         IMPORTED_LOCATION_MINSIZEREL "$ENV{OBS_BUILD_DIR}/deps/libcaption/RelWithDebInfo/caption.lib")
 
-    add_library(OBS::bpm STATIC IMPORTED GLOBAL)
-    set_target_properties(
-        OBS::bpm PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES "$ENV{OBS_SRC_DIR}/shared/bpm")
-    set_target_properties(
-        OBS::bpm PROPERTIES
-        IMPORTED_LOCATION_DEBUG "$ENV{OBS_BUILD_DIR}/shared/bpm/bpm.dir/Debug/bpm.lib"
-        IMPORTED_LOCATION_RELEASE "$ENV{OBS_BUILD_DIR}/shared/bpm/bpm.dir/Release/bpm.lib"
-        IMPORTED_LOCATION_RELWITHDEBINFO "$ENV{OBS_BUILD_DIR}/shared/bpm/bpm.dir/RelWithDebInfo/bpm.lib"
-        IMPORTED_LOCATION_MINSIZEREL "$ENV{OBS_BUILD_DIR}/shared/bpm/bpm.dir/RelWithDebInfo/bpm.lib")
+    if(HOPCAST_PREBUILT_ENGINE)
+        # HopCast: the engine is built separately and its bpm is an object library, so (as on Linux)
+        # compile it here from the engine source as a static library.
+        add_library(hopcast-bpm STATIC "$ENV{OBS_SRC_DIR}/shared/bpm/bpm.c")
+        target_include_directories(hopcast-bpm PUBLIC "$ENV{OBS_SRC_DIR}/shared/bpm")
+        target_link_libraries(hopcast-bpm PUBLIC OBS::libobs OBS::caption OBS::w32-pthreads)
+        set_target_properties(hopcast-bpm PROPERTIES FOLDER hopcast/engine)
+        add_library(OBS::bpm ALIAS hopcast-bpm)
+    else()
+        add_library(OBS::bpm STATIC IMPORTED GLOBAL)
+        set_target_properties(
+            OBS::bpm PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "$ENV{OBS_SRC_DIR}/shared/bpm")
+        set_target_properties(
+            OBS::bpm PROPERTIES
+            IMPORTED_LOCATION_DEBUG "$ENV{OBS_BUILD_DIR}/shared/bpm/bpm.dir/Debug/bpm.lib"
+            IMPORTED_LOCATION_RELEASE "$ENV{OBS_BUILD_DIR}/shared/bpm/bpm.dir/Release/bpm.lib"
+            IMPORTED_LOCATION_RELWITHDEBINFO "$ENV{OBS_BUILD_DIR}/shared/bpm/bpm.dir/RelWithDebInfo/bpm.lib"
+            IMPORTED_LOCATION_MINSIZEREL "$ENV{OBS_BUILD_DIR}/shared/bpm/bpm.dir/RelWithDebInfo/bpm.lib")
+
+    endif()
 
     add_library(OBS::aja-support STATIC IMPORTED GLOBAL)
     set_target_properties(

@@ -5,6 +5,11 @@ name: hopcast-windows
 
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Attach the portable zip to the release with this tag (created as a pre-release if it doesn't exist); empty = no release"
+        type: string
+        default: ""
 
 permissions:
   contents: write   # pushes logs to the dev-logs-windows branch
@@ -36,10 +41,10 @@ jobs:
           export PLS_VERSION="$VERSION" VERSION="$VERSION" PRISM_VERSION_MAJOR="$a" PRISM_VERSION_MINOR="$b" PRISM_VERSION_PATCH="$c" PRISM_VERSION_TWEAK="${d:-0}"
           export PRISM_COMMENTS=HopCast PRISM_SRC_DIR="$W/src/prism-live-studio" OBS_SRC_DIR="$W/src/obs-studio" OBS_BUILD_DIR="$W/build/engine"
           cd src/obs-studio
-          cmake --preset windows-x64 -Wno-dev \
+          cmake --preset windows-x64 -Wno-dev -DCMAKE_PROJECT_INCLUDE="$W/hopcast/cmake/engine-compat.cmake" \
             -DENABLE_UI=OFF -DENABLE_BROWSER=OFF -DENABLE_WEBSOCKET=OFF -DENABLE_WEBRTC=OFF \
             -DENABLE_AJA=OFF -DENABLE_DECKLINK=OFF -DENABLE_VLC=OFF -DENABLE_SCRIPTING=OFF -DENABLE_VST=OFF \
-            -DENABLE_SERVICE_UPDATES=OFF -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF 2>&1 | tee "$W/configure.log"
+            -DENABLE_SERVICE_UPDATES=OFF -DENABLE_VIRTUALCAM=OFF -DVIRTUALCAM_GUID=A49F51EE-8841-4425-BEC0-85D0C470BBDE -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF 2>&1 | tee "$W/configure.log"
           exit "${PIPESTATUS[0]}"
 
       - name: Build engine
@@ -52,6 +57,177 @@ jobs:
           cmake --build "$W/build/engine" --config RelWithDebInfo --parallel 2>&1 | tee "$W/build.log"
           exit "${PIPESTATUS[0]}"
 
+      - name: Install engine
+        if: steps.build.outcome == 'success'
+        run: |
+          cmake --install build/engine --config RelWithDebInfo --prefix build/engine-install 2>&1 | tail -5
+
+      - name: Install Qt 6.8
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          host: windows
+          target: desktop
+          arch: win64_msvc2022_64
+          modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats'
+          cache: true
+
+      - name: Install libraries (vcpkg)
+        continue-on-error: true
+        run: |
+          "$VCPKG_INSTALLATION_ROOT/vcpkg.exe" install openssl zstd libpng fftw3 mosquitto --triplet x64-windows 2>&1 | tee vcpkg.log
+          exit "${PIPESTATUS[0]}"
+
+      - name: Configure app
+        id: appconfigure
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: |
+          W=$(echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g')
+          Q=$(echo "$QT_ROOT_DIR" | sed 's|\\|/|g')
+          V=$(tr -d '[:space:]' < hopcast/VERSION)
+          IFS=. read -r a b c d <<< "$V"
+          export VERSION="$V" PLS_VERSION="$V" PRISM_VERSION_MAJOR="$a" PRISM_VERSION_MINOR="$b" PRISM_VERSION_PATCH="$c" PRISM_VERSION_TWEAK="${d:-0}" PRISM_COMMENTS=HopCast BUILD_TYPE=RelWithDebInfo
+          export SRC_DIR="$W/src" OBS_SRC_DIR="$W/src/obs-studio" PRISM_SRC_DIR="$W/src/prism-live-studio" OBS_BUILD_DIR="$W/build/engine" PRISM_BUILD_DIR="$W/build/app" DEV_OUTPUT_DIR="$W/build/app/output" ARCH=x86_64 QTDIR="$Q"
+          DEPS=$(ls -d "$W"/src/obs-studio/.deps/obs-deps-*-x64 | head -1)
+          VC=$(echo "$VCPKG_INSTALLATION_ROOT" | sed 's|\\|/|g')/installed/x64-windows
+          cmake -S src -B build/app -G "Visual Studio 17 2022" -A x64 -Wno-dev \
+            -DCMAKE_PREFIX_PATH="$Q;$DEPS;$VC;$W/build/engine-install" -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF -DENABLE_TEST=OFF \
+            -DCMAKE_PROJECT_INCLUDE="$W/hopcast/cmake/engine-compat.cmake" 2>&1 | tee "$W/appconfigure.log"
+          exit "${PIPESTATUS[0]}"
+
+      - name: Build app
+        id: appbuild
+        if: steps.appconfigure.outcome == 'success'
+        continue-on-error: true
+        run: |
+          cmake --build build/app --config RelWithDebInfo --parallel 2>&1 | tee appbuild.log
+          exit "${PIPESTATUS[0]}"
+
+      - name: Stage the portable folder
+        id: stage
+        if: steps.appbuild.outcome == 'success'
+        continue-on-error: true
+        run: |
+          W=$(echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g')
+          Q=$(echo "$QT_ROOT_DIR" | sed 's|\\|/|g')
+          VC=$(echo "$VCPKG_INSTALLATION_ROOT" | sed 's|\\|/|g')/installed/x64-windows
+          S="$W/stage/HopCast"; mkdir -p "$S"
+          {
+            echo "engine runtime:"; cp -r build/engine/rundir/RelWithDebInfo/. "$S/" && echo ok
+            echo "app output:"; for d in build/app/output/*; do [ -d "$d" ] && cp -r "$d"/. "$S/" && echo "copied $d"; done
+            echo "app exe:"; EXE=$(find build/app -name obs64.exe -not -path '*CMakeFiles*' | head -1); echo "$EXE"; [ -n "$EXE" ] && cp "$EXE" "$S/bin/64bit/obs64.exe"
+            echo "PRISM libraries:"; find build/app -name '*.dll' -not -path '*CMakeFiles*' -not -path '*/output/*' | while read f; do cp -n "$f" "$S/bin/64bit/" && echo "$f"; done
+            echo "drop NAVER's prebuilt OpenSSL 1.1 / mosquitto:"; rm -fv "$S"/bin/64bit/mosquitto.dll "$S"/bin/64bit/mosquittopp.dll "$S"/bin/64bit/libssl-1_1-x64.dll "$S"/bin/64bit/libcrypto-1_1-x64.dll
+            echo "dependency libraries:"; cp -n src/obs-studio/.deps/obs-deps-*-x64/bin/*.dll "$S/bin/64bit/" 2>&1 | tail -2; cp -n "$VC"/bin/*.dll "$S/bin/64bit/" 2>&1 | tail -2
+            echo "Qt:"; "$Q/bin/windeployqt.exe" --release --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw "$S/bin/64bit/obs64.exe" 2>&1 | tail -15
+          } 2>&1 | tee stage.log
+          find "$S" -type f | wc -l | tee -a stage.log
+
+      - name: Check for missing libraries
+        if: steps.stage.outcome == 'success'
+        continue-on-error: true
+        run: |
+          W=$(echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g')
+          Q=$(echo "$QT_ROOT_DIR" | sed 's|\\|/|g')
+          VC=$(echo "$VCPKG_INSTALLATION_ROOT" | sed 's|\\|/|g')/installed/x64-windows
+          pip install pefile >/dev/null 2>&1
+          WHO_IMPORTS="libssl-1_1-x64.dll,libcrypto-1_1-x64.dll,msvcr100.dll,libssl-3-x64.dll,libcrypto-3-x64.dll" python hopcast/scripts/win-missing-dlls.py "$W/stage/HopCast" "$Q/bin" "$VC/bin" "$W"/src/obs-studio/.deps/obs-deps-*-x64/bin "$W/build/engine" "$W/build/app" 2>&1 | tee missing.log
+
+      - name: Start it (smoke test)
+        id: smoke
+        if: steps.stage.outcome == 'success'
+        continue-on-error: true
+        run: |
+          S="$GITHUB_WORKSPACE/stage/HopCast/bin/64bit"
+          cd "$S" && ls obs64.exe
+          (./obs64.exe > "$GITHUB_WORKSPACE/run.log" 2>&1 &)
+          sleep 35
+          cd "$GITHUB_WORKSPACE"
+          powershell -NoProfile -Command "
+            Get-Process obs64 -ErrorAction SilentlyContinue | Select-Object Id,MainWindowTitle,Responding,WorkingSet64 | Format-List | Out-String | Add-Content run.log;
+            Add-Type -AssemblyName System.Windows.Forms,System.Drawing;
+            \$b=[System.Windows.Forms.SystemInformation]::VirtualScreen;
+            \$bmp=New-Object System.Drawing.Bitmap \$b.Width,\$b.Height;
+            \$g=[System.Drawing.Graphics]::FromImage(\$bmp);
+            \$g.CopyFromScreen(\$b.Left,\$b.Top,0,0,\$bmp.Size);
+            \$bmp.Save('shot.png');
+            Get-Process | Where-Object {\$_.MainWindowTitle} | Select-Object ProcessName,MainWindowTitle | Format-Table | Out-String | Add-Content run.log" 2>&1 | tee -a run.log || true
+          taskkill //IM obs64.exe 2>&1 | tee -a run.log || true   # close it politely so it writes its log
+          sleep 15
+          taskkill //F //IM obs64.exe 2>&1 | tee -a run.log || true
+          mkdir -p applogs; cp -r "$APPDATA/PRISMLiveStudio/logs" applogs/ 2>/dev/null || true; cp -r "$APPDATA/obs-studio/logs" applogs/ 2>/dev/null || true
+          find applogs -type f | tee -a run.log
+          find "$APPDATA/PRISMLiveStudio" -maxdepth 2 2>/dev/null | head -30 | tee -a run.log
+
+      - name: Visual C++ tools
+        if: steps.smoke.outcome == 'success'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Launcher and zip
+        id: package
+        if: steps.smoke.outcome == 'success'
+        continue-on-error: true
+        run: |
+          export MSYS2_ARG_CONV_EXCL='*'
+          V=$(tr -d '[:space:]' < hopcast/VERSION)
+          ( cd hopcast/windows
+            RES=""
+            if magick ../appimage/hopcast.png -define icon:auto-resize=256,128,64,48,32,16 hopcast.ico 2>/dev/null; then
+              echo 'IDI_ICON1 ICON "hopcast.ico"' > launcher.rc && rc /nologo launcher.rc && RES=launcher.res
+            fi
+            cl /nologo /O2 /Fe:HopCast.exe launcher.c $RES user32.lib /link /SUBSYSTEM:WINDOWS ) 2>&1 | tee package.log
+          cp hopcast/windows/HopCast.exe stage/HopCast/HopCast.exe
+          cp hopcast/windows/README.txt stage/HopCast/README.txt
+          cp COPYING stage/HopCast/COPYING.txt 2>/dev/null || true
+          7z a -tzip -mx=5 "HopCast-windows-x64-$V.zip" ./stage/HopCast >> package.log
+          sha256sum "HopCast-windows-x64-$V.zip" | tee SHA256SUMS-windows >> package.log
+          ls -la HopCast-windows-x64-*.zip >> package.log
+          # Start it the way a person will: through HopCast.exe.
+          taskkill //F //IM obs64.exe >/dev/null 2>&1 || true
+          ( cd stage/HopCast && ./HopCast.exe ) ; sleep 25
+          if tasklist //FI "IMAGENAME eq obs64.exe" | grep -qi obs64; then echo "launcher check: HopCast.exe started the program (obs64.exe is running)" | tee -a package.log; else echo "launcher check FAILED: obs64.exe is not running" | tee -a package.log; exit 1; fi
+          taskkill //F //IM obs64.exe >/dev/null 2>&1 || true
+
+      - name: Publish the Windows zip
+        if: steps.package.outcome == 'success' && inputs.release_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.release_tag }}
+        run: |
+          V=$(tr -d '[:space:]' < hopcast/VERSION)
+          cat > win-notes.md <<N
+          **HopCast for Windows - early build, portable (no installer).** The developer uses Linux and only tests the AppImage versions, so please try the Windows build in a virtual machine first and tell us what you find. Windows SmartScreen may warn because the program isn't code-signed; compare \`Get-FileHash\` with \`SHA256SUMS-windows\`.
+
+          - \`HopCast-windows-x64-*.zip\` - unzip and double-click \`HopCast.exe\`.
+          - \`SHA256SUMS-windows\` - checksum of the zip.
+
+          Built from the same source as the Linux AppImages. Not affiliated with NAVER Corp. or the OBS Project.
+          N
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "HopCast-windows-x64-$V.zip" SHA256SUMS-windows --clobber
+          else
+            gh release create "$TAG" --prerelease --target "$GITHUB_SHA" --title "HopCast $TAG (Windows build)" --notes-file win-notes.md "HopCast-windows-x64-$V.zip" SHA256SUMS-windows
+          fi
+
+      - name: Upload the portable folder
+        if: steps.stage.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: HopCast-windows-portable
+          path: stage/HopCast
+          retention-days: 3
+
+      - name: List what was built
+        if: always()
+        run: |
+          { echo "dlls: $(find build/engine -name '*.dll' 2>/dev/null | wc -l)  exes: $(find build/engine -name '*.exe' 2>/dev/null | wc -l)";
+            find build/engine -path '*rundir*' \( -name '*.dll' -o -name '*.exe' \) 2>/dev/null | sed 's|.*/rundir/||' | sort | head -60;
+            echo "--- app output: $(find build/app/output -type f 2>/dev/null | wc -l) files";
+            find build/app/output -maxdepth 4 -type d 2>/dev/null | sed 's|^build/app/output||' | head -60;
+            echo "--- exes in the app build:"; find build/app -name '*.exe' -not -path '*CMakeFiles*' 2>/dev/null | head -40;
+            echo "--- obs64 and PRISM dlls:"; find build/app -name 'obs64.*' -o -name 'PRISM*.dll' -o -name 'libpls*.dll' -o -name 'common-libs*.dll' 2>/dev/null | head -40; } > inventory.txt || true
+
       - name: Publish logs
         if: always()
         env:
@@ -59,16 +235,19 @@ jobs:
         run: |
           tmp=$(mktemp -d)
           git -C "$tmp" init -q -b dev-logs-windows
-          for f in configure.log build.log; do
+          for f in configure.log build.log vcpkg.log appconfigure.log appbuild.log stage.log missing.log run.log package.log; do
             [ -f "$f" ] || continue
-            grep -nE "CMake Error|error C[0-9]+|error LNK|fatal error|Could NOT find|FAILED|failed" "$f" | head -400 > "$tmp/${GITHUB_RUN_ID}-${f%.log}-errors.txt"
+            grep -nE "CMake Error|error C[0-9]+|error LNK|fatal error|Could NOT find|FAILED|failed" "$f" | head -400 > "$tmp/${GITHUB_RUN_ID}-${f%.log}-errors.txt" || true
             tail -c 300000 "$f" > "$tmp/${GITHUB_RUN_ID}-${f%.log}-tail.log"
           done
-          echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
+          echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }} appconfigure=${{ steps.appconfigure.outcome }} appbuild=${{ steps.appbuild.outcome }} stage=${{ steps.stage.outcome }} smoke=${{ steps.smoke.outcome }} package=${{ steps.package.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
+          [ -f inventory.txt ] && cp inventory.txt "$tmp/${GITHUB_RUN_ID}-inventory.txt"
+          [ -f shot.png ] && cp shot.png "$tmp/${GITHUB_RUN_ID}-screenshot.png"
+          for f in applogs/logs/*; do [ -f "$f" ] && tail -c 100000 "$f" > "$tmp/${GITHUB_RUN_ID}-applog-$(basename "$f")"; done 2>/dev/null || true
           git -C "$tmp" add -A
           git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "windows logs for run ${GITHUB_RUN_ID}"
           git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:dev-logs-windows
 
       - name: Result
-        if: steps.configure.outcome != 'success' || steps.build.outcome != 'success'
+        if: steps.configure.outcome != 'success' || steps.build.outcome != 'success' || steps.appconfigure.outcome != 'success' || steps.appbuild.outcome != 'success'
         run: exit 1
