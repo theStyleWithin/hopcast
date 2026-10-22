@@ -110,7 +110,14 @@ void PLSPlatformBase::prepareLiveCallback(bool value)
 
 	list<PLSPlatformBase *> platforms = pls_is_dual_output_on() && isVerticalOutput() ? PLS_PLATFORM_API->getVerticalPlatforms() : PLS_PLATFORM_API->getHorizontalPlatforms();
 
-	if (1 == platforms.size()) {
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: the first channel of each output is the main stream; the others get their own
+	 * output that shares its encoders (see hopcast/HopCastMultiStream). */
+	const bool savesStreamSettings = !platforms.empty() && platforms.front() == this;
+#else
+	const bool savesStreamSettings = 1 == platforms.size();
+#endif
+	if (savesStreamSettings) {
 		if (getServiceType() == PLSServiceType::ST_CUSTOM) {
 			QString rtmpId = mySharedData().m_mapInitData[ChannelData::g_rtmpUserID].toString();
 			QString rtmpPassword = mySharedData().m_mapInitData[ChannelData::g_password].toString();

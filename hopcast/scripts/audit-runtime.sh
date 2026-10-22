@@ -168,6 +168,9 @@ xcompmgr -n >/dev/null 2>&1 & COMP=$!
 RTMP_URL="rtmp://127.0.0.1:1935/live"; RTMP_KEY="hopcast-audit"
 ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f flv \
   -i "$RTMP_URL/$RTMP_KEY" -c copy -t 25 -y "$OUT/received.flv" > "$OUT/rtmp-server.log" 2>&1 & RTMP=$!
+RTMP_URL2="rtmp://127.0.0.1:1936/live2"; RTMP_KEY2="hopcast-audit-2"
+ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f flv \
+  -i "$RTMP_URL2/$RTMP_KEY2" -c copy -t 25 -y "$OUT/received2.flv" > "$OUT/rtmp-server2.log" 2>&1 & RTMP2=$!
 
 start_app first
 if wait_window; then pass "first start: main window shown"; else dump_stacks first; fail "first start: main window never appeared (hang-first.txt)"; fi
@@ -183,6 +186,25 @@ click 880 445; xdotool type --delay 20 "Audit Server"
 w 1; shot 02-channel-form
 click 942 763; w 6; shot 03-channel-saved   # no folder prompt: keys live in HopCast's own storage
 shot 04-channel-added
+
+# Multi-stream: a second Custom RTMP channel with its own local server. Going live should feed both.
+click 127 62; w 2; click 195 149; w 3; shot 04b-add-channels
+fw=$(xdotool search --onlyvisible --name '^Frame$' 2>/dev/null | head -1)
+if [[ -n "$fw" ]]; then
+  geo=$(xdotool getwindowgeometry --shell "$fw" 2>/dev/null)
+  gx=$(sed -n 's/^X=//p' <<<"$geo"); gy=$(sed -n 's/^Y=//p' <<<"$geo"); gw=$(sed -n 's/^WIDTH=//p' <<<"$geo"); gh=$(sed -n 's/^HEIGHT=//p' <<<"$geo")
+  info "Add Channel dialog at ${gx},${gy} ${gw}x${gh}"
+  click $((gx + gw / 2)) $((gy + gh - 42))
+else
+  info "Add Channel dialog not found by name; clicking the usual place"
+  click 800 652
+fi
+w 4; shot 04c-second-form
+click 880 273; xdotool type --delay 20 "$RTMP_URL2"
+click 880 323; xdotool type --delay 20 "$RTMP_KEY2"
+# The name box is pre-filled and limited to 20 characters: replace it, don't append (both channels would get the same name)
+click 880 445; xdotool key ctrl+a; xdotool type --delay 20 "Audit Two"
+w 1; click 942 763; w 6; shot 04d-two-channels
 ls "$XDG_CONFIG_HOME"/PRISMLiveStudio/user/hopcast-rtmp-channels.enc >/dev/null 2>&1 \
   && pass "stream key saved encrypted" || fail "encrypted stream-key file not written"
 grep -rl "$RTMP_KEY" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" 2>/dev/null > "$OUT/plaintext-key-files.txt"
@@ -207,6 +229,15 @@ grep -rl "$RTMP_KEY" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME" 2>/de
 grep -l "$RTMP_KEY" "$OUT/app-first.log" >/dev/null 2>&1 && info "stream key appears in the app's own log output (check log masking)"
 for _ in $(seq 1 $((30 * SLOW))); do kill -0 "$RTMP" 2>/dev/null || break; sleep 1; done  # server stops after 25 s of input
 kill -INT "$RTMP" 2>/dev/null; sleep 2; kill "$RTMP" 2>/dev/null
+kill -INT "$RTMP2" 2>/dev/null; sleep 1; kill "$RTMP2" 2>/dev/null
+grep -q "extra destination(s) besides the main stream" "$OUT/app-first.log" && info "$(grep -m1 'extra destination(s) besides the main stream' "$OUT/app-first.log" | sed 's/.*HopCast: //')"
+grep -q "HopCast: extra destination .* started" "$OUT/app-first.log" && pass "multi-stream: the extra destination's output started" || fail "multi-stream: the extra destination's output never started (app-first.log)"
+if [[ -s "$OUT/received2.flv" ]]; then
+  frames2=$(ffprobe -v error -count_packets -select_streams v:0 -show_entries stream=nb_read_packets -of csv=p=0 "$OUT/received2.flv" 2>/dev/null)
+  if [[ "${frames2:-0}" -gt 20 ]]; then pass "multi-stream: second server received ${frames2} video frames"; else fail "multi-stream: second server got only ${frames2:-0} video frames"; fi
+else
+  fail "multi-stream: nothing arrived at the second server (rtmp-server2.log, shots 04b-04d)"
+fi
 if [[ -s "$OUT/received.flv" ]]; then
   ffprobe -v error -show_entries stream=codec_type,codec_name,width,height,r_frame_rate:format=duration \
     -of compact "$OUT/received.flv" > "$OUT/received-probe.txt" 2>&1
@@ -222,7 +253,7 @@ grep -q "\[ALERT\] Failed to start live" "$OUT/app-first.log" && fail "\"Failed 
 # The test server stops after 25 s; HopCast tries to reconnect, then End stops it.
 grep -q "Reconnecting in" "$OUT/app-first.log" && pass "dropped connection: HopCast tried to reconnect"
 click 1328 873; w 5; shot 09-end-live-1      # End
-click 798 564; w 2; shot 10-end-live-2       # "Live Has Ended" -> OK
+click 798 602; w 2; shot 10-end-live-2       # "Live Has Ended" (two channels: taller dialog) -> OK
 fdsnap after-live
 for n in 0 1 2; do
   a=$(awk -v n=$n '$1==n{print $3}' "$OUT/fds-start.txt"); b=$(awk -v n=$n '$1==n{print $3}' "$OUT/fds-after-live.txt")

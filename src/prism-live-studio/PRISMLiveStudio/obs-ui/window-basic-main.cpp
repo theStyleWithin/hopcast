@@ -56,6 +56,7 @@
 #include "window-basic-source-select.hpp"
 #include "window-basic-main.hpp"
 #include "../prism-ui/hopcast/HopCastScreenshot.h" // HopCast: tray screenshots
+#include "../prism-ui/hopcast/HopCastMultiStream.h" // HopCast: several servers at once
 #include "window-basic-stats.hpp"
 #include "PLSBasicStatusBar.hpp"
 #include "window-basic-main-outputs.hpp"
@@ -9429,6 +9430,23 @@ void OBSBasic::StreamingStart()
 
 	blog(LOG_INFO, STREAMING_START);
 
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: start the extra destinations (one more output each, same encoders). */
+	{
+		const bool reconnect = config_get_bool(Config(), "Output", "Reconnect");
+		const int retryDelay = static_cast<int>(config_get_uint(Config(), "Output", "RetryDelay"));
+		const int maxRetries = reconnect ? static_cast<int>(config_get_uint(Config(), "Output", "MaxRetries")) : 0;
+		const auto notify = [this](const QString &message) {
+			pls_toast_message(pls_toast_info_type::PLS_TOAST_ERROR, message);
+			SysTrayNotify(message, QSystemTrayIcon::Warning);
+		};
+		if (outputHandler->streamOutput)
+			hopcast::startExtraDestinations(false, outputHandler->streamOutput.Get(), maxRetries, retryDelay, notify);
+		if (pls_is_dual_output_on() && outputHandler.voutput && outputHandler.voutput->streamOutput)
+			hopcast::startExtraDestinations(true, outputHandler.voutput->streamOutput.Get(), maxRetries, retryDelay, notify);
+	}
+#endif
+
 	configureWatermark();
 }
 
@@ -9441,6 +9459,9 @@ void OBSBasic::StreamStopping()
 	}
 
 	emit StreamingStopping();
+#ifdef HOPCAST_NO_NAVER
+	hopcast::stopExtraDestinations(); // HopCast: extra destinations stop with the main stream
+#endif
 
 	if (sysTrayStream)
 		sysTrayStream->setText(QTStr("Basic.Main.StoppingStreaming"));
@@ -9451,6 +9472,9 @@ void OBSBasic::StreamStopping()
 
 void OBSBasic::StreamingStop(int code, QString last_error, int vcode, QString vlast_error)
 {
+#ifdef HOPCAST_NO_NAVER
+	hopcast::stopExtraDestinations(); // HopCast: in case the main stream ended on its own
+#endif
 	pls_check_app_exiting();
 	const char *errorDescription = "";
 	DStr errorMessage;
