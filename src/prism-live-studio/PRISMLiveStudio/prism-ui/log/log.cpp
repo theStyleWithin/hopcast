@@ -1,3 +1,6 @@
+#ifdef HOPCAST_NO_NAVER
+#include "../hopcast/HopCastNetLog.h"
+#endif
 #include "log.h"
 
 #include <qglobal.h>
@@ -67,6 +70,16 @@ static void call_obs_handler(bool kr, pls_log_level_t log_level, const char *mod
 
 static void def_obs_log_handler(int log_level, const char *format, va_list args, void *)
 {
+#ifdef HOPCAST_NO_NAVER
+	{ /* HopCast: remember connection lines so a failed stream can show what the server answered */
+		char line[1024];
+		va_list copy;
+		va_copy(copy, args);
+		vsnprintf(line, sizeof line, format, copy);
+		va_end(copy);
+		hopcast::recordLogLine(line);
+	}
+#endif
 	switch (log_level) {
 	case LOG_ERROR:
 		pls_logvaex(false, PLS_LOG_ERROR, "obs", nullptr, 0, {}, -1, format, args);
@@ -90,6 +103,16 @@ static void def_obs_log_handler(int log_level, const char *format, va_list args,
 
 static void def_obs_log_handler(bool kr, int log_level, const char *format, va_list args, const char *fields[][2], int field_count, void *)
 {
+#ifdef HOPCAST_NO_NAVER
+	{ /* HopCast: remember connection lines so a failed stream can show what the server answered */
+		char line[1024];
+		va_list copy;
+		va_copy(copy, args);
+		vsnprintf(line, sizeof line, format, copy);
+		va_end(copy);
+		hopcast::recordLogLine(line);
+	}
+#endif
 	std::vector<std::pair<const char *, const char *>> tmp_fields;
 	for (int i = 0; i < field_count; ++i) {
 		tmp_fields.push_back({fields[i][0], fields[i][1]});
