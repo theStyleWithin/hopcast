@@ -29,7 +29,7 @@ PRISM Live Studio or the OBS Project**.
 
 HopCast never recommends, ranks or links to a platform, server, community or service. No quick links, no "join us", no "stream here instead". The developer sees quick links as a quiet kind of peer pressure: a shortcut that pulls people back into online spaces they may have decided to leave, simply because the link is there. HopCast leaves that decision to you. You type your own server address, and nothing in the app suggests anywhere else.
 
-This is the standard for every Hop app, and for contributions too: changes that add promotional links, platform shortcuts, community or social buttons, or recommendation prompts won't be merged. Free of outside influence means you decide where you are and why.
+This is the standard for every Gamehopper app, and for contributions too: changes that add promotional links, platform shortcuts, community or social buttons, or recommendation prompts won't be merged. Free of outside influence means you decide where you are and why.
 
 See **[SPECS.md](SPECS.md)** for the full description of what HopCast is and isn't.
 
