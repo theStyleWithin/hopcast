@@ -58,6 +58,8 @@ void handleEmptyChannel(const QString &uuid);
 
 void addRTMP(const QString &channleName = QString());
 void editRTMP(const QString &uuid);
+// HopCast: set (or, with an empty file, remove) the picture of an RTMP/SRT/RIST channel.
+void setRTMPChannelPicture(const QString &uuid, const QString &sourceFile);
 void runCMD(const QString &cmdStr);
 
 bool isCurrentVersionCanDoNext(const QStringList &, QWidget *parent);

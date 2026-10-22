@@ -1,4 +1,5 @@
 #include "ChannelCommonFunctions.h"
+#include <QFileInfo>
 #include <qdatastream.h>
 #include <qurlquery.h>
 #include <quuid.h>
@@ -342,6 +343,14 @@ void getComplexImageOfChannel(const QString &uuid, int imageType, QString &userI
 			userIcon = g_defualtPlatformIcon;
 		}
 		platformIcon = g_defualtPlatformSmallIcon;
+#ifdef HOPCAST_NO_NAVER
+		/* HopCast: a picture the user chose for this channel replaces the default "R" circle (and its badge). */
+		const QString custom = getInfo(srcData, g_userIconCachePath, QString());
+		if (!custom.isEmpty() && QFileInfo::exists(custom)) {
+			userIcon = custom;
+			platformIcon.clear();
+		}
+#endif
 	} else {
 		userIcon = getInfo(srcData, g_userIconCachePath, g_defaultHeaderIcon);
 		platformIcon = getPlatformImageFromName(platformName, imageType, prefix, surfix);

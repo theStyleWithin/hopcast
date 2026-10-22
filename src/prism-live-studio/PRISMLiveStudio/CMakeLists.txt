@@ -1011,7 +1011,8 @@ if(OS_WINDOWS)
     prism-ui/hopcast/HopCastMultiStream.cpp prism-ui/hopcast/HopCastMultiStream.h
     prism-ui/hopcast/HopCastProfileImport.cpp prism-ui/hopcast/HopCastProfileImport.h
     prism-ui/hopcast/HopCastNetLog.cpp prism-ui/hopcast/HopCastNetLog.h
-    prism-ui/hopcast/HopCastSettingsGuard.cpp prism-ui/hopcast/HopCastSettingsGuard.h)
+    prism-ui/hopcast/HopCastSettingsGuard.cpp prism-ui/hopcast/HopCastSettingsGuard.h
+    prism-ui/hopcast/HopCastChannelIcon.cpp prism-ui/hopcast/HopCastChannelIcon.h)
   target_link_libraries(PRISMLiveStudio PRIVATE hopcast::securestore Qt::GuiPrivate)
 
   if(_QT_VERSION EQUAL 5)
@@ -1141,7 +1142,8 @@ elseif(OS_POSIX)
     prism-ui/hopcast/HopCastMultiStream.cpp prism-ui/hopcast/HopCastMultiStream.h
     prism-ui/hopcast/HopCastProfileImport.cpp prism-ui/hopcast/HopCastProfileImport.h
     prism-ui/hopcast/HopCastNetLog.cpp prism-ui/hopcast/HopCastNetLog.h
-    prism-ui/hopcast/HopCastSettingsGuard.cpp prism-ui/hopcast/HopCastSettingsGuard.h)
+    prism-ui/hopcast/HopCastSettingsGuard.cpp prism-ui/hopcast/HopCastSettingsGuard.h
+    prism-ui/hopcast/HopCastChannelIcon.cpp prism-ui/hopcast/HopCastChannelIcon.h)
   target_link_libraries(PRISMLiveStudio PRIVATE hopcast::securestore)
   target_link_libraries(PRISMLiveStudio PRIVATE Qt::GuiPrivate)
 
