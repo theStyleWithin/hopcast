@@ -1,6 +1,6 @@
-# Template for fdroiddata: metadata/io.github.theStyleWithin.hopcast.android.yml
-# Placeholder until an Android release exists. Replace every @...@ mark, then test with `fdroid build`.
-# The app id is proposed; change it if the Android project uses a different one.
+# Template for fdroiddata: metadata/io.github.thestylewithin.hopcast.yml (the file name is the app id).
+# The release workflow fills the @...@ marks for each version. Test with `fdroid build` before submitting.
+# The Android project is in android/ (Gradle). versionCode is major*10000 + minor*100 + patch of hopcast/VERSION.
 Categories:
   - Multimedia
   - Internet

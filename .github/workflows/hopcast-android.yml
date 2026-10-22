@@ -51,7 +51,7 @@ jobs:
           F=build/fdroid
           mkdir -p "$F"
           sed -e "s|@VERSION_NAME@|$VN|g" -e "s|@VERSION_CODE@|$VC|g" -e "s|@COMMIT@|$GITHUB_SHA|g" -e "s|@ANDROID_PROJECT_DIR@|android|g" \
-            hopcast/packaging/fdroid/io.github.theStyleWithin.hopcast.android.yml.in > "$F/io.github.thestylewithin.hopcast.yml"
+            hopcast/packaging/fdroid/io.github.thestylewithin.hopcast.yml.in > "$F/io.github.thestylewithin.hopcast.yml"
           cp -r hopcast/packaging/fdroid/metadata "$F/metadata"
           cp hopcast/packaging/fdroid/README.md "$F/README.md"
           cp PACKAGING.md "$F/PACKAGING.md"
