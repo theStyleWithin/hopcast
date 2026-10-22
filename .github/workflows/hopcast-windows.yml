@@ -52,6 +52,11 @@ jobs:
           cmake --build "$W/build/engine" --config RelWithDebInfo --parallel 2>&1 | tee "$W/build.log"
           exit "${PIPESTATUS[0]}"
 
+      - name: Install engine
+        if: steps.build.outcome == 'success'
+        run: |
+          cmake --install build/engine --config RelWithDebInfo --prefix build/engine-install 2>&1 | tail -5
+
       - name: Install Qt 6.8
         uses: jurplel/install-qt-action@v4
         with:
@@ -82,7 +87,7 @@ jobs:
           DEPS=$(ls -d "$W"/src/obs-studio/.deps/obs-deps-*-x64 | head -1)
           VC=$(echo "$VCPKG_INSTALLATION_ROOT" | sed 's|\\|/|g')/installed/x64-windows
           cmake -S src -B build/app -G "Visual Studio 17 2022" -A x64 -Wno-dev \
-            -DCMAKE_PREFIX_PATH="$Q;$DEPS;$VC" -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF -DENABLE_TEST=OFF \
+            -DCMAKE_PREFIX_PATH="$Q;$DEPS;$VC;$W/build/engine-install" -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF -DENABLE_TEST=OFF \
             -DCMAKE_PROJECT_INCLUDE="$W/hopcast/cmake/engine-compat.cmake" 2>&1 | tee "$W/appconfigure.log"
           exit "${PIPESTATUS[0]}"
 
@@ -91,7 +96,7 @@ jobs:
         if: steps.appconfigure.outcome == 'success'
         continue-on-error: true
         run: |
-          cmake --build build/app --config RelWithDebInfo --parallel -- /maxcpucount /p:CL_MPCount=4 2>&1 | tee appbuild.log
+          cmake --build build/app --config RelWithDebInfo --parallel 2>&1 | tee appbuild.log
           exit "${PIPESTATUS[0]}"
 
       - name: List what was built
