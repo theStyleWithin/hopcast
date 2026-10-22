@@ -1,0 +1,97 @@
+# HopCast for Android: builds the APK and the F-Droid hand-off package from the same version as the desktop builds.
+# Builds on every change under android/; with release_tag it attaches them to that release. GPL-2.0-or-later.
+name: hopcast-android
+
+on:
+  pull_request:
+    paths: ["android/**", "hopcast/VERSION", "hopcast/packaging/fdroid/**", ".github/workflows/hopcast-android.yml"]
+  push:
+    branches: [main]
+    paths: ["android/**", "hopcast/VERSION", "hopcast/packaging/fdroid/**", ".github/workflows/hopcast-android.yml"]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Attach the APK and the F-Droid hand-off package to the release with this tag (created as a pre-release if it doesn't exist); empty = no release"
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  android:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Accept the Android SDK licenses
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+
+      - name: Build the APK
+        working-directory: android
+        run: ./gradlew --no-daemon --console=plain assembleRelease 2>&1 | tee ../android-build.log
+
+      - name: Package
+        id: package
+        run: |
+          set -e
+          V=$(tr -d '[:space:]' < hopcast/VERSION)
+          VN=$(echo "$V" | cut -d. -f1-3)
+          IFS=. read -r A B C _ <<< "$V"
+          VC=$((A * 10000 + B * 100 + C))
+          mkdir -p out
+          cp android/app/build/outputs/apk/release/app-release.apk "out/HopCast-android-$V.apk"
+          ( cd out && sha256sum "HopCast-android-$V.apk" > SHA256SUMS-android )
+          # F-Droid hand-off package: the build recipe with its marks filled in, store text and notes
+          F=build/fdroid
+          mkdir -p "$F"
+          sed -e "s|@VERSION_NAME@|$VN|g" -e "s|@VERSION_CODE@|$VC|g" -e "s|@COMMIT@|$GITHUB_SHA|g" -e "s|@ANDROID_PROJECT_DIR@|android|g" \
+            hopcast/packaging/fdroid/io.github.thestylewithin.hopcast.yml.in > "$F/io.github.thestylewithin.hopcast.yml"
+          cp -r hopcast/packaging/fdroid/metadata "$F/metadata"
+          cp hopcast/packaging/fdroid/README.md "$F/README.md"
+          cp PACKAGING.md "$F/PACKAGING.md"
+          printf '%s\n' "$VC" > /dev/null
+          echo "Changes in this version." > "$F/metadata/en-US/changelogs/$VC.txt"
+          tar -C "$F" -czf "out/hopcast-fdroid-$V.tar.gz" .
+          ( cd out && sha256sum "hopcast-fdroid-$V.tar.gz" >> SHA256SUMS-android )
+          cat out/SHA256SUMS-android
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+
+      - name: Publish
+        if: inputs.release_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.release_tag }}
+          V: ${{ steps.package.outputs.version }}
+        run: |
+          cd out
+          cat > android-notes.md <<N
+          **HopCast for Android - early test build.** It hasn't been run on many phones yet (tested on a RedMagic 8 Pro), so expect rough edges and please tell us what you find. Android 10 or newer.
+
+          - \`HopCast-android-*.apk\` - the app. Copy it to your phone and allow installs from your file manager or browser. It is signed with a public test key, so install updates over it only from these releases.
+          - \`hopcast-fdroid-*.tar.gz\` - F-Droid hand-off files (an untested template; the author doesn't publish to F-Droid).
+          - \`SHA256SUMS-android\` - checksums of both.
+
+          Not affiliated with NAVER Corp. or the OBS Project.
+          N
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "HopCast-android-$V.apk" "hopcast-fdroid-$V.tar.gz" SHA256SUMS-android --clobber
+          else
+            gh release create "$TAG" --prerelease --target "$GITHUB_SHA" --title "HopCast $TAG (Android build)" --notes-file android-notes.md "HopCast-android-$V.apk" "hopcast-fdroid-$V.tar.gz" SHA256SUMS-android
+          fi
+
+      - name: Keep the APK for testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: HopCast-android
+          path: out/*
+          retention-days: 14
+
+      - name: Build log
+        if: failure()
+        run: tail -80 android-build.log || true

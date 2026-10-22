@@ -1,11 +1,11 @@
-# Appends the Windows notice to an existing release's text (once). Manual only. GPL-2.0-or-later.
+# Appends the Windows and Android notices to an existing release's text (each once, only when the release has that build). Manual only. GPL-2.0-or-later.
 name: hopcast-release-notes
 
 on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Release tag to add the Windows notice to (e.g. v0.1.11)"
+        description: "Release tag to add the Windows and Android notices to (e.g. v0.1.15)"
         type: string
         required: true
 
@@ -16,21 +16,31 @@ jobs:
   notes:
     runs-on: ubuntu-24.04
     steps:
-      - name: Add the Windows notice
+      - name: Add the notices
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
         run: |
           body=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json body -q .body)
-          if printf '%s' "$body" | grep -q "HopCast-windows-x64"; then echo "already has the Windows notice"; exit 0; fi
-          {
-            printf '%s\n\n' "$body"
-            cat <<'N'
+          assets=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets -q '.assets[].name')
+          added=0
+          if printf '%s\n' "$assets" | grep -q "^HopCast-windows-x64" && ! printf '%s' "$body" | grep -q "HopCast-windows-x64"; then
+            body="$body
+
           ---
 
-          **Windows (early build, portable, no installer):** `HopCast-windows-x64-*.zip` - unzip it and double-click `HopCast.exe`. The developer uses Linux and only tests the AppImage versions, so please try the Windows build in a virtual machine first and tell us what you find. Windows SmartScreen may warn because the program isn't code-signed; compare `Get-FileHash` with `SHA256SUMS-windows`. Left out on Windows for now: virtual camera, capture-card support and the scripting tool.
-          N
-          } > notes.md
-          sed -i 's/^          //' notes.md
+          **Windows (early build, portable, no installer):** \`HopCast-windows-x64-*.zip\` - unzip it and double-click \`HopCast.exe\`. The developer uses Linux and only tests the AppImage versions, so please try the Windows build in a virtual machine first and tell us what you find. Windows SmartScreen may warn because the program isn't code-signed; compare \`Get-FileHash\` with \`SHA256SUMS-windows\`. Left out on Windows for now: virtual camera, capture-card support and the scripting tool."
+            added=1
+          fi
+          if printf '%s\n' "$assets" | grep -q "^HopCast-android" && ! printf '%s' "$body" | grep -q "HopCast-android"; then
+            body="$body
+
+          ---
+
+          **Android (early test build):** \`HopCast-android-*.apk\` - copy it to your phone and allow installs from your file manager or browser (Android 10 or newer). It has been tested on one phone only (a RedMagic 8 Pro), so expect rough edges and tell us what you find. It is signed with a public test key; compare \`sha256sum\` with \`SHA256SUMS-android\`. \`hopcast-fdroid-*.tar.gz\` holds F-Droid hand-off files (an untested template; the author doesn't publish to F-Droid)."
+            added=1
+          fi
+          if [ "$added" = 0 ]; then echo "nothing to add"; exit 0; fi
+          printf '%s\n' "$body" | sed 's/^          //' > notes.md
           gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes-file notes.md
-          echo "Windows notice added to $TAG"
+          echo "notices added to $TAG"

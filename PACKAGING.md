@@ -16,13 +16,16 @@ not endorsed or supported by the author.
 | `hopcast-source-<ver>.tar.gz` | the complete corresponding source (GPL-2.0), with build scripts in `hopcast/scripts/` |
 | `hopcast-bin-aur-<ver>.tar.gz` | `PKGBUILD` and `.SRCINFO` for an AUR package named `hopcast-bin` |
 | `hopcast-flatpak-<ver>.tar.gz` | a Flatpak manifest, AppStream metadata and notes (an untested template) |
-| `SHA256SUMS` | checksums of every file above |
+| `HopCast-android-<ver>.apk` | the Android app (early test build) |
+| `hopcast-fdroid-<ver>.tar.gz` | F-Droid build recipe and store text (an untested template) |
+| `SHA256SUMS` | checksums of the Linux files; `SHA256SUMS-android` and `SHA256SUMS-windows` cover those builds |
 
-## F-Droid (Android, later)
+## Android and F-Droid
 
-HopCast for Android is still only a design idea. Placeholder files for an F-Droid entry live in
-`hopcast/packaging/fdroid/` (a build recipe template and store descriptions), with a README that
-says how to fill them in. The same policy applies: the author won't submit or maintain it.
+Each release also has the Android app (`HopCast-android-<ver>.apk`, an early test build signed with a
+public test key) and an F-Droid hand-off package (`hopcast-fdroid-<ver>.tar.gz`: a build recipe with the
+version filled in, store descriptions and notes; an untested template). The files live in
+`hopcast/packaging/fdroid/`. The same policy applies: the author won't submit or maintain an F-Droid entry.
 
 ## Before you publish
 
