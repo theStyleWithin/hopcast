@@ -99,6 +99,44 @@ jobs:
           cmake --build build/app --config RelWithDebInfo --parallel 2>&1 | tee appbuild.log
           exit "${PIPESTATUS[0]}"
 
+      - name: Stage the portable folder
+        id: stage
+        if: steps.appbuild.outcome == 'success'
+        continue-on-error: true
+        run: |
+          W=$(echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g')
+          Q=$(echo "$QT_ROOT_DIR" | sed 's|\\|/|g')
+          VC=$(echo "$VCPKG_INSTALLATION_ROOT" | sed 's|\\|/|g')/installed/x64-windows
+          S="$W/stage/HopCast"; mkdir -p "$S"
+          {
+            echo "engine runtime:"; cp -r build/engine/rundir/RelWithDebInfo/. "$S/" && echo ok
+            echo "app output:"; for d in build/app/output/*; do [ -d "$d" ] && cp -r "$d"/. "$S/" && echo "copied $d"; done
+            echo "app exe:"; EXE=$(find build/app -name obs64.exe -not -path '*CMakeFiles*' | head -1); echo "$EXE"; [ -n "$EXE" ] && cp "$EXE" "$S/bin/64bit/obs64.exe"
+            echo "PRISM libraries:"; find build/app -name '*.dll' -not -path '*CMakeFiles*' -not -path '*/output/*' | while read f; do cp -n "$f" "$S/bin/64bit/" && echo "$f"; done
+            echo "dependency libraries:"; cp -n src/obs-studio/.deps/obs-deps-*-x64/bin/*.dll "$S/bin/64bit/" 2>&1 | tail -2; cp -n "$VC"/bin/*.dll "$S/bin/64bit/" 2>&1 | tail -2
+            echo "Qt:"; "$Q/bin/windeployqt.exe" --release --no-translations --no-system-d3d-compiler --no-opengl-sw "$S/bin/64bit/obs64.exe" 2>&1 | tail -15
+          } 2>&1 | tee stage.log
+          find "$S" -type f | wc -l | tee -a stage.log
+
+      - name: Start it (smoke test)
+        id: smoke
+        if: steps.stage.outcome == 'success'
+        continue-on-error: true
+        run: |
+          S="$GITHUB_WORKSPACE/stage/HopCast/bin/64bit"
+          ( cd "$S" && ls obs64.exe && (./obs64.exe > "$GITHUB_WORKSPACE/run.log" 2>&1 & echo $! > "$GITHUB_WORKSPACE/run.pid"); sleep 40; tasklist //FI "IMAGENAME eq obs64.exe" 2>&1 | tee -a "$GITHUB_WORKSPACE/run.log"; taskkill //F //IM obs64.exe 2>&1 | tee -a "$GITHUB_WORKSPACE/run.log" ) || true
+          # whatever the app wrote about itself
+          mkdir -p applogs; cp -r "$APPDATA/PRISMLiveStudio/logs" applogs/ 2>/dev/null || true; cp -r "$APPDATA/obs-studio/logs" applogs/ 2>/dev/null || true
+          find applogs -type f | head -5 | tee -a run.log
+
+      - name: Upload the portable folder
+        if: steps.stage.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: HopCast-windows-portable
+          path: stage/HopCast
+          retention-days: 3
+
       - name: List what was built
         if: always()
         run: |
@@ -116,13 +154,14 @@ jobs:
         run: |
           tmp=$(mktemp -d)
           git -C "$tmp" init -q -b dev-logs-windows
-          for f in configure.log build.log vcpkg.log appconfigure.log appbuild.log; do
+          for f in configure.log build.log vcpkg.log appconfigure.log appbuild.log stage.log run.log; do
             [ -f "$f" ] || continue
             grep -nE "CMake Error|error C[0-9]+|error LNK|fatal error|Could NOT find|FAILED|failed" "$f" | head -400 > "$tmp/${GITHUB_RUN_ID}-${f%.log}-errors.txt" || true
             tail -c 300000 "$f" > "$tmp/${GITHUB_RUN_ID}-${f%.log}-tail.log"
           done
-          echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }} appconfigure=${{ steps.appconfigure.outcome }} appbuild=${{ steps.appbuild.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
+          echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }} appconfigure=${{ steps.appconfigure.outcome }} appbuild=${{ steps.appbuild.outcome }} stage=${{ steps.stage.outcome }} smoke=${{ steps.smoke.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
           [ -f inventory.txt ] && cp inventory.txt "$tmp/${GITHUB_RUN_ID}-inventory.txt"
+          for f in applogs/logs/*; do [ -f "$f" ] && tail -c 100000 "$f" > "$tmp/${GITHUB_RUN_ID}-applog-$(basename "$f")"; done 2>/dev/null || true
           git -C "$tmp" add -A
           git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "windows logs for run ${GITHUB_RUN_ID}"
           git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:dev-logs-windows
