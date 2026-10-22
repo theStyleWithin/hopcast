@@ -18,6 +18,12 @@ not endorsed or supported by the author.
 | `hopcast-flatpak-<ver>.tar.gz` | a Flatpak manifest, AppStream metadata and notes (an untested template) |
 | `SHA256SUMS` | checksums of every file above |
 
+## F-Droid (Android, later)
+
+HopCast for Android is still only a design idea. Placeholder files for an F-Droid entry live in
+`hopcast/packaging/fdroid/` (a build recipe template and store descriptions), with a README that
+says how to fill them in. The same policy applies: the author won't submit or maintain it.
+
 ## Before you publish
 
 1. Verify the files against `SHA256SUMS` and read the source tarball. Nothing is hidden.

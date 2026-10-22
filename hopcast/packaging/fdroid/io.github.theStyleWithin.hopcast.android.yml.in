@@ -1,0 +1,30 @@
+# Template for fdroiddata: metadata/io.github.theStyleWithin.hopcast.android.yml
+# Placeholder until an Android release exists. Replace every @...@ mark, then test with `fdroid build`.
+# The app id is proposed; change it if the Android project uses a different one.
+Categories:
+  - Multimedia
+  - Internet
+License: GPL-2.0-or-later
+AuthorName: theStyleWithin
+WebSite: https://github.com/theStyleWithin/hopcast
+SourceCode: https://github.com/theStyleWithin/hopcast
+IssueTracker: https://github.com/theStyleWithin/hopcast/issues
+
+AutoName: HopCast
+Summary: Stream or record your phone screen, no account and no nudges
+
+RepoType: git
+Repo: https://github.com/theStyleWithin/hopcast.git
+
+Builds:
+  - versionName: '@VERSION_NAME@'
+    versionCode: @VERSION_CODE@
+    commit: @COMMIT@
+    subdir: @ANDROID_PROJECT_DIR@/app
+    gradle:
+      - yes
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: '@VERSION_NAME@'
+CurrentVersionCode: @VERSION_CODE@
