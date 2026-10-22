@@ -24,6 +24,7 @@ than OBS's, and makes four changes:
   - No sign-in and no telemetry.
   - No network traffic except the stream you start.
 - **Neutral.** You enter your own server address and stream key. HopCast doesn't recommend, rank or advertise any platform.
+- **No nudges.** No quick links, invitations or suggestions of where to be, so every choice about where to stream is the user's own. This is a golden rule, not a default: changes that add promotional or social links are out of scope.
 - **Safe with secrets.** Stream keys are encrypted at rest and never written to logs.
 - **Easy to install.** One AppImage that runs on current distributions (glibc 2.39 or newer: CachyOS, Arch, Fedora 40+, Ubuntu 24.04+).
 - **Open.** GPL-2.0, with full source for every release.
@@ -32,6 +33,7 @@ than OBS's, and makes four changes:
 
 - Accounts, cloud sync or anything that needs a HopCast or NAVER server.
 - Built-in platform integrations (sign-in with Twitch/YouTube/Facebook, platform chat, viewer counts).
+- Quick links, recommendations, community or social invitations, or anything else that steers people toward a platform.
 - Windows or macOS builds. Use PRISM Live Studio or OBS Studio there.
 - Re-adding PRISM's online extras (PRISM Lens, sticker and template stores, notices, update checks).
 
