@@ -313,7 +313,8 @@ kill -INT "$RTMP2" 2>/dev/null; sleep 2; kill "$RTMP2" 2>/dev/null
 frames2=$(ffprobe -v error -count_packets -select_streams v:0 -show_entries stream=nb_read_packets -of csv=p=0 "$OUT/received2.flv" 2>/dev/null)
 if [[ "${frames2:-0}" -gt 30 ]]; then pass "went live after a restart with the saved key: ${frames2} video frames"; else fail "after a restart the saved channel did not go live (app-second.log: 'going live' line, shots 21-22)"; fi
 grep -h "HopCast: going live" "$OUT/app-second.log" | tail -2 | sed 's/^/INFO  restart: /'
-click 1328 873; w 5; click 798 564; w 2
+click 1328 873; w 5; click 798 564; w 2; xdotool key Return; w 2   # End, then dismiss any alert (Live Has Ended / connect failed)
+shot 23-restart-ended
 quit_app second; code=$?
 crashed "$OUT/app-second.log" && fail "second run crashed (backtrace in app-second.log)"
 (( code == 0 )) && pass "second run quits cleanly" || fail "second run exit status $code"
