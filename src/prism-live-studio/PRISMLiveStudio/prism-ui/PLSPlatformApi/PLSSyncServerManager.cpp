@@ -1221,7 +1221,12 @@ const QString PLSSyncServerManager::getDiscordUrl()
 			PLS_INFO("SyncServer", "sync server status: m_strDiscordUrl from app default value json file , the m_strDiscordUrl is empty");
 			initDiscordInfo(m_policyPublishDefaultValueObject);
 			if (m_strDiscordUrl.isEmpty()) {
+				
+#ifdef HOPCAST_NO_NAVER
+				m_strDiscordUrl.clear(); // HopCast: no social invite links, not even a built-in default
+#else
 				m_strDiscordUrl = QStringLiteral("https://discord.com/invite/e2HsWnf48R");
+#endif
 			}
 		}
 	}

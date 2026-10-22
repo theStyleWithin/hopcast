@@ -1475,6 +1475,14 @@ void PLSBasic::PLSInit()
 		action->setVisible(false);
 		action->setEnabled(false);
 	}
+	/* HopCast: logs stay on this computer - no "upload to a server" entries, and the crash-log
+	 * submenu isn't a contact form. */
+	for (QAction *action : {ui->actionUploadCurrentLog, ui->actionUploadLastLog, ui->actionUploadLastCrashLog}) {
+		action->setVisible(false);
+		action->setEnabled(false);
+	}
+	ui->menuLogFiles->setTitle(QStringLiteral("Log files"));
+	ui->menuCrashLogs->setTitle(QStringLiteral("Crash logs"));
 #endif
 
 	auto text = ui->actionRepair->text();
