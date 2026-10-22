@@ -2,7 +2,7 @@ pkgbase = hopcast-bin
 	pkgdesc = Live streaming and recording studio for Linux: no account, no telemetry, any RTMP/SRT/RIST server
 	pkgver = @PKGVER@
 	pkgrel = 1
-	url = https://github.com/theStyleWithin/hoppercast
+	url = https://github.com/theStyleWithin/hopcast
 	arch = x86_64
 	license = GPL-2.0-or-later
 	depends = glibc
@@ -15,7 +15,7 @@ pkgbase = hopcast-bin
 	noextract = HopCast-release-@PKGVER@-x86_64.AppImage
 	options = !strip
 	options = !debug
-	source = HopCast-release-@PKGVER@-x86_64.AppImage::https://github.com/theStyleWithin/hoppercast/releases/download/@TAG@/HopCast-release-@PKGVER@-x86_64.AppImage
+	source = HopCast-release-@PKGVER@-x86_64.AppImage::https://github.com/theStyleWithin/hopcast/releases/download/@TAG@/HopCast-release-@PKGVER@-x86_64.AppImage
 	sha256sums = @SHA256@
 
 pkgname = hopcast-bin

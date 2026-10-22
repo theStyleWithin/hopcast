@@ -34,7 +34,7 @@ modules:
       - install -Dm644 io.github.theStyleWithin.HopCast.metainfo.xml /app/share/metainfo/io.github.theStyleWithin.HopCast.metainfo.xml
     sources:
       - type: file
-        url: https://github.com/theStyleWithin/hoppercast/releases/download/@TAG@/HopCast-release-@PKGVER@-x86_64.AppImage
+        url: https://github.com/theStyleWithin/hopcast/releases/download/@TAG@/HopCast-release-@PKGVER@-x86_64.AppImage
         sha256: @SHA256@
       - type: script
         dest-filename: hopcast-launcher
