@@ -1,0 +1,74 @@
+# HopCast for Windows: a portable .exe built from the same source as the Linux AppImage.
+# Stage 1 (this file): build the engine on a Windows runner and publish the logs, so each failure
+# can be fixed in turn. Manual only (workflow_dispatch). GPL-2.0-or-later.
+name: hopcast-windows
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # pushes logs to the dev-logs-windows branch
+
+jobs:
+  engine-windows:
+    runs-on: windows-2022
+    timeout-minutes: 150
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Fetch pinned engine (NAVER libobs fork)
+        run: |
+          git submodule update --init --depth 1 src/obs-studio
+          git -C src/obs-studio submodule update --init --depth 1 plugins/obs-browser plugins/obs-websocket
+
+      - name: Configure engine
+        id: configure
+        continue-on-error: true
+        run: |
+          W=$(echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g')
+          VERSION=$(tr -d '[:space:]' < hopcast/VERSION)
+          IFS=. read -r a b c d <<< "$VERSION"
+          export PLS_VERSION="$VERSION" VERSION="$VERSION" PRISM_VERSION_MAJOR="$a" PRISM_VERSION_MINOR="$b" PRISM_VERSION_PATCH="$c" PRISM_VERSION_TWEAK="${d:-0}"
+          export PRISM_COMMENTS=HopCast PRISM_SRC_DIR="$W/src/prism-live-studio" OBS_SRC_DIR="$W/src/obs-studio" OBS_BUILD_DIR="$W/build/engine"
+          cd src/obs-studio
+          cmake --preset windows-x64 -Wno-dev \
+            -DENABLE_UI=OFF -DENABLE_BROWSER=OFF -DENABLE_WEBSOCKET=OFF -DENABLE_WEBRTC=OFF \
+            -DENABLE_AJA=OFF -DENABLE_DECKLINK=OFF -DENABLE_VLC=OFF -DENABLE_SCRIPTING=OFF -DENABLE_VST=OFF \
+            -DENABLE_SERVICE_UPDATES=OFF -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF 2>&1 | tee "$W/configure.log"
+          exit "${PIPESTATUS[0]}"
+
+      - name: Build engine
+        id: build
+        if: steps.configure.outcome == 'success'
+        continue-on-error: true
+        run: |
+          W=$(echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g')
+          export PLS_VERSION=$(tr -d '[:space:]' < hopcast/VERSION) PRISM_SRC_DIR="$W/src/prism-live-studio" OBS_SRC_DIR="$W/src/obs-studio"
+          cmake --build "$W/build/engine" --config RelWithDebInfo --parallel 2>&1 | tee "$W/build.log"
+          exit "${PIPESTATUS[0]}"
+
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          tmp=$(mktemp -d)
+          git -C "$tmp" init -q -b dev-logs-windows
+          for f in configure.log build.log; do
+            [ -f "$f" ] || continue
+            grep -nE "CMake Error|error C[0-9]+|error LNK|fatal error|Could NOT find|FAILED|failed" "$f" | head -400 > "$tmp/${GITHUB_RUN_ID}-${f%.log}-errors.txt"
+            tail -c 300000 "$f" > "$tmp/${GITHUB_RUN_ID}-${f%.log}-tail.log"
+          done
+          echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
+          git -C "$tmp" add -A
+          git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "windows logs for run ${GITHUB_RUN_ID}"
+          git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:dev-logs-windows
+
+      - name: Result
+        if: steps.configure.outcome != 'success' || steps.build.outcome != 'success'
+        run: exit 1
