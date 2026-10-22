@@ -1,6 +1,7 @@
 #include "PLSRtmpChannelView.h"
 #include <QClipboard>
 #include "PLSAlertView.h"
+#include "../../hopcast/HopCastChannelIcon.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QHBoxLayout>
@@ -718,22 +719,6 @@ void PLSRtmpChannelView::setServerUI(const QString &channelName)
 }
 
 #ifdef HOPCAST_NO_NAVER
-namespace {
-constexpr qint64 kMaxIconBytes = 20 * 1024 * 1024; // keeps animated pictures from being huge
-
-QString iconDir()
-{
-	return pls_get_user_path(QStringLiteral("PRISMLiveStudio/user/channel-icons/"));
-}
-
-// Only ever delete a picture that HopCast itself copied in.
-void removeOwnedIcon(const QString &path)
-{
-	if (!path.isEmpty() && path.contains(QStringLiteral("/channel-icons/")))
-		QFile::remove(path);
-}
-} // namespace
-
 void PLSRtmpChannelView::initIconRow()
 {
 	auto *label = new QLabel(QStringLiteral("Icon"), this);
@@ -762,16 +747,9 @@ void PLSRtmpChannelView::initIconRow()
 	ui->gridLayout->addWidget(row, 6, 2);
 
 	connect(choose, &QPushButton::clicked, this, [this]() {
-		const QString file = QFileDialog::getOpenFileName(this, QStringLiteral("Choose a picture for this channel"), QDir::homePath(),
-								  QStringLiteral("Pictures (*.png *.jpg *.jpeg *.gif *.webp *.bmp);;All files (*)"));
-		if (file.isEmpty())
+		QString file;
+		if (!hopcast::pickChannelPicture(this, file))
 			return;
-		QImageReader reader(file);
-		if (!reader.canRead() || QFileInfo(file).size() > kMaxIconBytes) {
-			PLSAlertView::warning(this, QStringLiteral("HopCast"),
-					      QStringLiteral("That file can't be used as a picture (it must be a PNG, JPG, WebP or GIF, 20 MB or smaller)."));
-			return;
-		}
 		m_iconChosenSource = file;
 		m_iconCleared = false;
 		refreshIconPreview();
@@ -821,15 +799,14 @@ void PLSRtmpChannelView::refreshIconPreview()
 void PLSRtmpChannelView::applyIcon(QVariantMap &data) const
 {
 	if (!m_iconChosenSource.isEmpty()) {
-		QDir().mkpath(iconDir());
-		const QString dest = iconDir() + QUuid::createUuid().toString(QUuid::WithoutBraces) + QLatin1Char('.') + QFileInfo(m_iconChosenSource).suffix().toLower();
-		if (QFile::copy(m_iconChosenSource, dest)) {
-			removeOwnedIcon(m_iconCurrent);
+		const QString dest = hopcast::storeChannelPicture(m_iconChosenSource);
+		if (!dest.isEmpty()) {
+			hopcast::removeChannelPicture(m_iconCurrent);
 			m_iconCurrent = dest;
 			m_iconChosenSource.clear();
 		}
 	} else if (m_iconCleared) {
-		removeOwnedIcon(m_iconCurrent);
+		hopcast::removeChannelPicture(m_iconCurrent);
 		m_iconCurrent.clear();
 		m_iconCleared = false;
 	}

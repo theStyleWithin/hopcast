@@ -3,6 +3,9 @@
 #include <QUrl>
 #include <QWidgetAction>
 #include "ChannelCommonFunctions.h"
+#ifdef HOPCAST_NO_NAVER
+#include "../../hopcast/HopCastChannelIcon.h"
+#endif
 #include "LogPredefine.h"
 #include "PLSBasic.h"
 #include "PLSChannelDataAPI.h"
@@ -209,6 +212,24 @@ void ChannelConfigPannel::on_ConfigBtn_clicked()
 
 	auto menu = createWidgetWidthDeleter<QMenu>(this);
 	menu->setWindowFlag(Qt::NoDropShadowWindowHint);
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: Customize > picture / edit, for the channels that are just a server and a key. */
+	if (PLSCHANNELS_API->getValueOfChannel(mChannelID, ChannelData::g_data_type, ChannelData::NoType) >= ChannelData::CustomType) {
+		auto *customize = menu->addMenu(QStringLiteral("Customize"));
+		customize->setWindowFlag(Qt::NoDropShadowWindowHint);
+		auto *change = customize->addAction(QStringLiteral("Change picture..."));
+		connect(change, &QAction::triggered, this, [id = mChannelID, parent = this]() {
+			QString file;
+			if (hopcast::pickChannelPicture(parent, file))
+				setRTMPChannelPicture(id, file);
+		}, Qt::QueuedConnection);
+		auto *useDefault = customize->addAction(QStringLiteral("Use the default picture"));
+		connect(useDefault, &QAction::triggered, this, [id = mChannelID]() { setRTMPChannelPicture(id, QString()); }, Qt::QueuedConnection);
+		customize->addSeparator();
+		auto *edit = customize->addAction(QStringLiteral("Edit channel..."));
+		connect(edit, &QAction::triggered, this, [id = mChannelID]() { editRTMP(id); }, Qt::QueuedConnection);
+	}
+#endif
 	auto deleteAction = menu->addAction(CHANNELS_TR(Disconnect));
 	deleteAction->setParent(this);
 	auto platform = PLSCHANNELS_API->getValueOfChannel(mChannelID, ChannelData::g_channelName, QString());

@@ -1,4 +1,7 @@
 #include "PLSChannelsVirualAPI.h"
+#ifdef HOPCAST_NO_NAVER
+#include "../../hopcast/HopCastChannelIcon.h"
+#endif
 #include <qobject.h>
 #include <quuid.h>
 #include <QDialog>
@@ -649,6 +652,33 @@ void editRTMP(const QString &uuid)
 		PLSCHANNELS_API->setChannelInfos(channelInfo, false);
 		PLSCHANNELS_API->sigTryToUpdateChannel(uuid);
 	}
+}
+
+void setRTMPChannelPicture(const QString &uuid, const QString &sourceFile)
+{
+#ifdef HOPCAST_NO_NAVER
+	auto info = PLSCHANNELS_API->getChannelInfo(uuid);
+	if (info.isEmpty())
+		return;
+	const QString old = getInfo(info, g_userIconCachePath, QString());
+	QString now;
+	if (!sourceFile.isEmpty()) {
+		now = hopcast::storeChannelPicture(sourceFile);
+		if (now.isEmpty())
+			return;
+	}
+	if (now.isEmpty())
+		info.remove(g_userIconCachePath);
+	else
+		info[g_userIconCachePath] = now;
+	PLSCHANNELS_API->backupInfo(uuid);
+	PLSCHANNELS_API->setChannelInfos(info, false);
+	PLSCHANNELS_API->sigTryToUpdateChannel(uuid);
+	hopcast::removeChannelPicture(old);
+#else
+	Q_UNUSED(uuid)
+	Q_UNUSED(sourceFile)
+#endif
 }
 
 void runCMD(const QString &cmdStr)
