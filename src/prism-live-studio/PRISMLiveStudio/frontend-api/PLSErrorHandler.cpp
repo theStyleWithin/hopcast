@@ -1018,7 +1018,12 @@ PLSErrorHandler::AlertType PLSErrorHandler::getButtonAndMsgDatas(QMap<PLSAlertVi
 		transAndDealValStr(data.alertMsg, data.matchedObj, data.extraData, false);
 		transAndDealValStr(data.alertMsgEnglish, data.matchedObj, data.extraData, true);
 		buttonsMap.insert(QDialogButtonBox::Ok, QObject::tr(dialogBtn2Str(QDialogButtonBox::Ok)));
+#ifdef HOPCAST_NO_NAVER
+		/* HopCast: "View Help" opened a PRISM/NAVER help page; there is nothing to open. */
+		if (false) {
+#else
 		if (!btnText.first.isEmpty()) {
+#endif
 			auto qHelpBtn = QDialogButtonBox::Help;
 			buttonsMap.insert(qHelpBtn, btnText.first);
 			actionMap.insert(qHelpBtn, QString("open.").append(btnLink.first));
