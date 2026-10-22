@@ -735,10 +735,15 @@ void PLSRtmpChannelView::initIconRow()
 	m_iconPreview->setAlignment(Qt::AlignCenter);
 	layout->addWidget(m_iconPreview);
 
+	// Own look (same grey as the form's other buttons) so the form's fixed button width can't clip the text.
+	const QString buttonStyle = QStringLiteral("QPushButton{background:#444444;color:#ffffff;border:none;border-radius:2px;padding:0 18px;min-height:40px;font-weight:bold;}"
+						   "QPushButton:hover{background:#555555;}QPushButton:pressed{background:#3a3a3a;}");
 	auto *choose = new QPushButton(QStringLiteral("Choose a picture..."), row);
-	choose->setObjectName(QStringLiteral("CancelBtn")); // same look as the grey buttons here
+	choose->setStyleSheet(buttonStyle);
+	choose->setCursor(Qt::PointingHandCursor);
 	auto *clear = new QPushButton(QStringLiteral("Use the default"), row);
-	clear->setObjectName(QStringLiteral("CancelBtn"));
+	clear->setStyleSheet(buttonStyle);
+	clear->setCursor(Qt::PointingHandCursor);
 	layout->addWidget(choose);
 	layout->addWidget(clear);
 	layout->addStretch(1);
@@ -786,13 +791,27 @@ void PLSRtmpChannelView::refreshIconPreview()
 			shown.setDevicePixelRatio(devicePixelRatio());
 		}
 	}
-	if (shown.isNull()) {
-		m_iconPreview->setPixmap(QPixmap());
-		m_iconPreview->setText(QStringLiteral("R")); // what the default circle shows
-	} else {
-		m_iconPreview->setText(QString());
-		m_iconPreview->setPixmap(shown);
+	if (shown.isNull()) { // draw the default circle with its "R"
+		const int side = 44 * devicePixelRatio();
+		shown = QPixmap(side, side);
+		shown.fill(Qt::transparent);
+		{
+			QPainter painter(&shown);
+			painter.setRenderHint(QPainter::Antialiasing);
+			painter.setPen(Qt::NoPen);
+			painter.setBrush(QColor(0xe9, 0xe9, 0xe9));
+			painter.drawEllipse(0, 0, side, side);
+			QFont f = painter.font();
+			f.setBold(true);
+			f.setPixelSize(side / 2);
+			painter.setFont(f);
+			painter.setPen(QColor(0x22, 0x22, 0x22));
+			painter.drawText(QRect(0, 0, side, side), Qt::AlignCenter, QStringLiteral("R"));
+		}
+		shown.setDevicePixelRatio(devicePixelRatio());
 	}
+	m_iconPreview->setText(QString());
+	m_iconPreview->setPixmap(shown);
 }
 
 // Copies a newly chosen picture into HopCast's own folder (once) and records which one the channel uses.
