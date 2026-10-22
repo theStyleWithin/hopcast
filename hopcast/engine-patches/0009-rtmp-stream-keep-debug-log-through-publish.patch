@@ -1,0 +1,22 @@
+diff --git a/plugins/obs-outputs/rtmp-stream.c b/plugins/obs-outputs/rtmp-stream.c
+index 70347f8..42cd5c8 100644
+--- a/plugins/obs-outputs/rtmp-stream.c
++++ b/plugins/obs-outputs/rtmp-stream.c
+@@ -1378,11 +1378,13 @@ static int try_connect(struct rtmp_stream *stream)
+ 		return OBS_OUTPUT_CONNECT_FAILED;
+ 	}
+ 
+-	//PRISM/wangshaohui/20251219/PRISM_PC-4745/enable debug log for rtmp connection
+-	send_debug_log = false;
+-
+-	if (!RTMP_ConnectStream(&stream->rtmp, 0))
++	/* HopCast: keep the debug log on through the publish step too, so a refused stream key
++	 * leaves the server's own reason in the log. */
++	if (!RTMP_ConnectStream(&stream->rtmp, 0)) {
++		send_debug_log = false;
+ 		return OBS_OUTPUT_INVALID_STREAM;
++	}
++	send_debug_log = false;
+ 
+ 	char ip_address[INET6_ADDRSTRLEN] = {0};
+ 	netif_addr_to_str(&stream->rtmp.m_sb.sb_addr, ip_address, INET6_ADDRSTRLEN);
