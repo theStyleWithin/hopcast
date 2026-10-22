@@ -271,6 +271,18 @@ if wait_window; then pass "second start (same profile): main window shown"; else
 w 6; shot 20-second-start
 grep -qiE "tamper|key file is missing|KeyMissing" "$OUT/app-second.log" && fail "secure store reported a problem on second start" || pass "saved channel loaded without secure-store errors"
 grep -q "Audit Server\|hopcast_rtmp.*load" "$OUT/app-second.log" && info "channel load logged"
+# Go live again from the channel loaded off disk (the key must survive a restart).
+ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 120000000 -f flv \
+  -i "$RTMP_URL/$RTMP_KEY" -c copy -t 12 -y "$OUT/received2.flv" > "$OUT/rtmp-server-restart.log" 2>&1 & RTMP2=$!
+sleep 2
+click 1328 873; w 3; shot 21-restart-go-live-1
+click 724 557; w 6; shot 22-restart-go-live-2
+for _ in $(seq 1 $((25 * SLOW))); do kill -0 "$RTMP2" 2>/dev/null || break; sleep 1; done
+kill -INT "$RTMP2" 2>/dev/null; sleep 2; kill "$RTMP2" 2>/dev/null
+frames2=$(ffprobe -v error -count_packets -select_streams v:0 -show_entries stream=nb_read_packets -of csv=p=0 "$OUT/received2.flv" 2>/dev/null)
+if [[ "${frames2:-0}" -gt 30 ]]; then pass "went live after a restart with the saved key: ${frames2} video frames"; else fail "after a restart the saved channel did not go live (app-second.log: 'going live' line, shots 21-22)"; fi
+grep -h "HopCast: going live" "$OUT/app-second.log" | tail -2 | sed 's/^/INFO  restart: /'
+click 1328 873; w 5; click 798 564; w 2
 quit_app second; code=$?
 crashed "$OUT/app-second.log" && fail "second run crashed (backtrace in app-second.log)"
 (( code == 0 )) && pass "second run quits cleanly" || fail "second run exit status $code"

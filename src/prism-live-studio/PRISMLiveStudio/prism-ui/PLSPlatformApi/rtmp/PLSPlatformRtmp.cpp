@@ -26,8 +26,10 @@ void PLSPlatformRtmp::onPrepareLive(bool value)
 	 * the server's confusing "could not access the channel or stream key"), and log what is
 	 * used - the host and the key's length, never the key itself. */
 	{
-		const QString server = getInitData().value(ChannelData::g_channelRtmpUrl).toString().trimmed();
-		const QString key = getInitData().value(ChannelData::g_streamKey).toString();
+		QString server = getInitData().value(ChannelData::g_channelRtmpUrl).toString().trimmed();
+		while (server.endsWith(QLatin1Char('/')))
+			server.chop(1); // "…/app/" + "/" + key would send the server a path with an empty segment
+		const QString key = getInitData().value(ChannelData::g_streamKey).toString().trimmed();
 		PLS_INFO(MODULE_PlatformService, "HopCast: going live with '%s': server host=%s, stream key length=%d", qUtf8Printable(getChannelName()),
 			 qUtf8Printable(QUrl(server).host()), static_cast<int>(key.size()));
 		if (server.isEmpty() || key.isEmpty()) {
@@ -40,6 +42,10 @@ void PLSPlatformRtmp::onPrepareLive(bool value)
 			prepareLiveCallback(false);
 			return;
 		}
+		setStreamServer(server.toStdString());
+		setStreamKey(key.toStdString());
+		prepareLiveCallback(true);
+		return;
 	}
 #endif
 	setStreamServer(getInitData().value(ChannelData::g_channelRtmpUrl).toString().toStdString());

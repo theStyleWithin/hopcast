@@ -7,12 +7,15 @@
 #include <QDBusPendingCallWatcher>
 #include <QDateTime>
 #include <QDir>
+#include <QFileInfo>
 #include <QFile>
 #include <QGuiApplication>
 #include <QImage>
 #include <QPainter>
 #include <QPixmap>
 #include <QPointer>
+#include <QProcess>
+#include <QProcessEnvironment>
 #include <QRandomGenerator>
 #include <QScreen>
 #include <QStandardPaths>
@@ -156,6 +159,66 @@ void portalScreenshot(const QString &path, Done done)
 	QTimer::singleShot(120000, waiter, [waiter]() { waiter->finish(QStringLiteral("Screenshot timed out.")); });
 }
 
+
+// Silent capture with whatever screenshot tool the desktop already has. These run without any dialog,
+// unlike the desktop portal (KDE and GNOME both ask or open a window). The AppImage's own library
+// paths are removed first so the tool loads the system's Qt/GTK instead of ours.
+struct Tool {
+	const char *program;
+	QStringList args; // "%1" is replaced with the output path
+};
+
+void toolScreenshot(const QString &path, Done done, std::function<void()> fallback)
+{
+	static const QList<Tool> tools = {
+		{"spectacle", {"-b", "-n", "-f", "-o", "%1"}},
+		{"grim", {"%1"}},
+		{"gnome-screenshot", {"-f", "%1"}},
+		{"maim", {"%1"}},
+	};
+
+	QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+	for (const char *v : {"LD_LIBRARY_PATH", "LD_PRELOAD", "QT_PLUGIN_PATH", "QT_QPA_PLATFORM_PLUGIN_PATH",
+			      "QML2_IMPORT_PATH", "QT_QPA_PLATFORM"})
+		env.remove(QString::fromLatin1(v));
+
+	for (const Tool &t : tools) {
+		const QString exe = QStandardPaths::findExecutable(QString::fromLatin1(t.program));
+		if (exe.isEmpty())
+			continue;
+		QStringList args;
+		for (const QString &a : t.args)
+			args << QString(a).replace(QStringLiteral("%1"), path);
+
+		auto *proc = new QProcess(qApp);
+		proc->setProcessEnvironment(env);
+		QObject::connect(proc, &QProcess::finished, proc,
+				 [proc, path, done, fallback](int code, QProcess::ExitStatus st) {
+					 const bool ok = st == QProcess::NormalExit && code == 0 &&
+							 QFileInfo(path).size() > 0;
+					 proc->deleteLater();
+					 if (ok)
+						 done(path, QString());
+					 else
+						 fallback();
+				 });
+		QObject::connect(proc, &QProcess::errorOccurred, proc, [proc, fallback](QProcess::ProcessError e) {
+			if (e == QProcess::FailedToStart) {
+				proc->deleteLater();
+				fallback();
+			}
+		});
+		// Give the tray menu a moment to close before the picture is taken.
+		QTimer::singleShot(400, proc, [proc, exe, args]() { proc->start(exe, args); });
+		QTimer::singleShot(30000, proc, [proc]() {
+			if (proc->state() != QProcess::NotRunning)
+				proc->kill();
+		});
+		return;
+	}
+	fallback();
+}
+
 } // namespace
 
 namespace hopcast {
@@ -174,7 +237,7 @@ void takeDesktopScreenshot(std::function<void(const QString &path, const QString
 		});
 		return;
 	}
-	portalScreenshot(path, std::move(done));
+	toolScreenshot(path, done, [path, done]() { portalScreenshot(path, done); });
 }
 
 } // namespace hopcast

@@ -942,6 +942,9 @@ void PLSLaunchWizardView::updateGuideButtonState(bool on)
 
 void PLSLaunchWizardView::singletonWakeup()
 {
+#ifdef HOPCAST_NO_NAVER
+	return; // HopCast: no launcher window
+#endif
 	if (m_bShowFlag) {
 		PLS_INFO(ModuleName, "launch singletonWakeup");
 		if (isVisible()) {
@@ -988,6 +991,10 @@ void PLSLaunchWizardView::hideView()
 
 void PLSLaunchWizardView::firstShow(QWidget *parent)
 {
+#ifdef HOPCAST_NO_NAVER
+	pls_unused(parent);
+	return; // HopCast: no launcher window
+#endif
 	pls_unused(parent);
 	this->updateUserInfo();
 	QTimer::singleShot(1000, this, [this]() {
