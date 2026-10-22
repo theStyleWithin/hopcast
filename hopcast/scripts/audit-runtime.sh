@@ -185,9 +185,11 @@ else
 fi
 ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f flv \
   -i "$RTMP_LISTEN/$RTMP_KEY" -c copy -t 25 -y "$OUT/received.flv" > "$OUT/rtmp-server.log" 2>&1 & RTMP=$!
-RTMP_URL2="rtmp://127.0.0.1:1936/live2"; RTMP_KEY2="hopcast-audit-2"
+# The second server sits behind a proxy that drops the first connection: HopCast should retry by itself.
+RTMP_LISTEN2="rtmp://127.0.0.1:1936/live2"; RTMP_URL2="rtmp://127.0.0.1:1937/live2"; RTMP_KEY2="hopcast-audit-2"
+python3 "$(dirname "$0")/flaky-proxy.py" 1937 1936 > "$OUT/flaky-proxy.log" 2>&1 & FLAKY=$!
 ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f flv \
-  -i "$RTMP_URL2/$RTMP_KEY2" -c copy -t 25 -y "$OUT/received2.flv" > "$OUT/rtmp-server2.log" 2>&1 & RTMP2=$!
+  -i "$RTMP_LISTEN2/$RTMP_KEY2" -c copy -t 25 -y "$OUT/received2.flv" > "$OUT/rtmp-server2.log" 2>&1 & RTMP2=$!
 
 start_app first
 if wait_window; then pass "first start: main window shown"; else dump_stacks first; fail "first start: main window never appeared (hang-first.txt)"; fi
@@ -269,6 +271,7 @@ grep -q "HopCast: streaming directly" "$OUT/app-first.log" && info "Go Live used
 grep -q "\[ALERT\] Failed to start live" "$OUT/app-first.log" && fail "\"Failed to start live\" alert shown"
 # The test server stops after 25 s; HopCast tries to reconnect, then End stops it.
 grep -q "Reconnecting in" "$OUT/app-first.log" && pass "dropped connection: HopCast tried to reconnect"
+grep -q "dropped the first connection" "$OUT/flaky-proxy.log" 2>/dev/null && { grep -qE "HopCast: (connection failed with the default network settings|connected over IPv4)" "$OUT/app-first.log" && pass "first connection dropped: HopCast retried by itself over IPv4" || fail "first connection to the second server was dropped and HopCast did not retry (app-first.log)"; }
 click 1328 873; w 5; shot 09-end-live-1      # End
 click 798 602; w 2; shot 10-end-live-2       # "Live Has Ended" (two channels: taller dialog) -> OK
 fdsnap after-live
@@ -358,7 +361,7 @@ done
 (( hung == 0 )) && pass "$RUNS starts in a row, all reached the main window" || fail "$hung of $RUNS starts never showed the main window (app-restart-*.log has stacks)"
 (( badexit == 0 )) && pass "$RUNS quits in a row, all clean" || fail "$badexit of $RUNS quits did not exit cleanly"
 
-kill "$COMP" "$XVFB" ${TLSPROXY:-} 2>/dev/null
+kill "$COMP" "$XVFB" ${TLSPROXY:-} ${FLAKY:-} 2>/dev/null
 
 # ---------------------------------------------------------------- 4. Wayland
 if command -v weston >/dev/null; then

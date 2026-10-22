@@ -1,0 +1,99 @@
+diff --git a/plugins/obs-outputs/rtmp-stream.c b/plugins/obs-outputs/rtmp-stream.c
+index 42cd5c8..b8ee40d 100644
+--- a/plugins/obs-outputs/rtmp-stream.c
++++ b/plugins/obs-outputs/rtmp-stream.c
+@@ -1301,7 +1301,7 @@ static void win32_log_interface_type(struct rtmp_stream *stream)
+ }
+ #endif
+ 
+-static int try_connect(struct rtmp_stream *stream)
++static int try_connect_once(struct rtmp_stream *stream, int attempt_hint_len, const char *attempt_bind)
+ {
+ 	if (dstr_is_empty(&stream->path)) {
+ 		warn("URL is empty");
+@@ -1355,6 +1355,15 @@ static int try_connect(struct rtmp_stream *stream)
+ 	if (stream->rtmp.m_bindIP.addrLen == 0)
+ 		stream->rtmp.m_bindIP.addrLen = stream->addrlen_hint;
+ 
++	/* HopCast: retry attempts (see try_connect) override the default network choice. */
++	if (attempt_bind) {
++		if (!netif_str_to_addr(&stream->rtmp.m_bindIP.addr, &stream->rtmp.m_bindIP.addrLen, attempt_bind))
++			stream->rtmp.m_bindIP.addrLen = 0;
++	} else if (attempt_hint_len > 0 && stream->rtmp.m_bindIP.addrLen == 0) {
++		stream->rtmp.m_bindIP.addrLen = attempt_hint_len;
++	}
++
++
+ 	RTMP_AddStream(&stream->rtmp, stream->key.array);
+ 
+ 	stream->rtmp.m_outChunkSize = 4096;
+@@ -1547,6 +1556,69 @@ static bool init_connect(struct rtmp_stream *stream)
+ 	return true;
+ }
+ 
++/* HopCast: the default connection can fail for reasons no message explains (a broken IPv6 route, the
++ * wrong network interface chosen). When the user left the network settings on "default", retry over
++ * IPv4 only, then bound to each local IPv4 address, and remember what worked for the rest of the session.
++ * A user who picked an IP family or a bind address is never overridden. */
++static bool hopcast_prefer_ipv4 = false;
++static char hopcast_bind_ok[64] = "";
++
++static bool hopcast_retryable(int ret)
++{
++	return ret == OBS_OUTPUT_CONNECT_FAILED || ret == OBS_OUTPUT_INVALID_STREAM;
++}
++
++static int try_connect(struct rtmp_stream *stream)
++{
++	bool default_net = (dstr_is_empty(&stream->bind_ip) || dstr_cmp(&stream->bind_ip, "default") == 0) &&
++			   stream->addrlen_hint == 0;
++	if (!default_net)
++		return try_connect_once(stream, 0, NULL);
++
++	const int v4 = (int)sizeof(struct sockaddr_in);
++	const char *first_bind = hopcast_bind_ok[0] ? hopcast_bind_ok : NULL;
++	int first_hint = (!first_bind && hopcast_prefer_ipv4) ? v4 : 0;
++
++	int first = try_connect_once(stream, first_hint, first_bind);
++	if (first == OBS_OUTPUT_SUCCESS || stopping(stream) || !hopcast_retryable(first))
++		return first;
++
++	if (!first_bind && !first_hint) {
++		warn("HopCast: connection failed with the default network settings (%d); retrying over IPv4 only", first);
++		RTMP_Close(&stream->rtmp);
++		int r = try_connect_once(stream, v4, NULL);
++		if (r == OBS_OUTPUT_SUCCESS) {
++			hopcast_prefer_ipv4 = true;
++			info("HopCast: connected over IPv4 only; using IPv4 for the rest of this session");
++			return r;
++		}
++		if (stopping(stream) || !hopcast_retryable(r))
++			return first;
++	}
++
++	struct netif_saddr_data addrs = {0};
++	netif_get_addrs(&addrs);
++	int tried = 0;
++	for (size_t i = 0; i < addrs.addrs.num && tried < 2 && !stopping(stream); i++) {
++		const char *addr = addrs.addrs.array[i].addr;
++		if (!addr || strchr(addr, ':') || strlen(addr) >= sizeof(hopcast_bind_ok))
++			continue; /* IPv4 addresses only */
++		tried++;
++		warn("HopCast: retrying through %s (%s)", addrs.addrs.array[i].name ? addrs.addrs.array[i].name : "network interface", addr);
++		RTMP_Close(&stream->rtmp);
++		int r = try_connect_once(stream, 0, addr);
++		if (r == OBS_OUTPUT_SUCCESS) {
++			snprintf(hopcast_bind_ok, sizeof(hopcast_bind_ok), "%s", addr);
++			info("HopCast: connected through %s; using it for the rest of this session", addr);
++			netif_saddr_data_free(&addrs);
++			return r;
++		}
++	}
++	netif_saddr_data_free(&addrs);
++	hopcast_bind_ok[0] = 0;
++	return first;
++}
++
+ static void *connect_thread(void *data)
+ {
+ 	struct rtmp_stream *stream = data;
