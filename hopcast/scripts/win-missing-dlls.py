@@ -19,6 +19,7 @@ for base in [root] + extra:
 sysdlls = {f.lower() for f in os.listdir(system)} if os.path.isdir(system) else set()
 
 missing = {}
+importers = {}
 for d, _, files in os.walk(root):
     for f in files:
         if not f.lower().endswith((".dll", ".exe")):
@@ -30,6 +31,7 @@ for d, _, files in os.walk(root):
             continue
         for entry in getattr(pe, "DIRECTORY_ENTRY_IMPORT", []):
             name = entry.dll.decode("ascii", "replace").lower()
+            importers.setdefault(name, set()).add(f)
             if name.startswith(("api-ms-win-", "ext-ms-")) or name in sysdlls:
                 continue
             if name not in {x.lower() for x in os.listdir(d)} and not os.path.exists(os.path.join(root, "bin", "64bit", name)):
@@ -39,3 +41,7 @@ for name, users in sorted(missing.items()):
     where = have.get(name, "NOT FOUND ANYWHERE SEARCHED")
     print(f"{name}\t<- {', '.join(sorted(set(users))[:4])}\t[{where}]")
 print(f"{len(missing)} missing")
+for watch in os.environ.get("WHO_IMPORTS", "").split(","):
+    watch = watch.strip().lower()
+    if watch:
+        print(f"imported by {watch}: {', '.join(sorted(importers.get(watch, [])))}")

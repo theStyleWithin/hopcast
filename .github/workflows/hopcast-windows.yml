@@ -126,7 +126,7 @@ jobs:
           Q=$(echo "$QT_ROOT_DIR" | sed 's|\\|/|g')
           VC=$(echo "$VCPKG_INSTALLATION_ROOT" | sed 's|\\|/|g')/installed/x64-windows
           pip install pefile >/dev/null 2>&1
-          python hopcast/scripts/win-missing-dlls.py "$W/stage/HopCast" "$Q/bin" "$VC/bin" "$W"/src/obs-studio/.deps/obs-deps-*-x64/bin "$W/build/engine" "$W/build/app" 2>&1 | tee missing.log
+          WHO_IMPORTS="libssl-1_1-x64.dll,libcrypto-1_1-x64.dll,msvcr100.dll,libssl-3-x64.dll,libcrypto-3-x64.dll" python hopcast/scripts/win-missing-dlls.py "$W/stage/HopCast" "$Q/bin" "$VC/bin" "$W"/src/obs-studio/.deps/obs-deps-*-x64/bin "$W/build/engine" "$W/build/app" 2>&1 | tee missing.log
 
       - name: Start it (smoke test)
         id: smoke
