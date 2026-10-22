@@ -103,7 +103,10 @@ jobs:
         if: always()
         run: |
           { echo "dlls: $(find build/engine -name '*.dll' 2>/dev/null | wc -l)  exes: $(find build/engine -name '*.exe' 2>/dev/null | wc -l)";
-            find build/engine -path '*rundir*' \( -name '*.dll' -o -name '*.exe' \) 2>/dev/null | sed 's|.*/rundir/||' | sort | head -150; } > inventory.txt || true
+            find build/engine -path '*rundir*' \( -name '*.dll' -o -name '*.exe' \) 2>/dev/null | sed 's|.*/rundir/||' | sort | head -60;
+            echo "--- app output: $(find build/app/output -type f 2>/dev/null | wc -l) files";
+            find build/app/output -maxdepth 4 -type d 2>/dev/null | sed 's|^build/app/output||' | head -60;
+            find build/app/output -name '*.exe' 2>/dev/null | sed 's|^build/app/output||' | head -40; } > inventory.txt || true
 
       - name: Publish logs
         if: always()
