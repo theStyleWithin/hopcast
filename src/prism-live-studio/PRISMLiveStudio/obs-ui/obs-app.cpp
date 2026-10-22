@@ -17,6 +17,7 @@
 
 #ifdef HOPCAST_NO_NAVER
 #include "../prism-ui/hopcast/HopCastNetLog.h"
+#include "../prism-ui/hopcast/HopCastSettingsGuard.h"
 #endif
 #include <time.h>
 #include <stdio.h>
@@ -1220,6 +1221,14 @@ void OBSApp::AppInit()
 	ProfileScope("OBSApp::AppInit");
 	PLS_PERFORMANCE_FUNCTION();
 
+#ifdef HOPCAST_NO_NAVER
+	{
+		/* HopCast: check the settings and repair/snapshot them before anything reads them. */
+		char cfg[512];
+		if (GetAppConfigPath(cfg, sizeof(cfg), "PRISMLiveStudio") > 0)
+			hopcast::settingsGuardBeforeStartup(QString::fromUtf8(cfg), QString::fromUtf8(PLS_VERSION));
+	}
+#endif
 	if (!MakeUserDirs())
 		throw init_exception_code::failed_create_required_user_directory;
 	if (!InitGlobalConfig())

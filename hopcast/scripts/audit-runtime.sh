@@ -185,9 +185,11 @@ else
 fi
 ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f flv \
   -i "$RTMP_LISTEN/$RTMP_KEY" -c copy -t 25 -y "$OUT/received.flv" > "$OUT/rtmp-server.log" 2>&1 & RTMP=$!
-RTMP_URL2="rtmp://127.0.0.1:1936/live2"; RTMP_KEY2="hopcast-audit-2"
+# The second server sits behind a proxy that drops the first connection: HopCast should retry by itself.
+RTMP_LISTEN2="rtmp://127.0.0.1:1936/live2"; RTMP_URL2="rtmp://127.0.0.1:1937/live2"; RTMP_KEY2="hopcast-audit-2"
+python3 "$(dirname "$0")/flaky-proxy.py" 1937 1936 > "$OUT/flaky-proxy.log" 2>&1 & FLAKY=$!
 ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f flv \
-  -i "$RTMP_URL2/$RTMP_KEY2" -c copy -t 25 -y "$OUT/received2.flv" > "$OUT/rtmp-server2.log" 2>&1 & RTMP2=$!
+  -i "$RTMP_LISTEN2/$RTMP_KEY2" -c copy -t 25 -y "$OUT/received2.flv" > "$OUT/rtmp-server2.log" 2>&1 & RTMP2=$!
 
 start_app first
 if wait_window; then pass "first start: main window shown"; else dump_stacks first; fail "first start: main window never appeared (hang-first.txt)"; fi
@@ -248,7 +250,7 @@ for _ in $(seq 1 $((30 * SLOW))); do kill -0 "$RTMP" 2>/dev/null || break; sleep
 kill -INT "$RTMP" 2>/dev/null; sleep 2; kill "$RTMP" 2>/dev/null
 kill -INT "$RTMP2" 2>/dev/null; sleep 1; kill "$RTMP2" 2>/dev/null
 grep -q "extra destination(s) besides the main stream" "$OUT/app-first.log" && info "$(grep -m1 'extra destination(s) besides the main stream' "$OUT/app-first.log" | sed 's/.*HopCast: //')"
-grep -q "HopCast: extra destination .* started" "$OUT/app-first.log" && pass "multi-stream: the extra destination's output started" || fail "multi-stream: the extra destination's output never started (app-first.log)"
+grep -qE "HopCast: extra destination .* (started|stopped)" "$OUT/app-first.log" && pass "multi-stream: the extra destination's output started" || fail "multi-stream: the extra destination's output never started (app-first.log)"
 if [[ -s "$OUT/received2.flv" ]]; then
   frames2=$(ffprobe -v error -count_packets -select_streams v:0 -show_entries stream=nb_read_packets -of csv=p=0 "$OUT/received2.flv" 2>/dev/null)
   if [[ "${frames2:-0}" -gt 20 ]]; then pass "multi-stream: second server received ${frames2} video frames"; else fail "multi-stream: second server got only ${frames2:-0} video frames"; fi
@@ -269,6 +271,7 @@ grep -q "HopCast: streaming directly" "$OUT/app-first.log" && info "Go Live used
 grep -q "\[ALERT\] Failed to start live" "$OUT/app-first.log" && fail "\"Failed to start live\" alert shown"
 # The test server stops after 25 s; HopCast tries to reconnect, then End stops it.
 grep -q "Reconnecting in" "$OUT/app-first.log" && pass "dropped connection: HopCast tried to reconnect"
+grep -q "dropped the first connection" "$OUT/flaky-proxy.log" 2>/dev/null && { grep -qE "HopCast: (connection failed with the default network settings|connected over IPv4)" "$OUT/app-first.log" && pass "first connection dropped: HopCast retried by itself over IPv4" || fail "first connection to the second server was dropped and HopCast did not retry (app-first.log)"; }
 click 1328 873; w 5; shot 09-end-live-1      # End
 click 798 602; w 2; shot 10-end-live-2       # "Live Has Ended" (two channels: taller dialog) -> OK
 fdsnap after-live
@@ -314,9 +317,16 @@ if (( code == 0 )); then pass "Ctrl+Q quits cleanly (exit 0)"; elif (( code == 1
 rm -f "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel" 2>/dev/null
 
 # ---------------------------------------------------------------- 3. second run on the same profile
+# Settings guard: the first run must have left snapshots (settings + key), and a damaged settings file
+# must be put back by the next start.
+BK="$XDG_DATA_HOME/hopcast/settings-backups"
+snap=$(ls -1d "$BK"/*/ 2>/dev/null | head -1)
+if [[ -n "$snap" && -s "${snap}config/global.ini" && -s "${snap}key" ]]; then pass "settings snapshot written (settings and key)"; else fail "no settings snapshot after the first run ($(ls "$BK" 2>/dev/null | tr '\n' ' '))"; fi
+: > "$XDG_CONFIG_HOME/PRISMLiveStudio/global.ini"   # damage the settings file
 start_app second
 if wait_window; then pass "second start (same profile): main window shown"; else dump_stacks second; fail "second start: main window never appeared (hang-second.txt)"; fi
 w 6; shot 20-second-start
+grep -q "HopCast: restored global.ini from snapshot" "$OUT/app-second.log" && pass "damaged global.ini was put back from a snapshot" || fail "damaged global.ini was not repaired (app-second.log)"
 grep -qiE "tamper|key file is missing|KeyMissing" "$OUT/app-second.log" && fail "secure store reported a problem on second start" || pass "saved channel loaded without secure-store errors"
 grep -q "Audit Server\|hopcast_rtmp.*load" "$OUT/app-second.log" && info "channel load logged"
 # Go live again from the channel loaded off disk (the key must survive a restart).
@@ -358,7 +368,7 @@ done
 (( hung == 0 )) && pass "$RUNS starts in a row, all reached the main window" || fail "$hung of $RUNS starts never showed the main window (app-restart-*.log has stacks)"
 (( badexit == 0 )) && pass "$RUNS quits in a row, all clean" || fail "$badexit of $RUNS quits did not exit cleanly"
 
-kill "$COMP" "$XVFB" ${TLSPROXY:-} 2>/dev/null
+kill "$COMP" "$XVFB" ${TLSPROXY:-} ${FLAKY:-} 2>/dev/null
 
 # ---------------------------------------------------------------- 4. Wayland
 if command -v weston >/dev/null; then

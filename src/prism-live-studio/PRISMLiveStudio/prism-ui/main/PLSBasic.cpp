@@ -7,6 +7,9 @@
 #include "../hopcast/HopCastScreenshot.h" // HopCast: Tools > Screenshot
 #include "../hopcast/HopCastProfileImport.h" // HopCast: Profile > Import OBS profile
 #include "../hopcast/HopCastNetLog.h"
+#include "../hopcast/HopCastSettingsGuard.h"
+#include <QInputDialog>
+#include <QTimer>
 #include <QFileDialog>
 #include <QDir>
 #endif
@@ -1299,6 +1302,25 @@ void PLSBasic::PLSInit()
 								      QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 		if (!dir.isEmpty())
 			hopcast::importObsProfile(this, dir);
+	});
+	/* HopCast: settings are snapshotted automatically; these two are for doing it by hand. */
+	QTimer::singleShot(15000, this, []() { hopcast::settingsGuardAfterStartup(QString::fromUtf8(PLS_VERSION)); });
+	connect(ui->menuTools->addAction(QStringLiteral("Back up settings now")), &QAction::triggered, this, [this]() {
+		PLSAlertView::information(this, QStringLiteral("HopCast"),
+					  hopcast::settingsBackupNow() ? QStringLiteral("Your settings were backed up.")
+								      : QStringLiteral("Your settings are already backed up (nothing changed)."));
+	});
+	connect(ui->menuTools->addAction(QStringLiteral("Restore settings from a backup...")), &QAction::triggered, this, [this]() {
+		const QStringList names = hopcast::settingsBackupNames();
+		if (names.isEmpty()) {
+			PLSAlertView::information(this, QStringLiteral("HopCast"), QStringLiteral("There are no backups yet."));
+			return;
+		}
+		bool ok = false;
+		const QString name = QInputDialog::getItem(this, QStringLiteral("Restore settings"),
+							   QStringLiteral("Pick a backup (newest first). It is applied the next time HopCast starts:"), names, 0, false, &ok);
+		if (ok && hopcast::settingsScheduleRestore(name))
+			PLSAlertView::information(this, QStringLiteral("HopCast"), QStringLiteral("Close HopCast and open it again to finish restoring."));
 	});
 	hopcast::LinkGuard::install(); // HopCast: never open PRISM/NAVER pages in the browser
 	/* HopCast: the platform chat panel has nothing to show for Custom RTMP and its

@@ -1131,7 +1131,8 @@ elseif(OS_POSIX)
     prism-ui/hopcast/HopCastScreenshot.cpp prism-ui/hopcast/HopCastScreenshot.h
     prism-ui/hopcast/HopCastMultiStream.cpp prism-ui/hopcast/HopCastMultiStream.h
     prism-ui/hopcast/HopCastProfileImport.cpp prism-ui/hopcast/HopCastProfileImport.h
-    prism-ui/hopcast/HopCastNetLog.cpp prism-ui/hopcast/HopCastNetLog.h)
+    prism-ui/hopcast/HopCastNetLog.cpp prism-ui/hopcast/HopCastNetLog.h
+    prism-ui/hopcast/HopCastSettingsGuard.cpp prism-ui/hopcast/HopCastSettingsGuard.h)
   target_link_libraries(PRISMLiveStudio PRIVATE hopcast::securestore)
   target_link_libraries(PRISMLiveStudio PRIVATE Qt::GuiPrivate)
 
