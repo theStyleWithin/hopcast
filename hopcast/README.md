@@ -207,8 +207,10 @@ Fixed because of it (2026-10-14):
 | Background NAVER activity | notice/update polling, MQTT (outside the network block), Lens IPC retry every 3 s, 9 sign-in plugins loaded | removed |
 
 Multi-channel streaming (one stream to several servers) went through NAVER's relay. HopCast
-streams to one channel per output (horizontal, plus vertical with dual output) and says so if
-more are switched on.
+sends it directly instead: the first channel switched on is the main stream, and every other
+channel gets one more output that shares the main stream's encoders (`prism-ui/hopcast/HopCastMultiStream`),
+so the picture is encoded once. A destination that fails or drops is reported and leaves the
+others running. Tested in CI with two local servers (`audit-runtime.sh`).
 
 ### Next in Phase 1
 

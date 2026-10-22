@@ -818,6 +818,7 @@ void PLSPlatformApi::onPrepareLive()
 	auto out_cx = config_get_uint(PLSBasic::Get()->Config(), "Video", "OutputCX");
 	auto out_cy = config_get_uint(PLSBasic::Get()->Config(), "Video", "OutputCY");
 
+#ifndef HOPCAST_NO_NAVER // HopCast: no relay, so no relay resolution limit
 	// Multi-push: each channel has MaxResolution (W x H); take min(W*H) and compare with horizontal (and vertical if dual output) W*H
 	if (getActivePlatforms().size() > 1) {
 		const qint64 minAllowedPixels = multiPushMinAllowedOutputPixelProduct();
@@ -834,6 +835,7 @@ void PLSPlatformApi::onPrepareLive()
 			return;
 		}
 	}
+#endif
 
 	//Sort platform pointer objects
 	sortPlatforms();
@@ -874,10 +876,12 @@ void PLSPlatformApi::onPrepareLive()
 		return;
 	}
 
+#ifndef HOPCAST_NO_NAVER // HopCast: no relay, so no relay bitrate cap
 	//Check whether the bit rate of the multi - platform live broadcast output is valid
 	if ((PLS_PLATFORM_HORIZONTAL.size() > 1 || PLS_PLATFORM_VERTICAL.size() > 1) && !checkOutputBitrateValid()) {
 		return;
 	}
+#endif
 
 	//Check if the network is connected
 	if (!checkNetworkConnected()) {
@@ -899,8 +903,13 @@ void PLSPlatformApi::onPrepareLive()
 
 	bool bResum = getResumeStreamingFlag();
 	if (bDualOutput) {
+#ifdef HOPCAST_NO_NAVER // HopCast: extra channels are separate outputs, never a PRISM relay
+		m_bPrismLive[DualOutputType::Horizontal] = false;
+		m_bPrismLive[DualOutputType::Vertical] = false;
+#else
 		m_bPrismLive[DualOutputType::Horizontal] = platformsHorizontal.size() > 1;
 		m_bPrismLive[DualOutputType::Vertical] = platformVertical.size() > 1;
+#endif
 
 		if (!bResum && (platformsHorizontal.empty() || platformVertical.empty())) {
 			PLSErrorHandler::ExtraData dualExtra("Prepare live dual output missing orientation");
@@ -917,7 +926,11 @@ void PLSPlatformApi::onPrepareLive()
 			return;
 		}
 	} else {
+#ifdef HOPCAST_NO_NAVER
+		m_bPrismLive[DualOutputType::Horizontal] = false;
+#else
 		m_bPrismLive[DualOutputType::Horizontal] = platformActived.size() > 1;
+#endif
 	}
 
 	m_listFailedPlatform.clear();

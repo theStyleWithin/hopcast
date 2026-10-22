@@ -21,6 +21,9 @@
 #include <cassert>
 #include "pls-net-url.hpp"
 #include "PLSServerStreamHandler.hpp"
+#ifdef HOPCAST_NO_NAVER
+#include "../../hopcast/HopCastMultiStream.h"
+#endif
 #include "band/PLSPlatformBand.h"
 #include "../youtube/PLSAPIYoutube.h"
 //#include "pls-app.hpp"
@@ -198,23 +201,37 @@ void PLSPlatformPrism::onPrepareLive(bool value)
 	/* HopCast: PRISM registered every broadcast with NAVER's server first
 	 * (/live/direct/v2/start) and, with several channels on, sent one stream to
 	 * NAVER's relay which forwarded it to each platform (/live/start). Neither
-	 * exists here, so Go Live always failed. Stream directly instead: one
-	 * channel per output (horizontal, and vertical with dual output). No server
+	 * exists here, so Go Live always failed. Stream directly instead: the first
+	 * channel per output (horizontal, and vertical with dual output) is the main stream, any others get
+	 * their own output sharing its encoders. No server
 	 * session means the video sequence stays 0, so every stop/end path finishes
 	 * locally without contacting anything. */
 	{
-		const auto tooMany = [](const std::list<PLSPlatformBase *> &l) { return l.size() > 1; };
-		const bool multi = pls_is_dual_output_on() ? (tooMany(PLS_PLATFORM_HORIZONTAL) || tooMany(PLS_PLATFORM_VERTICAL)) : tooMany(PLS_PLATFORM_ACTIVIED);
-		if (multi) {
-			PLS_WARN(MODULE_PlatformService, "HopCast: more than one channel switched on for one output; streaming to several servers at once is not supported yet");
-			pls_async_call_mt(this, [] {
-				PLSAlertView::warning(pls_get_main_view(), QTStr("Alert.Title"),
-						      QObject::tr("HopCast can stream to one channel at a time (one for horizontal and one for vertical with dual output).\n\n"
-								  "Switch off the other channels, then go live again."));
-			});
-			prepareLiveCallback(false);
-			return;
+		/* The first channel streams through the normal output; every other channel switched on
+		 * becomes an extra destination fed by the same encoders (hopcast/HopCastMultiStream). */
+		std::vector<hopcast::Destination> extras[2];
+		const auto collect = [](const std::list<PLSPlatformBase *> &channels, std::vector<hopcast::Destination> &out) {
+			bool first = true;
+			for (PLSPlatformBase *channel : channels) {
+				if (first) {
+					first = false;
+					continue;
+				}
+				const QVariantMap &data = channel->getInitData();
+				out.push_back({channel->getChannelName(), QString::fromStdString(channel->getStreamServer()), QString::fromStdString(channel->getStreamKey()),
+					       data.value(ChannelData::g_rtmpUserID).toString(), data.value(ChannelData::g_password).toString()});
+			}
+		};
+		if (pls_is_dual_output_on()) {
+			collect(PLS_PLATFORM_HORIZONTAL, extras[0]);
+			collect(PLS_PLATFORM_VERTICAL, extras[1]);
+		} else {
+			collect(PLS_PLATFORM_ACTIVIED, extras[0]);
 		}
+		PLS_INFO(MODULE_PlatformService, "HopCast: %d extra destination(s) besides the main stream (%d vertical)", static_cast<int>(extras[0].size() + extras[1].size()),
+			 static_cast<int>(extras[1].size()));
+		hopcast::setExtraDestinations(false, std::move(extras[0]));
+		hopcast::setExtraDestinations(true, std::move(extras[1]));
 		m_iVideoSeq[DualOutputType::Horizontal] = 0;
 		m_iVideoSeq[DualOutputType::Vertical] = 0;
 		PLS_INFO(MODULE_PlatformService, "HopCast: streaming directly to the channel's server (no PRISM broadcast registration)");
