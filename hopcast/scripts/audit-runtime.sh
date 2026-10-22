@@ -317,9 +317,16 @@ if (( code == 0 )); then pass "Ctrl+Q quits cleanly (exit 0)"; elif (( code == 1
 rm -f "$XDG_CONFIG_HOME/PRISMLiveStudio/.sentinel" 2>/dev/null
 
 # ---------------------------------------------------------------- 3. second run on the same profile
+# Settings guard: the first run must have left snapshots (settings + key), and a damaged settings file
+# must be put back by the next start.
+BK="$XDG_DATA_HOME/hopcast/settings-backups"
+snap=$(ls -1d "$BK"/*/ 2>/dev/null | head -1)
+if [[ -n "$snap" && -s "${snap}config/global.ini" && -s "${snap}key" ]]; then pass "settings snapshot written (settings and key)"; else fail "no settings snapshot after the first run ($(ls "$BK" 2>/dev/null | tr '\n' ' '))"; fi
+: > "$XDG_CONFIG_HOME/PRISMLiveStudio/global.ini"   # damage the settings file
 start_app second
 if wait_window; then pass "second start (same profile): main window shown"; else dump_stacks second; fail "second start: main window never appeared (hang-second.txt)"; fi
 w 6; shot 20-second-start
+grep -q "HopCast: restored global.ini from snapshot" "$OUT/app-second.log" && pass "damaged global.ini was put back from a snapshot" || fail "damaged global.ini was not repaired (app-second.log)"
 grep -qiE "tamper|key file is missing|KeyMissing" "$OUT/app-second.log" && fail "secure store reported a problem on second start" || pass "saved channel loaded without secure-store errors"
 grep -q "Audit Server\|hopcast_rtmp.*load" "$OUT/app-second.log" && info "channel load logged"
 # Go live again from the channel loaded off disk (the key must survive a restart).

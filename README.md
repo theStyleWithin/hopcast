@@ -21,6 +21,8 @@ PRISM Live Studio or the OBS Project**.
 - **No platform favoritism.** It streams to any RTMP, SRT or RIST server you enter, with no built-in buttons for particular platforms.
 - **Several servers at once.** Switch on more than one channel and Go Live sends to all of them. The picture is encoded once, with no relay.
 - **Your stream keys stay yours.** They are stored encrypted (AES-256-GCM), inside HopCast's own storage on your computer, with no account and no folder to manage.
+- **Your settings stay put.** HopCast snapshots its settings, profiles, scenes and channels in the background (and once before the first run of each new version), puts back any settings file that goes missing or corrupt, and has Tools > Back up settings now / Restore settings from a backup. Snapshots live in `~/.local/share/hopcast/settings-backups` (owner-only; they include the key file, since saved stream keys can't be read without it).
+- **Connects on its own.** If the first connection fails and you haven't chosen a network setting, HopCast retries over IPv4 and through each network interface by itself, so there's no Bind to IP to hunt for.
 - **Linux first.** Works on X11 and Wayland, and ships as a single AppImage.
 
 See **[SPECS.md](SPECS.md)** for the full description of what HopCast is and isn't.
