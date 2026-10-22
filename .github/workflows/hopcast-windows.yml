@@ -36,7 +36,7 @@ jobs:
           export PLS_VERSION="$VERSION" VERSION="$VERSION" PRISM_VERSION_MAJOR="$a" PRISM_VERSION_MINOR="$b" PRISM_VERSION_PATCH="$c" PRISM_VERSION_TWEAK="${d:-0}"
           export PRISM_COMMENTS=HopCast PRISM_SRC_DIR="$W/src/prism-live-studio" OBS_SRC_DIR="$W/src/obs-studio" OBS_BUILD_DIR="$W/build/engine"
           cd src/obs-studio
-          cmake --preset windows-x64 -Wno-dev \
+          cmake --preset windows-x64 -Wno-dev -DCMAKE_PROJECT_INCLUDE="$W/hopcast/cmake/engine-compat.cmake" \
             -DENABLE_UI=OFF -DENABLE_BROWSER=OFF -DENABLE_WEBSOCKET=OFF -DENABLE_WEBRTC=OFF \
             -DENABLE_AJA=OFF -DENABLE_DECKLINK=OFF -DENABLE_VLC=OFF -DENABLE_SCRIPTING=OFF -DENABLE_VST=OFF \
             -DENABLE_SERVICE_UPDATES=OFF -DENABLE_VIRTUALCAM=OFF -DVIRTUALCAM_GUID=A49F51EE-8841-4425-BEC0-85D0C470BBDE -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF 2>&1 | tee "$W/configure.log"
