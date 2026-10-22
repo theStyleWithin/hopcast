@@ -106,7 +106,8 @@ jobs:
             find build/engine -path '*rundir*' \( -name '*.dll' -o -name '*.exe' \) 2>/dev/null | sed 's|.*/rundir/||' | sort | head -60;
             echo "--- app output: $(find build/app/output -type f 2>/dev/null | wc -l) files";
             find build/app/output -maxdepth 4 -type d 2>/dev/null | sed 's|^build/app/output||' | head -60;
-            find build/app/output -name '*.exe' 2>/dev/null | sed 's|^build/app/output||' | head -40; } > inventory.txt || true
+            echo "--- exes in the app build:"; find build/app -name '*.exe' -not -path '*CMakeFiles*' 2>/dev/null | head -40;
+            echo "--- obs64 and PRISM dlls:"; find build/app -name 'obs64.*' -o -name 'PRISM*.dll' -o -name 'libpls*.dll' -o -name 'common-libs*.dll' 2>/dev/null | head -40; } > inventory.txt || true
 
       - name: Publish logs
         if: always()
