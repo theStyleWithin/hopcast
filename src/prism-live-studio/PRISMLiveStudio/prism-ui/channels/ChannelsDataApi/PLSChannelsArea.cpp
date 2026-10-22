@@ -931,8 +931,15 @@ void PLSChannelsArea::createFoldButton()
 	ui->TailLayout->insertWidget(0, m_FoldUpButton);
 	connect(m_FoldUpButton, &QPushButton::clicked, this, &PLSChannelsArea::onFoldUpButtonClick);
 	connect(m_FoldUpButton, &QPushButton::clicked, PLSMainView::instance(), []() { PLSMainView::instance()->setChannelsAreaHeight(30); }, Qt::QueuedConnection);
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: folding the channel bar only leads to PRISM's viewer-count dashboard, which can never show
+	 * anything without platform connections ("Viewer count is not supported ..."). No fold button. */
+	m_FoldUpButton->setEnabled(false);
+	m_FoldUpButton->setVisible(false);
+#else
 	m_FoldUpButton->setEnabled(true);
 	m_FoldUpButton->setVisible(true);
+#endif
 	m_FoldUpButton->setToolTip(tr("Channels.dashbrod.tooltip"));
 	pls_uistep_v2_set_value(m_FoldUpButton, QStringLiteral("*"), QStringLiteral("Channel Dashbord Up Fold Button"));
 

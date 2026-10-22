@@ -1114,7 +1114,7 @@ public:
 	OBSScene GetCurrentScene();
 	void GetConfigFPS(uint32_t &num, uint32_t &den) const;
 	obs_frontend_callbacks *getApi() { return api; }
-	void SysTrayNotify(const QString &text, QSystemTrayIcon::MessageIcon n);
+	void SysTrayNotify(const QString &text, QSystemTrayIcon::MessageIcon n, const QString &title = QStringLiteral("HopCast"));
 
 	void resetAllGroupTransforms();
 	void resetAllGroupSelectStatus();
