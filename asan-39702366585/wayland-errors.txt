@@ -1,0 +1,1 @@
+/home/runner/work/hoppercast/hoppercast/build/audit/.gdb-wayland:11: Error in sourced command file:

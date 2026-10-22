@@ -1,0 +1,26 @@
+    825 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:N sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+     11 PRISMLiveStudio ERROR main/main-frame PLSBasic.cpp:N read local twitch service json failed, path = /home/runner/work/hoppercast/hoppercast/build/audit/home/.config/PRISMLiveStudio/plugin_config/rtmp-services/twitch_ingests.json
+     11 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:N sync server status: init WaterMark info failed
+     11 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:N sync server status: init OutroPolicy info failed
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QObject::connect(QWindow, Unknown): invalid nullptr parameter
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_user_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_settings_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_multiviewProjectorWindowed_triggered()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_listWidget_itemClicked(const QListWidgetItem*)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_help_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_chat_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_alert_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionRenameSceneCollection_triggered(QString,QString)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionRemoveSceneCollection_triggered(QString,QString)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionReleaseNotes_triggered()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionQuitApp_triggered()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionNewSceneCollection_triggered_with_parent(QWidget*)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionImportSceneCollection_triggered_with_parent(QWidget*)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionImportFromOtherSceneCollection_triggered()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionExportSceneCollection_triggered_with_path(QString,QString,QWidget*)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionDupSceneCollection_triggered(QString,QString)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionChangeSceneCollection_triggered(QString,QString,bool)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_ResolutionBtn_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QLayout: Attempting to add QLayout "" to PLSSceneListView "scenesFrame", which already has a layout
+     10 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionDiscord_triggered()
+      1 MLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionDiscord_triggered()

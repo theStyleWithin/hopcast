@@ -1,0 +1,24 @@
+PASS  every binary and plugin resolves its libraries
+PASS  Qt has a native Wayland platform plugin
+INFO  session D-Bus running
+INFO  PulseAudio running (null speakers + virtual mic)
+FAIL  first start: main window never appeared (hang-first.txt)
+INFO  Add Channel dialog not found by name; clicking the usual place
+FAIL  encrypted stream-key file not written
+PASS  stream key not stored in plain text anywhere in the profile
+FAIL  recording before going live: no file
+PASS  while live, stream key not in plain text anywhere in the profile
+FAIL  multi-stream: the extra destination's output never started (app-first.log)
+FAIL  multi-stream: nothing arrived at the second server (rtmp-server2.log, shots 04b-04d)
+FAIL  nothing arrived at the RTMP server (rtmp-server.log, shots 06-08)
+FAIL  no recording file found under the home folder
+FAIL  app exited with status 1 after Ctrl+Q
+FAIL  second start: main window never appeared (hang-second.txt)
+PASS  saved channel loaded without secure-store errors
+FAIL  after a restart the saved channel did not go live (app-second.log: 'going live' line, shots 21-22)
+FAIL  second run exit status 1
+FAIL  8 of 8 starts never showed the main window (app-restart-*.log has stacks)
+PASS  8 quits in a row, all clean
+FAIL  Wayland: app exited early with status 1 (app-wayland.log)
+INFO  Wayland graphics/platform errors: see wayland-errors.txt
+INFO  26 distinct warning/error lines in the app logs (log-problems.txt)

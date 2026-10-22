@@ -1,0 +1,4 @@
+W: [pulseaudio] authkey.c: Failed to open cookie file '/home/runner/work/hoppercast/hoppercast/build/audit/home/.config/pulse/cookie': No such file or directory
+W: [pulseaudio] authkey.c: Failed to load authentication key '/home/runner/work/hoppercast/hoppercast/build/audit/home/.config/pulse/cookie': No such file or directory
+W: [pulseaudio] authkey.c: Failed to open cookie file '/home/runner/work/hoppercast/hoppercast/build/audit/home/.pulse-cookie': No such file or directory
+W: [pulseaudio] authkey.c: Failed to load authentication key '/home/runner/work/hoppercast/hoppercast/build/audit/home/.pulse-cookie': No such file or directory

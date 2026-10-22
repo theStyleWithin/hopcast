@@ -1,0 +1,574 @@
+Catchpoint 1 (fork)
+Catchpoint 2 (vfork)
+Catchpoint 3 (throw)
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7fffddfff6c0 (LWP 14945)]
+info: upload_thread enter
+QString::arg: Argument missing: , 
+QString::arg: Argument missing: , 
+QString::arg: Argument missing: , 
+QString::arg: Argument missing: , 
+[New Thread 0x7fffda7596c0 (LWP 14946)]
+[New Thread 0x7fffd87ba6c0 (LWP 14947)]
+[New Thread 0x7fffd6c896c0 (LWP 14948)]
+[New Thread 0x7fffd51626c0 (LWP 14949)]
+[New Thread 0x7fffd361e6c0 (LWP 14950)]
+[New Thread 0x7fffd1af76c0 (LWP 14951)]
+[New Thread 0x7fffd0ae86c0 (LWP 14952)]
+[New Thread 0x7fffce4a96c0 (LWP 14953)]
+[New Thread 0x7fffcc9606c0 (LWP 14954)]
+[New Thread 0x7fffcb9516c0 (LWP 14955)]
+[New Thread 0x7fffc9e2a6c0 (LWP 14956)]
+[New Thread 0x7fffc83036c0 (LWP 14957)]
+2026-10-22 01:39:23.161+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:2642 ============================ PRISM APP Startup ============================
+2026-10-22 01:39:23.161+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:2643 prism session = {fb63e390-7f84-4fba-b997-d3717218f853},	prism subSession = {6c0d22f5-6295-49c6-8bf5-740f6fd7ac71}
+2026-10-22 01:39:23.196+00:00 PRISMLiveStudio INFO NetworkState network-state-linux.cpp:63 NetworkState started (backend: glib). network state : Connected
+2026-10-22 01:39:23.230+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:262 Error handler splitVersion downloadVersion:0 appVersion:1777018320 jsonUse:app
+2026-10-22 01:39:23.232+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:Alert.json
+2026-10-22 01:39:23.233+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:BAND.json
+2026-10-22 01:39:23.233+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:CHZZK.json
+2026-10-22 01:39:23.233+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:Common.json
+2026-10-22 01:39:23.233+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:Custom RTMP.json
+2026-10-22 01:39:23.234+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:Email.json
+2026-10-22 01:39:23.234+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:Facebook.json
+2026-10-22 01:39:23.234+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:IniValue.json
+2026-10-22 01:39:23.234+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:NAVER Cloud B2B.json
+2026-10-22 01:39:23.235+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:NAVER TV.json
+2026-10-22 01:39:23.235+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:Naver Shopping LIVE.json
+2026-10-22 01:39:23.235+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:OutputRecord.json
+2026-10-22 01:39:23.235+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:OutputStream.json
+2026-10-22 01:39:23.236+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:PRISM.json
+2026-10-22 01:39:23.236+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:Twitch.json
+2026-10-22 01:39:23.236+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:UnitTest.json
+2026-10-22 01:39:23.236+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:YouTube.json
+2026-10-22 01:39:23.237+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:afreecaTV.json
+2026-10-22 01:39:23.237+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:default.json
+2026-10-22 01:39:23.237+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:290 Error handler splitVersion load json item succeed:mqtt.json
+2026-10-22 01:39:23.237+00:00 PRISMLiveStudio INFO ErrorHandler PLSErrorHandler.cpp:295 Error handler splitVersion load json count: 20
+2026-10-22 01:39:23.238+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:2144 install language translator
+2026-10-22 01:39:23.238+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:2161 prism is started by daemon process:0, the daemon prism session is: , limit retry count:
+2026-10-22 01:39:23.249+00:00 PRISMLiveStudio INFO PLSAPP PLSApp.cpp:868 get current app runing path /home/runner/work/hoppercast/hoppercast/build/stage/bin
+2026-10-22 01:39:23.249+00:00 PRISMLiveStudio ERROR main/main-frame PLSBasic.cpp:7069 read local twitch service json failed, path = /home/runner/work/hoppercast/hoppercast/build/audit/home/.config/PRISMLiveStudio/plugin_config/rtmp-services/twitch_ingests.json
+2026-10-22 01:39:23.249+00:00 PRISMLiveStudio INFO PLSGpopData pls-gpop-data.cpp:32 gpop data is empty, need  to read local qrc file .
+2026-10-22 01:39:23.249+00:00 PRISMLiveStudio INFO PLSGpopData pls-gpop-data.cpp:182 start init gpop data.
+2026-10-22 01:39:23.249+00:00 PRISMLiveStudio INFO PLSGpopData pls-gpop-data.cpp:93 gpop data version = 0
+2026-10-22 01:39:23.250+00:00 PRISMLiveStudio INFO main/main-frame PLSBasic.cpp:7072 init gcc = KR, and init gpop data from local data
+2026-10-22 01:39:23.250+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:190 sync server status: start reading app qrc prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Publish.json file
+2026-10-22 01:39:23.250+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:201 sync server status: prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Publish.json version is 0 , Policy_Publish.json file
+2026-10-22 01:39:23.251+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:97 sync server status: read Policy_Publish.json default value , version is 0
+2026-10-22 01:39:23.251+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:190 sync server status: start reading app qrc prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Platform.json file
+2026-10-22 01:39:23.251+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:201 sync server status: prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Platform.json version is 0 , Policy_Platform.json file
+2026-10-22 01:39:23.251+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:100 sync server status: read Policy_Platform.json default value , version is 0
+2026-10-22 01:39:23.251+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:190 sync server status: start reading app qrc prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Watermark_Config.json file
+2026-10-22 01:39:23.252+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:201 sync server status: prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Watermark_Config.json version is 0 , Policy_Watermark_Config.json file
+2026-10-22 01:39:23.252+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:104 sync server status: read Policy_Watermark_Config.json default value , version is 0
+2026-10-22 01:39:23.252+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:190 sync server status: start reading app qrc prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Outro_Config.json file
+2026-10-22 01:39:23.253+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:201 sync server status: prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Outro_Config.json version is 0 , Policy_Outro_Config.json file
+2026-10-22 01:39:23.253+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:108 sync server status: read Policy_Outro_PC_Config.json default value , version is 0
+2026-10-22 01:39:23.254+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:20 old version have not login prism
+2026-10-22 01:39:23.254+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:110 get user info from lens
+2026-10-22 01:39:23.254+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:119 get user info is failed.
+2026-10-22 01:39:23.254+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:110 get user info from lens
+2026-10-22 01:39:23.254+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:119 get user info is failed.
+2026-10-22 01:39:23.255+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:110 get user info from lens
+2026-10-22 01:39:23.255+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:119 get user info is failed.
+2026-10-22 01:39:23.255+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:156 sync server status: start update SupportedPlatforms object
+2026-10-22 01:39:23.255+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:190 sync server status: start reading app qrc prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Publish.json file
+2026-10-22 01:39:23.255+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:201 sync server status: prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Publish.json version is 0 , Policy_Publish.json file
+2026-10-22 01:39:23.255+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:210 sync server status: start reading user AppData Folder PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Publish.json file
+2026-10-22 01:39:23.255+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:213 read PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Publish.json json failed, No such file or directory
+2026-10-22 01:39:23.255+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:236 sync server status: use PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Publish.json file
+2026-10-22 01:39:23.255+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.256+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.256+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:160 sync server status: end update SupportedPlatforms object
+2026-10-22 01:39:23.256+00:00 PRISMLiveStudio INFO main/main-frame PLSBasic.cpp:7079 start init api flow
+2026-10-22 01:39:23.256+00:00 PRISMLiveStudio INFO PLSGpopData pls-gpop-data.cpp:32 gpop data is empty, need  to read local qrc file .
+2026-10-22 01:39:23.256+00:00 PRISMLiveStudio INFO PLSGpopData pls-gpop-data.cpp:182 start init gpop data.
+2026-10-22 01:39:23.256+00:00 PRISMLiveStudio INFO PLSGpopData pls-gpop-data.cpp:93 gpop data version = 0
+2026-10-22 01:39:23.256+00:00 PRISMLiveStudio INFO PLSAPP PLSApp.cpp:882 restartType = 0
+2026-10-22 01:39:23.257+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:900 initialize app language
+2026-10-22 01:39:23.257+00:00 PRISMLiveStudio DEBUG obs Attempted path: /home/runner/work/hoppercast/hoppercast/build/stage/share/hopcast/data/prism-studio/locale
+2026-10-22 01:39:23.261+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file en-US.ini.
+2026-10-22 01:39:23.263+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file Channels/en-US.ini.
+2026-10-22 01:39:23.263+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file Chat/en-US.ini.
+2026-10-22 01:39:23.263+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file ChatTemplate/en-US.ini.
+2026-10-22 01:39:23.264+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file ChzzkSponsor/en-US.ini.
+2026-10-22 01:39:23.264+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file Drawpen/en-US.ini.
+2026-10-22 01:39:23.264+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file DualOutput/en-US.ini.
+2026-10-22 01:39:23.264+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file HelpMenu/en-US.ini.
+2026-10-22 01:39:23.265+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file Laboratory/en-US.ini.
+2026-10-22 01:39:23.265+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file LiveInfo/Thumbnail/en-US.ini.
+2026-10-22 01:39:23.266+00:00 PRISMLiveStudio INFO main/m[New Thread 0x7fffc58be6c0 (LWP 14958)]
+ain-frame obs-app.cpp:868 Successful to load locale file MainFrame/en-US.ini.
+2026-10-22 01:39:23.266+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file MobileSource/en-US.ini.
+2026-10-22 01:39:23.266+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file Music/en-US.ini.
+2026-10-22 01:39:23.267+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file Mutex/en-US.ini.
+2026-10-22 01:39:23.267+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file RemoteControl/en-US.ini.
+2026-10-22 01:39:23.267+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file ResolutionGuide/en-US.ini.
+2026-10-22 01:39:23.267+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file SceneCollection/en-US.ini.
+2026-10-22 01:39:23.268+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file SceneTemplate/en-US.ini.
+2026-10-22 01:39:23.268+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file Settings/en-US.ini.
+2026-10-22 01:39:23.269+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file SourceMenu/en-US.ini.
+2026-10-22 01:39:23.269+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file Status/en-US.ini.
+2026-10-22 01:39:23.269+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file TextTemplate/en-US.ini.
+2026-10-22 01:39:23.270+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file Virtual/en-US.ini.
+2026-10-22 01:39:23.270+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file audioMixer/en-US.ini.
+2026-10-22 01:39:23.270+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file b2b/en-US.ini.
+2026-10-22 01:39:23.270+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file bannar/en-US.ini.
+2026-10-22 01:39:23.271+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file facebook/en-US.ini.
+2026-10-22 01:39:23.271+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file libui/en-US.ini.
+2026-10-22 01:39:23.271+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file obs-ndi/en-US.ini.
+2026-10-22 01:39:23.272+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file other/en-US.ini.
+2026-10-22 01:39:23.272+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file payment/en-US.ini.
+2026-10-22 01:39:23.273+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file prism-login/en-US.ini.
+2026-10-22 01:39:23.273+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file sticker/en-US.ini.
+2026-10-22 01:39:23.273+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:868 Successful to load locale file vstFilter/en-US.ini.
+2026-10-22 01:39:23.274+00:00 PRISMLiveStudio INFO PlatformService PLSPlatformApi.cpp:113 0x513000072500 PLSPlatformApi
+2026-10-22 01:39:23.274+00:00 PRISMLiveStudio INFO PlatformService PLSPlatformPrism.cpp:75 0x50c0000fd840 PLSPlatformPrism
+2026-10-22 01:39:23.275+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:110 get user info from lens
+2026-10-22 01:39:23.275+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:119 get user info is failed.
+2026-10-22 01:39:23.275+00:00 PRISMLiveStudio DEBUG main/main-frame PLSApp.cpp:469 remove config file .png.
+2026-10-22 01:39:23.275+00:00 PRISMLiveStudio INFO main/main-frame PLSApp.cpp:473 remove config[PRISMLiveStudio/user/.png] successed.
+2026-10-22 01:39:23.275+00:00 PRISMLiveStudio INFO main/main-frame PLSApp.cpp:946 app configuration information initialization completed.
+2026-10-22 01:39:23.275+00:00 PRISMLiveStudio INFO main/main-frame PLSApp.cpp:958[New Thread 0x7fffc3d976c0 (LWP 14959)]
+[New Thread 0x7fffc2d886c0 (LWP 14960)]
+[New Thread 0x7fffc04db6c0 (LWP 14961)]
+ SkipResourceDownload flag is set, skipping resource download for debugging.
+2026-10-22 01:39:23.275+00:00 PRISMLiveStudio INFO main/main-frame PLSApp.cpp:963 init program
+2026-10-22 01:39:23.275+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:110 get user info from lens
+2026-10-22 01:39:23.276+00:00 PRISMLiveStudio INFO UserInfo login-user-info.cpp:119 get user info is failed.
+2026-10-22 01:39:23.276+00:00 PRISMLiveStudio INFO obs Using EGL/X11
+2026-10-22 01:39:23.276+00:00 PRISMLiveStudio INFO obs CPU Name: Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz
+2026-10-22 01:39:23.276+00:00 PRISMLiveStudio INFO obs CPU Speed: 3491.753MHz
+2026-10-22 01:39:23.276+00:00 PRISMLiveStudio INFO obs Physical Cores: 2, Logical Cores: 4
+2026-10-22 01:39:23.276+00:00 PRISMLiveStudio INFO obs Physical Memory: 15982MB Total, 1326MB Free
+2026-10-22 01:39:23.276+00:00 PRISMLiveStudio INFO obs Kernel Version: Linux 7.0.0-1017-azure
+2026-10-22 01:39:23.276+00:00 PRISMLiveStudio INFO obs Distribution: "Ubuntu" "24.04"
+2026-10-22 01:39:23.277+00:00 PRISMLiveStudio INFO obs Window System: X11.0, Vendor: The X.Org Foundation, Version: 1.21.1
+2026-10-22 01:39:23.278+00:00 PRISMLiveStudio DEBUG obs found alternate keycode 62 for OBS_KEY_SHIFT which already has keycode 50
+2026-10-22 01:39:23.278+00:00 PRISMLiveStudio DEBUG obs found alternate keycode 105 for OBS_KEY_CONTROL which already has keycode 37
+2026-10-22 01:39:23.278+00:00 PRISMLiveStudio DEBUG obs found alternate keycode 108 for OBS_KEY_ALT which already has keycode 64
+2026-10-22 01:39:23.278+00:00 PRISMLiveStudio DEBUG obs found alternate keycode 129 for OBS_KEY_NUMPERIOD which already has keycode 91
+2026-10-22 01:39:23.278+00:00 PRISMLiveStudio DEBUG obs found alternate keycode 190 for OBS_KEY_REDO which already has keycode 137
+2026-10-22 01:39:23.278+00:00 PRISMLiveStudio DEBUG obs found alternate keycode 208 for OBS_KEY_VK_MEDIA_PLAY_PAUSE which already has keycode 172
+2026-10-22 01:39:23.278+00:00 PRISMLiveStudio DEBUG obs found alternate keycode 215 for OBS_KEY_VK_MEDIA_PLAY_PAUSE which already has keycode 172
+2026-10-22 01:39:23.278+00:00 PRISMLiveStudio DEBUG obs found alternate keycode 218 for OBS_KEY_PRINT which already has keycode 107
+2026-10-22 01:39:23.278+00:00 PRISMLiveStudio DEBUG obs found alternate keycode 231 for OBS_KEY_CANCEL which already has keycode 136
+2026-10-22 01:39:23.279+00:00 PRISMLiveStudio INFO obs Qt Version: 6.8.3 (runtime), 6.8.3 (compiled)
+2026-10-22 01:39:23.279+00:00 PRISMLiveStudio INFO obs Portable mode: false
+2026-10-22 01:39:23.299+00:00 PRISMLiveStudio INFO Channels PLSChannelDataAPI.cpp:1397 Channels :Broadcast state change from ReadyState( user can set channel )  to ReadyState( user can set channel ) 
+2026-10-22 01:39:23.299+00:00 PRISMLiveStudio INFO Channels PLSChannelDataAPI.cpp:1311 Channels :Record state change from RecordReady( user can set record information )  to RecordReady( user can set record information ) 
+2026-10-22 01:39:23.313+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_alert_clicked()
+2026-10-22 01:39:23.313+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_ResolutionBtn_clicked()
+2026-10-22 01:39:23.313+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_chat_clicked()
+2026-10-22 01:39:23.313+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_settings_clicked()
+2026-10-22 01:39:23.313+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_help_clicked()
+2026-10-22 01:39:23.313+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_listWidget_itemClicked(const QListWidgetItem*)
+2026-10-22 01:39:23.313+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_user_clicked()
+2026-10-22 01:39:23.388+00:00 PRISMLiveStudio DEBUG main/main-menu PLSMainView.cpp:1400 initHelpMenu helpList size=7, items=User Guide, FAQ, Website, Discord, Contact Us, Notices and Updates, Program Info
+2026-10-22 01:39:23.420+00:00 PRISMLiveStudio UI STEP [Operation] libui.h:510 In [Main Window], Choose [combobox: ]
+2026-10-22 01:39:23.467+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QLayout: Attempting to add QLayout "" to PLSSceneListView "scenesFrame", which already has a layout
+2026-10-22 01:39:23.540+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.540+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:123 sync server status: start update policy publish and policy platform json object
+2026-10-22 01:39:23.540+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:190 sync server status: start reading app qrc prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Publish.json file
+2026-10-22 01:39:23.540+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:201 sync server status: prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Publish.json version is 0 , Policy_Publish.json file
+2026-10-22 01:39:23.540+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:210 sync server status: start reading user AppData Folder PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Publish.json file
+2026-10-22 01:39:23.540+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:213 read PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Publish.json json failed, No such file or directory
+2026-10-22 01:39:23.540+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:236 sync server status: use PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Publish.json file
+2026-10-22 01:39:23.540+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:190 sync server status: start reading app qrc prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Platform.json file
+2026-10-22 01:39:23.540+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:201 sync server status: prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Platform.json version is 0 , Policy_Platform.json file
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:210 sync server status: start reading user AppData Folder PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Platform.json file
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:213 read PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Platform.json json failed, No such file or directory
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:236 sync server status: use PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Platform.json file
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:556 sync server status: start init supported resolution fps info
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:559 sync server status: init supported resolution fps info failed ,because the supportedResolutionFPS value is not json object
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:588 sync server status: start init rtmp destination info
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:593 sync server status: init rtmp destination info failed ,because the supportedResolutionFPS value is not json array
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:247 sync server status: start init multiple platform max bitrate info
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:250 sync server status: init multiple platform max bitrate info success , m_iMultiplePlatformMaxBitrate is 0
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:255 sync server status: start init prism live start request timeout
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:261 sync server status: init prism live start request timeout success , value is 30000 ms
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:266 sync server status: start init naver platform white list info
+2026-10-22 01:39:23.541+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:273 sync server status: init naver platform white list info failed , because the naverPlatformWhitelist is not json array
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:287 sync server status: start init stream server list info
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:290 sync server status: init stream server list info failed ,because the streamService value is not json object
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:301 sync server status: start init platform max live time info
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:304 sync server status: init platform max live time info failed ,because the platformLiveTimeLimit value is not json object
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:315 sync server status: start init platform required version info
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:322 sync server status: init platform required version info failed ,because the platform value is not json object
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:339 sync server status: start init navershopping info
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:342 sync server status: init navershopping info failed , because the navershopping value is not json object
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:453 sync server status: start init Twitch WhipServer
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:456 sync server status: init Twitch WhipServer failed , because the Twitch WhipServer value is not json object
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.542+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1203 sync server status: start init Discord info
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1206 sync server status: init Discord info failed , because the Discord info value is not json object
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1245 sync server status: get current language plus url is empty from sync server, use en plus url.
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1249 sync server status: init plus url info, m_plusUrl is 
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:190 sync server status: start reading app qrc prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Watermark_Config.json file
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:201 sync server status: prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Watermark_Config.json version is 0 , Policy_Watermark_Config.json file
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:210 sync server status: start reading user AppData Folder PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Watermark_Config.json file
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:213 read PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Watermark_Config.json json failed, No such file or directory
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:236 sync server status: use PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Watermark_Config.json file
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:529 sync server status: start init WaterMark info
+2026-10-22 01:39:23.543+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:532 sync server status: init WaterMark info failed
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:190 sync server status: start reading app qrc prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Outro_Config.json file
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:201 sync server status: prism-live-studio/PRISMLiveStudio/prism-ui/defaultSources.qrc/Policy_Outro_Config.json version is 0 , Policy_Outro_Config.json file
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:210 sync server status: start reading user AppData Folder PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Outro_Config.json file
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:213 read PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Outro_Config.json json failed, No such file or directory
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:236 sync server status: use PRISMLiveStudio/resources/library/Library_Policy_PC/Policy_Outro_Config.json file
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:542 sync server status: start OutroPolicy info
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:546 sync server status: init OutroPolicy info failed
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:422 sync server status: start init open source info
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:448 sync server status: init open source info success , open source is 
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:151 sync server status: end update policy publish and policy platform json object
+2026-10-22 01:39:23.544+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.545+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.545+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.545+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.545+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.545+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.545+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.545+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.545+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.545+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.545+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.546+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.547+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.547+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.547+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.547+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.549+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.549+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.549+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.549+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.549+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.549+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.549+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.549+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.549+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.549+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.550+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.551+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.551+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.551+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.551+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.551+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.551+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.551+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.551+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.552+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.553+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.554+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.554+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.554+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.554+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.554+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.554+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.554+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.555+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.556+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.556+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.556+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.556+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.556+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.556+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.556+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.556+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.556+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.556+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.557+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.558+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.558+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.558+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.558+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.558+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.558+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.558+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.558+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.558+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.558+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.559+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.559+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.559+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.559+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.559+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.559+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.560+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.561+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.562+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.562+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.562+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.562+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.562+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.562+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.563+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.564+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.565+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.565+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.565+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.565+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.565+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.565+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.565+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.566+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.567+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.568+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.568+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.568+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.568+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.568+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.568+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.568+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.568+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.569+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.570+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.570+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.570+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.570+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.570+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.570+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.570+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.570+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.570+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.571+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.571+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.571+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.571+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.571+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.571+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.571+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.571+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.571+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.571+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.572+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.573+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.573+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.573+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.573+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.573+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.573+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.573+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.573+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.573+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.573+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.574+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.574+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 syn[New Thread 0x7fffbe3b86c0 (LWP 14962)]
+[Thread 0x7fffbe3b86c0 (LWP 14962) exited]
+c server status: start init supported platforms info
+2026-10-22 01:39:23.574+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.574+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1091 sync server status: get m_supportedPlatformsMap from AppData or App Bundle , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.574+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:1094 sync server status: m_supportedPlatformsMap from app default value json file , the m_supportedPlatformsMap is empty
+2026-10-22 01:39:23.574+00:00 PRISMLiveStudio INFO SyncServer PLSSyncServerManager.cpp:467 sync server status: start init supported platforms info
+2026-10-22 01:39:23.574+00:00 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:470 sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+2026-10-22 01:39:23.578+00:00 PRISMLiveStudio INFO PLSChat PLSChatHelper.cpp:591 PLSChat send font scale size: 100
+2026-10-22 01:39:23.640+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionQuitApp_triggered()
+2026-10-22 01:39:23.640+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionDiscord_triggered()
+2026-10-22 01:39:23.640+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionReleaseNotes_triggered()
+2026-10-22 01:39:23.641+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_multiviewProjectorWindowed_triggered()
+2026-10-22 01:39:23.642+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionNewSceneCollection_triggered_with_parent(QWidget*)
+2026-10-22 01:39:23.642+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionImportSceneCollection_triggered_with_parent(QWidget*)
+2026-10-22 01:39:23.642+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionChangeSceneCollection_triggered(QString,QString,bool)
+2026-10-22 01:39:23.642+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionExportSceneCollection_triggered_with_path(QString,QString,QWidget*)
+2026-10-22 01:39:23.643+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionRenameSceneCollection_triggered(QString,QString)
+2026-10-22 01:39:23.643+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionDupSceneCollection_triggered(QString,QString)
+2026-10-22 01:39:23.643+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionRemoveSceneCollection_triggered(QString,QString)
+2026-10-22 01:39:23.643+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionImportFromOtherSceneCollection_triggered()
+2026-10-22 01:39:23.878+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QObject::connect(QWindow, Unknown): invalid nullptr parameter
+2026-10-22 01:39:23.879+00:00 PRISMLiveStudio INFO obs OBS 31.0.3 (linux)
+2026-10-22 01:39:23.879+00:00 PRISMLiveStudio INFO obs ---------------------------------
+2026-10-22 01:39:23.881+00:00 PRISMLiveStudio INFO PLSChat PLSChatDialog.cpp:616 PLSChat Dialog hideEvent
+2026-10-22 01:39:23.884+00:00 PRISMLiveStudio INFO main/main-frame PLSBasic.cpp:6399 Receive live end signal and ready to refresh live ui.
+2026-10-22 01:39:23.885+00:00 PRISMLiveStudio INFO main/main-frame obs-app.cpp:1417 main window create success.
+2026-10-22 01:39:24.061+00:00 PRISMLiveStudio INFO obs ---------------------------------
+2026-10-22 01:39:24.061+00:00 PRISMLiveStudio INFO obs[New Thread 0x7fffbd3546c0 (LWP 14965)]
+=== throw ===
+#0  0x00007fffebebb35a in __cxa_throw () at /lib/x86_64-linux-gnu/libstdc++.so.6
+#1  0x000055556229586c in OBSBasic::OBSInit (this=<optimized out>) at /home/runner/work/hoppercast/hoppercast/src/prism-live-studio/PRISMLiveStudio/obs-ui/window-basic-main.cpp:2662
+#2  0x0000555562b786d0 in OBSApp::OBSInit (this=this@entry=0x7fffdef03550) at /home/runner/work/hoppercast/hoppercast/src/prism-live-studio/PRISMLiveStudio/obs-ui/obs-app.cpp:1440
+#3  0x0000555565d1bf42 in PLSApp::PLSInit (this=this@entry=0x7fffdef03550) at /home/runner/work/hoppercast/hoppercast/src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSApp.cpp:597
+#4  0x0000555565d24162 in PLSApp::runProgram (program=..., argc=<optimized out>, argv=argv@entry=0x7fffffffcf38, prof=...) at /home/runner/work/hoppercast/hoppercast/src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSApp.cpp:964
+#5  0x0000555562b9b313 in run_program (argc=<optimized out>, argc@entry=1, argv=argv@entry=0x7fffffffcf38) at /home/runner/work/hoppercast/hoppercast/src/prism-live-studio/PRISMLiveStudio/obs-ui/obs-app.cpp:2201
+#6  0x00005555624dbd25 in main (argc=<optimized out>, argv=0x7fffffffcf38) at /home/runner/work/hoppercast/hoppercast/src/prism-live-studio/PRISMLiveStudio/obs-ui/obs-app.cpp:2819
+HopCast: startup failed: Failed to initialize video:  Graphics module not found
+[Thread 0x7fffc2d886c0 (LWP 14960) exited]
+[Thread 0x7fffbd3546c0 (LWP 14965) exited]
+[Thread 0x7fffc04db6c0 (LWP 14961) exited]
+[Thread 0x7fffc3d976c0 (LWP 14959) exited]
+[Thread 0x7fffc58be6c0 (LWP 14958) exited]
+[Thread 0x7fffc83036c0 (LWP 14957) exited]
+[Thread 0x7fffc9e2a6c0 (LWP 14956) exited]
+[Thread 0x7fffcb9516c0 (LWP 14955) exited]
+[Thread 0x7fffcc9606c0 (LWP 14954) exited]
+[Thread 0x7fffce4a96c0 (LWP 14953) exited]
+[Thread 0x7fffd0ae86c0 (LWP 14952) exited]
+[Thread 0x7fffd1af76c0 (LWP 14951) exited]
+[Thread 0x7fffd361e6c0 (LWP 14950) exited]
+[Thread 0x7fffd51626c0 (LWP 14949) exited]
+[Thread 0x7fffd6c896c0 (LWP 14948) exited]
+[Thread 0x7fffd87ba6c0 (LWP 14947) exited]
+[Thread 0x7fffda7596c0 (LWP 14946) exited]
+[Thread 0x7fffddfff6c0 (LWP 14945) exited]
+
+Program terminated with signal SIGKILL, Killed.
+The program no longer exists.
+
+=== CRASH BACKTRACE ===
+/home/runner/work/hoppercast/hoppercast/build/audit/.gdb-second:26: Error in sourced command file:
+No stack.

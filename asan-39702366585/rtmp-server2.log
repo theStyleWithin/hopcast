@@ -1,0 +1,4 @@
+[rtmp @ 0x561b8c069600] Cannot open connection tcp://127.0.0.1:1936?listen&listen_timeout=-1000&tcp_nodelay=0
+[in#0 @ 0x561b8c068ec0] Error opening input: Immediate exit requested
+Error opening input file rtmp://127.0.0.1:1936/live2/hopcast-audit-2.
+Exiting normally, received signal 2.

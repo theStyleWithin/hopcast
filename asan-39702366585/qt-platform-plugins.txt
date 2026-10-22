@@ -1,0 +1,10 @@
+libqeglfs.so
+libqlinuxfb.so
+libqminimal.so
+libqminimalegl.so
+libqoffscreen.so
+libqvkkhrdisplay.so
+libqvnc.so
+libqwayland-egl.so
+libqwayland-generic.so
+libqxcb.so
