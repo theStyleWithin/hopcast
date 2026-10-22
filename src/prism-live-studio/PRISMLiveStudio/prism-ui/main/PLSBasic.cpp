@@ -5,6 +5,10 @@
 #include "../hopcast/HopCastSecrets.h"
 #include "../hopcast/HopCastLinkGuard.h"
 #include "../hopcast/HopCastScreenshot.h" // HopCast: Tools > Screenshot
+#include "../hopcast/HopCastProfileImport.h" // HopCast: Profile > Import OBS profile
+#include "../hopcast/HopCastNetLog.h"
+#include <QFileDialog>
+#include <QDir>
 #endif
 #include "pls-common-define.hpp"
 #include "pls-common-language.hpp"
@@ -1278,6 +1282,23 @@ void PLSBasic::PLSInit()
 			else
 				PLSAlertView::warning(this, QStringLiteral("HopCast"), error);
 		});
+	});
+	/* HopCast: Profile > Import OBS profile (.zip) - the files streaming sites hand out. */
+	connect(ui->profileMenu->addAction(QStringLiteral("Import OBS profile (.zip)...")), &QAction::triggered, this, [this]() {
+		const QString file = QFileDialog::getOpenFileName(this, QStringLiteral("Import OBS profile"), QDir::homePath(),
+								  QStringLiteral("OBS profile (*.zip)"));
+		if (!file.isEmpty())
+			hopcast::importObsProfile(this, file);
+	});
+	/* ...and from a profile folder, e.g. one in OBS Studio's own ~/.config/obs-studio/basic/profiles. */
+	connect(ui->profileMenu->addAction(QStringLiteral("Import OBS profile (folder)...")), &QAction::triggered, this, [this]() {
+		QString start = QDir::homePath() + QStringLiteral("/.config/obs-studio/basic/profiles");
+		if (!QDir(start).exists())
+			start = QDir::homePath();
+		const QString dir = QFileDialog::getExistingDirectory(this, QStringLiteral("Import OBS profile"), start,
+								      QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+		if (!dir.isEmpty())
+			hopcast::importObsProfile(this, dir);
 	});
 	hopcast::LinkGuard::install(); // HopCast: never open PRISM/NAVER pages in the browser
 	/* HopCast: the platform chat panel has nothing to show for Custom RTMP and its
@@ -5147,6 +5168,26 @@ void PLSBasic::ShowOutputStreamErrorAlert(int code, QString last_error, bool ver
 	if (streamUrlEn.isEmpty())
 		streamUrlEn = "stream output";
 
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: for a failed connection, show what the connection actually did (the error number alone
+	 * can't tell a wrong key from a certificate or protocol problem). */
+	if (isVisible() && pls_is_in(code, OBS_OUTPUT_INVALID_STREAM, OBS_OUTPUT_CONNECT_FAILED, OBS_OUTPUT_BAD_PATH)) {
+		const char *why = code == OBS_OUTPUT_INVALID_STREAM
+					  ? "The server answered, but it didn't accept the stream. Check the server address and the stream key."
+				  : code == OBS_OUTPUT_BAD_PATH ? "The server address isn't valid."
+								: "HopCast couldn't reach the server.";
+		QStringList seen = hopcast::recentConnectionLog(8);
+		for (QString &l : seen)
+			l = l.mid(l.indexOf(QLatin1Char(' '), 24) + 1).left(150); // drop the time stamp
+		QString text = QStringLiteral("%1 (error %2)").arg(QString::fromUtf8(why)).arg(code);
+		if (!last_error.isEmpty())
+			text += QStringLiteral("\n\n") + last_error;
+		if (!seen.isEmpty())
+			text += QStringLiteral("\n\nWhat HopCast saw:\n") + seen.join(QLatin1Char('\n'));
+		PLSAlertView::warning(parent, QStringLiteral("Failed to connect"), text);
+		return;
+	}
+#endif
 	PLSErrorHandler::ExtraData extra_data(streamUrlEn);
 	bool encoder_error = (code == OBS_OUTPUT_ENCODE_ERROR);
 	bool use_last_error = pls_is_in(code, OBS_OUTPUT_DISCONNECTED, OBS_OUTPUT_ERROR, OBS_OUTPUT_CONNECT_FAILED);

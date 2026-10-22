@@ -27,8 +27,6 @@ void PLSPlatformRtmp::onPrepareLive(bool value)
 	 * used - the host and the key's length, never the key itself. */
 	{
 		QString server = getInitData().value(ChannelData::g_channelRtmpUrl).toString().trimmed();
-		while (server.endsWith(QLatin1Char('/')))
-			server.chop(1); // "…/app/" + "/" + key would send the server a path with an empty segment
 		const QString key = getInitData().value(ChannelData::g_streamKey).toString().trimmed();
 		PLS_INFO(MODULE_PlatformService, "HopCast: going live with '%s': server host=%s, stream key length=%d", qUtf8Printable(getChannelName()),
 			 qUtf8Printable(QUrl(server).host()), static_cast<int>(key.size()));

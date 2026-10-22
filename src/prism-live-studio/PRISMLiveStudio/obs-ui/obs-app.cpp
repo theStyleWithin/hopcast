@@ -15,6 +15,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#ifdef HOPCAST_NO_NAVER
+#include "../prism-ui/hopcast/HopCastNetLog.h"
+#endif
 #include <time.h>
 #include <stdio.h>
 #include <wchar.h>
@@ -446,6 +449,9 @@ static void do_log(int log_level, const char *msg, va_list args, void *param)
 	}
 #endif
 
+#ifdef HOPCAST_NO_NAVER
+	hopcast::recordLogLine(str); // HopCast: remembered so a failed stream can show what happened
+#endif
 	if (log_level <= LOG_INFO || LocalGlobalVars::log_verbose) {
 
 		if (!too_many_repeated_entries(logFile, msg, str))
