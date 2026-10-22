@@ -184,10 +184,14 @@ jobs:
           sha256sum "HopCast-windows-x64-$V.zip" | tee SHA256SUMS-windows >> package.log
           ls -la HopCast-windows-x64-*.zip >> package.log
           # Start it the way a person will: through HopCast.exe.
-          taskkill //F //IM obs64.exe >/dev/null 2>&1 || true
-          ( cd stage/HopCast && ./HopCast.exe ) ; sleep 25
-          if tasklist //FI "IMAGENAME eq obs64.exe" | grep -qi obs64; then echo "launcher check: HopCast.exe started the program (obs64.exe is running)" | tee -a package.log; else echo "launcher check FAILED: obs64.exe is not running" | tee -a package.log; exit 1; fi
-          taskkill //F //IM obs64.exe >/dev/null 2>&1 || true
+          powershell -NoProfile -Command "Get-Process obs64 -ErrorAction SilentlyContinue | Stop-Process -Force" || true
+          ( cd stage/HopCast && ./HopCast.exe ); sleep 25
+          if powershell -NoProfile -Command "if (Get-Process obs64 -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }"; then
+            echo "launcher check: HopCast.exe started the program (obs64.exe is running)" | tee -a package.log
+          else
+            echo "launcher check FAILED: obs64.exe is not running" | tee -a package.log; exit 1
+          fi
+          powershell -NoProfile -Command "Get-Process obs64 -ErrorAction SilentlyContinue | Stop-Process -Force" || true
 
       - name: Publish the Windows zip
         if: steps.package.outcome == 'success' && inputs.release_tag != ''
