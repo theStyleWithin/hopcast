@@ -1,0 +1,12 @@
+HopCast lets you stream your phone screen, or record it, while you keep using other apps. It stays running in the background behind a small floating bubble, so you can switch between apps and games without stopping.
+
+<ul>
+<li>Stream to any RTMP, SRT or RIST server you type in. No account.</li>
+<li>Every session is also saved on your phone as an MP4 file.</li>
+<li>Microphone is off until you turn it on.</li>
+<li>App block list: pick apps that should never be shown. When one is on screen, the stream and recording go black right away until it is out of view.</li>
+<li>Hide-screen button in the bubble for when something private pops up.</li>
+<li>Follows your game's portrait or landscape orientation.</li>
+</ul>
+
+Whatever is on your screen is streamed, including notifications, so check what you share. HopCast sends nothing to any company server and has no tracking.
