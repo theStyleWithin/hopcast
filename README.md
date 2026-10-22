@@ -1,7 +1,7 @@
 # HopCast
 
 > [!WARNING]
-> **HopCast is in early development.** Test builds are on the [Releases](https://github.com/theStyleWithin/hoppercast/releases)
+> **HopCast is in early development.** Test builds are on the [Releases](https://github.com/theStyleWithin/hopcast/releases)
 > page for people who want to help test. It has only been tested on automated build machines so far, not on a
 > real desktop, and things will change or break without notice. Don't rely on it for a stream that matters yet.
 
@@ -60,7 +60,7 @@ Windows will show a SmartScreen warning because the program isn't code-signed. C
 > settings or recordings, or misbehave. HopCast comes with no warranty (see [License](#license)). Back up anything
 > important and don't rely on it for a stream or recording that matters.
 
-Download `HopCast-release-<version>-x86_64.AppImage` from [Releases](https://github.com/theStyleWithin/hoppercast/releases), then:
+Download `HopCast-release-<version>-x86_64.AppImage` from [Releases](https://github.com/theStyleWithin/hopcast/releases), then:
 
 ```sh
 chmod +x HopCast-release-*.AppImage

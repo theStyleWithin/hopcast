@@ -18,4 +18,4 @@ Please read:
   the scripting tool.
 
 HopCast is free software (GPL-2.0), built on PRISM Live Studio and OBS Studio. Source:
-https://github.com/theStyleWithin/hoppercast
+https://github.com/theStyleWithin/hopcast

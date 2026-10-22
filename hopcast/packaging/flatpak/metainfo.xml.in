@@ -16,8 +16,8 @@
     </ul>
   </description>
   <launchable type="desktop-id">io.github.theStyleWithin.HopCast.desktop</launchable>
-  <url type="homepage">https://github.com/theStyleWithin/hoppercast</url>
-  <url type="bugtracker">https://github.com/theStyleWithin/hoppercast/issues</url>
+  <url type="homepage">https://github.com/theStyleWithin/hopcast</url>
+  <url type="bugtracker">https://github.com/theStyleWithin/hopcast/issues</url>
   <provides><binary>hopcast</binary></provides>
   <categories>
     <category>AudioVideo</category>
