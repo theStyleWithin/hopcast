@@ -52,6 +52,12 @@ jobs:
           cmake --build "$W/build/engine" --config RelWithDebInfo --parallel 2>&1 | tee "$W/build.log"
           exit "${PIPESTATUS[0]}"
 
+      - name: List what was built
+        if: always()
+        run: |
+          { echo "dlls: $(find build/engine -name '*.dll' 2>/dev/null | wc -l)  exes: $(find build/engine -name '*.exe' 2>/dev/null | wc -l)";
+            find build/engine -path '*rundir*' \( -name '*.dll' -o -name '*.exe' \) 2>/dev/null | sed 's|.*/rundir/||' | sort | head -150; } > inventory.txt || true
+
       - name: Publish logs
         if: always()
         env:
@@ -61,10 +67,11 @@ jobs:
           git -C "$tmp" init -q -b dev-logs-windows
           for f in configure.log build.log; do
             [ -f "$f" ] || continue
-            grep -nE "CMake Error|error C[0-9]+|error LNK|fatal error|Could NOT find|FAILED|failed" "$f" | head -400 > "$tmp/${GITHUB_RUN_ID}-${f%.log}-errors.txt"
+            grep -nE "CMake Error|error C[0-9]+|error LNK|fatal error|Could NOT find|FAILED|failed" "$f" | head -400 > "$tmp/${GITHUB_RUN_ID}-${f%.log}-errors.txt" || true
             tail -c 300000 "$f" > "$tmp/${GITHUB_RUN_ID}-${f%.log}-tail.log"
           done
           echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
+          [ -f inventory.txt ] && cp inventory.txt "$tmp/${GITHUB_RUN_ID}-inventory.txt"
           git -C "$tmp" add -A
           git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "windows logs for run ${GITHUB_RUN_ID}"
           git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:dev-logs-windows
