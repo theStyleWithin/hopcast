@@ -52,6 +52,48 @@ jobs:
           cmake --build "$W/build/engine" --config RelWithDebInfo --parallel 2>&1 | tee "$W/build.log"
           exit "${PIPESTATUS[0]}"
 
+      - name: Install Qt 6.8
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          host: windows
+          target: desktop
+          arch: win64_msvc2022_64
+          modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats'
+          cache: true
+
+      - name: Install libraries (vcpkg)
+        continue-on-error: true
+        run: |
+          "$VCPKG_INSTALLATION_ROOT/vcpkg.exe" install openssl zstd libpng fftw3 --triplet x64-windows 2>&1 | tee vcpkg.log
+          exit "${PIPESTATUS[0]}"
+
+      - name: Configure app
+        id: appconfigure
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: |
+          W=$(echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g')
+          Q=$(echo "$QT_ROOT_DIR" | sed 's|\\|/|g')
+          V=$(tr -d '[:space:]' < hopcast/VERSION)
+          IFS=. read -r a b c d <<< "$V"
+          export VERSION="$V" PLS_VERSION="$V" PRISM_VERSION_MAJOR="$a" PRISM_VERSION_MINOR="$b" PRISM_VERSION_PATCH="$c" PRISM_VERSION_TWEAK="${d:-0}" PRISM_COMMENTS=HopCast BUILD_TYPE=RelWithDebInfo
+          export SRC_DIR="$W/src" OBS_SRC_DIR="$W/src/obs-studio" PRISM_SRC_DIR="$W/src/prism-live-studio" OBS_BUILD_DIR="$W/build/engine" PRISM_BUILD_DIR="$W/build/app" DEV_OUTPUT_DIR="$W/build/app/output" ARCH=x86_64 QTDIR="$Q"
+          DEPS=$(ls -d "$W"/src/obs-studio/.deps/obs-deps-*-x64 | head -1)
+          VC=$(echo "$VCPKG_INSTALLATION_ROOT" | sed 's|\\|/|g')/installed/x64-windows
+          cmake -S src -B build/app -G "Visual Studio 17 2022" -A x64 -Wno-dev \
+            -DCMAKE_PREFIX_PATH="$Q;$DEPS;$VC" -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF -DENABLE_TEST=OFF \
+            -DCMAKE_PROJECT_INCLUDE="$W/hopcast/cmake/engine-compat.cmake" 2>&1 | tee "$W/appconfigure.log"
+          exit "${PIPESTATUS[0]}"
+
+      - name: Build app
+        id: appbuild
+        if: steps.appconfigure.outcome == 'success'
+        continue-on-error: true
+        run: |
+          cmake --build build/app --config RelWithDebInfo --parallel -- /maxcpucount /p:CL_MPCount=4 2>&1 | tee appbuild.log
+          exit "${PIPESTATUS[0]}"
+
       - name: List what was built
         if: always()
         run: |
@@ -65,17 +107,17 @@ jobs:
         run: |
           tmp=$(mktemp -d)
           git -C "$tmp" init -q -b dev-logs-windows
-          for f in configure.log build.log; do
+          for f in configure.log build.log vcpkg.log appconfigure.log appbuild.log; do
             [ -f "$f" ] || continue
             grep -nE "CMake Error|error C[0-9]+|error LNK|fatal error|Could NOT find|FAILED|failed" "$f" | head -400 > "$tmp/${GITHUB_RUN_ID}-${f%.log}-errors.txt" || true
             tail -c 300000 "$f" > "$tmp/${GITHUB_RUN_ID}-${f%.log}-tail.log"
           done
-          echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
+          echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }} appconfigure=${{ steps.appconfigure.outcome }} appbuild=${{ steps.appbuild.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
           [ -f inventory.txt ] && cp inventory.txt "$tmp/${GITHUB_RUN_ID}-inventory.txt"
           git -C "$tmp" add -A
           git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "windows logs for run ${GITHUB_RUN_ID}"
           git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:dev-logs-windows
 
       - name: Result
-        if: steps.configure.outcome != 'success' || steps.build.outcome != 'success'
+        if: steps.configure.outcome != 'success' || steps.build.outcome != 'success' || steps.appconfigure.outcome != 'success' || steps.appbuild.outcome != 'success'
         run: exit 1
