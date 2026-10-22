@@ -183,6 +183,11 @@ jobs:
           7z a -tzip -mx=5 "HopCast-windows-x64-$V.zip" ./stage/HopCast >> package.log
           sha256sum "HopCast-windows-x64-$V.zip" | tee SHA256SUMS-windows >> package.log
           ls -la HopCast-windows-x64-*.zip >> package.log
+          # Start it the way a person will: through HopCast.exe.
+          taskkill //F //IM obs64.exe >/dev/null 2>&1 || true
+          ( cd stage/HopCast && ./HopCast.exe ) ; sleep 25
+          if tasklist //FI "IMAGENAME eq obs64.exe" | grep -qi obs64; then echo "launcher check: HopCast.exe started the program (obs64.exe is running)" | tee -a package.log; else echo "launcher check FAILED: obs64.exe is not running" | tee -a package.log; exit 1; fi
+          taskkill //F //IM obs64.exe >/dev/null 2>&1 || true
 
       - name: Publish the Windows zip
         if: steps.package.outcome == 'success' && inputs.release_tag != ''
