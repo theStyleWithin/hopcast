@@ -12374,8 +12374,10 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 	connect(shotStream, &QAction::triggered, this, &OBSBasic::ScreenshotScene);
 	trayMenu->addAction(shotStream);
 #endif
+#ifndef HOPCAST_NO_NAVER
 	sysTrayBanner = addSysTrayAction(QTStr("Basic.Main.Wizard"), "sysTrayBanner",
 					 []() { PLSLaunchWizardView::instance()->singletonWakeup(); });
+#endif
 	trayMenu->addSeparator();
 	trayMenu->addAction(exit);
 	trayIcon->setContextMenu(trayMenu);
