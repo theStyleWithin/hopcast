@@ -42,6 +42,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(OS_MACOS OFF)
   set(OS_POSIX OFF)
   list(APPEND CMAKE_MODULE_PATH "$ENV{OBS_SRC_DIR}/cmake/windows")
+  # HopCast: no account, no NAVER services (same options as Linux) and the encrypted key store.
+  include("${CMAKE_SOURCE_DIR}/../hopcast/cmake/prism-windows.cmake")
+  add_subdirectory("${CMAKE_SOURCE_DIR}/../hopcast/securestore" "${CMAKE_BINARY_DIR}/hopcast-securestore")
 # HopCast: Linux support. The engine is built beforehand by
 # hopcast/scripts/build-engine.sh; dependencies come from the system / CI Qt.
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")

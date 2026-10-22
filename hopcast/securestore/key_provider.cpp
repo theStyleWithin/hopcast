@@ -15,7 +15,9 @@
 #include <cstring>
 #include <mutex>
 
+#ifndef _WIN32
 #include <sys/stat.h>
+#endif
 
 #ifdef HOPCAST_HAVE_LIBSECRET
 #include <libsecret/secret.h>
@@ -167,7 +169,9 @@ private:
 	std::optional<std::string> fromKeyFile(bool create, std::string &error)
 	{
 		if (auto stored = read_file(m_keyFile); stored) {
+#ifndef _WIN32
 			::chmod(m_keyFile.c_str(), S_IRUSR | S_IWUSR); // keep it owner-only
+#endif
 			auto key = from_hex(trim(*stored));
 			OPENSSL_cleanse(stored->data(), stored->size());
 			if (!key)
