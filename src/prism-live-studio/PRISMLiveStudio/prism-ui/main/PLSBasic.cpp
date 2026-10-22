@@ -5,6 +5,9 @@
 #include "../hopcast/HopCastSecrets.h"
 #include "../hopcast/HopCastLinkGuard.h"
 #include "../hopcast/HopCastScreenshot.h" // HopCast: Tools > Screenshot
+#include "../hopcast/HopCastProfileImport.h" // HopCast: Profile > Import OBS profile
+#include <QFileDialog>
+#include <QDir>
 #endif
 #include "pls-common-define.hpp"
 #include "pls-common-language.hpp"
@@ -1278,6 +1281,13 @@ void PLSBasic::PLSInit()
 			else
 				PLSAlertView::warning(this, QStringLiteral("HopCast"), error);
 		});
+	});
+	/* HopCast: Profile > Import OBS profile (.zip) - the files streaming sites hand out. */
+	connect(ui->profileMenu->addAction(QStringLiteral("Import OBS profile (.zip)...")), &QAction::triggered, this, [this]() {
+		const QString file = QFileDialog::getOpenFileName(this, QStringLiteral("Import OBS profile"), QDir::homePath(),
+								  QStringLiteral("OBS profile (*.zip)"));
+		if (!file.isEmpty())
+			hopcast::importObsProfile(this, file);
 	});
 	hopcast::LinkGuard::install(); // HopCast: never open PRISM/NAVER pages in the browser
 	/* HopCast: the platform chat panel has nothing to show for Custom RTMP and its
