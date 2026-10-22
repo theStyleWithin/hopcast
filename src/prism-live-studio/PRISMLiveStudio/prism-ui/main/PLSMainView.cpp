@@ -956,10 +956,7 @@ bool PLSMainView::eventFilter(QObject *watcher, QEvent *event)
 	} else if (watcher == ui->content) {
 		if (event->type() == QEvent::Resize) {
 			if (m_toastMsg->isVisible()) {
-				int width = ui->content->width();
-				QPoint pt = ui->content->mapToGlobal(QPoint(width, 0));
-				pt = mapFromGlobal(pt);
-				m_toastMsg->move(pt.x() - m_toastMsg->width() - 10, pt.y() + 10);
+				placeToast();
 			}
 		}
 	}
@@ -1676,11 +1673,8 @@ void PLSMainView::toastMessage(pls_toast_info_type type, const QString &message,
 	}
 
 	m_toastMsg->showMsg(message, type);
-	int width = ui->content->width();
-	QPoint pt = ui->content->mapToGlobal(QPoint(width, 0));
-	pt = mapFromGlobal(pt);
 	m_toastMsg->show();
-	m_toastMsg->move(pt.x() - m_toastMsg->width() - 10, pt.y() + 10);
+	placeToast();
 
 	PLS_INFO(MAINFRAME_MODULE, "%s", qUtf8Printable(message));
 	m_livingMsgView->addMsgItem(message, currtime, type);
@@ -1690,6 +1684,17 @@ void PLSMainView::toastMessage(pls_toast_info_type type, const QString &message,
 	QString msg(message);
 	toastMessage(type, m_livingMsgView->getInfoWithUrl(message, url, replaceStr), autoClose);
 	m_toastMsg->showMsg(msg.replace(url, replaceStr), type);
+}
+
+void PLSMainView::placeToast()
+{
+	QPoint pt = ui->content->mapToGlobal(QPoint(ui->content->width(), 0));
+#if defined(Q_OS_LINUX)
+	m_toastMsg->move(pt.x() - m_toastMsg->width() - 10, pt.y() + 10); // its own window: screen coordinates
+#else
+	pt = mapFromGlobal(pt);
+	m_toastMsg->move(pt.x() - m_toastMsg->width() - 10, pt.y() + 10);
+#endif
 }
 
 void PLSMainView::toastClear()

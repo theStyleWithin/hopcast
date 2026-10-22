@@ -13,4 +13,8 @@ void recordLogLine(const char *line);
 // The most recent connection lines, oldest first, with stream keys hidden.
 QStringList recentConnectionLog(int maxLines);
 
+// The same, but only lines recorded since `sinceMs` (milliseconds since the epoch; see nowMs()).
+QStringList recentConnectionLogSince(qint64 sinceMs, int maxLines);
+qint64 nowMs();
+
 } // namespace hopcast

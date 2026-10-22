@@ -1,6 +1,7 @@
 // HopCast: recent connection log lines. GPL-2.0-or-later.
 #include "HopCastNetLog.h"
 
+#include <QDateTime>
 #include <QRegularExpression>
 #include <QMutex>
 #include <QMutexLocker>
@@ -15,9 +16,9 @@ QMutex &mutex()
 	return *m;
 }
 
-std::deque<QString> &lines()
+std::deque<std::pair<qint64, QString>> &lines()
 {
-	static auto *d = new std::deque<QString>;
+	static auto *d = new std::deque<std::pair<qint64, QString>>;
 	return *d;
 }
 
@@ -51,7 +52,7 @@ void recordLogLine(const char *line)
 		return;
 	QMutexLocker lock(&mutex());
 	auto &d = lines();
-	d.push_back(QString::fromUtf8(line).trimmed().left(300));
+	d.emplace_back(QDateTime::currentMSecsSinceEpoch(), QString::fromUtf8(line).trimmed().left(300));
 	while (d.size() > 40)
 		d.pop_front();
 }
@@ -63,8 +64,26 @@ QStringList recentConnectionLog(int maxLines)
 	QStringList out;
 	const int start = qMax(0, static_cast<int>(d.size()) - maxLines);
 	for (int i = start; i < static_cast<int>(d.size()); ++i)
-		out << hideKeys(d[i]);
+		out << hideKeys(d[i].second);
 	return out;
+}
+
+QStringList recentConnectionLogSince(qint64 sinceMs, int maxLines)
+{
+	QMutexLocker lock(&mutex());
+	const auto &d = lines();
+	QStringList out;
+	for (const auto &entry : d)
+		if (entry.first >= sinceMs)
+			out << hideKeys(entry.second);
+	while (out.size() > maxLines)
+		out.removeFirst();
+	return out;
+}
+
+qint64 nowMs()
+{
+	return QDateTime::currentMSecsSinceEpoch();
 }
 
 } // namespace hopcast

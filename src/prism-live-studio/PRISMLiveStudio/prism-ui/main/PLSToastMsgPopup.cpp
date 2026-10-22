@@ -13,6 +13,12 @@ PLSToastMsgPopup::PLSToastMsgPopup(QWidget *parent) : QLabel(parent)
 #if !defined(Q_OS_LINUX) // HopCast: native child widgets leave stale paint on Linux
 	setAttribute(Qt::WA_NativeWindow);
 #endif
+#if defined(Q_OS_LINUX)
+	/* HopCast: the video preview is a native window that paints over ordinary child widgets, which hid
+	 * the lower lines of a notice. A small tool-tip style window of its own always stays on top. */
+	setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus);
+	setAttribute(Qt::WA_ShowWithoutActivating);
+#endif
 	m_timer = pls_new<QTimer>(this);
 	ui->setupUi(this);
 	setFixedWidth(325);
