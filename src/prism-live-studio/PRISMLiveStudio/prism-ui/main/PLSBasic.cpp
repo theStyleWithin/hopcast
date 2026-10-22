@@ -1281,9 +1281,9 @@ void PLSBasic::PLSInit()
 	connect(ui->menuTools->addAction(QStringLiteral("Screenshot of my screen")), &QAction::triggered, this, [this]() {
 		hopcast::takeDesktopScreenshot([this](const QString &path, const QString &error) {
 			if (error.isEmpty())
-				PLSAlertView::information(this, QStringLiteral("HopCast"), QStringLiteral("Screenshot saved:\n") + path);
+				PLSAlertView::information(this, QStringLiteral("HopShots"), QStringLiteral("Screenshot saved:\n") + path);
 			else
-				PLSAlertView::warning(this, QStringLiteral("HopCast"), error);
+				PLSAlertView::warning(this, QStringLiteral("HopShots"), error);
 		});
 	});
 	/* HopCast: Profile > Import OBS profile (.zip) - the files streaming sites hand out. */

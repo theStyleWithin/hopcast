@@ -12364,9 +12364,9 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 	connect(shotDesktop, &QAction::triggered, this, [this]() {
 		hopcast::takeDesktopScreenshot([this](const QString &path, const QString &error) {
 			if (error.isEmpty())
-				SysTrayNotify(QStringLiteral("Screenshot saved: ") + path, QSystemTrayIcon::Information);
+				SysTrayNotify(QStringLiteral("Screenshot saved: ") + path, QSystemTrayIcon::Information, QStringLiteral("HopShots"));
 			else
-				SysTrayNotify(error, QSystemTrayIcon::Warning);
+				SysTrayNotify(error, QSystemTrayIcon::Warning, QStringLiteral("HopShots"));
 		});
 	});
 	trayMenu->addAction(shotDesktop);
@@ -12433,11 +12433,11 @@ void OBSBasic::IconActivated(QSystemTrayIcon::ActivationReason reason)
 #endif
 }
 
-void OBSBasic::SysTrayNotify(const QString &text, QSystemTrayIcon::MessageIcon n)
+void OBSBasic::SysTrayNotify(const QString &text, QSystemTrayIcon::MessageIcon n, const QString &title)
 {
 	if (trayIcon && trayIcon->isVisible() && QSystemTrayIcon::supportsMessages()) {
 		QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::MessageIcon(n);
-		trayIcon->showMessage("PRISMLiveStudio", text, icon, 10000);
+		trayIcon->showMessage(title, text, icon, 10000); // HopCast: never the PRISM name
 	}
 }
 
