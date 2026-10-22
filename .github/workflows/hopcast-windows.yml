@@ -5,6 +5,11 @@ name: hopcast-windows
 
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Attach the portable zip to the release with this tag (created as a pre-release if it doesn't exist); empty = no release"
+        type: string
+        default: ""
 
 permissions:
   contents: write   # pushes logs to the dev-logs-windows branch
@@ -155,6 +160,51 @@ jobs:
           find applogs -type f | tee -a run.log
           find "$APPDATA/PRISMLiveStudio" -maxdepth 2 2>/dev/null | head -30 | tee -a run.log
 
+      - name: Visual C++ tools
+        if: steps.smoke.outcome == 'success'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Launcher and zip
+        id: package
+        if: steps.smoke.outcome == 'success'
+        continue-on-error: true
+        run: |
+          export MSYS2_ARG_CONV_EXCL='*'
+          V=$(tr -d '[:space:]' < hopcast/VERSION)
+          ( cd hopcast/windows
+            RES=""
+            if magick ../appimage/hopcast.png -define icon:auto-resize=256,128,64,48,32,16 hopcast.ico 2>/dev/null; then
+              echo 'IDI_ICON1 ICON "hopcast.ico"' > launcher.rc && rc /nologo launcher.rc && RES=launcher.res
+            fi
+            cl /nologo /O2 /Fe:HopCast.exe launcher.c $RES user32.lib /link /SUBSYSTEM:WINDOWS ) 2>&1 | tee package.log
+          cp hopcast/windows/HopCast.exe stage/HopCast/HopCast.exe
+          cp hopcast/windows/README.txt stage/HopCast/README.txt
+          cp COPYING stage/HopCast/COPYING.txt 2>/dev/null || true
+          7z a -tzip -mx=5 "HopCast-windows-x64-$V.zip" ./stage/HopCast >> package.log
+          sha256sum "HopCast-windows-x64-$V.zip" | tee SHA256SUMS-windows >> package.log
+          ls -la HopCast-windows-x64-*.zip >> package.log
+
+      - name: Publish the Windows zip
+        if: steps.package.outcome == 'success' && inputs.release_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.release_tag }}
+        run: |
+          V=$(tr -d '[:space:]' < hopcast/VERSION)
+          cat > win-notes.md <<N
+          **HopCast for Windows - early build, portable (no installer).** The developer uses Linux and only tests the AppImage versions, so please try the Windows build in a virtual machine first and tell us what you find. Windows SmartScreen may warn because the program isn't code-signed; compare \`Get-FileHash\` with \`SHA256SUMS-windows\`.
+
+          - \`HopCast-windows-x64-*.zip\` - unzip and double-click \`HopCast.exe\`.
+          - \`SHA256SUMS-windows\` - checksum of the zip.
+
+          Built from the same source as the Linux AppImages. Not affiliated with NAVER Corp. or the OBS Project.
+          N
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "HopCast-windows-x64-$V.zip" SHA256SUMS-windows --clobber
+          else
+            gh release create "$TAG" --prerelease --target "$GITHUB_SHA" --title "HopCast $TAG (Windows build)" --notes-file win-notes.md "HopCast-windows-x64-$V.zip" SHA256SUMS-windows
+          fi
+
       - name: Upload the portable folder
         if: steps.stage.outcome == 'success'
         uses: actions/upload-artifact@v4
@@ -180,12 +230,12 @@ jobs:
         run: |
           tmp=$(mktemp -d)
           git -C "$tmp" init -q -b dev-logs-windows
-          for f in configure.log build.log vcpkg.log appconfigure.log appbuild.log stage.log missing.log run.log; do
+          for f in configure.log build.log vcpkg.log appconfigure.log appbuild.log stage.log missing.log run.log package.log; do
             [ -f "$f" ] || continue
             grep -nE "CMake Error|error C[0-9]+|error LNK|fatal error|Could NOT find|FAILED|failed" "$f" | head -400 > "$tmp/${GITHUB_RUN_ID}-${f%.log}-errors.txt" || true
             tail -c 300000 "$f" > "$tmp/${GITHUB_RUN_ID}-${f%.log}-tail.log"
           done
-          echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }} appconfigure=${{ steps.appconfigure.outcome }} appbuild=${{ steps.appbuild.outcome }} stage=${{ steps.stage.outcome }} smoke=${{ steps.smoke.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
+          echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }} appconfigure=${{ steps.appconfigure.outcome }} appbuild=${{ steps.appbuild.outcome }} stage=${{ steps.stage.outcome }} smoke=${{ steps.smoke.outcome }} package=${{ steps.package.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
           [ -f inventory.txt ] && cp inventory.txt "$tmp/${GITHUB_RUN_ID}-inventory.txt"
           [ -f shot.png ] && cp shot.png "$tmp/${GITHUB_RUN_ID}-screenshot.png"
           for f in applogs/logs/*; do [ -f "$f" ] && tail -c 100000 "$f" > "$tmp/${GITHUB_RUN_ID}-applog-$(basename "$f")"; done 2>/dev/null || true
