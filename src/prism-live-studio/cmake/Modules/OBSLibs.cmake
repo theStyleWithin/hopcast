@@ -91,7 +91,7 @@ if(OS_WINDOWS)
         # compile it here from the engine source as a static library.
         add_library(hopcast-bpm STATIC "$ENV{OBS_SRC_DIR}/shared/bpm/bpm.c")
         target_include_directories(hopcast-bpm PUBLIC "$ENV{OBS_SRC_DIR}/shared/bpm")
-        target_link_libraries(hopcast-bpm PUBLIC OBS::libobs OBS::caption)
+        target_link_libraries(hopcast-bpm PUBLIC OBS::libobs OBS::caption OBS::w32-pthreads)
         set_target_properties(hopcast-bpm PROPERTIES FOLDER hopcast/engine)
         add_library(OBS::bpm ALIAS hopcast-bpm)
     else()
