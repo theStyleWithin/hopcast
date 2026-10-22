@@ -165,9 +165,26 @@ sleep 2
 xcompmgr -n >/dev/null 2>&1 & COMP=$!
 
 # ---------------------------------------------------------------- 2. first run: channel, stream, record, quit
-RTMP_URL="rtmp://127.0.0.1:1935/live"; RTMP_KEY="hopcast-audit"
+# The first server is reached over RTMPS (TLS), like Kick, YouTube and Twitch: a TLS front (socat) with a
+# throwaway CA that the system trusts, in front of the plain ffmpeg listener. Skipped without sudo.
+RTMP_LISTEN="rtmp://127.0.0.1:1935/live"; RTMP_URL="$RTMP_LISTEN"; RTMP_KEY="hopcast-audit"
+if [[ "${AUDIT_RTMPS:-1}" == 1 ]] && sudo -n true 2>/dev/null && command -v socat >/dev/null && command -v openssl >/dev/null; then
+  T="$OUT/tls"; mkdir -p "$T"
+  openssl req -x509 -newkey rsa:2048 -nodes -keyout "$T/ca.key" -out "$T/ca.crt" -days 2 -subj "/CN=HopCast audit CA" \
+    -addext "basicConstraints=critical,CA:TRUE" >/dev/null 2>&1
+  openssl req -newkey rsa:2048 -nodes -keyout "$T/server.key" -out "$T/server.csr" -subj "/CN=localhost" >/dev/null 2>&1
+  printf 'subjectAltName=DNS:localhost\n' > "$T/san.cnf"
+  openssl x509 -req -in "$T/server.csr" -CA "$T/ca.crt" -CAkey "$T/ca.key" -CAcreateserial -out "$T/server.crt" -days 2 -extfile "$T/san.cnf" >/dev/null 2>&1
+  sudo cp "$T/ca.crt" /usr/local/share/ca-certificates/hopcast-audit.crt && sudo update-ca-certificates >/dev/null 2>&1
+  cat "$T/server.crt" "$T/server.key" > "$T/server.pem"
+  socat OPENSSL-LISTEN:1943,reuseaddr,fork,cert="$T/server.pem",verify=0 TCP:127.0.0.1:1935 > "$OUT/tls-proxy.log" 2>&1 & TLSPROXY=$!
+  RTMP_URL="rtmps://localhost:1943/live"
+  info "first server is reached over RTMPS (rtmps://localhost:1943)"
+else
+  info "RTMPS test skipped (needs sudo, socat and openssl)"
+fi
 ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f flv \
-  -i "$RTMP_URL/$RTMP_KEY" -c copy -t 25 -y "$OUT/received.flv" > "$OUT/rtmp-server.log" 2>&1 & RTMP=$!
+  -i "$RTMP_LISTEN/$RTMP_KEY" -c copy -t 25 -y "$OUT/received.flv" > "$OUT/rtmp-server.log" 2>&1 & RTMP=$!
 RTMP_URL2="rtmp://127.0.0.1:1936/live2"; RTMP_KEY2="hopcast-audit-2"
 ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 180000000 -f flv \
   -i "$RTMP_URL2/$RTMP_KEY2" -c copy -t 25 -y "$OUT/received2.flv" > "$OUT/rtmp-server2.log" 2>&1 & RTMP2=$!
@@ -304,7 +321,7 @@ grep -qiE "tamper|key file is missing|KeyMissing" "$OUT/app-second.log" && fail 
 grep -q "Audit Server\|hopcast_rtmp.*load" "$OUT/app-second.log" && info "channel load logged"
 # Go live again from the channel loaded off disk (the key must survive a restart).
 ffmpeg -nostdin -hide_banner -loglevel info -listen 1 -rw_timeout 120000000 -f flv \
-  -i "$RTMP_URL/$RTMP_KEY" -c copy -t 12 -y "$OUT/received2.flv" > "$OUT/rtmp-server-restart.log" 2>&1 & RTMP2=$!
+  -i "$RTMP_LISTEN/$RTMP_KEY" -c copy -t 12 -y "$OUT/received2.flv" > "$OUT/rtmp-server-restart.log" 2>&1 & RTMP2=$!
 sleep 2
 click 1328 873; w 3; shot 21-restart-go-live-1
 click 724 557; w 6; shot 22-restart-go-live-2
@@ -341,7 +358,7 @@ done
 (( hung == 0 )) && pass "$RUNS starts in a row, all reached the main window" || fail "$hung of $RUNS starts never showed the main window (app-restart-*.log has stacks)"
 (( badexit == 0 )) && pass "$RUNS quits in a row, all clean" || fail "$badexit of $RUNS quits did not exit cleanly"
 
-kill "$COMP" "$XVFB" 2>/dev/null
+kill "$COMP" "$XVFB" ${TLSPROXY:-} 2>/dev/null
 
 # ---------------------------------------------------------------- 4. Wayland
 if command -v weston >/dev/null; then
