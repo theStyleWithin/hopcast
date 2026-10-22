@@ -1,0 +1,36 @@
+# Appends the Windows notice to an existing release's text (once). Manual only. GPL-2.0-or-later.
+name: hopcast-release-notes
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to add the Windows notice to (e.g. v0.1.11)"
+        type: string
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  notes:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Add the Windows notice
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          body=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json body -q .body)
+          if printf '%s' "$body" | grep -q "HopCast-windows-x64"; then echo "already has the Windows notice"; exit 0; fi
+          {
+            printf '%s\n\n' "$body"
+            cat <<'N'
+          ---
+
+          **Windows (early build, portable, no installer):** `HopCast-windows-x64-*.zip` - unzip it and double-click `HopCast.exe`. The developer uses Linux and only tests the AppImage versions, so please try the Windows build in a virtual machine first and tell us what you find. Windows SmartScreen may warn because the program isn't code-signed; compare `Get-FileHash` with `SHA256SUMS-windows`. Left out on Windows for now: virtual camera, capture-card support and the scripting tool.
+          N
+          } > notes.md
+          sed -i 's/^          //' notes.md
+          gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes-file notes.md
+          echo "Windows notice added to $TAG"
