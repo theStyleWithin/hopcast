@@ -1289,6 +1289,16 @@ void PLSBasic::PLSInit()
 		if (!file.isEmpty())
 			hopcast::importObsProfile(this, file);
 	});
+	/* ...and from a profile folder, e.g. one in OBS Studio's own ~/.config/obs-studio/basic/profiles. */
+	connect(ui->profileMenu->addAction(QStringLiteral("Import OBS profile (folder)...")), &QAction::triggered, this, [this]() {
+		QString start = QDir::homePath() + QStringLiteral("/.config/obs-studio/basic/profiles");
+		if (!QDir(start).exists())
+			start = QDir::homePath();
+		const QString dir = QFileDialog::getExistingDirectory(this, QStringLiteral("Import OBS profile"), start,
+								      QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+		if (!dir.isEmpty())
+			hopcast::importObsProfile(this, dir);
+	});
 	hopcast::LinkGuard::install(); // HopCast: never open PRISM/NAVER pages in the browser
 	/* HopCast: the platform chat panel has nothing to show for Custom RTMP and its
 	 * "Add PRISM Chat Source" button crashed - keep it hidden and out of the Docks menu. */
