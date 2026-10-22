@@ -135,10 +135,25 @@ jobs:
         continue-on-error: true
         run: |
           S="$GITHUB_WORKSPACE/stage/HopCast/bin/64bit"
-          ( cd "$S" && ls obs64.exe && (./obs64.exe > "$GITHUB_WORKSPACE/run.log" 2>&1 & echo $! > "$GITHUB_WORKSPACE/run.pid"); sleep 40; tasklist //FI "IMAGENAME eq obs64.exe" 2>&1 | tee -a "$GITHUB_WORKSPACE/run.log"; taskkill //F //IM obs64.exe 2>&1 | tee -a "$GITHUB_WORKSPACE/run.log" ) || true
-          # whatever the app wrote about itself
+          cd "$S" && ls obs64.exe
+          (./obs64.exe > "$GITHUB_WORKSPACE/run.log" 2>&1 &)
+          sleep 35
+          cd "$GITHUB_WORKSPACE"
+          powershell -NoProfile -Command "
+            Get-Process obs64 -ErrorAction SilentlyContinue | Select-Object Id,MainWindowTitle,Responding,WorkingSet64 | Format-List | Out-String | Add-Content run.log;
+            Add-Type -AssemblyName System.Windows.Forms,System.Drawing;
+            \$b=[System.Windows.Forms.SystemInformation]::VirtualScreen;
+            \$bmp=New-Object System.Drawing.Bitmap \$b.Width,\$b.Height;
+            \$g=[System.Drawing.Graphics]::FromImage(\$bmp);
+            \$g.CopyFromScreen(\$b.Left,\$b.Top,0,0,\$bmp.Size);
+            \$bmp.Save('shot.png');
+            Get-Process | Where-Object {\$_.MainWindowTitle} | Select-Object ProcessName,MainWindowTitle | Format-Table | Out-String | Add-Content run.log" 2>&1 | tee -a run.log || true
+          taskkill //IM obs64.exe 2>&1 | tee -a run.log || true   # close it politely so it writes its log
+          sleep 15
+          taskkill //F //IM obs64.exe 2>&1 | tee -a run.log || true
           mkdir -p applogs; cp -r "$APPDATA/PRISMLiveStudio/logs" applogs/ 2>/dev/null || true; cp -r "$APPDATA/obs-studio/logs" applogs/ 2>/dev/null || true
-          find applogs -type f | head -5 | tee -a run.log
+          find applogs -type f | tee -a run.log
+          find "$APPDATA/PRISMLiveStudio" -maxdepth 2 2>/dev/null | head -30 | tee -a run.log
 
       - name: Upload the portable folder
         if: steps.stage.outcome == 'success'
@@ -172,6 +187,7 @@ jobs:
           done
           echo "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }} appconfigure=${{ steps.appconfigure.outcome }} appbuild=${{ steps.appbuild.outcome }} stage=${{ steps.stage.outcome }} smoke=${{ steps.smoke.outcome }}" > "$tmp/${GITHUB_RUN_ID}-summary.txt"
           [ -f inventory.txt ] && cp inventory.txt "$tmp/${GITHUB_RUN_ID}-inventory.txt"
+          [ -f shot.png ] && cp shot.png "$tmp/${GITHUB_RUN_ID}-screenshot.png"
           for f in applogs/logs/*; do [ -f "$f" ] && tail -c 100000 "$f" > "$tmp/${GITHUB_RUN_ID}-applog-$(basename "$f")"; done 2>/dev/null || true
           git -C "$tmp" add -A
           git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "windows logs for run ${GITHUB_RUN_ID}"
