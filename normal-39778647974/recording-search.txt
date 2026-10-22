@@ -1,0 +1,7 @@
+-rw-r--r-- 1 runner runner 0 2026-10-22 12:34:44.827620434 +0000 /home/runner/work/hoppercast/hoppercast/build/audit/.start-marker
+2026-10-22 12:33:47.7452305540 0 /home/runner/work/hoppercast/hoppercast/build/audit/home/.cache/mesa_shader_cache/marker
+2026-10-22 12:34:29.7895158170 1310728 /home/runner/work/hoppercast/hoppercast/build/audit/home/.cache/mesa_shader_cache/index
+2026-10-22 12:34:38.2545746640 2455799 /home/runner/work/hoppercast/hoppercast/build/audit/home/2026-10-22 12-34-29.mkv
+2026-10-22 12:34:13.9984821920 1608 /home/runner/work/hoppercast/hoppercast/build/audit/home/.config/PRISMLiveStudio/global.ini
+2026-10-22 12:33:40.3050753260 256 /home/runner/work/hoppercast/hoppercast/build/audit/home/.config/pulse/cookie
+2026-10-22 12:35:41.0160033160 3782174 /home/runner/work/hoppercast/hoppercast/build/audit/home/2026-10-22 12-35-28.mkv

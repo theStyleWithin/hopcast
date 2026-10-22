@@ -1,0 +1,5 @@
+2026/10/22 12:35:14 socat[13400] E write(6, 0x55ef2be3c000, 4097): Broken pipe
+2026/10/22 12:35:16 socat[13462] E connect(6, AF=2 127.0.0.1:1935, 16): Connection refused
+2026/10/22 12:35:16 socat[13465] E connect(6, AF=2 127.0.0.1:1935, 16): Connection refused
+2026/10/22 12:35:16 socat[13468] E connect(6, AF=2 127.0.0.1:1935, 16): Connection refused
+2026/10/22 12:38:04 socat[13148] W exiting on signal 15

@@ -1,0 +1,34 @@
+Input #0, flv, from 'rtmp://127.0.0.1:1936/live2/hopcast-audit-2':
+  Metadata:
+    fileSize        : 0
+    audiochannels   : 2
+    2.1             : false
+    3.1             : false
+    4.0             : false
+    4.1             : false
+    5.1             : false
+    7.1             : false
+    encoder         : PRISM 0.1.10.0 (libobs version 31.0.3)
+    publisherinfo   : osType=macOS&appName=PRISM&appVersion=0.1.10.0&osVersion=&sdkVersion=31.0.3
+  Duration: 00:00:00.00, start: 0.066000, bitrate: N/A
+  Stream #0:0: Audio: aac (LC), 48000 Hz, stereo, fltp, 163 kb/s
+  Stream #0:1: Video: h264 (High), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 2560 kb/s, 30 fps, 30 tbr, 1k tbn
+Output #0, flv, to '/home/runner/work/hoppercast/hoppercast/build/audit/received2.flv':
+  Metadata:
+    fileSize        : 0
+    audiochannels   : 2
+    2.1             : false
+    3.1             : false
+    4.0             : false
+    4.1             : false
+    5.1             : false
+    7.1             : false
+    publisherinfo   : osType=macOS&appName=PRISM&appVersion=0.1.10.0&osVersion=&sdkVersion=31.0.3
+    encoder         : Lavf60.16.100
+  Stream #0:0: Video: h264 (High) ([7][0][0][0] / 0x0007), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], q=2-31, 2560 kb/s, 30 fps, 30 tbr, 1k tbn
+  Stream #0:1: Audio: aac (LC) ([10][0][0][0] / 0x000A), 48000 Hz, stereo, fltp, 163 kb/s
+Stream mapping:
+  Stream #0:1 -> #0:0 (copy)
+  Stream #0:0 -> #0:1 (copy)
+size=       1kB time=-00:00:00.06 bitrate=N/A speed=N/A    size=     512kB time=00:00:01.79 bitrate=2340.6kbits/s speed=3.57x    size=     512kB time=00:00:02.30 bitrate=1823.6kbits/s speed=2.23x    size=     768kB time=00:00:02.81 bitrate=2234.2kbits/s speed=1.84x    size=     768kB time=00:00:03.32 bitrate=1890.5kbits/s speed=1.63x    size=    1024kB time=00:00:03.83 bitrate=2188.5kbits/s speed= 1.5x    size=    1280kB time=00:00:04.33 bitrate=2420.0kbits/s speed=1.41x    size=    1280kB time=00:00:04.86 bitrate=2155.8kbits/s speed=1.36x    size=    1536kB time=00:00:05.36 bitrate=2344.9kbits/s speed=1.31x    size=    1536kB time=00:00:05.88 bitrate=2137.0kbits/s speed=1.28x    size=    1792kB time=00:00:06.40 bitrate=2293.8kbits/s speed=1.25x    size=    2048kB time=00:00:06.90 bitrate=2431.5kbits/s speed=1.23x    size=    2048kB time=00:00:07.40 bitrate=2267.2kbits/s speed=1.21x    size=    2304kB time=00:00:07.91 bitrate=2384.9kbits/s speed=1.19x    size=    2560kB time=00:00:08.40 bitrate=2495.1kbits/s speed=1.18x    size=    2560kB time=00:00:08.90 bitrate=2356.4kbits/s speed=1.17x    size=    2816kB time=00:00:09.42 bitrate=2446.6kbits/s speed=1.16x    size=    2816kB time=00:00:09.93 bitrate=2322.4kbits/s speed=1.15x    size=    3072kB time=00:00:10.46 bitrate=2404.5kbits/s speed=1.14x    size=    3328kB time=00:00:10.96 bitrate=2486.1kbits/s speed=1.13x    size=    3328kB time=00:00:11.49 bitrate=2371.1kbits/s speed=1.13x    size=    3584kB time=00:00:12.00 bitrate=2446.7kbits/s speed=1.12x    size=    3584kB time=00:00:12.50 bitrate=2348.6kbits/s speed=1.11x    size=    3840kB time=00:00:13.01 bitrate=2417.4kbits/s speed=1.11x    size=    4096kB time=00:00:13.50 bitrate=2485.5kbits/s speed= 1.1x    size=    4096kB time=00:00:14.03 bitrate=2391.1kbits/s speed= 1.1x    size=    4352kB time=00:00:14.54 bitrate=2450.4kbits/s speed= 1.1x    size=    4352kB time=00:00:15.06 bitrate=2367.1kbits/s speed=1.09x    size=    4608kB time=00:00:15.56 bitrate=2425.1kbits/s speed=1.09x    size=    4864kB time=00:00:16.06 bitrate=2480.1kbits/s speed=1.09x    size=    4864kB time=00:00:16.57 bitrate=2403.8kbits/s speed=1.08x    size=    5120kB time=00:00:17.08 bitrate=2454.5kbits/s speed=1.08x    size=    5376kB time=00:00:17.57 bitrate=2505.4kbits/s speed=1.08x    size=    5376kB time=00:00:18.09 bitrate=2434.5kbits/s speed=1.08x    size=    5632kB time=00:00:18.60 bitrate=2480.5kbits/s speed=1.07x    size=    5632kB time=00:00:19.10 bitrate=2415.6kbits/s speed=1.07x    size=    5888kB time=00:00:19.62 bitrate=2457.7kbits/s speed=1.07x    size=    6144kB time=00:00:20.13 bitrate=2500.0kbits/s speed=1.07x    size=    6144kB time=00:00:20.63 bitrate=2439.4kbits/s speed=1.07x    size=    6400kB time=00:00:21.13 bitrate=2480.9kbits/s speed=1.06x    size=    6400kB time=00:00:21.63 bitrate=2423.6kbits/s speed=1.06x    size=    6656kB time=00:00:22.14 bitrate=2462.3kbits/s speed=1.06x    size=    6912kB time=00:00:22.65 bitrate=2499.3kbits/s speed=1.06x    size=    6912kB time=00:00:23.16 bitrate=2444.2kbits/s speed=1.06x    size=    7168kB time=00:00:23.68 bitrate=2479.7kbits/s speed=1.06x    size=    7168kB time=00:00:24.19 bitrate=2427.3kbits/s speed=1.06x    size=    7424kB time=00:00:24.70 bitrate=2462.2kbits/s speed=1.05x    [out#0/flv @ 0x5647fa76e8c0] video:7621kB audio:7kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.455759%
+size=    7662kB time=00:00:24.98 bitrate=2512.7kbits/s speed=1.05x    

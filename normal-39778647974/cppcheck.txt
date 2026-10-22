@@ -1,0 +1,100 @@
+src/common-libs/libutils-api/libutils-api.h:1442: error/missingReturn: Found an exit path from function with non-void return type that has missing return statement
+src/common-libs/libutils-api/libutils-api.h:1452: error/missingReturn: Found an exit path from function with non-void return type that has missing return statement
+src/common-libs/libutils-api/libutils-api.h:1481: error/missingReturn: Found an exit path from function with non-void return type that has missing return statement
+src/common-libs/libutils-api/libutils-api.h:1510: error/missingReturn: Found an exit path from function with non-void return type that has missing return statement
+src/common-libs/libutils-api/libutils-api.h:1529: error/missingReturn: Found an exit path from function with non-void return type that has missing return statement
+src/common-libs/libutils-api/libutils-api.h:1539: error/missingReturn: Found an exit path from function with non-void return type that has missing return statement
+src/common-libs/libhttp-client/libhttp-client.cpp:1664: performance/useInitializationList: Variable 'm_impl' is assigned in constructor body. Consider performing initialization in initialization list.
+src/common-libs/libhttp-client/libhttp-client.cpp:706: performance/iterateByValue: Range variable 'requestImpl' should be declared as const reference.
+src/common-libs/libhttp-client/libhttp-client.cpp:712: performance/iterateByValue: Range variable 'requestImpl' should be declared as const reference.
+src/common-libs/libhttp-client/libhttp-client.cpp:1189: performance/iterateByValue: Range variable 'requestImpl' should be declared as const reference.
+src/common-libs/libutils-api/pls-performance.h:129: warning/duplInheritedMember: The struct 'PLSGlobalStats' defines member function with name 'clear' also defined in its parent struct 'PLSStats'.
+src/common-libs/libui/PLSDialogView.cpp:727: warning/nullPointerRedundantCheck: Either the condition 'event' is redundant or there is possible null pointer dereference: event.
+src/common-libs/libui/PLSDialogView.cpp:402: performance/passedByValue: Function parameter 'bkgColor' should be passed by const reference.
+src/common-libs/libui/PLSDialogView.cpp:407: performance/passedByValue: Function parameter 'tooltip' should be passed by const reference.
+src/common-libs/libresource/libresource.cpp:1935: performance/useInitializationList: Variable 'm_categoryId' is assigned in constructor body. Consider performing initialization in initialization list.
+src/common-libs/libutils-api/libutils-api.h:2380: performance/passedByValue: Function parameter 'pred' should be passed by const reference.
+src/common-libs/libutils-api/libutils-api.h:2380: performance/passedByValue: Function parameter 'toVal' should be passed by const reference.
+src/common-libs/libui/PLSCheckBox.h:82: warning/duplInheritedMember: The class 'PLSElideCheckBox' defines member function with name 'setText' also defined in its parent class 'PLSCheckBox'.
+src/common-libs/libui/PLSCheckBox.h:83: warning/duplInheritedMember: The class 'PLSElideCheckBox' defines member function with name 'text' also defined in its parent class 'PLSCheckBox'.
+src/common-libs/libui/PLSRadioButton.h:118: warning/duplInheritedMember: The class 'PLSElideRadioButton' defines member function with name 'setText' also defined in its parent class 'PLSRadioButton'.
+src/common-libs/libui/PLSRadioButton.h:119: warning/duplInheritedMember: The class 'PLSElideRadioButton' defines member function with name 'text' also defined in its parent class 'PLSRadioButton'.
+src/common-libs/libui/PLSWindow.cpp:420: warning/identicalInnerCondition: Identical inner 'if' condition is always true.
+src/common-libs/libui/PLSWindow.cpp:671: warning/nullPointerRedundantCheck: Either the condition 'event' is redundant or there is possible null pointer dereference: event.
+src/common-libs/libui/PLSWindow.cpp:362: performance/passedByValue: Function parameter 'bkgColor' should be passed by const reference.
+src/common-libs/libui/PLSWindow.cpp:367: performance/passedByValue: Function parameter 'tooltip' should be passed by const reference.
+src/common-libs/libui/libui.cpp:104: warning/nullPointerRedundantCheck: Either the condition 'caller' is redundant or there is possible null pointer dereference: caller.
+src/common-libs/libutils-api/libutils-api.cpp:3173: portability/CastIntegerToAddressAtReturn: Returning an integer in a function with pointer return type is not portable.
+src/common-libs/libutils-api/libutils-api.cpp:2417: error/missingReturn: Found an exit path from function with non-void return type that has missing return statement
+src/common-libs/libutils-api/libutils-api.cpp:3527: error/missingReturn: Found an exit path from function with non-void return type that has missing return statement
+src/prism-live-studio/PRISMLiveStudio/frontend-api/frontend-api.h:433: performance/passedByValue: Function parameter 'files' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/frontend-api/PLSErrorHandler.cpp:198: performance/iterateByValue: Range variable 'item' should be declared as const reference.
+src/prism-live-studio/PRISMLiveStudio/frontend-api/frontend-internal.hpp:66: performance/passedByValue: Function parameter 'files' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/frontend-api/frontend-api.cpp:715: performance/passedByValue: Function parameter 'files' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/frontend-api/frontend-api.cpp:2233: performance/passedByValue: Function parameter 'arguments' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/frontend-api/frontend-api.cpp:2240: performance/passedByValue: Function parameter 'title' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/frontend-api/frontend-api.cpp:2240: performance/passedByValue: Function parameter 'content' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/frontend-api/frontend-api.cpp:2240: performance/passedByValue: Function parameter 'okTip' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/frontend-api/frontend-api.cpp:2240: performance/passedByValue: Function parameter 'cancelTip' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/ffmpeg-utils.hpp:61: warning/uninitMemberVar: Member variable 'FFmpegFormat::name' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/ffmpeg-utils.hpp:61: warning/uninitMemberVar: Member variable 'FFmpegFormat::long_name' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/ffmpeg-utils.hpp:61: warning/uninitMemberVar: Member variable 'FFmpegFormat::mime_type' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/ffmpeg-utils.hpp:61: warning/uninitMemberVar: Member variable 'FFmpegFormat::extensions' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/ffmpeg-utils.hpp:61: warning/uninitMemberVar: Member variable 'FFmpegFormat::codec_tags' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/ffmpeg-utils.hpp:107: warning/uninitMemberVar: Member variable 'FFmpegCodec::name' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/ffmpeg-utils.hpp:107: warning/uninitMemberVar: Member variable 'FFmpegCodec::long_name' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/ffmpeg-utils.hpp:107: warning/uninitMemberVar: Member variable 'FFmpegCodec::id' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/ffmpeg-utils.hpp:107: warning/uninitMemberVar: Member variable 'FFmpegCodec::type' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/auth-youtube.hpp:61: warning/duplInheritedMember: The class 'YoutubeAuth' defines member function with name 'Login' also defined in its parent class 'OAuth'.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/auth-base.hpp:20: performance/passedByValue: Function parameter 'error_' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/youtube-api-wrappers.hpp:58: performance/passedByValue: Function parameter 'broadcast_id' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/youtube-api-wrappers.hpp:58: performance/passedByValue: Function parameter 'stream_id' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/window-basic-settings.hpp:321: performance/passedByValue: Function parameter 'text' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/auth-youtube.hpp:21: warning/uninitMemberVar: Member variable 'YoutubeChatDock::isLoggedIn' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/auth-youtube.hpp:22: warning/duplInheritedMember: The class 'YoutubeChatDock' defines member function with name 'SetWidget' also defined in its parent class 'BrowserDock'.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/shared/properties-view/properties-view.cpp:1891: warning/ignoredReturnValue: Return value of function obj.release() is not used.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/shared/properties-view/properties-view.cpp:1982: warning/nullPointerRedundantCheck: Either the condition '!edit' is redundant or there is possible null pointer dereference: edit.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/obs-app.cpp:2281: portability/arithOperationsOnVoidPointer: 'message_buffer.get()' is of type 'void *'. When using void pointers in calculations, the behaviour is undefined.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/shared/properties-view/properties-view.hpp:388: warning/nullPointerRedundantCheck: Either the condition 'm_watcher' is redundant or there is possible null pointer dereference: m_watcher.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/window-basic-main-outputs.cpp:3095: performance/passedByValue: Function parameter 'audio_encoder_id' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/shared/properties-view/properties-view2.cpp:49: warning/constStatement: Unused variable value 'actived'
+src/prism-live-studio/PRISMLiveStudio/obs-ui/window-projector.cpp:555: performance/passedByValue: Function parameter 'name' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/window-projector.cpp:634: performance/passedByValue: Function parameter 'oldName' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/window-projector.cpp:634: performance/passedByValue: Function parameter 'newName' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/obs-ui/window-remux.cpp:350: performance/iterateByValue: Range variable 'path' should be declared as const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/PLSPlatformBase.hpp:298: portability/CastIntegerToAddressAtReturn: Returning an integer in a function with pointer return type is not portable.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/twitch/PLSPlatformTwitch.h:29: warning/uninitDerivedMemberVar: Member variable 'PLSPlatformBase::m_tokenRequestStatus' is not initialized in the constructor. Maybe it should be initialized directly in the class PLSPlatformBase?
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/navertv/PLSPlatformNaverTV.h:17: warning/uninitDerivedMemberVar: Member variable 'PLSPlatformBase::m_tokenRequestStatus' is not initialized in the constructor. Maybe it should be initialized directly in the class PLSPlatformBase?
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/youtube/PLSPlatformYoutube.h:150: performance/passedByValue: Function parameter 'value' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/naver-shopping-live/PLSPlatformNaverShoppingLIVE.h:46: performance/passedByValue: Function parameter 'channelName' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/ncb2b/PLSPlatformNCB2B.h:81: performance/passedByValue: Function parameter 'value' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/PLSPlatformApi.h:408: performance/passedByValue: Function parameter 'data' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/PLSPlatformApi.cpp:2683: performance/passedByValue: Function parameter 'platforms' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/PLSSelectImageButton.cpp:67: warning/ignoredReturnValue: Return value of function temp.cd() is not used.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/PLSTakeCameraSnapshot.cpp:215: warning/negativeContainerIndex: Either the condition 'self->count<0' is redundant, otherwise there is negative array index -1.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/naver-shopping-live/PLSLiveInfoNaverShoppingLIVE.cpp:704: performance/passedByValue: Function parameter 'id' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/naver-shopping-live/PLSLiveInfoNaverShoppingLIVE.cpp:992: performance/iterateByValue: Range variable 'info' should be declared as const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/naver-shopping-live/PLSLiveInfoNaverShoppingLIVE.cpp:1481: performance/passedByValueCallback: Function parameter 'selectID' should be passed by const reference. However it seems that 'scheduleItemClick' is a callback function.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/naver-shopping-live/PLSLiveInfoNaverShoppingLIVE.h:108: performance/passedByValue: Function parameter 'selectID' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/naver-shopping-live/PLSPlatformNaverShoppingLIVE.cpp:274: performance/passedByValue: Function parameter 'channelName' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/channels/ChannelsDataApi/PLSChannelDataHandler.h:119: warning/duplInheritedMember: The class 'YoutubeHandler' defines member function with name 'runTasks' also defined in its parent class 'TwitchDataHandler'.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/PLSPlatformApi/common/PLSAPICommon.h:39: performance/passedByValue: Function parameter 'cmpStr' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/channels/ChannelsDataApi/ChannelCommonFunctions.cpp:464: performance/iterateByValue: Range variable 'chName' should be declared as const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/channels/ChannelsDataApi/ChannelCommonFunctions.cpp:699: performance/passedByValue: Function parameter 'serviceName' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/channels/ChannelsDataApi/PLSChannelDataAPI.cpp:951: performance/iterateByValue: Range variable 'platform' should be declared as const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/channels/ChannelsDataApi/PLSChannelDataAPI.cpp:1601: performance/iterateByValue: Range variable 'uuid' should be declared as const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/channels/Chat/PLSChatDialog.cpp:485: warning/containerOutOfBounds: Either the condition 'index>m_vecChatDatas.size()' is redundant or 'index' can have the value m_vecChatDatas.size(). Expression 'm_vecChatDatas[index]' cause access out of bounds.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/giphy/PLSSearchPopupMenu.cpp:235: performance/iterateByValue: Range variable 'content' should be declared as const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/giphy/PLSGiphyStickerView.cpp:928: performance/iterateByValue: Range variable 'sticker_data' should be declared as const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSBasic.cpp:6798: error/syntaxError: syntax error
+src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSAddSourceView.cpp:823: performance/iterateByValue: Range variable 'lang' should be declared as const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSBasicProperties.cpp:256: warning/identicalInnerCondition: Identical inner 'if' condition is always true.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSPropertiesExtraUI.hpp:28: performance/passedByValue: Function parameter 'text' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSPropertiesExtraUI.hpp:28: performance/passedByValue: Function parameter 'iconPath' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSDrawPen/PLSDrawPenMgr.cpp:36: performance/useInitializationList: Variable 'movingEvent' is assigned in constructor body. Consider performing initialization in initialization list.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/main/pls-gpop-data.cpp:40: warning/uninitMemberVarPrivate: Member variable 'PLSGpopData::m_common' is not initialized in the constructor.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/prism-login/ui/PLSLoginMainView.h:30: portability/CastIntegerToAddressAtReturn: Returning an integer in a function with pointer return type is not portable.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/prism-login/ui/login-select-platform-view.hpp:89: performance/passedByValue: Function parameter 'code' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/scene/PLSSceneItemView.cpp:672: performance/passedByValue: Function parameter 'file' should be passed by const reference.
+src/prism-live-studio/PRISMLiveStudio/prism-ui/scene/PLSSceneItemView.cpp:1282: performance/passedByValue: Function parameter 'sceneName' should be passed by const reference.
+src/prism-live-studio/common/libbrowser/libbrowser.cpp:428: performance/useInitializationList: Variable 'm_impl' is assigned in constructor body. Consider performing initialization in initialization list.

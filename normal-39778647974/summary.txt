@@ -1,0 +1,33 @@
+PASS  every binary and plugin resolves its libraries
+PASS  Qt has a native Wayland platform plugin
+INFO  session D-Bus running
+INFO  PulseAudio running (null speakers + virtual mic)
+INFO  first server is reached over RTMPS (rtmps://localhost:1943)
+PASS  first start: main window shown
+INFO  Add Channel dialog at 485,193 628x512
+PASS  stream key saved encrypted
+PASS  stream key not stored in plain text anywhere in the profile
+PASS  recording before going live: file written
+PASS  while live, stream key not in plain text anywhere in the profile
+INFO  stream key appears in the app's own log output (check log masking)
+INFO  1 extra destination(s) besides the main stream (0 vertical)
+PASS  multi-stream: the extra destination's output started
+PASS  multi-stream: second server received 752 video frames
+PASS  streamed to RTMP server: 752 video frames, audio=yes
+INFO  Go Live used the direct path (no PRISM registration)
+PASS  dropped connection: HopCast tried to reconnect
+PASS  first connection dropped: HopCast retried by itself over IPv4
+INFO  recording written to 2026-10-22 12-35-28.mkv (12.233000 s)
+PASS  recording plays back (12.233000 s)
+PASS  Ctrl+Q quits cleanly (exit 0)
+PASS  settings snapshot written (settings and key)
+PASS  second start (same profile): main window shown
+PASS  damaged global.ini was put back from a snapshot
+PASS  saved channel loaded without secure-store errors
+PASS  went live after a restart with the saved key: 752 video frames
+PASS  second run quits cleanly
+PASS  8 starts in a row, all reached the main window
+PASS  8 quits in a row, all clean
+PASS  Wayland (native Qt platform): still running after 45 s
+INFO  Wayland graphics/platform errors: see wayland-errors.txt
+INFO  63 distinct warning/error lines in the app logs (log-problems.txt)

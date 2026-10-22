@@ -1,0 +1,63 @@
+   1700 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:N sync server status: init supported platforms info failed ,because the supported platforms value is not json object
+    176 PRISMLiveStudio DEBUG QTLog [QT::Warning] QCssParser::parseColorValue: Specified color without alpha value but alpha given: 'rgb N,N,N,5'
+     44 PRISMLiveStudio DEBUG QTLog [QT::Warning] Unknown property font-stretch
+     22 PRISMLiveStudio DEBUG QTLog [QT::Warning] QWidget::setMinimumSize: (/VolumeMeter) Negative sizes (N,-3) are not possible
+     17 PRISMLiveStudio DEBUG QTLog [QT::Warning] QString::arg: Argument missing: , /prismpc/runtime
+     17 PRISMLiveStudio DEBUG QTLog [QT::Warning] QString::arg: Argument missing: , 
+     11 PRISMLiveStudio WARN obs Failed to load 'en-US' text for module: 'libobs-composite-blur.so'
+     11 PRISMLiveStudio WARN obs Failed to initialize module 'obs-nvenc.so'
+     11 PRISMLiveStudio WARN launcher/login PLSBasic.cpp:N use prism default thumbnail
+     11 PRISMLiveStudio ERROR obs os_dlopen(libnvidia-encode.so.1->libnvidia-encode.so.1): libnvidia-encode.so.1: cannot open shared object file: No such file or directory
+     11 PRISMLiveStudio ERROR main/main-frame PLSBasic.cpp:N read local twitch service json failed, path = /home/runner/work/hoppercast/hoppercast/build/audit/home/.config/PRISMLiveStudio/plugin_config/rtmp-services/twitch_ingests.json
+     11 PRISMLiveStudio ERROR libbrowser libbrowser.cpp:N load obs-browser library failed
+     11 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:N sync server status: init WaterMark info failed
+     11 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:N sync server status: init OutroPolicy info failed
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QObject::connect(QWindow, Unknown): invalid nullptr parameter
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QObject::connect(QWindow, PLSBackgroundMusicView): invalid nullptr parameter
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_user_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_settings_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_multiviewProjectorWindowed_triggered()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_listWidget_itemClicked(const QListWidgetItem*)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_help_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_chat_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_alert_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionRenameSceneCollection_triggered(QString,QString)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionRemoveSceneCollection_triggered(QString,QString)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionReleaseNotes_triggered()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionQuitApp_triggered()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionNewSceneCollection_triggered_with_parent(QWidget*)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionImportSceneCollection_triggered_with_parent(QWidget*)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionImportFromOtherSceneCollection_triggered()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionExportSceneCollection_triggered_with_path(QString,QString,QWidget*)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionDupSceneCollection_triggered(QString,QString)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionChangeSceneCollection_triggered(QString,QString,bool)
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_ResolutionBtn_clicked()
+     11 PRISMLiveStudio DEBUG QTLog [QT::Warning] QLayout: Attempting to add QLayout "" to PLSSceneListView "scenesFrame", which already has a layout
+     10 PRISMLiveStudio ERROR obs window manager does not support Extended Window Manager Hints (EWMH).
+     10 PRISMLiveStudio DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionDiscord_triggered()
+      7 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:N sync server status: init[New Thread 0x… (LWP N)]
+      4 PRISMLiveStudio WARN obs [ffmpeg muxer: 'simple_file_output'] output=0x… HopCast: packet for muxer 0x… ignored: not active (capturing=0 stopping=0 pipe=(nil))
+      2 PRISMLiveStudio WARN obs [rtmp stream: 'simple_stream'] HopCast: retrying through [eth0] 10.1.0.N (10.1.0.N)
+      2 PRISMLiveStudio WARN obs [rtmp stream: 'simple_stream'] HopCast: retrying through [docker0] N.17.0.1 (N.17.0.1)
+      2 PRISMLiveStudio WARN obs [rtmp stream: 'simple_stream'] HopCast: connection failed with the default network settings (-2); retrying over IPv4 only
+      2 PRISMLiveStudio WARN obs 0x…-obs_output_signal_stop: output_signal [Enter] id:rtmp_output data=0x…, video=(nil), encoder=0x… code=-2 [stream abort] 
+      2 PRISMLiveStudio WARN PlatformService PLSPlatformApi.cpp:N Custom RTMP(R) abort living.
+      2 PRISMLiveStudio DEBUG QTLog [QT::Warning] QLayout: Attempting to add QLayout "" to QWidget "tipWidget", which already has a layout
+      2 PRISMLiveStudio DEBUG QTLog [QT::Warning] QLayout: Attempting to add QLayout "" to QWidget "statusWidget", which already has a layout
+      1 PRISMLiveStudio WARN obs [rtmp stream: 'hopcast_extra_output_1'] HopCast: retrying through [eth0] 10.1.0.N (10.1.0.N)
+      1 PRISMLiveStudio WARN obs [rtmp stream: 'hopcast_extra_output_1'] HopCast: retrying through [docker0] N.17.0.1 (N.17.0.1)
+      1 PRISMLiveStudio WARN obs HopCast: restored global.ini from snapshot N-N-exit
+      1 PRISMLiveStudio WARN obs 0x…-obs_output_signal_stop: output_signal [Enter] id:rtmp_output data=0x…, video=(nil), encoder=0x… code=-5 [stream abort] 
+      1 PRISMLiveStudio WARN obs 0x…-obs_output_signal_stop: output_signal [Enter] id:rtmp_output data=0x…, video=(nil), encoder=0x… code=-5
+      1 PRISMLiveStudio WARN obs 0x…-obs_output_signal_stop: output_signal [Enter] id:rtmp_output data=0x…, video=(nil), encoder=0x… code=-2
+      1 PRISMLiveStudio WARN main/prism-outro window-basic-main.cpp:N Failed to get outro configuration. PLSSyncServerManager::getOutroResLocalPathAndText returns empty.
+      1 PRISMLiveStudio WARN main/output window-basic-main-outputs.cpp:N [Output] rtmp_output :'simple_stream' unexpected stopped due to error -2('Connect Failed'), msg 'none'.
+      1 PRISMLiveStudio WARN main/output window-basic-main-outputs.cpp:N Send state of encoder 0x… obs_xN, 'none' (-2)
+      1 PRISMLiveStudio ERROR obs [rtmp stream: 'hopcast_extra_output_1'] RTMP_ReadPacket error: 2
+      1 PRISMLiveStudio ERROR main/main-frame window-basic-main.cpp:N LoadServiceData failed
+      1 PRISMLiveStudio ERROR SyncServer PLSSyncServerManager.cpp:N sync server status: init suppor[New Thread 0x… (LWP N)]
+      1 PRISMLiveStudio ERROR PlatformService PLSPlatformApi.cpp:N Custom RTMP(R),Custom RTMP(R) live aborted.
+      1 PRISMLiveStudio DEBUG QTLog [QT::Warning] QObject: Cannot create children for a parent that is in a different thread.
+      1 DEBUG QTLog [QT::Warning] QMetaObject::connectSlotsByName: No matching signal for on_actionDiscord_triggered()
+      1 58+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QString::arg: Argument missing: , /prismpc/runtime
+      1 34:38.N+00:00 PRISMLiveStudio DEBUG QTLog [QT::Warning] QString::arg: Argument missing: , 
