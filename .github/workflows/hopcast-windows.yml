@@ -118,6 +118,16 @@ jobs:
           } 2>&1 | tee stage.log
           find "$S" -type f | wc -l | tee -a stage.log
 
+      - name: Check for missing libraries
+        if: steps.stage.outcome == 'success'
+        continue-on-error: true
+        run: |
+          W=$(echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g')
+          Q=$(echo "$QT_ROOT_DIR" | sed 's|\\|/|g')
+          VC=$(echo "$VCPKG_INSTALLATION_ROOT" | sed 's|\\|/|g')/installed/x64-windows
+          pip install pefile >/dev/null 2>&1
+          python hopcast/scripts/win-missing-dlls.py "$W/stage/HopCast" "$Q/bin" "$VC/bin" "$W"/src/obs-studio/.deps/obs-deps-*-x64/bin "$W/build/engine" "$W/build/app" 2>&1 | tee missing.log
+
       - name: Start it (smoke test)
         id: smoke
         if: steps.stage.outcome == 'success'
@@ -154,7 +164,7 @@ jobs:
         run: |
           tmp=$(mktemp -d)
           git -C "$tmp" init -q -b dev-logs-windows
-          for f in configure.log build.log vcpkg.log appconfigure.log appbuild.log stage.log run.log; do
+          for f in configure.log build.log vcpkg.log appconfigure.log appbuild.log stage.log missing.log run.log; do
             [ -f "$f" ] || continue
             grep -nE "CMake Error|error C[0-9]+|error LNK|fatal error|Could NOT find|FAILED|failed" "$f" | head -400 > "$tmp/${GITHUB_RUN_ID}-${f%.log}-errors.txt" || true
             tail -c 300000 "$f" > "$tmp/${GITHUB_RUN_ID}-${f%.log}-tail.log"
