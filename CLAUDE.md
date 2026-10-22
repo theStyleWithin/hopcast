@@ -25,3 +25,7 @@ No nudges: no quick links, recommendations or invitations toward any platform or
 ## Android test device
 
 The owner tests the Android app on a RedMagic 8 Pro (Snapdragon 8 Gen 2, 12 to 16 GB RAM, 6.8 inch AMOLED at 2480x1116 and 120 Hz, no camera cutout because the front camera is under the display, built-in cooling fan, Android 13 at launch). Design and tune for that phone first: hardware video encoding (H.264 and HEVC), a long gaming session on a sustained load, and a tall 20:9 screen. Keep it working on older and slower phones too, but this is the one that gets tested.
+
+## Android as a second test point for streaming problems
+
+Streaming to Rumble and Odysee is still refused, and a multi-destination stream once dropped the owner's Wi-Fi (see `KNOWN-ISSUES.md`). The Android app is a second place to try the same destinations: same servers and keys from a different device, network (mobile data as well as Wi-Fi) and program. Keep its log of what each server answered in the same plain form as the desktop's "What HopCast saw", so results from Linux, Windows and Android can be compared side by side. Compare first; don't patch on a guess. Each platform has its own way of accepting streams, so meet it on its terms.
