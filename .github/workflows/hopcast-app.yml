@@ -226,19 +226,27 @@ jobs:
           done
           mv build/aur/SRCINFO build/aur/.SRCINFO
           tar -C build/aur -czf "build/appimage/hopcast-bin-aur-$v.tar.gz" PKGBUILD .SRCINFO
+          mkdir -p build/flatpak
+          sed -e "s|@PKGVER@|$v|g" -e "s|@TAG@|$TAG|g" -e "s|@SHA256@|$sum|g" hopcast/packaging/flatpak/manifest.yml.in > build/flatpak/io.github.theStyleWithin.HopCast.yml
+          sed -e "s|@PKGVER@|$v|g" -e "s|@DATE@|$(date -u +%F)|g" hopcast/packaging/flatpak/metainfo.xml.in > build/flatpak/io.github.theStyleWithin.HopCast.metainfo.xml
+          cp PACKAGING.md build/flatpak/PACKAGING.md
+          tar -C build/flatpak -czf "build/appimage/hopcast-flatpak-$v.tar.gz" .
+          (cd build/appimage && sha256sum *.AppImage "hopcast-source-$v.tar.gz" "hopcast-bin-aur-$v.tar.gz" "hopcast-flatpak-$v.tar.gz" > SHA256SUMS)
           cat > notes.md <<N
           **Early build - install and use at your own risk. Expect bugs.**
 
           - \`HopCast-release-*.AppImage\` - the normal build.
           - \`HopCast-debug-*.AppImage\` - writes a log and crash report to \`~/.local/share/hopcast/crash-logs/\`. Logs mask stream keys, but don't type anything sensitive into the debug build and review a log before sharing it.
           - \`hopcast-source-*.tar.gz\` - complete corresponding source (GPL-2.0).
-          - \`hopcast-bin-aur-*.tar.gz\` - PKGBUILD and .SRCINFO for the AUR package \`hopcast-bin\`.
+          - \`hopcast-bin-aur-*.tar.gz\` - PKGBUILD and .SRCINFO for the AUR package \`hopcast-bin\` (a hand-off; the author doesn't publish it).
+          - \`hopcast-flatpak-*.tar.gz\` - Flatpak manifest and AppStream metadata (an untested hand-off template).
+          - \`SHA256SUMS\` - checksums of every file. See PACKAGING.md in the source for the hand-off policy.
 
           Run: \`chmod +x HopCast-*.AppImage && ./HopCast-release-*.AppImage\`. Needs glibc 2.39+ (Ubuntu 24.04, Fedora 40, Arch/CachyOS). Not affiliated with NAVER Corp. or the OBS Project.
           N
           gh release create "$TAG" ${{ inputs.prerelease && '--prerelease' || '' }} --target "$GITHUB_SHA" \
             --title "HopCast $TAG" --notes-file notes.md \
-            build/appimage/*.AppImage "build/appimage/hopcast-source-$v.tar.gz" "build/appimage/hopcast-bin-aur-$v.tar.gz"
+            build/appimage/*.AppImage "build/appimage/hopcast-source-$v.tar.gz" "build/appimage/hopcast-bin-aur-$v.tar.gz" "build/appimage/hopcast-flatpak-$v.tar.gz" build/appimage/SHA256SUMS
 
       - name: Report failure details
         if: failure()

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.theStyleWithin.HopCast</id>
+  <name>HopCast</name>
+  <summary>Live streaming and recording studio, no account and no nudges</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0-or-later</project_license>
+  <developer_name>theStyleWithin</developer_name>
+  <description>
+    <p>HopCast is a live streaming and recording studio for Linux. It opens straight into the studio with no account, sends nothing to any company server, and streams to any RTMP, SRT or RIST server you type in.</p>
+    <ul>
+      <li>Scenes, sources, audio mixer, recording and virtual camera</li>
+      <li>Stream to several servers at once from a single encode</li>
+      <li>Stream keys stored encrypted on your computer</li>
+      <li>Settings backed up and repaired automatically</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">io.github.theStyleWithin.HopCast.desktop</launchable>
+  <url type="homepage">https://github.com/theStyleWithin/hoppercast</url>
+  <url type="bugtracker">https://github.com/theStyleWithin/hoppercast/issues</url>
+  <provides><binary>hopcast</binary></provides>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Video</category>
+    <category>Recorder</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="@PKGVER@" date="@DATE@"/>
+  </releases>
+</component>
