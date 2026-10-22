@@ -114,7 +114,7 @@ jobs:
             echo "app exe:"; EXE=$(find build/app -name obs64.exe -not -path '*CMakeFiles*' | head -1); echo "$EXE"; [ -n "$EXE" ] && cp "$EXE" "$S/bin/64bit/obs64.exe"
             echo "PRISM libraries:"; find build/app -name '*.dll' -not -path '*CMakeFiles*' -not -path '*/output/*' | while read f; do cp -n "$f" "$S/bin/64bit/" && echo "$f"; done
             echo "dependency libraries:"; cp -n src/obs-studio/.deps/obs-deps-*-x64/bin/*.dll "$S/bin/64bit/" 2>&1 | tail -2; cp -n "$VC"/bin/*.dll "$S/bin/64bit/" 2>&1 | tail -2
-            echo "Qt:"; "$Q/bin/windeployqt.exe" --release --no-translations --no-system-d3d-compiler --no-opengl-sw "$S/bin/64bit/obs64.exe" 2>&1 | tail -15
+            echo "Qt:"; "$Q/bin/windeployqt.exe" --release --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw "$S/bin/64bit/obs64.exe" 2>&1 | tail -15
           } 2>&1 | tee stage.log
           find "$S" -type f | wc -l | tee -a stage.log
 
