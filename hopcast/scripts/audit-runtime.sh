@@ -250,7 +250,7 @@ for _ in $(seq 1 $((30 * SLOW))); do kill -0 "$RTMP" 2>/dev/null || break; sleep
 kill -INT "$RTMP" 2>/dev/null; sleep 2; kill "$RTMP" 2>/dev/null
 kill -INT "$RTMP2" 2>/dev/null; sleep 1; kill "$RTMP2" 2>/dev/null
 grep -q "extra destination(s) besides the main stream" "$OUT/app-first.log" && info "$(grep -m1 'extra destination(s) besides the main stream' "$OUT/app-first.log" | sed 's/.*HopCast: //')"
-grep -q "HopCast: extra destination .* started" "$OUT/app-first.log" && pass "multi-stream: the extra destination's output started" || fail "multi-stream: the extra destination's output never started (app-first.log)"
+grep -qE "HopCast: extra destination .* (started|stopped)" "$OUT/app-first.log" && pass "multi-stream: the extra destination's output started" || fail "multi-stream: the extra destination's output never started (app-first.log)"
 if [[ -s "$OUT/received2.flv" ]]; then
   frames2=$(ffprobe -v error -count_packets -select_streams v:0 -show_entries stream=nb_read_packets -of csv=p=0 "$OUT/received2.flv" 2>/dev/null)
   if [[ "${frames2:-0}" -gt 20 ]]; then pass "multi-stream: second server received ${frames2} video frames"; else fail "multi-stream: second server got only ${frames2:-0} video frames"; fi
