@@ -45,6 +45,12 @@ See **[SPECS.md](SPECS.md)** for the full description of what HopCast is and isn
 | AUR (`hopcast-bin`) | 🧪 PKGBUILD attached to each release |
 | Flathub | ⏳ later, once real-desktop testing is done |
 
+## Windows (early, community-tested)
+
+A portable Windows build is in progress: unzip it and run it, with no installer, no admin rights and nothing written to the registry. **The developer uses Linux and only tests the AppImage versions of HopCast.** The Windows build is made and checked automatically, but it hasn't been run by hand on a real Windows PC. If you try it, please test it in a virtual machine first (VirtualBox, VMware, Hyper-V) before using it on your main computer, and tell us what you find.
+
+Windows will show a SmartScreen warning because the program isn't code-signed. Check the download against `SHA256SUMS` from the release page if you want to be sure it's the real file.
+
 ## Trying a test build
 
 > [!CAUTION]
