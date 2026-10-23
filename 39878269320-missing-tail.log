@@ -1,0 +1,8 @@
+spoutdx.dll	<- win-spout.dll	[D:/a/hopcast/hopcast/stage/HopCast\prism-plugins\64bit\SpoutDX.dll]
+spoutlibrary.dll	<- win-spout.dll	[D:/a/hopcast/hopcast/stage/HopCast\prism-plugins\64bit\SpoutLibrary.dll]
+2 missing
+imported by libssl-1_1-x64.dll: 
+imported by libcrypto-1_1-x64.dll: 
+imported by msvcr100.dll: 
+imported by libssl-3-x64.dll: mosquitto.dll
+imported by libcrypto-3-x64.dll: legacy.dll, libssl-3-x64.dll, mosquitto.dll

@@ -1,0 +1,52 @@
+info: time_uploader::upload_thread enter
+
+
+Id              : 7664
+MainWindowTitle : HopCast
+Responding      : True
+WorkingSet64    : 179535872
+
+
+
+
+
+ProcessName          MainWindowTitle                                              
+-----------          ---------------                                              
+hosted-compute-agent C:\ProgramData\GitHub\HostedComputeAgent\hosted-compute-agent
+obs64                HopCast                                                      
+
+
+
+SUCCESS: Sent termination signal to the process "obs64.exe" with PID 7664.
+ERROR: The process "obs64.exe" not found.
+applogs/logs/20261023010940.txt
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/basic
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/basic/profiles
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/basic/scenes
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/blockDump
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/Cache
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/Cache/channel_cache.dat.enc
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/Cache/cookies.ini
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/Cache/pc_state_log.txt
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/crashDump
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/crashDump/modules.json
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/crashDump/third_party_plugins.json
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/crashes
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/drawpen
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/global.ini
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/laboratory
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/laboratory/downloadLab.json
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/laboratory/Laboratory.json
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/logs
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/logs/20261023010940.txt
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/naver_shopping
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/naver_shopping/naver_shopping.ini
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/plugin_config
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/plugin_config/text-freetype2
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/plugin_config/win-capture
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/prism_host_proc
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/profiler_data
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/resources
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/updates
+C:\Users\runneradmin\AppData\Roaming/PRISMLiveStudio/user

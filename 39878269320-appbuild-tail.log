@@ -1,0 +1,1744 @@
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Automatic UIC for target QQREncoder
+  Automatic MOC and UIC for target libutils-api
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/CMakeLists.txt
+  QQRCoder.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/libutils-api/CMakeLists.txt
+  CrossProcessNotification.m
+  get_win_ver.cpp
+  libutils-api-log.cpp
+  libutils-api.cpp
+  libutils-gpu-cpu-monitor-info-mac.mm
+  libutils-gpu-cpu-monitor-info.cpp
+  network-state.cpp
+  pls-performance.cpp
+  pls-shared-values.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/common-libs/libutils-api/RelWithDebInfo/libutils-api.lib and object D:/a/hopcast/hopcast/build/app/common-libs/libutils-api/RelWithDebInfo/libutils-api.exp
+  libutils-api.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\libutils-api\RelWithDebInfo\libutils-api.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libutils-api
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=libutils-api
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libutils-api/RelWithDebInfo/libutils-api.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libutils-api/RelWithDebInfo/libutils-api.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/liblog/liblog/CMakeLists.txt
+  liblog.cpp
+  bitstream.c
+  mask.c
+  mmask.c
+  mqrspec.c
+  qrencode.c
+  qrinput.c
+  qrspec.c
+  rsecc.c
+  split.c
+  QQREncoder.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\third-party\QREncoder\RelWithDebInfo\QQREncoder.lib
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=QQREncoder
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/third-party/QREncoder/RelWithDebInfo/QQREncoder.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+     Creating library D:/a/hopcast/hopcast/build/app/common-libs/liblog/liblog/RelWithDebInfo/liblog.lib and object D:/a/hopcast/hopcast/build/app/common-libs/liblog/liblog/RelWithDebInfo/liblog.exp
+  liblog.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\liblog\liblog\RelWithDebInfo\liblog.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/liblog/liblog
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=liblog
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/liblog/liblog/RelWithDebInfo/liblog.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/common-libs/liblog/liblog/RelWithDebInfo/liblog.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  Automatic MOC for target libhttp-client
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/common/log/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/libhttp-client/CMakeLists.txt
+  log.cpp
+  libhttp-client.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  log.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\common\log\RelWithDebInfo\log.lib
+     Creating library D:/a/hopcast/hopcast/build/app/common-libs/libhttp-client/RelWithDebInfo/libhttp-client.lib and object D:/a/hopcast/hopcast/build/app/common-libs/libhttp-client/RelWithDebInfo/libhttp-client.exp
+  libhttp-client.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\libhttp-client\RelWithDebInfo\libhttp-client.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libhttp-client
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=libhttp-client
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libhttp-client/RelWithDebInfo/libhttp-client.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libhttp-client/RelWithDebInfo/libhttp-client.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libhttp-client
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/third-party/openssl/windows/bin
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=libcrypto-1_1-x64
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/common-libs/third-party/openssl/windows/bin/libcrypto-1_1-x64.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/src/common-libs/third-party/openssl/windows/bin/libcrypto-1_1-x64.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libhttp-client
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/third-party/openssl/windows/bin
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=libssl-1_1-x64
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/common-libs/third-party/openssl/windows/bin/libssl-1_1-x64.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/src/common-libs/third-party/openssl/windows/bin/libssl-1_1-x64.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  Automatic MOC for target libipc
+  Automatic MOC and UIC for target libui
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/libipc/CMakeLists.txt
+  libipc.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  AutoMoc: D:/a/hopcast/hopcast/src/common-libs/libui/PLSMenu.cpp: note: No relevant classes found. No output generated.
+  3>Automatic RCC for libui-css.qrc
+  1>
+  2>Automatic RCC for libui-images.qrc
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/libui/CMakeLists.txt
+     Creating library D:/a/hopcast/hopcast/build/app/common-libs/libipc/RelWithDebInfo/libipc.lib and object D:/a/hopcast/hopcast/build/app/common-libs/libipc/RelWithDebInfo/libipc.exp
+  PLSAlertView.cpp
+  PLSAnimationLabel.cpp
+  libipc.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\libipc\RelWithDebInfo\libipc.dll
+  PLSCheckBox.cpp
+  PLSColorDialogView.cpp
+  PLSComboBox.cpp
+  PLSCommonScrollBar.cpp
+  PLSCopyLabel.cpp
+  PLSDialogButtonBox.cpp
+  PLSDialogView.cpp
+  PLSDock.cpp
+  PLSEdit.cpp
+  PLSEvents.cpp
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  PLSFontDialogView.cpp
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libipc
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=libipc
+  -- OS_WINDOWS=ON
+  PLSImageTextButton.cpp
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libipc/RelWithDebInfo/libipc.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libipc/RelWithDebInfo/libipc.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  PLSLabel.cpp
+  PLSLoadingButton.cpp
+  PLSLoadingView.cpp
+  Automatic MOC for target libtask
+  PLSMenu.cpp
+  PLSMenuPushButton.cpp
+  PLSPushButton.cpp
+  PLSRadioButton.cpp
+  PLSScrollingLabel.cpp
+  PLSSearchLineEdit.cpp
+  PLSSpinBox.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/libtask/CMakeLists.txt
+  PLSTextLoadingView.cpp
+  PLSToplevelView.cpp
+  PLSTrackers.cpp
+  PLSTransparentForMouseEvents.cpp
+  libtask.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  PLSUIApp.cpp
+  PLSWatchers.cpp
+  PLSWidgetCloseHook.cpp
+  PLSWindow.cpp
+  PLSWizardView.cpp
+  libui.cpp
+  pls-channel-const.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/common-libs/libtask/RelWithDebInfo/libtask.lib and object D:/a/hopcast/hopcast/build/app/common-libs/libtask/RelWithDebInfo/libtask.exp
+  pls-shared-functions.cpp
+  libtask.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\libtask\RelWithDebInfo\libtask.dll
+  PLSNetworkHookTool.cpp
+  PLSNetworkMonitorTool.cpp
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libtask
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=libtask
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libtask/RelWithDebInfo/libtask.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libtask/RelWithDebInfo/libtask.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  PLSPerformanceTool.cpp
+  PLSTestTools.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  qrc_libui-css.cpp
+  qrc_libui-images.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/common-libs/libui/RelWithDebInfo/libui.lib and object D:/a/hopcast/hopcast/build/app/common-libs/libui/RelWithDebInfo/libui.exp
+  libui.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\libui\RelWithDebInfo\libui.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libui
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=libui
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libui/RelWithDebInfo/libui.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libui/RelWithDebInfo/libui.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libui
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data/locale
+  -- DATA_OUTPUT_PATH=data/prism-studio/locale/libui
+  -- ARCH=x86_64
+  -- TARGET=libui
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/common-libs/libui/data/locale/en-US.ini -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio/locale/libui
+  -- D:/a/hopcast/hopcast/src/common-libs/libui/data/locale/es-ES.ini -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio/locale/libui
+  -- D:/a/hopcast/hopcast/src/common-libs/libui/data/locale/id-ID.ini -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio/locale/libui
+  -- D:/a/hopcast/hopcast/src/common-libs/libui/data/locale/ja-JP.ini -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio/locale/libui
+  -- D:/a/hopcast/hopcast/src/common-libs/libui/data/locale/ko-KR.ini -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio/locale/libui
+  -- D:/a/hopcast/hopcast/src/common-libs/libui/data/locale/pt-BR.ini -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio/locale/libui
+  -- D:/a/hopcast/hopcast/src/common-libs/libui/data/locale/vi-VN.ini -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio/locale/libui
+  -- deploy target qt libraries.
+  -- CONFIG=RelWithDebInfo
+  -- QT_DIR=D:/a/hopcast/Qt/6.8.3/msvc2022_64
+  -- DEV_OUTPUT_DIR=D:/a/hopcast/hopcast/build/app/output
+  -- TARGET=libui
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- VS_WINDOWS_TARGET_PLATFORM_VERSION=10.0.26100.0
+  D:\a\hopcast\hopcast\build\app\output\Release\bin\64bit\libui.dll 64 bit, release executable
+  Adding in plugin type generic for module: Qt6Gui
+  Adding in plugin type iconengines for module: Qt6Gui
+  Adding in plugin type imageformats for module: Qt6Gui
+  Adding in plugin type multimedia for module: Qt6Multimedia
+  Adding in plugin type networkinformation for module: Qt6Network
+  Adding in plugin type platforms for module: Qt6Gui
+  Adding in plugin type styles for module: Qt6Widgets
+  Adding in plugin type tls for module: Qt6Network
+  Skipping plugin qopensslbackend.dll. Use -force-openssl or specify -openssl-root if you want to use it.
+  Direct dependencies: Qt6Core Qt6Gui Qt6Multimedia Qt6Network Qt6Svg Qt6Widgets
+  All dependencies   : Qt6Core Qt6Gui Qt6Multimedia Qt6Network Qt6Svg Qt6Widgets
+  To be deployed     : Qt6Core Qt6Gui Qt6Multimedia Qt6Network Qt6Svg Qt6Widgets
+EXEC : warning : Cannot find Visual Studio installation directory, VCINSTALLDIR is not set. [D:\a\hopcast\hopcast\build\app\common-libs\libui\libui.vcxproj]
+  Updating Qt6Core.dll.
+  Updating Qt6Gui.dll.
+  Updating Qt6Multimedia.dll.
+  Updating Qt6Network.dll.
+  Updating Qt6Svg.dll.
+  Updating Qt6Widgets.dll.
+  Updating opengl32sw.dll.
+  Updating dxcompiler.dll.
+  Updating dxil.dll.
+  Updating avcodec-61.dll.
+  Updating avformat-61.dll.
+  Updating avutil-59.dll.
+  Updating swresample-5.dll.
+  Updating swscale-8.dll.
+  Creating directory D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit/generic.
+  Updating qtuiotouchplugin.dll.
+  Creating directory D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit/iconengines.
+  Updating qsvgicon.dll.
+  Creating directory D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit/imageformats.
+  Updating qgif.dll.
+  Updating qicns.dll.
+  Updating qico.dll.
+  Updating qjpeg.dll.
+  Updating qsvg.dll.
+  Updating qtga.dll.
+  Updating qtiff.dll.
+  Updating qwbmp.dll.
+  Updating qwebp.dll.
+  Creating directory D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit/multimedia.
+  Updating ffmpegmediaplugin.dll.
+  Updating windowsmediaplugin.dll.
+  Creating directory D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit/networkinformation.
+  Updating qnetworklistmanager.dll.
+  Creating directory D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit/platforms.
+  Updating qwindows.dll.
+  Creating directory D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit/styles.
+  Updating qmodernwindowsstyle.dll.
+  Creating directory D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit/tls.
+  Updating qcertonlybackend.dll.
+  Updating qschannelbackend.dll.
+  -- Copy File C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/D3DCompiler_47.dll -> D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit/D3DCompiler_47.dll
+  Automatic MOC and UIC for target libdump-analyzer
+  Automatic MOC for target libresource
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/libdump-analyzer/libdump-analyzer/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/libresource/CMakeLists.txt
+  unzip.cpp
+  PLSUtil.cpp
+  zip.cpp
+  libresource.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(1411,5): warning C5033: 'register' is no longer a supported storage class [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(1512,5): warning C5033: 'register' is no longer a supported storage class [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(1583,5): warning C5033: 'register' is no longer a supported storage class [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(1584,5): warning C5033: 'register' is no longer a supported storage class [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(1585,5): warning C5033: 'register' is no longer a supported storage class [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(1598,5): warning C5033: 'register' is no longer a supported storage class [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(1599,5): warning C5033: 'register' is no longer a supported storage class [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(1600,5): warning C5033: 'register' is no longer a supported storage class [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(1688,5): warning C5033: 'register' is no longer a supported storage class [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(1857,5): warning C5033: 'register' is no longer a supported storage class [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+D:\a\hopcast\hopcast\src\common-libs\libresource\WindowsUnzip\zip.cpp(2649,41): warning C4311: 'type cast': pointer truncation from 'HWND' to 'unsigned long' [D:\a\hopcast\hopcast\build\app\common-libs\libresource\libresource.vcxproj]
+  PLSDumpAnalyzer.cpp
+  PLSAnalysisStack.cpp
+  PLSParseDumpFile.cpp
+D:\a\hopcast\hopcast\src\common-libs\libdump-analyzer\libdump-analyzer\PLSProcessInfo.h(43,28): warning C4091: '__declspec(dllexport)': ignored on left of 'ProcessInfo' when no variable is declared [D:\a\hopcast\hopcast\build\app\common-libs\libdump-analyzer\libdump-analyzer\libdump-analyzer.vcxproj]
+  (compiling source file '../../../../../src/common-libs/libdump-analyzer/libdump-analyzer/PLSUtil.cpp')
+  
+D:\a\hopcast\hopcast\src\common-libs\libdump-analyzer\libdump-analyzer\PLSProcessInfo.h(43,28): warning C4091: '__declspec(dllexport)': ignored on left of 'ProcessInfo' when no variable is declared [D:\a\hopcast\hopcast\build\app\common-libs\libdump-analyzer\libdump-analyzer\libdump-analyzer.vcxproj]
+  (compiling source file '../../../../../src/common-libs/libdump-analyzer/libdump-analyzer/PLSDumpAnalyzer.cpp')
+  
+D:\a\hopcast\hopcast\src\common-libs\libdump-analyzer\libdump-analyzer\PLSProcessInfo.h(43,28): warning C4091: '__declspec(dllexport)': ignored on left of 'ProcessInfo' when no variable is declared [D:\a\hopcast\hopcast\build\app\common-libs\libdump-analyzer\libdump-analyzer\libdump-analyzer.vcxproj]
+  (compiling source file '../../../../../src/common-libs/libdump-analyzer/libdump-analyzer/PLSAnalysisStack.cpp')
+  
+  PLSSoftStatistic.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/common-libs/libdump-analyzer/libdump-analyzer/RelWithDebInfo/libdump-analyzer.lib and object D:/a/hopcast/hopcast/build/app/common-libs/libdump-analyzer/libdump-analyzer/RelWithDebInfo/libdump-analyzer.exp
+  libdump-analyzer.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\libdump-analyzer\libdump-analyzer\RelWithDebInfo\libdump-analyzer.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libdump-analyzer/libdump-analyzer
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=libdump-analyzer
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libdump-analyzer/libdump-analyzer/RelWithDebInfo/libdump-analyzer.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libdump-analyzer/libdump-analyzer/RelWithDebInfo/libdump-analyzer.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/CMakeLists.txt
+  build.cpp
+  obs-build.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\RelWithDebInfo\obs-build.exe
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-monitor-capture/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-composite-blur/CMakeLists.txt
+  build.cpp
+  obs-composite-blur-filter.c
+  obs-composite-blur-plugin.c
+  gaussian-kernel.c
+  obs-utils.c
+  gdi-capture.cpp
+  gaussian.c
+  gdi-data.cpp
+  monitor-info.cpp
+  box.c
+     Creating library D:/a/hopcast/hopcast/build/app/common-libs/libresource/RelWithDebInfo/libresource.lib and object D:/a/hopcast/hopcast/build/app/common-libs/libresource/RelWithDebInfo/libresource.exp
+  plugin-main.cpp
+  pixelate.c
+  dual_kawase.c
+  prism-region-source.cpp
+  libresource.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\libresource\RelWithDebInfo\libresource.dll
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/obs-composite-blur/RelWithDebInfo/obs-composite-blur.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/obs-composite-blur/RelWithDebInfo/obs-composite-blur.exp
+  obs-composite-blur.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\obs-composite-blur\RelWithDebInfo\obs-composite-blur.dll
+  obs-copy.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\RelWithDebInfo\obs-copy.exe
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-composite-blur
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=obs-composite-blur
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/obs-composite-blur/RelWithDebInfo/obs-composite-blur.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/obs-composite-blur/RelWithDebInfo/obs-composite-blur.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-composite-blur
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/obs-composite-blur
+  -- ARCH=x86_64
+  -- TARGET=obs-composite-blur
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-composite-blur/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/obs-composite-blur
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-composite-blur/data/shaders -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/obs-composite-blur
+  -- Copy obs bins.
+  -- OBS_SRC_DIR=D:/a/hopcast/hopcast/src/obs-studio
+  -- OBS_BUILD_DIR=D:/a/hopcast/hopcast/build/engine
+  -- PRISM_SRC_DIR=D:/a/hopcast/hopcast/src/prism-live-studio
+  -- PRISM_BUILD_DIR=D:/a/hopcast/hopcast/build/app
+  -- OBS_BIN_DIR=D:/a/hopcast/hopcast/build/engine/rundir/RelWithDebInfo
+  -- DEV_OUTPUT_DIR=D:/a/hopcast/hopcast/build/app/output
+  -- Copy file, from D:/a/hopcast/hopcast/build/engine/rundir/RelWithDebInfo/bin to D:/a/hopcast/hopcast/build/app/output/Release
+  -- Copy file, from D:/a/hopcast/hopcast/build/engine/rundir/RelWithDebInfo/data to D:/a/hopcast/hopcast/build/app/output/Release
+  -- Copy file, from D:/a/hopcast/hopcast/build/engine/rundir/RelWithDebInfo/obs-plugins to D:/a/hopcast/hopcast/build/app/output/Release
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libresource
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=libresource
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libresource/RelWithDebInfo/libresource.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libresource/RelWithDebInfo/libresource.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  Automatic MOC and UIC for target frontend-api
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/frontend-api/CMakeLists.txt
+  PLSErrorHandler.cpp
+  frontend-api.cpp
+  login-info.cpp
+  DNSSDRegisterManager.cpp
+  DNSSDRegistration-mac.mm
+  DNSSDRegistrationCPPClass.cpp
+  pls-net-url.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-monitor-capture/RelWithDebInfo/prism-monitor-capture.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-monitor-capture/RelWithDebInfo/prism-monitor-capture.exp
+  utils-api.cpp
+  prism-monitor-capture.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-monitor-capture\RelWithDebInfo\prism-monitor-capture.dll
+  mocs_compilation_RelWithDebInfo.cpp
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-monitor-capture
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-monitor-capture
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-monitor-capture/RelWithDebInfo/prism-monitor-capture.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-monitor-capture/RelWithDebInfo/prism-monitor-capture.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-monitor-capture
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-monitor-capture
+  -- ARCH=x86_64
+  -- TARGET=prism-monitor-capture
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-monitor-capture/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-monitor-capture
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/frontend-api/RelWithDebInfo/frontend-api.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/frontend-api/RelWithDebInfo/frontend-api.exp
+  frontend-api.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\frontend-api\RelWithDebInfo\frontend-api.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/frontend-api
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=frontend-api
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/frontend-api/RelWithDebInfo/frontend-api.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/frontend-api/RelWithDebInfo/frontend-api.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  Automatic MOC for target prism-stream-deck
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sticker-source/CMakeLists.txt
+  1>Automatic RCC for prism-spectralizer.qrc
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sound-touch/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/CMakeLists.txt
+  1>Automatic RCC for timer_source.qrc
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-lens-v2/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-stream-deck/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-timer-source/CMakeLists.txt
+  actionhelp.cpp
+  streamdeckplugin_module.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  StringConvert.cpp
+  handle-wrapper.cpp
+  prism-named-pipe.cpp
+  prism-ipc-buffer.cpp
+  lens-logo.cpp
+  plugin-main.cpp
+  prism-lens-source.cpp
+  task-pool.cpp
+  audio-visualizer.cpp
+  bar-visualizer.cpp
+  obs-internal-source.cpp
+  prism-spectralizer-plugin.cpp
+  Automatic MOC and UIC for target prism-viewer-count-source
+  prism-visualizer-source.cpp
+  spectrum-visualizer.cpp
+  prism-timer-source.cpp
+  plugin-main.cpp
+  Automatic MOC and UIC for target prism-text-template-source
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bkg-template/CMakeLists.txt
+  Automatic MOC and UIC for target prism-chatv2-source
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-text-template-source/CMakeLists.txt
+  1>Automatic RCC for resource.qrc
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-viewer-count-source/CMakeLists.txt
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-stream-deck/RelWithDebInfo/prism-stream-deck.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-stream-deck/RelWithDebInfo/prism-stream-deck.exp
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chatv2-source/CMakeLists.txt
+  prism-stream-deck.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-stream-deck\RelWithDebInfo\prism-stream-deck.dll
+  Automatic MOC and UIC for target prism-chat-source
+  Automatic MOC and UIC for target win-spout
+  prism-sticker-source.cpp
+  prism-giphy-sticker-source.cpp
+  plugin-main.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-lens-v2/RelWithDebInfo/prism-lens-v2.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-lens-v2/RelWithDebInfo/prism-lens-v2.exp
+  prism-sound-touch-plugin.cpp
+  sound-touch-filter.cpp
+  sound-touch-pipe.cpp
+  prism-lens-v2.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-lens-v2\RelWithDebInfo\prism-lens-v2.dll
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chat-source/CMakeLists.txt
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-lens-v2
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-lens-v2
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-lens-v2/RelWithDebInfo/prism-lens-v2.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-lens-v2/RelWithDebInfo/prism-lens-v2.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-lens-v2
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-lens-v2
+  -- ARCH=x86_64
+  -- TARGET=prism-lens-v2
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-lens-v2/data/lens_logo.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-lens-v2
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-lens-v2/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-lens-v2
+  1>
+  Automatic MOC and UIC for target prism-chzzk-sponsor-source
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chzzk-sponsor-source/CMakeLists.txt
+  win-spout.cpp
+  win-spout-source.cpp
+  win-spout-output.cpp
+  win-spout-filter.cpp
+  qrc_timer_source.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sound-touch/RelWithDebInfo/prism-sound-touch.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sound-touch/RelWithDebInfo/prism-sound-touch.exp
+  win-spout-config.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins/CMakeLists.txt
+  prism-sound-touch.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-sound-touch\RelWithDebInfo\prism-sound-touch.dll
+  win-spout-output-settings.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sticker-source/RelWithDebInfo/prism-sticker-source.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sticker-source/RelWithDebInfo/prism-sticker-source.exp
+  qrc_prism-spectralizer.cpp
+  prism-sticker-source.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-sticker-source\RelWithDebInfo\prism-sticker-source.dll
+  plugin-main.cpp
+  prism-chatv2-source.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/RelWithDebInfo/prism-spectralizer.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/RelWithDebInfo/prism-spectralizer.exp
+  chat-source.cpp
+  plugin-main.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  plugin-main.cpp
+  prism-bkg-template.cpp
+  prism-spectralizer.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-spectralizer\RelWithDebInfo\prism-spectralizer.dll
+  plugin-main.cpp
+  text-template-source.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-spectralizer
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/RelWithDebInfo/prism-spectralizer.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/RelWithDebInfo/prism-spectralizer.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/RelWithDebInfo/win-spout.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/RelWithDebInfo/win-spout.exp
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chat-source/RelWithDebInfo/prism-chat-source.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chat-source/RelWithDebInfo/prism-chat-source.exp
+  win-spout.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\obs-spout2-plugin\RelWithDebInfo\win-spout.dll
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-spectralizer
+  -- ARCH=x86_64
+  -- TARGET=prism-spectralizer
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/data/blur_filter.effect -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-spectralizer
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/data/color_mask.effect -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-spectralizer
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/data/color_region_extend.effect -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-spectralizer
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/data/images -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-spectralizer
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-spectralizer
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/data/outter_blur.effect -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-spectralizer
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/fftw3/lib/64bit
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=fftw3
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/fftw3/lib/64bit/fftw3.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  prism-chat-source.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-chat-source\RelWithDebInfo\prism-chat-source.dll
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-timer-source/RelWithDebInfo/prism-timer-source.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-timer-source/RelWithDebInfo/prism-timer-source.exp
+  prism-bgm-plugin.cpp
+  prism-bgm-source.cpp
+  plugin-main.cpp
+  prism_chzzk_sponsor_source.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  plugin-main.cpp
+  prism_viewer_count_source.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  prism-timer-source.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-timer-source\RelWithDebInfo\prism-timer-source.dll
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bkg-template/RelWithDebInfo/prism-bkg-template.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bkg-template/RelWithDebInfo/prism-bkg-template.exp
+  prism-bkg-template.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-bkg-template\RelWithDebInfo\prism-bkg-template.dll
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-text-template-source/RelWithDebInfo/prism-text-template-source.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-text-template-source/RelWithDebInfo/prism-text-template-source.exp
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chatv2-source/RelWithDebInfo/prism-chatv2-source.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chatv2-source/RelWithDebInfo/prism-chatv2-source.exp
+  prism-text-template-source.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-text-template-source\RelWithDebInfo\prism-text-template-source.dll
+  prism-chatv2-source.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-chatv2-source\RelWithDebInfo\prism-chatv2-source.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-timer-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-timer-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-timer-source/RelWithDebInfo/prism-timer-source.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-timer-source/RelWithDebInfo/prism-timer-source.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-stream-deck
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-stream-deck
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-stream-deck/RelWithDebInfo/prism-stream-deck.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-stream-deck/RelWithDebInfo/prism-stream-deck.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-timer-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-timer-source
+  -- ARCH=x86_64
+  -- TARGET=prism-timer-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-timer-source/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-timer-source
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-stream-deck
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-stream-deck
+  -- ARCH=x86_64
+  -- TARGET=prism-stream-deck
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chatv2-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-chatv2-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chatv2-source/RelWithDebInfo/prism-chatv2-source.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chatv2-source/RelWithDebInfo/prism-chatv2-source.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chzzk-sponsor-source/RelWithDebInfo/prism-chzzk-sponsor-source.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chzzk-sponsor-source/RelWithDebInfo/prism-chzzk-sponsor-source.exp
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chatv2-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-chatv2-source
+  -- ARCH=x86_64
+  -- TARGET=prism-chatv2-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chatv2-source/data/fonts -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-chatv2-source
+  prism-chzzk-sponsor-source.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-chzzk-sponsor-source\RelWithDebInfo\prism-chzzk-sponsor-source.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-text-template-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-text-template-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-text-template-source/RelWithDebInfo/prism-text-template-source.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-text-template-source/RelWithDebInfo/prism-text-template-source.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-text-template-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-text-template-source
+  -- ARCH=x86_64
+  -- TARGET=prism-text-template-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-text-template-source/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-text-template-source
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chzzk-sponsor-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-chzzk-sponsor-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chzzk-sponsor-source/RelWithDebInfo/prism-chzzk-sponsor-source.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chzzk-sponsor-source/RelWithDebInfo/prism-chzzk-sponsor-source.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chzzk-sponsor-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-chzzk-sponsor-source
+  -- ARCH=x86_64
+  -- TARGET=prism-chzzk-sponsor-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chzzk-sponsor-source/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-chzzk-sponsor-source
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chat-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-chat-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chat-source/RelWithDebInfo/prism-chat-source.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chat-source/RelWithDebInfo/prism-chat-source.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chat-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-chat-source
+  -- ARCH=x86_64
+  -- TARGET=prism-chat-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chat-source/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-chat-source
+  qrc_resource.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins/RelWithDebInfo/prism-bgm-plugins.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins/RelWithDebInfo/prism-bgm-plugins.exp
+  prism-bgm-plugins.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-bgm-plugins\RelWithDebInfo\prism-bgm-plugins.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-bgm-plugins
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins/RelWithDebInfo/prism-bgm-plugins.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins/RelWithDebInfo/prism-bgm-plugins.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-bgm-plugins
+  -- ARCH=x86_64
+  -- TARGET=prism-bgm-plugins
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins/data/images -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-bgm-plugins
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-bgm-plugins
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins/data/mask-mixer.effect -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-bgm-plugins
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-viewer-count-source/RelWithDebInfo/prism-viewer-count-source.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-viewer-count-source/RelWithDebInfo/prism-viewer-count-source.exp
+  prism-viewer-count-source.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\plugins\source\prism-viewer-count-source\RelWithDebInfo\prism-viewer-count-source.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-viewer-count-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-viewer-count-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-viewer-count-source/RelWithDebInfo/prism-viewer-count-source.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-viewer-count-source/RelWithDebInfo/prism-viewer-count-source.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-viewer-count-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-viewer-count-source
+  -- ARCH=x86_64
+  -- TARGET=prism-viewer-count-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-viewer-count-source/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-viewer-count-source
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chatv2-source/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-chatv2-source
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/deps/Spout2/BUILD/Binaries/x64/
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=Spout
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/deps/Spout2/BUILD/Binaries/x64//Spout.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/deps/Spout2/BUILD/Binaries/x64/
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=SpoutLibrary
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/deps/Spout2/BUILD/Binaries/x64//SpoutLibrary.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/deps/Spout2/BUILD/Binaries/x64/
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=SpoutDX
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/deps/Spout2/BUILD/Binaries/x64//SpoutDX.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=win-spout
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/RelWithDebInfo/win-spout.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/RelWithDebInfo/win-spout.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/win-spout
+  -- ARCH=x86_64
+  -- TARGET=win-spout
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/win-spout
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sticker-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-sticker-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sticker-source/RelWithDebInfo/prism-sticker-source.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sticker-source/RelWithDebInfo/prism-sticker-source.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sticker-source
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-sticker-source
+  -- ARCH=x86_64
+  -- TARGET=prism-sticker-source
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sticker-source/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-sticker-source
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sound-touch
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-sound-touch
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sound-touch/RelWithDebInfo/prism-sound-touch.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sound-touch/RelWithDebInfo/prism-sound-touch.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sound-touch
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-sound-touch
+  -- ARCH=x86_64
+  -- TARGET=prism-sound-touch
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sound-touch/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-sound-touch
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bkg-template
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=prism-plugins/64bit
+  -- ARCH=x86_64
+  -- TARGET=prism-bkg-template
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bkg-template/RelWithDebInfo/prism-bkg-template.dll->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bkg-template/RelWithDebInfo/prism-bkg-template.pdb->D:/a/hopcast/hopcast/build/app/output/Release/prism-plugins/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bkg-template
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-plugins/prism-bkg-template
+  -- ARCH=x86_64
+  -- TARGET=prism-bkg-template
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bkg-template/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-plugins/prism-bkg-template
+  Automatic MOC and UIC for target PLSAppLoadingView
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/libdump-analyzer/PrismCommandLine/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/daemon/CMakeLists.txt
+  main.cpp
+  main-win.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/CMakeLists.txt
+  blake2b-ref.c
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/CMakeLists.txt
+  bpm.c
+  hopcast-bpm.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\RelWithDebInfo\hopcast-bpm.lib
+  Building Custom Rule D:/a/hopcast/hopcast/hopcast/securestore/CMakeLists.txt
+  secure_store.cpp
+  Automatic MOC for target libbrowser
+  key_provider.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/common/libbrowser/CMakeLists.txt
+  PrismCommandLine.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\libdump-analyzer\PrismCommandLine\RelWithDebInfo\PrismCommandLine.exe
+  Generating Code...
+  hopcast-securestore.vcxproj -> D:\a\hopcast\hopcast\build\app\hopcast-securestore\RelWithDebInfo\hopcast-securestore.lib
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/libdump-analyzer/PrismCommandLine
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=PrismCommandLine
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libdump-analyzer/PrismCommandLine/RelWithDebInfo/PrismCommandLine.exe->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/common-libs/libdump-analyzer/PrismCommandLine/RelWithDebInfo/PrismCommandLine.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  hopcast-blake2.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\RelWithDebInfo\hopcast-blake2.lib
+  libbrowser.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/third-party/QtApng/src/3rdparty/zlib/CMakeLists.txt
+  adler32.c
+  compress.c
+  crc32.c
+  deflate.c
+  gzclose.c
+  gzlib.c
+  gzread.c
+  gzwrite.c
+  infback.c
+  inffast.c
+  inflate.c
+  inftrees.c
+  trees.c
+  uncompr.c
+  zutil.c
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/common/util-pc-detect/CMakeLists.txt
+  Automatic MOC for target region-capture
+  PRISMDaemon.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\daemon\RelWithDebInfo\PRISMLiveStudio.exe
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/daemon
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=PRISMLiveStudio
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/daemon/RelWithDebInfo/PRISMLiveStudio.exe->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/daemon/RelWithDebInfo/PRISMLiveStudio.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  qtapng_zlib.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\third-party\QtApng\src\3rdparty\zlib\RelWithDebInfo\qtapng_zlib.lib
+  main.cpp
+  1>Automatic RCC for region-capture.qrc
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/region-capture/CMakeLists.txt
+  Automatic MOC for target vst-check
+  main.cpp
+  region-capture.cpp
+  region-capture-service.cpp
+  win-signal.cpp
+  PLSHookKeyboard-win.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/common/libbrowser/RelWithDebInfo/libbrowser.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/common/libbrowser/RelWithDebInfo/libbrowser.exp
+  libbrowser.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\common\libbrowser\RelWithDebInfo\libbrowser.dll
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/common/libbrowser
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=libbrowser
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/common/libbrowser/RelWithDebInfo/libbrowser.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/common/libbrowser/RelWithDebInfo/libbrowser.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/vst-check/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/third-party/QtApng/src/3rdparty/libpng/CMakeLists.txt
+  main.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  util-pc-detect.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\common\util-pc-detect\RelWithDebInfo\util-pc-detect.exe
+  png.c
+  pngerror.c
+  pngget.c
+  pngmem.c
+  pngpread.c
+  pngread.c
+  pngrio.c
+  pngrtran.c
+  pngrutil.c
+  pngset.c
+  pngtest.c
+D:\a\hopcast\hopcast\src\common-libs\third-party\QtApng\src\3rdparty\libpng\src\pngtest.c(1644,17): warning C4005: 'pass_height': macro redefinition [D:\a\hopcast\hopcast\build\app\common-libs\third-party\QtApng\src\3rdparty\libpng\qtapng_png.vcxproj]
+      D:\a\hopcast\hopcast\src\common-libs\third-party\QtApng\src\3rdparty\libpng\src\pngtest.c(1581,23):
+      see previous definition of 'pass_height'
+  
+  pngtrans.c
+  pngwio.c
+  pngwrite.c
+  pngwtran.c
+  pngwutil.c
+  qrc_region-capture.cpp
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/common/util-pc-detect
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=util-pc-detect
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/common/util-pc-detect/RelWithDebInfo/util-pc-detect.exe->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/common/util-pc-detect/RelWithDebInfo/util-pc-detect.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  1>
+  2>Automatic RCC for resources.qrc
+  qtapng_png.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\third-party\QtApng\src\3rdparty\libpng\RelWithDebInfo\qtapng_png.lib
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/pls-loading-view/CMakeLists.txt
+  PLSAppLoadingView.cpp
+  main.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  region-capture.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\region-capture\RelWithDebInfo\region-capture.exe
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/region-capture
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=region-capture
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/region-capture/RelWithDebInfo/region-capture.exe->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/region-capture/RelWithDebInfo/region-capture.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  Automatic MOC and UIC for target qapng
+  Building Custom Rule D:/a/hopcast/hopcast/src/common-libs/third-party/QtApng/src/plugins/imageformats/apng/CMakeLists.txt
+  apngimagehandler.cpp
+  apngimageplugin.cpp
+  apngreader.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  vst-check.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\vst-check\RelWithDebInfo\vst-check.exe
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/vst-check
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=vst-check
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/vst-check/RelWithDebInfo/vst-check.exe->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/vst-check/RelWithDebInfo/vst-check.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+     Creating library D:/a/hopcast/hopcast/build/app/common-libs/third-party/QtApng/src/plugins/imageformats/apng/RelWithDebInfo/qapng.lib and object D:/a/hopcast/hopcast/build/app/common-libs/third-party/QtApng/src/plugins/imageformats/apng/RelWithDebInfo/qapng.exp
+  qapng.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\third-party\QtApng\src\plugins\imageformats\apng\RelWithDebInfo\qapng.dll
+  Automatic MOC and UIC for target PRISMLiveStudio
+EXEC : AutoGen warning : "SRC:/prism-live-studio/PRISMLiveStudio/prism-ui/main/audio-meter-wrapper.cpp" is empty. [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  
+D:\a\hopcast\hopcast\src\common-libs\libdump-analyzer\libdump-analyzer\PLSProcessInfo.h(43,28): warning C4091: '__declspec(dllimport)': ignored on left of 'ProcessInfo' when no variable is declared [D:\a\hopcast\hopcast\build\app\common-libs\pls-loading-view\PLSAppLoadingView.vcxproj]
+  (compiling source file '../../../../src/common-libs/pls-loading-view/main.cpp')
+  
+  qrc_resources.cpp
+  PLSAppLoadingView.vcxproj -> D:\a\hopcast\hopcast\build\app\common-libs\pls-loading-view\RelWithDebInfo\PLSAppLoadingView.exe
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/common-libs/pls-loading-view
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=PLSAppLoadingView
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/pls-loading-view/RelWithDebInfo/PLSAppLoadingView.exe->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/common-libs/pls-loading-view/RelWithDebInfo/PLSAppLoadingView.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  AutoUic: D:\a\hopcast\hopcast\src\prism-live-studio\PRISMLiveStudio\prism-ui\forms\PLSDrawPenView.ui: Warning: Z-order assignment: 'label_separate_5' is not a valid widget.
+  AutoMoc: D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/hopcast/HopCastScreenshot.cpp: note: No relevant classes found. No output generated.
+  4>Automatic RCC for prism-ui/prism-login.qrc
+  1>
+  1>Automatic RCC for obs-ui/forms/obs.qrc
+  1>Automatic RCC for prism-ui/prism.qrc
+  4>Automatic RCC for prism-ui/filter-ui.qrc
+  4>Automatic RCC for prism-ui/obs-dark.qrc
+  4>Automatic RCC for prism-ui/prism-chat-template.qrc
+  3>Automatic RCC for prism-ui/prism-channels-resources.qrc
+  3>Automatic RCC for prism-ui/defaultSources.qrc
+  3>Automatic RCC for prism-ui/prism-images-3.qrc
+  1>Automatic RCC for prism-ui/prism-css.qrc
+  2>Automatic RCC for prism-ui/prism-images-1.qrc
+  2>Automatic RCC for prism-ui/audio-mixer.qrc
+  2>Automatic RCC for prism-ui/prism-images-2.qrc
+  2>Automatic RCC for prism-ui/giphy-sticker.qrc
+  4>Automatic RCC for prism-ui/prism-source-guide.qrc
+  4>Automatic RCC for prism-ui/notice-update.qrc
+  4>Automatic RCC for prism-ui/channels/data/Style/ChannelResources.qrc
+  3>Automatic RCC for prism-ui/prism-images-chat.qrc
+  Building Custom Rule D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/CMakeLists.txt
+  auth-oauth.cpp
+  auth-listener.cpp
+  ffmpeg-utils.cpp
+  obs-app.cpp
+  obs-proxy-style.cpp
+  auth-base.cpp
+  crash-report.cpp
+  qt-display-failed-view.cpp
+D:\a\hopcast\hopcast\src\common-libs\libdump-analyzer\libdump-analyzer\PLSProcessInfo.h(43,28): warning C4091: '__declspec(dllimport)': ignored on left of 'ProcessInfo' when no variable is declared [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  (compiling source file '../../../../src/prism-live-studio/PRISMLiveStudio/obs-ui/obs-app.cpp')
+  
+  qt-display.cpp
+  ui-validation.cpp
+  multiview.cpp
+  json11.cpp
+  absolute-slider.cpp
+  adv-audio-control.cpp
+  audio-encoders.cpp
+  basic-controls.cpp
+  horizontal-scroll-area.cpp
+  item-widget-helpers.cpp
+  context-bar-controls.cpp
+  focus-list.cpp
+  hotkey-edit.cpp
+  log-viewer.cpp
+  media-controls.cpp
+  menu-button.cpp
+  remote-text.cpp
+  scene-tree.cpp
+  source-label.cpp
+  source-tree.cpp
+  url-push-button.cpp
+  undo-stack-obs.cpp
+  volume-control.cpp
+  visibility-item-widget.cpp
+  preview-controls.cpp
+  window-whats-new.cpp
+  window-basic-about.cpp
+  window-basic-adv-audio.cpp
+  window-basic-filters.cpp
+  window-basic-interaction.cpp
+  window-basic-main.cpp
+  window-basic-main-browser.cpp
+  window-basic-main-dropfiles.cpp
+  window-basic-main-icons.cpp
+D:\a\hopcast\hopcast\src\common-libs\libdump-analyzer\libdump-analyzer\PLSProcessInfo.h(43,28): warning C4091: '__declspec(dllimport)': ignored on left of 'ProcessInfo' when no variable is declared [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  (compiling source file '../../../../src/prism-live-studio/PRISMLiveStudio/obs-ui/window-basic-main.cpp')
+  
+D:\a\hopcast\hopcast\src\prism-live-studio\PRISMLiveStudio\obs-ui\window-basic-main.cpp(12725,6): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  window-basic-main-outputs2.cpp
+  window-basic-main-outputs.cpp
+  window-basic-main-profiles.cpp
+  window-basic-main-scene-collections.cpp
+  window-basic-main-screenshot.cpp
+  window-basic-main-transitions.cpp
+  window-basic-preview.cpp
+  window-basic-properties.cpp
+  window-basic-settings.cpp
+  window-basic-settings-a11y.cpp
+  window-basic-settings-stream.cpp
+D:\a\hopcast\hopcast\src\prism-live-studio\PRISMLiveStudio\obs-ui\window-basic-properties.cpp(699,9): warning C4068: unknown pragma 'mark' [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  window-basic-source-select.cpp
+  window-basic-stats.cpp
+  window-basic-status-bar.cpp
+  window-basic-transform.cpp
+  window-basic-vcam-config.cpp
+  window-dock-youtube-app.cpp
+  window-dock.cpp
+  window-importer.cpp
+  window-missing-files.cpp
+  window-namedialog.cpp
+  window-log-reply.cpp
+  window-projector.cpp
+  window-remux.cpp
+  goliveapi-censoredjson.cpp
+  goliveapi-network.cpp
+  goliveapi-postdata.cpp
+  multitrack-video-error.cpp
+  multitrack-video-output.cpp
+  importers.cpp
+  classic.cpp
+  sl.cpp
+  studio.cpp
+  xsplit.cpp
+  PLSMessageBox.cpp
+  PLSNameDialog.cpp
+  flowlayout.cpp
+  PLSToastMsgFrame.cpp
+  bubbletips.cpp
+  PLSMainView.cpp
+  PLSLogo.cpp
+  PLSBasicStatusBarAnalog.mm
+  PLSBasicStatusBar.cpp
+  PLSBasicStatusPanel.cpp
+  PLSBasic.cpp
+  PLSNewIconActionWidget.cpp
+  PLSContactView.cpp
+  PLSFileItemView.cpp
+  loading-event.cpp
+  PLSFileButton.cpp
+  PLSAboutView.cpp
+  PLSUpdateView.cpp
+  PLSNoticeUpdateRepository.cpp
+  PLSNoticeUpdateCoordinator.cpp
+  PLSNoticePopupDialog.cpp
+  PLSNoticeUpdateCenterDialog.cpp
+  PLSGetPropertiesThread.cpp
+  PLSPropertyModel.cpp
+  PLSTemplateButton.cpp
+  PLSAudioControl.cpp
+  PLSFiltersItemView.cpp
+  PLSOutputHandler.cpp
+  PLSSceneItemView.cpp
+  PLSSceneListView.cpp
+  PLSSceneTransitionsView.cpp
+  PLSSceneDataMgr.cpp
+  PLSScrollAreaContent.cpp
+  PLSFloatScrollBarScrollArea.cpp
+  log.cpp
+  PLSToastButton.cpp
+  login-common-helper.cpp
+  PLSToastMsgPopup.cpp
+  PLSLivingMsgView.cpp
+  PLSLivingMsgItem.cpp
+  channel-login-view.cpp
+  login-user-info.cpp
+  pls-gpop-data.cpp
+  audio-meter-wrapper.cpp
+  PLSAddSourceView.cpp
+  PLSAddSourceGuideView.cpp
+  PLSSourceTemplateConfig.cpp
+  PLSIPCHandler.cpp
+  window-basic-color-select.cpp
+  PLSSourceTypeList.cpp
+  api-interface.cpp
+  PLSPreviewTitle.cpp
+  window-basic-prism-scene-collection.cpp
+  PLSSceneCollectionItem.cpp
+  PLSSceneCollectionView.cpp
+  PLSSceneCollectionManagement.cpp
+  PLSImporter.cpp
+  PLSImporterItem.cpp
+  PLSPrismShareMemory.cpp
+  PLSSceneitemMapManager.cpp
+  PLSGiphyStickerView.cpp
+  GiphyWebHandler.cpp
+  GiphyDownloader.cpp
+  PLSSearchPopupMenu.cpp
+  PLSBasicProperties.cpp
+D:\a\hopcast\hopcast\src\prism-live-studio\PRISMLiveStudio\prism-ui\giphy\PLSGiphyStickerView.cpp(1481,16): warning C4858: discarding return value: Use QThreadPool::start(Callable&&) if you don't need the returned QFuture [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  PLSPropertiesView.cpp
+  PLSPropertiesViewVbChromakey.cpp
+  PLSPropertiesExtraUI.cpp
+  PLSRegionCapture.cpp
+  PLSBackgroundMusicView.cpp
+  PLSBgmItemCoverView.cpp
+  PLSBgmDataManager.cpp
+  PLSBgmDragView.cpp
+  PLSBgmItemDelegate.cpp
+  PLSBgmItemView.cpp
+  PLSBgmLibraryView.cpp
+  PLSBgmControlsView.cpp
+  PLSBgmControlsBase.cpp
+  window-basic-main-bgm.cpp
+  PLSSourceToolbar.cpp
+  PLSCompleter.cpp
+  PLSCTPropertiesUi.cpp
+  PLSPreviewMaskWidget.cpp
+  PLSMotionImageListView.cpp
+  PLSMotionDefine.cpp
+  PLSMyMotionListView.cpp
+  PLSImageListView.cpp
+  PLSMotionItemView.cpp
+  PLSMotionFileManager.cpp
+  PLSRecentListView.cpp
+  PLSPrismListView.cpp
+  CategoryVirtualTemplate.cpp
+  PLSVirtualBgManager.cpp
+  PLSMotionErrorLayer.cpp
+  PLSMotionAddButton.cpp
+  PLSApp.cpp
+  PLSVstFilterView.cpp
+  PLSBrowserView.cpp
+  pls-setting-general-view.cpp
+  pls-complex-header-icon.cpp
+D:\a\hopcast\hopcast\src\common-libs\libdump-analyzer\libdump-analyzer\PLSProcessInfo.h(43,28): warning C4091: '__declspec(dllimport)': ignored on left of 'ProcessInfo' when no variable is declared [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  (compiling source file '../../../../src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSApp.cpp')
+  
+  change-password-view.cpp
+  TextMotionTemplateButton.cpp
+  TextMotionTemplateDataHelper.cpp
+  PLSChatTemplateDataHelper.cpp
+  PLSSideBarDialogView.cpp
+  PLSOpenSourceView.cpp
+  PLSOnBoardingDlg.cpp
+  PLSInfoCollector.cpp
+  MutiLanguageTestView.cpp
+  PLSDualOutputTitle.cpp
+  PLSMediaRender.cpp
+  PLSNodeManager.cpp
+  PLSOverlayNode.cpp
+  PLSSceneInstallButton.cpp
+  PLSSceneTemplateBorderLabel.cpp
+  PLSSceneTemplateContainer.cpp
+  PLSSceneTemplateDetailScene.cpp
+  PLSSceneTemplateImageView.cpp
+  PLSSceneTemplateMainScene.cpp
+  PLSSceneTemplateMainSceneInstallView.cpp
+  PLSSceneTemplateMainSceneItem.cpp
+  PLSSceneTemplateMainSceneItemIntroView.cpp
+  PLSSceneTemplateMediaManage.cpp
+  PLSSceneTemplateResourceMgr.cpp
+  PLSSceneTemplateReturnButton.cpp
+  PLSErrorCodeTransformTool.cpp
+D:\a\hopcast\hopcast\src\prism-live-studio\PRISMLiveStudio\prism-ui\scene-templates\PLSSceneTemplateMediaManage.cpp(144,16): warning C4858: discarding return value: Use QThreadPool::start(Callable&&) if you don't need the returned QFuture [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  PLSWatermark.cpp
+  PLSDrawPenDefine.cpp
+  PLSDrawPenMgr.cpp
+  PLSDrawPenView.cpp
+  PLSD2DGeometry.cpp
+  PLSD2DRenderTarget.cpp
+  PLSDrawPenCore.cpp
+  PLSDrawPenEffect.cpp
+  PLSDrawPenWin.cpp
+  PLSGraphicsHandler.cpp
+  PLSUndoRedoCache.cpp
+  PLSBlockDump.cpp
+  PLSModuleMonitor.cpp
+  PLSWinrtNotify.cpp
+  PLSOutro.cpp
+  PLSAudioMixer.cpp
+D:\a\hopcast\hopcast\src\prism-live-studio\PRISMLiveStudio\prism-ui\main\windows\PLSModuleMonitor.cpp(32,39): warning C4858: discarding return value: Use QThreadPool::start(Callable&&) if you don't need the returned QFuture [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  PLSMixerContent.cpp
+  PLSFileDownloader.cpp
+  PLSPrismSticker.cpp
+  PLSStickerDataHandler.cpp
+  PLSStickerToastFrame.cpp
+  PLSUpdateStickerGuideView.cpp
+  PrismStickerResourceMgr.cpp
+  PLSCropImage.cpp
+  PLSLiveInfoBase.cpp
+  PLSLiveInfoDialogs.cpp
+  PLSMosquitto.cpp
+  PLSPlatformApi.cpp
+  PLSPlatformBase.cpp
+  PLSScheLiveNotice.cpp
+  PLSSelectImageButton.cpp
+  PLSServerStreamHandler.cpp
+  PLSSyncServerManager.cpp
+  PLSTakeCameraSnapshot.cpp
+  PLSTakePhotoHelper.cpp
+  PLSAPIAfreecaTV.cpp
+  PLSAfreecaTVDataHandler.cpp
+  PLSLiveInfoAfreecaTV.cpp
+  PLSPlatformAfreecaTV.cpp
+  PLSBandDataHandler.cpp
+  PLSLiveInfoBand.cpp
+  PLSPlatformBand.cpp
+  PLSAPIChzzk.cpp
+  PLSChzzkDataHandler.cpp
+  PLSLiveInfoChzzk.cpp
+  PLSPlatformChzzk.cpp
+  PLSAPICommon.cpp
+  PLSDateFormate.cpp
+  PLSGuideButton.cpp
+  PLSScheduleCombox.cpp
+  PLSScheduleComboxMenu.cpp
+  PLSSearchCombobox.cpp
+  PLSAPIFacebook.cpp
+  PLSFacebookDataHandler.cpp
+  PLSFacebookGameLineEdit.cpp
+  PLSLiveInfoFacebook.cpp
+  PLSLoadingCombox.cpp
+  PLSLoadingComboxMenu.cpp
+  PLSLoadingMenuItem.cpp
+  PLSLoadingTitleItem.cpp
+  PLSPlatformFacebook.cpp
+  PLSLiveInfoNaverShoppingLIVE.cpp
+  PLSLiveInfoNaverShoppingLIVEProductItemView.cpp
+  PLSLiveInfoNaverShoppingLIVEProductList.cpp
+  PLSLoadNextPage.cpp
+  PLSNaverShoppingLIVEAPI.cpp
+  PLSNaverShoppingLIVEDataHandler.cpp
+  PLSNaverShoppingLIVEDataManager.cpp
+  PLSNaverShoppingLIVEProductDialogView.cpp
+  PLSNaverShoppingLIVEProductImageView.cpp
+  PLSNaverShoppingLIVEProductItemView.cpp
+  PLSNaverShoppingLIVESearchKeywordItemView.cpp
+  PLSNaverShoppingLIVEStoreNameList.cpp
+  PLSNaverShoppingNotice.cpp
+  PLSNaverShoppingUseTerm.cpp
+  PLSPlatformNaverShoppingLIVE.cpp
+  PLSPressRestoreButton.cpp
+  PLSShoppingCalenderCombox.cpp
+  PLSShoppingCalenderWidget.cpp
+  PLSShoppingComboxMenu.cpp
+  PLSShoppingHostChannel.cpp
+  PLSShoppingRhythmicity.cpp
+  PLSLiveInfoNaverTV.cpp
+  PLSNaverTVDataHandler.cpp
+  PLSPlatformNaverTV.cpp
+  PLSAPINCB2B.cpp
+  PLSLiveInfoNCB2B.cpp
+  PLSNCB2BDataHandler.cpp
+  PLSNCB2bBroSettingsItem.cpp
+  PLSNCB2bBrowserDock.cpp
+  PLSNCB2bBrowserDockContent.cpp
+  PLSNCB2bBrowserSettings.cpp
+  PLSPlatformNCB2B.cpp
+  PLSPlatformPrism.cpp
+  PLSPlatformRtmp.cpp
+  PLSLiveInfoTwitch.cpp
+  PLSPlatformTwitch.cpp
+  PLSAPIYoutube.cpp
+  PLSLiveInfoYoutube.cpp
+  PLSPlatformYoutube.cpp
+  ChannelCapsule.cpp
+  ChannelCommonFunctions.cpp
+  ChannelConfigPannel.cpp
+  ChannelFoldCapsule.cpp
+  ChannelsAddWin.cpp
+  ComplexButton.cpp
+  ComplexHeaderIcon.cpp
+  DefaultPlatformsAddList.cpp
+  GoLivePannel.cpp
+  LoadingFrame.cpp
+  PLSAddingFrame.cpp
+  PLSChannelDataAPI.cpp
+  PLSChannelDataHandler.cpp
+  PLSChannelDataHandlerFunctions.cpp
+  PLSChannelSupportVideEncoder.cpp
+  PLSChannelsArea.cpp
+  PLSChannelsEntrance.cpp
+  PLSChannelsVirualAPI.cpp
+  PLSRtmpChannelView.cpp
+  ChannelItem.cpp
+  ChannelsSettingsWidget.cpp
+  PLSChatDialog.cpp
+  PLSChatFontZoomFrame.cpp
+  PLSChatHelper.cpp
+  PLSEndTipView.cpp
+  PLSLiveEndDialog.cpp
+  PLSLiveEndItem.cpp
+  CheckedFrame.cpp
+  PLSShareSourceItem.cpp
+  B2BResolutionGuideItem.cpp
+  ResolutionConst.cpp
+  ResolutionGuideItem.cpp
+  ResolutionGuidePage.cpp
+  ResolutionTipFrame.cpp
+  outsideNode.cpp
+  PLSLaunchWizardView.cpp
+  PLSWizardInfoView.cpp
+  PLSGuideTipsframe.cpp
+  PLSGuidetipsConst.cpp
+  PLSLabDownloadFile.cpp
+  PLSLaboratory.cpp
+  PLSLaboratoryInstallView.cpp
+  PLSLaboratoryItem.cpp
+  PLSLaboratoryManage.cpp
+  PLSRemoteChatManage.cpp
+  PLSRemoteChatView.cpp
+  PLSRemoteChatWebSocketServer.cpp
+  PLSLoginMainView.cpp
+  PLSProgressView.cpp
+  PLSUpdateTipView.cpp
+  login-background-view.cpp
+  login-custom-button.cpp
+  login-password-lineEdit.cpp
+  login-select-platform-view.cpp
+  login-terms-of-agree-view.cpp
+  login-view.cpp
+  login-with-email-view.cpp
+  reset-password-email-view.cpp
+  signup-with-email-view.cpp
+  PLSCommonFunc.cpp
+  PLSLoginDataHandler.cpp
+  PLSRecentLoginStore.cpp
+  win-signal.cpp
+  GPUUsage.cpp
+  window-dock-browser.cpp
+  window-extra-browsers.cpp
+  platform-windows.cpp
+  system-info-windows.cpp
+  unzip.cpp
+  HopCastSecrets.cpp
+  HopCastLinkGuard.cpp
+  HopCastScreenshot.cpp
+  HopCastMultiStream.cpp
+  HopCastProfileImport.cpp
+  HopCastNetLog.cpp
+  HopCastSettingsGuard.cpp
+  HopCastChannelIcon.cpp
+  double-slider.cpp
+  properties-view.cpp
+  spinbox-ignorewheel.cpp
+  properties-view2.cpp
+  qt-wrappers.cpp
+  plain-text-edit.cpp
+D:\a\hopcast\hopcast\src\prism-live-studio\PRISMLiveStudio\obs-ui\shared\properties-view\properties-view.cpp(2666,9): warning C4068: unknown pragma 'mark' [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  vertical-scroll-area.cpp
+  slider-ignorewheel.cpp
+  mocs_compilation_RelWithDebInfo.cpp
+  obf.c
+  win-dll-blocklist.c
+  qrc_obs.cpp
+  qrc_prism.cpp
+  qrc_prism-css.cpp
+  qrc_prism-images-1.cpp
+  qrc_audio-mixer.cpp
+  qrc_prism-images-2.cpp
+  qrc_giphy-sticker.cpp
+  qrc_prism-channels-resources.cpp
+  qrc_defaultSources.cpp
+  qrc_prism-images-3.cpp
+  qrc_prism-images-chat.cpp
+  qrc_prism-login.cpp
+  qrc_filter-ui.cpp
+  qrc_obs-dark.cpp
+  qrc_prism-chat-template.cpp
+  qrc_prism-source-guide.cpp
+  qrc_notice-update.cpp
+  qrc_ChannelResources.cpp
+  caption.lib(mpeg.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
+LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+     Creating library D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/RelWithDebInfo/obs64.lib and object D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/RelWithDebInfo/obs64.exp
+  Generating code
+  Finished generating code
+  PRISMLiveStudio.vcxproj -> D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\RelWithDebInfo\obs64.exe
+  -- Copy binary target.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- BINARY_SRC_PATH=
+  -- BINARY_OUTPUT_PATH=bin/64bit
+  -- ARCH=x86_64
+  -- TARGET=obs64
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/RelWithDebInfo/obs64.exe->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- D:/a/hopcast/hopcast/build/app/prism-live-studio/PRISMLiveStudio/RelWithDebInfo/obs64.pdb->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=data
+  -- DATA_OUTPUT_PATH=data/prism-studio
+  -- ARCH=x86_64
+  -- TARGET=PRISMLiveStudio
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/OBSPublicRSAKey.pem -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/images -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/license -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/locale -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/locale.ini -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/newInfo - sample.json -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/newInfo.json -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/resources -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/themes -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/user -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/data/webpage -> D:/a/hopcast/hopcast/build/app/output/Release/data/prism-studio
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=prism-ui/resource/LUTs
+  -- DATA_OUTPUT_PATH=data/obs-plugins/obs-filters/LUTs
+  -- ARCH=x86_64
+  -- TARGET=PRISMLiveStudio
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/01_N1.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/C5(Cobalt).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/C5_20180828.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/COLOR_Selfie1.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/COLOR_Selfie2.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/COLOR_Selfie3.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/COLOR_Warm4(Cream).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Cool1.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Cool2.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Cool3.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Film1.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Film2.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Film3(Antique).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Film4(Vintage).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Film5(DramaticWarm).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Mono1(Chic).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Mono2(Silver).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Mono3(Noir).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Mono4(Mono).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/N2_180830.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/N3(Clear)_20180828.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Vivid1.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Vivid2(Lucent).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Vivid3(Bright).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Vivid4(Tender).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Vivid5(Cool4).png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/W5(Candy)_20180828.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Warm1.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Warm2.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Warm3.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/Warm4.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/black_and_white.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/grayscale.cube -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/grayscale.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/original.cube -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/original.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/posterize.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/red_isolated.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/resource/LUTs/teal_lows_orange_highs.png -> D:/a/hopcast/hopcast/build/app/output/Release/data/obs-plugins/obs-filters/LUTs
+  -- Copy target data.
+  -- CONFIG=RelWithDebInfo
+  -- SRC_PATH=D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio
+  -- DEV_OUTPUT_PATH=D:/a/hopcast/hopcast/build/app/output
+  -- DATA_SRC_PATH=prism-ui/main/PLSDrawPen/data
+  -- DATA_OUTPUT_PATH=data/libobs
+  -- ARCH=x86_64
+  -- TARGET=PRISMLiveStudio
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSDrawPen/data/highlighter.effect -> D:/a/hopcast/hopcast/build/app/output/Release/data/libobs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSDrawPen/data/mix_texture.effect -> D:/a/hopcast/hopcast/build/app/output/Release/data/libobs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSDrawPen/data/opaque_pls.effect -> D:/a/hopcast/hopcast/build/app/output/Release/data/libobs
+  -- D:/a/hopcast/hopcast/src/prism-live-studio/PRISMLiveStudio/prism-ui/main/PLSDrawPen/data/outer_glow.effect -> D:/a/hopcast/hopcast/build/app/output/Release/data/libobs
+  -- deploy target qt libraries.
+  -- CONFIG=RelWithDebInfo
+  -- QT_DIR=D:/a/hopcast/Qt/6.8.3/msvc2022_64
+  -- DEV_OUTPUT_DIR=D:/a/hopcast/hopcast/build/app/output
+  -- TARGET=obs64
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- VS_WINDOWS_TARGET_PLATFORM_VERSION=
+  D:\a\hopcast\hopcast\build\app\output\Release\bin\64bit\obs64.exe 64 bit, release executable
+  Adding in plugin type generic for module: Qt6Gui
+  Adding in plugin type iconengines for module: Qt6Gui
+  Adding in plugin type imageformats for module: Qt6Gui
+  Adding in plugin type multimedia for module: Qt6Multimedia
+  Adding in plugin type networkinformation for module: Qt6Network
+  Adding in plugin type platforms for module: Qt6Gui
+  Adding in plugin type styles for module: Qt6Widgets
+  Adding in plugin type tls for module: Qt6Network
+  Skipping plugin qopensslbackend.dll. Use -force-openssl or specify -openssl-root if you want to use it.
+  Direct dependencies: Qt6Core Qt6Gui Qt6Multimedia Qt6Network Qt6Svg Qt6WebSockets Qt6Widgets Qt6Xml
+  All dependencies   : Qt6Core Qt6Gui Qt6Multimedia Qt6Network Qt6Svg Qt6WebSockets Qt6Widgets Qt6Xml
+  To be deployed     : Qt6Core Qt6Gui Qt6Multimedia Qt6Network Qt6Svg Qt6WebSockets Qt6Widgets Qt6Xml
+EXEC : warning : Cannot find Visual Studio installation directory, VCINSTALLDIR is not set. [D:\a\hopcast\hopcast\build\app\prism-live-studio\PRISMLiveStudio\PRISMLiveStudio.vcxproj]
+  Qt6Core.dll is up to date.
+  Qt6Gui.dll is up to date.
+  Qt6Multimedia.dll is up to date.
+  Qt6Network.dll is up to date.
+  Qt6Svg.dll is up to date.
+  Updating Qt6WebSockets.dll.
+  Qt6Widgets.dll is up to date.
+  Updating Qt6Xml.dll.
+  opengl32sw.dll is up to date.
+  dxcompiler.dll is up to date.
+  dxil.dll is up to date.
+  avcodec-61.dll is up to date.
+  avformat-61.dll is up to date.
+  avutil-59.dll is up to date.
+  swresample-5.dll is up to date.
+  swscale-8.dll is up to date.
+  qtuiotouchplugin.dll is up to date.
+  qsvgicon.dll is up to date.
+  qgif.dll is up to date.
+  qicns.dll is up to date.
+  qico.dll is up to date.
+  qjpeg.dll is up to date.
+  qsvg.dll is up to date.
+  qtga.dll is up to date.
+  qtiff.dll is up to date.
+  qwbmp.dll is up to date.
+  qwebp.dll is up to date.
+  ffmpegmediaplugin.dll is up to date.
+  windowsmediaplugin.dll is up to date.
+  qnetworklistmanager.dll is up to date.
+  qwindows.dll is up to date.
+  qmodernwindowsstyle.dll is up to date.
+  qcertonlybackend.dll is up to date.
+  qschannelbackend.dll is up to date.
+  -- Copy QtApng target.
+  -- CONFIG=RelWithDebInfo
+  -- qapng_BINARY_DIR=D:/a/hopcast/hopcast/build/app/common-libs/third-party/QtApng/src/plugins/imageformats/apng
+  -- DEV_OUTPUT_DIR=D:/a/hopcast/hopcast/build/app/output
+  -- ARCH=x86_64
+  -- TARGET=qapng
+  -- OS_WINDOWS=ON
+  -- OS_MACOS=OFF
+  -- D:/a/hopcast/hopcast/build/app/common-libs/third-party/QtApng/src/plugins/imageformats/apng/RelWithDebInfo/qapng.dll->D:/a/hopcast/hopcast/build/app/output/Release/bin/64bit/imageformats/qapng.dll
+  Building Custom Rule D:/a/hopcast/hopcast/src/CMakeLists.txt

@@ -1,0 +1,54 @@
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.20348.
+-- The C compiler identification is MSVC 19.44.35229.0
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- build type: 
+-- performance stats disabled
+-- ui action stats disabled
+-- Found OpenSSL: C:/vcpkg/installed/x64-windows/lib/libcrypto.lib (found suitable version "3.6.5", minimum required is "3") found components: Crypto
+-- HopCast: secure store key in an owner-only key file (no keyring)
+-- include OBS buildspec
+-- Setting up Pre-Built obs-deps (x64)
+-- Setting up Pre-Built obs-deps (x64) - done
+-- prism configure
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+-- Performing Test HAVE_STDATOMIC
+-- Performing Test HAVE_STDATOMIC - Success
+-- Found WrapAtomic: TRUE
+-- Found WrapVulkanHeaders: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/include
+D:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/./qrencode-4.1.0/QQRCoder.cppD:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/./qrencode-4.1.0/bitstream.cD:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/./qrencode-4.1.0/mask.cD:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/./qrencode-4.1.0/mmask.cD:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/./qrencode-4.1.0/mqrspec.cD:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/./qrencode-4.1.0/qrencode.cD:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/./qrencode-4.1.0/qrinput.cD:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/./qrencode-4.1.0/qrspec.cD:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/./qrencode-4.1.0/rsecc.cD:/a/hopcast/hopcast/src/common-libs/third-party/QREncoder/./qrencode-4.1.0/split.c
+-- Sub: PrismCommandLine
+-- PRISM Plugin: prism-lens-v2
+-- PRISM Plugin: PRISMLiveStudio
+-- PRISM Plugin: prism-spectralizer
+-- PRISM Plugin: prism-sticker-source
+-- Found FFmpeg: D:/a/hopcast/Qt/6.8.3/msvc2022_64/bin/avcodec-61.dll;D:/a/hopcast/Qt/6.8.3/msvc2022_64/bin/avutil-59.dll;D:/a/hopcast/Qt/6.8.3/msvc2022_64/bin/avformat-61.dll (found version "7.0") found components: avcodec avutil avformat
+-- PRISM Plugin: prism-sound-touch
+-- PRISM Plugin: prism-monitor-capture
+-- PRISM Plugin: prism-viewer-count-source
+-- PRISM Plugin: prism-text-template-source
+-- PRISM Plugin: prism-chat-source
+-- PRISM Plugin: prism-timer-source
+-- PRISM Plugin: prism-chatv2-source
+-- PRISM Plugin: prism-chzzk-sponsor-source
+-- Found CURL: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/cmake/CURL/CURLConfig.cmake (found version "8.9.1-DEV")
+-- Found nlohmann_json: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/share/cmake/nlohmann_json/nlohmann_jsonConfig.cmake (found version "3.11.3")
+-- Found Detours: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/detours.lib (found version "0.0.0")
+-- Configuring done (9.9s)
+-- Generating done (11.0s)
+-- Build files have been written to: D:/a/hopcast/hopcast/build/app

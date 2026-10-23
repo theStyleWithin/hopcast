@@ -1,0 +1,161 @@
+Preset CMake variables:
+
+  GPU_PRIORITY_VAL:STRING=""
+  RESTREAM_CLIENTID:STRING=""
+  RESTREAM_HASH:STRING=""
+  TWITCH_CLIENTID:STRING=""
+  TWITCH_HASH:STRING=""
+  YOUTUBE_CLIENTID:STRING=""
+  YOUTUBE_CLIENTID_HASH:STRING=""
+  YOUTUBE_SECRET:STRING=""
+  YOUTUBE_SECRET_HASH:STRING=""
+
+-- Selecting Windows SDK version 10.0.22621.0 to target Windows 10.0.20348.
+-- The C compiler identification is MSVC 19.44.35229.0
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Selecting Windows SDK version 10.0.22621.0 to target Windows 10.0.20348.
+-- The C compiler identification is MSVC 19.44.35229.0
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x86/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x86/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Setting up Pre-Built obs-deps (x86)
+-- Downloading https://github.com/obsproject/obs-deps/releases/download/2024-09-12/windows-deps-2024-09-12-x86.zip
+-- Downloading https://github.com/obsproject/obs-deps/releases/download/2024-09-12/windows-deps-2024-09-12-x86.zip - done
+-- Setting up Pre-Built obs-deps (x86) - done
+-- INFO: PLS_VERSION is defined!
+CMake Warning (dev) at cmake/finders/FindDetours.cmake:65 (message):
+  Failed to find detours version.
+Call Stack (most recent call first):
+  plugins/win-capture/graphics-hook/CMakeLists.txt:3 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Found Detours: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x86/lib/detours.lib (found version "0.0.0")
+-- Found Vulkan: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x86/lib/vulkan-1.lib (found version "1.3.216")  missing components: glslc glslangValidator
+-- Configuring done (7.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: D:/a/hopcast/hopcast/src/obs-studio/build_x86
+-- Setting up Pre-Built obs-deps (x64)
+-- Downloading https://github.com/obsproject/obs-deps/releases/download/2024-09-12/windows-deps-2024-09-12-x64.zip
+-- Downloading https://github.com/obsproject/obs-deps/releases/download/2024-09-12/windows-deps-2024-09-12-x64.zip - done
+-- Setting up Pre-Built obs-deps (x64) - done
+-- INFO: PLS_VERSION is defined!
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+-- Found FFmpeg: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avformat-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avutil-59.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/swscale-8.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/swresample-5.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avcodec-61.dll (found suitable version "7.0", minimum required is "6.1") found components: avformat avutil swscale swresample avcodec
+-- Found ZLIB: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/zlib.lib (found version "1.3.1")
+-- Found Uthash: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/include (found version "2.3.0")
+-- Found jansson: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/jansson.lib (found version "2.14")
+-- Performing Test COMPILER_HAS_DEPRECATED_ATTR
+-- Performing Test COMPILER_HAS_DEPRECATED_ATTR - Failed
+-- Performing Test COMPILER_HAS_DEPRECATED
+-- Performing Test COMPILER_HAS_DEPRECATED - Success
+-- Found OpenGL: opengl32
+-- Found FFmpeg: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avcodec-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avfilter-10.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avdevice-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avutil-59.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/swscale-8.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avformat-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/swresample-5.dll (found suitable version "7.0", minimum required is "6.1") found components: avcodec avfilter avdevice avutil swscale avformat swresample
+-- Found FFmpeg: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avcodec-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avfilter-10.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avdevice-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avutil-59.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/swscale-8.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avformat-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/swresample-5.dll (found version "7.0") found components: avcodec avdevice avutil avformat
+-- Found AMF: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/include (found suitable version "1.4.34", minimum required is "1.4.29")
+-- Found FFmpeg: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avcodec-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avfilter-10.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avdevice-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avutil-59.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/swscale-8.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avformat-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/swresample-5.dll (found version "7.0") found components: avcodec avutil avformat
+-- Found Libspeexdsp: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/speexdsp.lib (found version "0.0.0")
+-- Found Librnnoise: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/rnnoise.lib (found version "0.0.0")
+-- Found FFnvcodec: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/include (found suitable version "12.2", minimum required is "12")
+-- Found MbedTLS: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/mbedtls.lib (found version "3.4.1")
+-- Found VPL: optimized;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/vpl.lib;debug;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/vpld.lib (Required is at least version "2.9")
+-- Found VPL: optimized;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/vpl.lib;debug;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/vpld.lib (found suitable version "2.12", minimum required is "2.9")
+-- Found Libx264: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/libx264-164.dll (found version "0.164.3106")
+-- Found CURL: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/cmake/CURL/CURLConfig.cmake (found version "8.9.1-DEV")
+-- Found Freetype: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/freetype.lib (found version "2.13.3")
+-- Found Detours: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/detours.lib (found version "0.0.0")
+-- Found Vulkan: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/lib/vulkan-1.lib (found version "1.3.216")  missing components: glslc glslangValidator
+-- Found FFmpeg: D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avcodec-61.dll;D:/a/hopcast/hopcast/src/obs-studio/.deps/obs-deps-2024-09-12-x64/bin/avutil-59.dll (found version "7.0") found components: avcodec avutil
+                      _                   _             _ _       
+                 ___ | |__  ___       ___| |_ _   _  __| (_) ___  
+                / _ \| '_ \/ __|_____/ __| __| | | |/ _` | |/ _ \ 
+               | (_) | |_) \__ \_____\__ \ |_| |_| | (_| | | (_) |
+                \___/|_.__/|___/     |___/\__|\__,_|\__,_|_|\___/ 
+
+OBS:  Application Version: 31.0.3 - Build Number: 39878269320
+==================================================================================
+
+
+------------------------       Enabled Features           ------------------------
+ - Direct3D 11 renderer
+ - NVIDIA Audio FX support
+ - NVIDIA Video FX support
+ - OpenGL renderer
+ - Plugin Support
+ - RNNoise noise suppression
+ - SpeexDSP noise suppression
+------------------------       Disabled Features          ------------------------
+ - Browser sources are not enabled by default (set CEF_ROOT_DIR and ENABLE_BROWSER)
+ - User Interface
+ - Virtual Camera Support
+------------------------        Enabled Modules           ------------------------
+ - coreaudio-encoder
+ - graphics-hook
+ - image-source
+ - libobs-d3d11
+ - libobs-winrt
+ - nv-filters
+ - obs-ffmpeg
+ - obs-filters
+ - obs-nvenc
+ - obs-outputs
+ - obs-qsv11
+ - obs-text
+ - obs-transitions
+ - obs-x264
+ - rtmp-services
+ - text-freetype2
+ - win-capture
+ - win-dshow
+ - win-wasapi
+------------------------        Disabled Modules          ------------------------
+ - aja
+ - decklink
+ - obs-browser
+ - obs-libfdk
+ - obs-virtualcam-module
+ - obs-vst
+ - obs-webrtc
+ - obs-websocket
+ - test-input
+ - vlc-video
+----------------------------------------------------------------------------------
+-- Configuring done (31.1s)
+-- Generating done (0.8s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    RESTREAM_CLIENTID
+    RESTREAM_HASH
+    TWITCH_CLIENTID
+    TWITCH_HASH
+    YOUTUBE_CLIENTID
+    YOUTUBE_CLIENTID_HASH
+    YOUTUBE_SECRET
+    YOUTUBE_SECRET_HASH
+
+
+-- Build files have been written to: D:/a/hopcast/hopcast/build/engine
