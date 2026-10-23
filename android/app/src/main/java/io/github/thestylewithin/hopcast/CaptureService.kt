@@ -59,6 +59,7 @@ class CaptureService : Service() {
   private var recordFile: File? = null
   private var finishing = false
   private var watcher: AppWatcher? = null
+  private var cover: ImageFilterRender? = null
 
   /** A camera on screen: which source it belongs to, the picture it draws into, and the running camera. */
   private class CameraHandle(val src: Studio.Source, val filter: ImageFilterRender, var feed: CameraFeed)
@@ -135,6 +136,7 @@ class CaptureService : Service() {
     Studio.load(applicationContext)
     Live.reset()
     Live.gamePackage = Studio.scene().sources.firstOrNull { it.kind == "game" && it.visible }?.text.orEmpty()
+    Live.hasBase = Studio.scene().sources.any { it.visible && (it.kind == "screen" || it.kind == "game") }
     Live.micOn = intent.getBooleanExtra("mic", false)
     Live.status = ""
     instance = this
@@ -229,7 +231,7 @@ class CaptureService : Service() {
     val gl = s.getGlInterface()
     val canvasAspect = if (portrait) 9f / 16f else 16f / 9f
     for (src in Studio.scene().sources) {
-      if (!src.visible || src.kind == "game" || !File(src.file).exists()) continue
+      if (!src.visible || src.kind == "game" || src.kind == "screen" || !File(src.file).exists()) continue
       try {
         if (src.kind == "camera") {
           val picture = ImageFilterRender().also { it.setImage(Studio.decode(src.file, 1024)) }
@@ -316,7 +318,20 @@ class CaptureService : Service() {
   /** The picture goes black while the user hid it or HopCast's own screen is showing. */
   private fun applyMute() {
     val gl = stream?.getGlInterface() ?: return
-    if (Live.hidden || Live.appVisible || Live.blocked || Live.watcherDown) gl.muteVideo() else gl.unMuteVideo()
+    val hide = Live.hidden || Live.appVisible || Live.blocked || Live.watcherDown || !Live.hasBase
+    if (hide && cover == null) {
+      // a solid black picture under your other sources, so nothing from the screen can show through
+      val black = Bitmap.createBitmap(8, 8, Bitmap.Config.ARGB_8888).apply { eraseColor(android.graphics.Color.BLACK) }
+      val filter = ImageFilterRender()
+      filter.setImage(black)
+      filter.setScale(100f, 100f)
+      filter.setPosition(0f, 0f)
+      gl.addFilter(0, filter)
+      cover = filter
+    } else if (!hide && cover != null) {
+      cover?.let { gl.removeFilter(it) }
+      cover = null
+    }
   }
 
   private fun finish() {
@@ -326,6 +341,7 @@ class CaptureService : Service() {
     Live.blocked = false
     watcher?.stop()
     watcher = null
+    cover = null
     cameras.forEach { try { it.feed.close() } catch (e: Exception) { } }
     cameras.clear()
     bubble?.hide()

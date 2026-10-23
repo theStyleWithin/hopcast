@@ -27,6 +27,8 @@ object Live {
   @Volatile var blocked = false
   /** When set, only this app is ever shown on the stream and in the recording (the "Game" source). */
   @Volatile var gamePackage = ""
+  /** The scene shows your screen (a Home screen or Game source). Without one, the picture is black behind the other sources. */
+  @Volatile var hasBase = true
   /** The block list has apps but the watcher is switched off, so the picture stays black to be safe. */
   @Volatile var watcherDown = false
 

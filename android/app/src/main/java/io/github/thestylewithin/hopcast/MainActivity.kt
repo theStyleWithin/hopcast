@@ -49,6 +49,7 @@ class MainActivity : Activity() {
   private lateinit var preview: PreviewView
   private lateinit var shapePill: TextView
   private lateinit var infoText: TextView
+  private lateinit var sizeButton: Button
   private lateinit var editButton: Button
   private lateinit var removeButton: Button
   private lateinit var tabViews: List<TextView>
@@ -145,9 +146,10 @@ class MainActivity : Activity() {
     val info = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL; setPadding(dp(12), dp(6), dp(12), dp(6)) }
     infoText = label("", 12f, Color.parseColor("#c8c8c8"))
     info.addView(infoText, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+    sizeButton = smallButton("Size") { sizeMenu() }
     editButton = smallButton("Edit") { editSelected() }
     removeButton = smallButton("Remove") { removeSelected() }
-    info.addView(editButton); info.addView(removeButton)
+    info.addView(sizeButton); info.addView(editButton); info.addView(removeButton)
     root.addView(info)
 
     // tabs
@@ -194,11 +196,16 @@ class MainActivity : Activity() {
     infoText.text = when {
       s == null -> "No source selected. Tap one in the preview or the list."
       s.kind == "game" -> "Game: the stream shows only ${s.name}"
+      s.kind == "screen" -> "Home screen: shows your whole screen, every app"
+      s.kind == "cover" -> "Black box: drag to move, pinch or drag a corner to resize"
       else -> "${s.name}: drag to move, pinch to resize"
     }
-    editButton.isEnabled = s != null
+    val box = s != null && s.kind != "screen" && s.kind != "game"
+    sizeButton.isEnabled = box
+    editButton.isEnabled = s != null && s.kind != "screen"
     removeButton.isEnabled = s != null
-    editButton.alpha = if (s != null) 1f else 0.4f
+    sizeButton.alpha = if (box) 1f else 0.4f
+    editButton.alpha = if (s != null && s.kind != "screen") 1f else 0.4f
     removeButton.alpha = if (s != null) 1f else 0.4f
   }
 
@@ -330,9 +337,13 @@ class MainActivity : Activity() {
     val list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
     list.addView(header("Sources") { addSourceMenu() })
     val bound = Studio.scene().sources.any { it.kind == "game" && it.visible }
-    list.addView(sourceRow(null, if (bound) "Whole screen (not used while a game is bound)" else "Whole screen: home screen and every app", if (bound) "Off" else "Always on"))
+    if (Studio.scene().sources.none { it.kind == "screen" || it.kind == "game" }) {
+      list.addView(label("No screen in this scene: the stream is black behind your other sources. Add Home screen or Game with the +.", 12f, Color.parseColor("#effc35")).apply { setPadding(0, dp(4), 0, dp(8)) })
+    }
     Studio.scene().sources.reversed().forEach { s ->
       val title = when (s.kind) {
+        "screen" -> if (bound) "Home screen (not used while a game is bound)" else "Home screen: your whole screen, every app"
+        "cover" -> s.name + " (hides part of the screen)"
         "game" -> "Game: ${s.name} (only this app)"
         "text" -> s.name + " (text)"
         "gif" -> s.name + " (animated)"
@@ -340,6 +351,7 @@ class MainActivity : Activity() {
         else -> s.name + " (image)"
       }
       list.addView(sourceRow(s, title, if (s.visible) (if (s.kind == "game") "Bound" else "Shown") else "Hidden"))
+
     }
     return list
   }
@@ -353,7 +365,7 @@ class MainActivity : Activity() {
     val thumb = ImageView(this).apply {
       scaleType = ImageView.ScaleType.CENTER_CROP
       layoutParams = LinearLayout.LayoutParams(dp(40), dp(26)).apply { rightMargin = dp(10) }
-      if (s == null) background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(Color.parseColor("#12243b"), Color.parseColor("#3d2535")))
+      if (s == null || s.kind == "screen") background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(Color.parseColor("#12243b"), Color.parseColor("#3d2535")))
       else if (s.kind == "game") { try { setImageDrawable(packageManager.getApplicationIcon(s.text)) } catch (e: Exception) { } }
       else Studio.decode(s.file, 96)?.let { setImageBitmap(it) }
     }
@@ -370,7 +382,7 @@ class MainActivity : Activity() {
     val list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
     list.addView(header("Scenes") {
       textDialog("New scene", "Scene name", "Scene ${Studio.scenes.size + 1}") { n ->
-        Studio.scenes.add(Studio.Scene(Studio.newId(), n)); Studio.activeScene = Studio.scenes.size - 1
+        Studio.scenes.add(Studio.newScene(n)); Studio.activeScene = Studio.scenes.size - 1
         preview.selected = null; preview.reload(); Studio.save(); refreshAll()
       }
     })
@@ -422,16 +434,80 @@ class MainActivity : Activity() {
   // ---------------------------------------------------------------- sources
 
   private fun addSourceMenu() {
+    val items = mutableListOf<Pair<String, () -> Unit>>()
+    if (Studio.scene().sources.none { it.kind == "screen" }) items.add("Home screen (your whole screen)" to { addScreenSource() })
+    val last = AppWatcher.lastAppBeforeUs(this)
+    if (last != null) {
+      val label = appLabel(last)
+      items.add("Game: $label (the app you were just in)" to { setGame(last, label) })
+    }
+    items.add("Game (choose an app)" to { startActivityForResult(Intent(this, BlocklistActivity::class.java).putExtra("pick", true), REQ_GAME) })
+    items.add("Image (PNG, JPG, WebP)" to { pickPicture("sources") { f -> addPictureSource(f) } })
+    items.add("Animated picture (GIF)" to { pickPicture("sources") { f -> addPictureSource(f) } })
+    items.add("Text" to { textSourceDialog(null) })
+    items.add("Camera" to { cameraMenu() })
+    items.add("Black box (hide part of the screen)" to { addBlackBox() })
+    items.add("Preview backdrop (a screenshot)" to { backdropMenu() })
     AlertDialog.Builder(this).setTitle("Add a source")
-      .setItems(arrayOf("Image (PNG, JPG, WebP)", "Animated picture (GIF)", "Text", "Camera", "Game (show only one app)")) { _, which ->
-        when (which) {
-          0, 1 -> pickPicture("sources") { f -> addPictureSource(f) }
-          2 -> textSourceDialog(null)
-          3 -> cameraMenu()
-          else -> gameMenu()
-        }
+      .setItems(items.map { it.first }.toTypedArray()) { _, which -> items[which].second() }.show()
+  }
+
+  private fun addScreenSource() {
+    if (Studio.scene().sources.any { it.kind == "screen" }) {
+      Toast.makeText(this, "This scene already has the home screen", Toast.LENGTH_SHORT).show()
+      return
+    }
+    Studio.scene().sources.add(0, Studio.newScreenSource())
+    Studio.save(); refreshAll()
+  }
+
+  private fun addBlackBox() {
+    val file = Studio.renderBlackBox(this)
+    if (file == null) { Toast.makeText(this, "Couldn't add the black box", Toast.LENGTH_SHORT).show(); return }
+    addSource(Studio.Source(Studio.newId(), "cover", "Black box", true, file.path, "", Color.BLACK, 5f, 5f, 18f, 1f))
+  }
+
+  private fun backdropMenu() {
+    val options = mutableListOf("Pick a screenshot...")
+    if (Studio.backdrop.isNotEmpty()) options.add("Remove the backdrop")
+    AlertDialog.Builder(this).setTitle("Preview backdrop").setMessage("Use a screenshot of your home screen behind the preview, so you can see where to put black boxes. It only shows here, never on the stream.")
+      .setItems(options.toTypedArray()) { _, i ->
+        if (i == 0) pickPicture("backdrop") { f -> Studio.backdrop = f.path; Studio.save(); preview.reload() }
+        else { Studio.backdrop = ""; Studio.save(); preview.reload() }
       }.show()
   }
+
+  // ---- size and place a picture, text, camera or black box
+
+  private fun canvasAspect() = if (preview.portrait) 9f / 16f else 16f / 9f
+
+  private fun sizeMenu() {
+    val s = preview.selected ?: return
+    if (s.kind == "screen" || s.kind == "game") return
+    val options = listOf<Pair<String, () -> Unit>>(
+      "Fit to the screen (keeps its shape)" to {
+        val ca = canvasAspect()
+        s.w = if (s.aspect >= ca) 100f else 100f * s.aspect / ca
+        s.x = (100f - s.w) / 2f; s.y = (100f - heightPct(s)) / 2f
+      },
+      "Stretch to fill the screen" to { s.w = 100f; s.aspect = canvasAspect(); s.x = 0f; s.y = 0f },
+      "Back to its own shape" to { s.aspect = Studio.naturalAspect(s) },
+      "Bigger" to { s.w = (s.w * 1.25f).coerceAtMost(400f) },
+      "Smaller" to { s.w = (s.w * 0.8f).coerceAtLeast(3f) },
+      "Centre" to { s.x = (100f - s.w) / 2f; s.y = (100f - heightPct(s)) / 2f },
+      "Top left" to { s.x = 3f; s.y = 3f },
+      "Top right" to { s.x = 97f - s.w; s.y = 3f },
+      "Bottom left" to { s.x = 3f; s.y = 97f - heightPct(s) },
+      "Bottom right" to { s.x = 97f - s.w; s.y = 97f - heightPct(s) },
+    )
+    AlertDialog.Builder(this).setTitle("Size and place").setItems(options.map { it.first }.toTypedArray()) { _, i ->
+      options[i].second()
+      Studio.save(); preview.reload(); refreshInfo()
+    }.show()
+  }
+
+  /** The source's height as a percent of the picture's height. */
+  private fun heightPct(s: Studio.Source) = s.w * canvasAspect() / s.aspect.coerceAtLeast(0.05f)
 
   private fun appLabel(pkg: String): String = try {
     packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
@@ -476,7 +552,12 @@ class MainActivity : Activity() {
 
   private fun refreshHint() {
     val g = Studio.scene().sources.firstOrNull { it.kind == "game" && it.visible }
-    preview.centerText = if (g != null) "GAME: " + g.name.uppercase() else "WHOLE SCREEN"
+    val screen = Studio.scene().sources.any { it.kind == "screen" && it.visible }
+    preview.centerText = when {
+      g != null -> "GAME: " + g.name.uppercase()
+      screen -> "HOME SCREEN"
+      else -> "NO SCREEN (BLACK)"
+    }
   }
 
   private fun withCamera(then: () -> Unit) {

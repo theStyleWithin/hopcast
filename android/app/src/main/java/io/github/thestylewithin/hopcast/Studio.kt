@@ -42,6 +42,9 @@ object Studio {
   val scenes = mutableListOf<Scene>()
   var activeScene = 0
   val blocked = linkedSetOf<String>()
+  /** A screenshot (for example of your home screen) shown behind the sources in the preview. */
+  var backdrop = ""
+  private var screenAdded = false
   /** A copy the app watcher can read from its own thread. */
   @Volatile var blockedFast: Set<String> = emptySet()
 
@@ -50,8 +53,13 @@ object Studio {
 
   fun newId(): String = UUID.randomUUID().toString().take(8)
 
+  /** Your whole screen: the home screen and every app. A scene shows no screen at all unless it has this or a Game. */
+  fun newScreenSource() = Source(newId(), "screen", "Home screen", true, "", "", Color.WHITE, 0f, 0f, 0f, 1f)
+
+  fun newScene(name: String) = Scene(newId(), name, mutableListOf(newScreenSource()))
+
   fun scene(): Scene {
-    if (scenes.isEmpty()) scenes.add(Scene(newId(), "Scene 1"))
+    if (scenes.isEmpty()) scenes.add(newScene("Scene 1"))
     activeScene = activeScene.coerceIn(0, scenes.size - 1)
     return scenes[activeScene]
   }
@@ -93,6 +101,8 @@ object Studio {
           }
         }
         activeScene = root.optInt("activeScene", 0)
+        backdrop = root.optString("backdrop", "")
+        screenAdded = root.optBoolean("screenAdded", false)
         root.optJSONArray("blocked")?.let { arr -> for (i in 0 until arr.length()) blocked.add(arr.getString(i)) }
       } catch (e: Exception) {
         // a damaged file starts fresh rather than stopping the app
@@ -109,6 +119,11 @@ object Studio {
     }
     blockedFast = blocked.toSet()
     scene()
+    if (!screenAdded) {
+      // earlier test builds always showed the screen; keep that by adding it as a source once
+      scenes.forEach { sc -> if (sc.sources.none { it.kind == "screen" || it.kind == "game" }) sc.sources.add(0, newScreenSource()) }
+      screenAdded = true
+    }
     save()
   }
 
@@ -135,6 +150,8 @@ object Studio {
         }
       })
       root.put("activeScene", activeScene)
+      root.put("backdrop", backdrop)
+      root.put("screenAdded", screenAdded)
       root.put("blocked", JSONArray().apply { blocked.forEach { put(it) } })
       File(dir, "studio.json").writeText(root.toString())
     } catch (e: Exception) {
@@ -196,6 +213,28 @@ object Studio {
     } catch (e: Exception) {
       null
     }
+  }
+
+  /** A plain black square, for covering part of the screen (an app icon and its name, for instance). */
+  fun renderBlackBox(context: Context): File? {
+    return try {
+      val bitmap = Bitmap.createBitmap(64, 64, Bitmap.Config.ARGB_8888)
+      Canvas(bitmap).drawColor(Color.BLACK)
+      val file = File(filesDir(context, "sources"), newId() + ".png")
+      FileOutputStream(file).use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+      file
+    } catch (e: Exception) {
+      null
+    }
+  }
+
+  /** The shape a source naturally has (width divided by height), used to undo a stretch. */
+  fun naturalAspect(s: Source): Float {
+    if (s.kind == "camera") return 480f / 360f
+    if (s.kind == "cover") return 1f
+    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeFile(s.file, bounds)
+    return if (bounds.outWidth > 0 && bounds.outHeight > 0) bounds.outWidth.toFloat() / bounds.outHeight else s.aspect
   }
 
   fun decode(path: String, maxSide: Int = 768): Bitmap? {
