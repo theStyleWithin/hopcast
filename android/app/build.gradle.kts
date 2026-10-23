@@ -6,7 +6,7 @@ plugins {
 val hopcastVersion = file("../../hopcast/VERSION").readText().trim()
 val versionParts = hopcastVersion.split(".").map { it.toInt() }
 val hopcastVersionName = versionParts.take(3).joinToString(".")
-val hopcastVersionCode = versionParts[0] * 10000 + versionParts[1] * 100 + versionParts[2]
+val hopcastVersionCode = versionParts[0] * 1_000_000 + versionParts[1] * 10_000 + versionParts[2] * 100 + versionParts[3]
 
 android {
   namespace = "io.github.thestylewithin.hopcast"

@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">HopCast</string>
-  <string name="watcher_name">HopCast app watcher</string>
-  <string name="watcher_description">HopCast uses this only to notice which app is on screen, so apps on your block list go black on the stream and the recording. It reads no content and sends nothing anywhere.</string>
 </resources>

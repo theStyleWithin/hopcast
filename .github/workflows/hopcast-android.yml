@@ -42,8 +42,8 @@ jobs:
           set -e
           V=$(tr -d '[:space:]' < hopcast/VERSION)
           VN=$(echo "$V" | cut -d. -f1-3)
-          IFS=. read -r A B C _ <<< "$V"
-          VC=$((A * 10000 + B * 100 + C))
+          IFS=. read -r A B C D <<< "$V"
+          VC=$((A * 1000000 + B * 10000 + C * 100 + D))
           mkdir -p out
           cp android/app/build/outputs/apk/release/app-release.apk "out/HopCast-android-$V.apk"
           ( cd out && sha256sum "HopCast-android-$V.apk" > SHA256SUMS-android )

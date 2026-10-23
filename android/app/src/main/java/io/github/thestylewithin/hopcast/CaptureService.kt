@@ -57,13 +57,14 @@ class CaptureService : Service() {
   private var bubble: Bubble? = null
   private var recordFile: File? = null
   private var finishing = false
+  private var watcher: AppWatcher? = null
 
   private val beginRunnable = Runnable { if (Live.waiting && !Live.appVisible) beginCapture() }
 
   /** Every second: if the block list has apps but the watcher got switched off, stay black rather than risk showing one. */
   private val watchdog = object : Runnable {
     override fun run() {
-      val down = Studio.blocked.isNotEmpty() && !BlockWatcher.enabled(this@CaptureService)
+      val down = Studio.blocked.isNotEmpty() && !AppWatcher.allowed(this@CaptureService)
       if (down != Live.watcherDown) {
         Live.watcherDown = down
         applyMute()
@@ -156,6 +157,7 @@ class CaptureService : Service() {
 
     Live.waiting = true
     main.post(watchdog)
+    if (Studio.blocked.isNotEmpty()) watcher = AppWatcher(applicationContext).also { it.start() }
     config?.let { cfg ->
       if (cfg.bubble && Settings.canDrawOverlays(this)) bubble = Bubble(this).also { it.show() }
     }
@@ -283,6 +285,8 @@ class CaptureService : Service() {
     finishing = true
     main.removeCallbacksAndMessages(null)
     Live.blocked = false
+    watcher?.stop()
+    watcher = null
     bubble?.hide()
     bubble = null
     val s = stream
@@ -377,7 +381,7 @@ class CaptureService : Service() {
 
   private fun statusLine(): String {
     val extra = when {
-      Live.watcherDown -> " The app watcher is off, so the picture is black."
+      Live.watcherDown -> " Usage access is off, so the picture is black."
       Live.blocked -> " A blocked app is on screen, so the picture is black."
       Live.hidden -> " Screen hidden."
       else -> ""

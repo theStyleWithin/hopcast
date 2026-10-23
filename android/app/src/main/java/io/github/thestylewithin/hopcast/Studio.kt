@@ -42,6 +42,8 @@ object Studio {
   val scenes = mutableListOf<Scene>()
   var activeScene = 0
   val blocked = linkedSetOf<String>()
+  /** A copy the app watcher can read from its own thread. */
+  @Volatile var blockedFast: Set<String> = emptySet()
 
   private var loaded = false
   private lateinit var dir: File
@@ -105,11 +107,13 @@ object Studio {
         prefs.setChannelKey(id, prefs.key)
       }
     }
+    blockedFast = blocked.toSet()
     scene()
     save()
   }
 
   fun save() {
+    blockedFast = blocked.toSet()
     try {
       val root = JSONObject()
       root.put("channels", JSONArray().apply {

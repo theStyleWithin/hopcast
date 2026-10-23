@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.net.Uri
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
@@ -86,8 +87,11 @@ class BlocklistActivity : Activity() {
     root.addView(status)
     enable = Button(this).apply {
       isAllCaps = false
-      text = "Turn on the HopCast app watcher"
-      setOnClickListener { startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
+      text = "Allow usage access (one tap)"
+      setOnClickListener {
+        try { startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS, Uri.parse("package:$packageName"))) }
+        catch (e: Exception) { startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)) }
+      }
       layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { setMargins(dp(18), 0, dp(18), dp(8)) }
     }
     root.addView(enable)
@@ -130,10 +134,10 @@ class BlocklistActivity : Activity() {
   }
 
   private fun refreshStatus() {
-    val on = BlockWatcher.enabled(this)
+    val on = AppWatcher.allowed(this)
     val n = Studio.blocked.size
     status.text = (if (n == 0) "No apps on the list yet. " else "$n app${if (n == 1) "" else "s"} on the list. ") +
-      if (on) "The app watcher is on." else "The app watcher is off, so nothing is hidden yet."
+      if (on) "HopCast can see which app is open, so these will be hidden." else "Usage access is off, so nothing is hidden yet. It only lets HopCast see which app is open, nothing inside it."
     enable.visibility = if (on) View.GONE else View.VISIBLE
   }
 }

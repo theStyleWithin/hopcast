@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -8,6 +9,8 @@
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
   <!-- only asked for when the microphone is switched on -->
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
+  <!-- lets HopCast see which app is open, for the app block list; switched on by you in Android settings -->
+  <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
   <!-- only for the floating bubble; HopCast works without it -->
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
@@ -39,19 +42,6 @@
         android:name=".BlocklistActivity"
         android:exported="false"
         android:screenOrientation="portrait" />
-
-    <service
-        android:name=".BlockWatcher"
-        android:exported="false"
-        android:label="@string/watcher_name"
-        android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-      <intent-filter>
-        <action android:name="android.accessibilityservice.AccessibilityService" />
-      </intent-filter>
-      <meta-data
-          android:name="android.accessibilityservice"
-          android:resource="@xml/block_watcher" />
-    </service>
 
     <service
         android:name=".CaptureService"

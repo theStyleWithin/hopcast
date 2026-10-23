@@ -536,11 +536,14 @@ class MainActivity : Activity() {
         .setPositiveButton("Got it") { _, _ -> prefs.warned = true; startCapture(stream) }.show()
       return
     }
-    if (Studio.blocked.isNotEmpty() && !BlockWatcher.enabled(this)) {
-      AlertDialog.Builder(this).setTitle("Turn on the app watcher")
-        .setMessage("Your block list has apps on it, but the HopCast app watcher is off, so they wouldn't be hidden. Turn it on in Accessibility settings, then tap again.")
+    if (Studio.blocked.isNotEmpty() && !AppWatcher.allowed(this)) {
+      AlertDialog.Builder(this).setTitle("Allow usage access")
+        .setMessage("Your block list has apps on it, but HopCast can't see which app is open yet, so they wouldn't be hidden. Android needs you to allow \"usage access\" once. It only shows HopCast which app is open, nothing inside it. Then tap again.")
         .setNegativeButton("Cancel", null)
-        .setPositiveButton("Open settings") { _, _ -> startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }.show()
+        .setPositiveButton("Allow") { _, _ ->
+          try { startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS, Uri.parse("package:$packageName"))) }
+          catch (e: Exception) { startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)) }
+        }.show()
       return
     }
     if (Build.VERSION.SDK_INT >= 33 && !askedNotifications && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
