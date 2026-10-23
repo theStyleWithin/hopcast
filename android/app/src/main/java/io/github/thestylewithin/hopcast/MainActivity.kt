@@ -476,7 +476,7 @@ class MainActivity : Activity() {
 
   private fun refreshHint() {
     val g = Studio.scene().sources.firstOrNull { it.kind == "game" && it.visible }
-    preview.hint = if (g != null) "GAME: " + g.name.uppercase() else "WHOLE SCREEN"
+    preview.centerText = if (g != null) "GAME: " + g.name.uppercase() else "WHOLE SCREEN"
   }
 
   private fun withCamera(then: () -> Unit) {

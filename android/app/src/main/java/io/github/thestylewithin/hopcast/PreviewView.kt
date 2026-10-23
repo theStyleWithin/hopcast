@@ -24,7 +24,7 @@ class PreviewView(context: Context) : View(context) {
   var selected: Studio.Source? = null
     set(value) { field = value; invalidate() }
   /** Shown in the middle of the preview: the whole screen, or the one game the stream is bound to. */
-  var hint = "WHOLE SCREEN"
+  var centerText = "WHOLE SCREEN"
     set(value) { field = value; invalidate() }
   var onSelect: (Studio.Source?) -> Unit = {}
   var onChanged: () -> Unit = {}
@@ -86,7 +86,7 @@ class PreviewView(context: Context) : View(context) {
     canvas.drawColor(Color.parseColor("#151515"))
     back.shader = LinearGradient(canvasRect.left, canvasRect.top, canvasRect.right, canvasRect.bottom, Color.parseColor("#12243b"), Color.parseColor("#3d2535"), Shader.TileMode.CLAMP)
     canvas.drawRect(canvasRect, back)
-    canvas.drawText(hint, canvasRect.centerX(), canvasRect.centerY(), hint)
+    canvas.drawText(centerText, canvasRect.centerX(), canvasRect.centerY(), hint)
     canvas.save()
     canvas.clipRect(canvasRect)
     Studio.scene().sources.filter { it.visible && it.kind != "game" }.forEach { s ->
