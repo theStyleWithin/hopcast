@@ -5,13 +5,17 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.DashPathEffect
+import android.graphics.ImageDecoder
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Shader
+import android.graphics.drawable.AnimatedImageDrawable
+import android.graphics.drawable.Drawable
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import java.io.File
 
 /**
  * Shows the stream's layout: your sources over a placeholder for your screen (HopCast can't show your real
@@ -32,6 +36,13 @@ class PreviewView(context: Context) : View(context) {
   private val density = resources.displayMetrics.density
   private val canvasRect = RectF()
   private val bitmaps = HashMap<String, Bitmap?>()
+  private val animations = HashMap<String, AnimatedImageDrawable?>()
+  // kept as a field: a drawable only holds its callback weakly
+  private val animationCallback = object : Drawable.Callback {
+    override fun invalidateDrawable(who: Drawable) { invalidate() }
+    override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) { postDelayed(what, `when` - android.os.SystemClock.uptimeMillis()) }
+    override fun unscheduleDrawable(who: Drawable, what: Runnable) { removeCallbacks(what) }
+  }
   private val back = Paint()
   private val hint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#77ffffff"); textAlign = Paint.Align.CENTER; textSize = 12f * density; letterSpacing = 0.1f }
   private val outline = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#effc35"); style = Paint.Style.STROKE; strokeWidth = 2f * density; pathEffect = DashPathEffect(floatArrayOf(10f, 8f), 0f) }
@@ -76,6 +87,36 @@ class PreviewView(context: Context) : View(context) {
     canvasRect.set(left, top, left + w, top + h)
   }
 
+  /** A GIF as a moving picture, so the preview shows it playing. Null if this phone can't play it; then the first frame shows. */
+  private fun animationFor(s: Studio.Source): AnimatedImageDrawable? {
+    if (animations.containsKey(s.file)) return animations[s.file]
+    val made: AnimatedImageDrawable? = try {
+      val d = ImageDecoder.decodeDrawable(ImageDecoder.createSource(File(s.file))) { decoder, info, _ ->
+        val sample = Math.max(1, Math.max(info.size.width, info.size.height) / 512)
+        decoder.setTargetSampleSize(sample)
+      }
+      (d as? AnimatedImageDrawable)?.also {
+        it.repeatCount = AnimatedImageDrawable.REPEAT_INFINITE
+        it.callback = animationCallback
+        it.start()
+      }
+    } catch (e: Exception) {
+      null
+    }
+    animations[s.file] = made
+    return made
+  }
+
+  override fun onDetachedFromWindow() {
+    animations.values.forEach { it?.stop() }
+    super.onDetachedFromWindow()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    animations.values.forEach { it?.start() }
+  }
+
   private fun bitmapFor(s: Studio.Source): Bitmap? = bitmaps.getOrPut(s.file) { Studio.decode(s.file) }
 
   private fun rectOf(s: Studio.Source): RectF {
@@ -107,7 +148,14 @@ class PreviewView(context: Context) : View(context) {
     canvas.save()
     canvas.clipRect(canvasRect)
     Studio.scene().sources.filter { it.visible && drawable(it) }.forEach { s ->
-      bitmapFor(s)?.let { canvas.drawBitmap(it, null, rectOf(s), bitmapPaint) }
+      val moving = if (s.kind == "gif") animationFor(s) else null
+      if (moving != null) {
+        val r = rectOf(s)
+        moving.setBounds(r.left.toInt(), r.top.toInt(), r.right.toInt(), r.bottom.toInt())
+        moving.draw(canvas)
+      } else {
+        bitmapFor(s)?.let { canvas.drawBitmap(it, null, rectOf(s), bitmapPaint) }
+      }
     }
     canvas.restore()
     selected?.takeIf { drawable(it) }?.let { s ->
