@@ -15,6 +15,7 @@ The owner's standing rules for this project. Follow them every session.
 ## Platforms behave the same
 
 - Keep the Linux, Windows and Android builds running as identically as possible. When a feature or fix lands on one platform, the others are owed it; where a platform can't do something (for example virtual camera or capture cards on Windows), say so plainly in the release text.
+- **One deliberate exception: the live-preview security check is Android-only.** A phone puts your whole life on screen and it is much harder to control what gets recorded, so HopCast for Android builds its own barriers: the app block list, the Game source (only one app is ever shown), black boxes, and the live-preview security check (tag app icons on your home screen before going live; HopCast keeps a black box over them). Desktop does not need these.
 - The owner tests only Linux and Android, for errors and viruses. Windows is checked by automated builds only, and its release notice says so.
 - Everyone should find their version on the one release page, with the same version number in every file name.
 
@@ -30,7 +31,7 @@ No nudges: no quick links, recommendations or invitations toward any platform or
 
 ## Android test device
 
-The owner tests the Android app on a RedMagic 8 Pro (Snapdragon 8 Gen 2, 12 to 16 GB RAM, 6.8 inch AMOLED at 2480x1116 and 120 Hz, no camera cutout because the front camera is under the display, built-in cooling fan, Android 13 at launch). Design and tune for that phone first: hardware video encoding (H.264 and HEVC), a long gaming session on a sustained load, and a tall 20:9 screen. Keep it working on older and slower phones too, but this is the one that gets tested.
+The owner tests the Android app on a RedMagic 8S Pro (model NX729J, Android 15 on RedMagic OS 10, Snapdragon 8 Gen 2, 16 GB RAM plus 10 GB virtual, 512 GB storage, 6.8 inch AMOLED at 2480x1116 and 120 Hz, no camera cutout because the front camera is under the display, built-in cooling fan). Design and tune for that phone first: hardware video encoding (H.264 and HEVC), a long gaming session on a sustained load, and a tall 20:9 screen. Keep it working on older and slower phones too, but this is the one that gets tested.
 
 ## Android as a second test point for streaming problems
 

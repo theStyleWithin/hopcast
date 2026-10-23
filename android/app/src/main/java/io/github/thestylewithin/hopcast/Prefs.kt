@@ -45,6 +45,11 @@ class Prefs(context: Context) {
     get() = sp.getInt("shape", 0)
     set(v) = sp.edit().putInt("shape", v).apply()
 
+  /** The live-preview security check was offered once before going live. */
+  var checkOffered: Boolean
+    get() = sp.getBoolean("checkOffered", false)
+    set(v) = sp.edit().putBoolean("checkOffered", v).apply()
+
   /** The one-time notice about what goes out live has been shown. */
   var warned: Boolean
     get() = sp.getBoolean("warned", false)
@@ -53,6 +58,17 @@ class Prefs(context: Context) {
   var key: String
     get() = decrypt(sp.getString("key", "") ?: "")
     set(v) = sp.edit().putString("key", encrypt(v)).apply()
+
+  /** Stream keys for the channels, each encrypted the same way. */
+  fun channelKey(id: String): String = decrypt(sp.getString("ck_$id", "") ?: "")
+
+  fun setChannelKey(id: String, key: String) {
+    sp.edit().putString("ck_$id", encrypt(key)).apply()
+  }
+
+  fun removeChannelKey(id: String) {
+    sp.edit().remove("ck_$id").apply()
+  }
 
   private fun secretKey(): SecretKey {
     val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
