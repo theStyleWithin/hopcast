@@ -200,21 +200,18 @@ class MainActivity : Activity() {
     val s = preview.selected
     infoText.text = when {
       s == null -> "No source selected. Tap one in the preview or the list."
-      s.kind == "game" -> "Game: the stream shows only ${s.name}"
+      s.kind == "game" -> "Game: the stream shows only ${s.name}. Tap My screen to see it here."
       s.kind == "screen" -> "Home screen: shows your whole screen, every app. Tap My screen to see yours here."
       s.kind == "cover" -> "Black box: drag to move, pinch or drag a corner to resize"
       else -> "${s.name}: drag to move, pinch to resize"
     }
-    val box = s != null && s.kind != "screen" && s.kind != "game"
-    screenButton.visibility = if (s?.kind == "screen") View.VISIBLE else View.GONE
-    sizeButton.visibility = if (s?.kind == "screen") View.GONE else View.VISIBLE
-    editButton.visibility = if (s?.kind == "screen") View.GONE else View.VISIBLE
-    sizeButton.isEnabled = box
-    editButton.isEnabled = s != null && s.kind != "screen"
-    removeButton.isEnabled = s != null
-    sizeButton.alpha = if (box) 1f else 0.4f
-    editButton.alpha = if (s != null && s.kind != "screen") 1f else 0.4f
-    removeButton.alpha = if (s != null) 1f else 0.4f
+    val base = s?.kind == "screen" || s?.kind == "game"
+    val box = s != null && !base
+    // only the buttons that do something for what is selected
+    screenButton.visibility = if (s == null || base) View.VISIBLE else View.GONE
+    sizeButton.visibility = if (box) View.VISIBLE else View.GONE
+    editButton.visibility = if (s != null && s.kind != "screen") View.VISIBLE else View.GONE
+    removeButton.visibility = if (s != null) View.VISIBLE else View.GONE
   }
 
   private fun refreshTabs() {
@@ -745,7 +742,7 @@ class MainActivity : Activity() {
       return
     }
     AlertDialog.Builder(this).setTitle(if (forBackground) "Picture of your screen" else "Live-preview security check")
-      .setMessage((if (forBackground) "Your real home screen shows with a small panel on top. Go anywhere you like, then open HopCast again: the Home screen source shows your screen live, without HopCast in it (while HopCast or a blocked app is in front it keeps showing the last picture of your screen). Tap Done on the panel when you're finished. For a still picture instead, tap \"Use my screen in the HopCast preview\" on the panel.\n\n" else "") + "Nothing goes out. HopCast shows your home screen with a small panel on top. Scroll to a page, tap \"Tag an app\", mark an app's icon and name, and HopCast keeps a black box over it wherever it appears, even when you move it. Tap Done when you've tagged everything.")
+      .setMessage((if (forBackground) "Your real screen shows with a small panel on top. Open your game (or go anywhere you like), then open HopCast again: the Home screen or Game source shows your screen as it was, without HopCast in it. It refreshes each time you come back. Tap Done on the panel when you're finished. For a still picture instead, tap \"Use my screen in the HopCast preview\" on the panel.\n\n" else "") + "Nothing goes out. HopCast shows your home screen with a small panel on top. Scroll to a page, tap \"Tag an app\", mark an app's icon and name, and HopCast keeps a black box over it wherever it appears, even when you move it. Tap Done when you've tagged everything.")
       .setNegativeButton("Cancel", null)
       .setPositiveButton("Start") { _, _ ->
         pendingStream = false

@@ -134,7 +134,7 @@ class PreviewView(context: Context) : View(context) {
     canvas.drawRect(canvasRect, back)
     if (Studio.backdrop != backdropPath) { backdropPath = Studio.backdrop; backdropBitmap = if (backdropPath.isNotEmpty()) Studio.decode(backdropPath, 1280) else null }
     // the live view of your screen (only while the check/live-view session runs) comes before a still backdrop
-    val live = if (Live.checking && Studio.scene().sources.any { it.kind == "screen" && it.visible }) Live.liveFrame else null
+    val live = if (Live.checking && Studio.scene().sources.any { (it.kind == "screen" || it.kind == "game") && it.visible }) Live.liveFrame else null
     val backdrop = live ?: backdropBitmap
     if (backdrop != null) {
       val sameShape = (backdrop.height > backdrop.width) == (canvasRect.height() > canvasRect.width())
