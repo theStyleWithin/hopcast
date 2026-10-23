@@ -33,6 +33,7 @@ class BlocklistActivity : Activity() {
   private lateinit var list: ListView
   private lateinit var status: TextView
   private lateinit var enable: Button
+  private var pickMode = false
 
   private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
@@ -57,8 +58,13 @@ class BlocklistActivity : Activity() {
       labels.addView(TextView(this@BlocklistActivity).apply { text = e.pkg; textSize = 11f; setTextColor(Color.parseColor("#8a8a8a")) })
       row.addView(labels)
       val box = CheckBox(this@BlocklistActivity).apply { isChecked = Studio.blocked.contains(e.pkg); isClickable = false; isFocusable = false }
-      row.addView(box)
+      if (!pickMode) row.addView(box)
       row.setOnClickListener {
+        if (pickMode) {
+          setResult(RESULT_OK, Intent().putExtra("pkg", e.pkg).putExtra("label", e.label))
+          finish()
+          return@setOnClickListener
+        }
         if (!Studio.blocked.add(e.pkg)) Studio.blocked.remove(e.pkg)
         Studio.save()
         box.isChecked = Studio.blocked.contains(e.pkg)
@@ -71,16 +77,17 @@ class BlocklistActivity : Activity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Studio.load(applicationContext)
+    pickMode = intent.getBooleanExtra("pick", false)
     window.statusBarColor = Color.parseColor("#272727")
     window.navigationBarColor = Color.parseColor("#272727")
 
     val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(Color.parseColor("#272727")) }
     root.addView(TextView(this).apply {
-      text = "App block list"; textSize = 22f; typeface = Typeface.DEFAULT_BOLD; setTextColor(Color.WHITE)
+      text = if (pickMode) "Pick your game" else "App block list"; textSize = 22f; typeface = Typeface.DEFAULT_BOLD; setTextColor(Color.WHITE)
       setPadding(dp(18), dp(24), dp(18), dp(4))
     })
     root.addView(TextView(this).apply {
-      text = "While you're live or recording, an app on this list goes black on the stream and in the recording the moment it is on screen, and comes back when you leave it."
+      text = if (pickMode) "The stream will show only this app. Anything else, including other apps and your home screen, stays black until you are back in it." else "While you're live or recording, an app on this list goes black on the stream and in the recording the moment it is on screen, and comes back when you leave it."
       textSize = 13f; setTextColor(Color.parseColor("#bdbdbd")); setPadding(dp(18), 0, dp(18), dp(10))
     })
     status = TextView(this).apply { textSize = 13f; setTextColor(Color.parseColor("#effc35")); setPadding(dp(18), 0, dp(18), dp(6)) }
@@ -135,6 +142,12 @@ class BlocklistActivity : Activity() {
 
   private fun refreshStatus() {
     val on = AppWatcher.allowed(this)
+    if (pickMode) {
+      status.text = if (on) "" else "Usage access is off, so HopCast can't tell when you're in the game yet. Allow it below, then pick."
+      status.visibility = if (on) View.GONE else View.VISIBLE
+      enable.visibility = if (on) View.GONE else View.VISIBLE
+      return
+    }
     val n = Studio.blocked.size
     status.text = (if (n == 0) "No apps on the list yet. " else "$n app${if (n == 1) "" else "s"} on the list. ") +
       if (on) "HopCast can see which app is open, so these will be hidden." else "Usage access is off, so nothing is hidden yet. It only lets HopCast see which app is open, nothing inside it."

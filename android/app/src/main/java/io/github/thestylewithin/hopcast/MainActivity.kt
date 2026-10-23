@@ -181,7 +181,7 @@ class MainActivity : Activity() {
   }
 
   private fun refreshAll() {
-    refreshChannels(); refreshShape(); refreshInfo(); refreshTabs(); refreshPanel(); refreshBottom()
+    refreshHint(); refreshChannels(); refreshShape(); refreshInfo(); refreshTabs(); refreshPanel(); refreshBottom()
   }
 
   private fun refreshShape() {
@@ -191,7 +191,11 @@ class MainActivity : Activity() {
 
   private fun refreshInfo() {
     val s = preview.selected
-    infoText.text = if (s == null) "No source selected. Tap one in the preview or the list." else "${s.name}: drag to move, pinch to resize"
+    infoText.text = when {
+      s == null -> "No source selected. Tap one in the preview or the list."
+      s.kind == "game" -> "Game: the stream shows only ${s.name}"
+      else -> "${s.name}: drag to move, pinch to resize"
+    }
     editButton.isEnabled = s != null
     removeButton.isEnabled = s != null
     editButton.alpha = if (s != null) 1f else 0.4f
@@ -325,9 +329,17 @@ class MainActivity : Activity() {
   private fun sourcesPanel(): View {
     val list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
     list.addView(header("Sources") { addSourceMenu() })
-    list.addView(sourceRow(null, "Whole screen: home screen and every app", "Always on"))
+    val bound = Studio.scene().sources.any { it.kind == "game" && it.visible }
+    list.addView(sourceRow(null, if (bound) "Whole screen (not used while a game is bound)" else "Whole screen: home screen and every app", if (bound) "Off" else "Always on"))
     Studio.scene().sources.reversed().forEach { s ->
-      list.addView(sourceRow(s, s.name + (if (s.kind == "text") " (text)" else if (s.kind == "gif") " (animated)" else if (s.kind == "camera") " (camera)" else " (image)"), if (s.visible) "Shown" else "Hidden"))
+      val title = when (s.kind) {
+        "game" -> "Game: ${s.name} (only this app)"
+        "text" -> s.name + " (text)"
+        "gif" -> s.name + " (animated)"
+        "camera" -> s.name + " (camera)"
+        else -> s.name + " (image)"
+      }
+      list.addView(sourceRow(s, title, if (s.visible) (if (s.kind == "game") "Bound" else "Shown") else "Hidden"))
     }
     return list
   }
@@ -342,13 +354,14 @@ class MainActivity : Activity() {
       scaleType = ImageView.ScaleType.CENTER_CROP
       layoutParams = LinearLayout.LayoutParams(dp(40), dp(26)).apply { rightMargin = dp(10) }
       if (s == null) background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(Color.parseColor("#12243b"), Color.parseColor("#3d2535")))
+      else if (s.kind == "game") { try { setImageDrawable(packageManager.getApplicationIcon(s.text)) } catch (e: Exception) { } }
       else Studio.decode(s.file, 96)?.let { setImageBitmap(it) }
     }
     row.addView(thumb)
     row.addView(label(title, 13f, Color.WHITE), LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
     row.addView(label(state, 12f, DIM).apply {
       setPadding(dp(10), dp(4), dp(4), dp(4))
-      if (s != null) setOnClickListener { s.visible = !s.visible; Studio.save(); preview.reload(); refreshPanel() }
+      if (s != null) setOnClickListener { s.visible = !s.visible; Studio.save(); preview.reload(); refreshHint(); refreshPanel() }
     })
     return row
   }
@@ -410,13 +423,60 @@ class MainActivity : Activity() {
 
   private fun addSourceMenu() {
     AlertDialog.Builder(this).setTitle("Add a source")
-      .setItems(arrayOf("Image (PNG, JPG, WebP)", "Animated picture (GIF)", "Text", "Camera")) { _, which ->
+      .setItems(arrayOf("Image (PNG, JPG, WebP)", "Animated picture (GIF)", "Text", "Camera", "Game (show only one app)")) { _, which ->
         when (which) {
           0, 1 -> pickPicture("sources") { f -> addPictureSource(f) }
           2 -> textSourceDialog(null)
-          else -> cameraMenu()
+          3 -> cameraMenu()
+          else -> gameMenu()
         }
       }.show()
+  }
+
+  private fun appLabel(pkg: String): String = try {
+    packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
+  } catch (e: Exception) {
+    pkg
+  }
+
+  /** Binds the stream to one app: only that app is ever shown; anything else stays black until you are back in it. */
+  private fun gameMenu() {
+    val last = AppWatcher.lastAppBeforeUs(this)
+    val items = mutableListOf<String>()
+    val actions = mutableListOf<() -> Unit>()
+    if (last != null) {
+      val label = appLabel(last)
+      items.add("The app you were just in: $label")
+      actions.add { setGame(last, label) }
+    }
+    items.add("Choose from my apps...")
+    actions.add {
+      @Suppress("DEPRECATION")
+      startActivityForResult(Intent(this, BlocklistActivity::class.java).putExtra("pick", true), REQ_GAME)
+    }
+    if (Studio.scene().sources.any { it.kind == "game" }) {
+      items.add("Show the whole screen instead")
+      actions.add {
+        Studio.scene().sources.removeAll { it.kind == "game" }
+        preview.selected = null; Studio.save(); refreshAll()
+      }
+    }
+    AlertDialog.Builder(this).setTitle("Game").setItems(items.toTypedArray()) { _, i -> actions[i]() }.show()
+  }
+
+  private fun setGame(pkg: String, label: String) {
+    Studio.scene().sources.removeAll { it.kind == "game" }
+    val game = Studio.Source(Studio.newId(), "game", label, true, "", pkg, Color.WHITE, 0f, 0f, 0f, 1f)
+    Studio.scene().sources.add(0, game)
+    preview.selected = null
+    Studio.save()
+    refreshAll()
+    Toast.makeText(this, "Bound to $label. Only it will show on the stream.", Toast.LENGTH_LONG).show()
+  }
+
+  private fun refreshHint() {
+    val g = Studio.scene().sources.firstOrNull { it.kind == "game" && it.visible }
+    preview.hint = if (g != null) "GAME: " + g.name.uppercase() else "WHOLE SCREEN"
   }
 
   private fun withCamera(then: () -> Unit) {
@@ -518,7 +578,8 @@ class MainActivity : Activity() {
 
   private fun editSelected() {
     val s = preview.selected ?: return
-    if (s.kind == "text") textSourceDialog(s)
+    if (s.kind == "game") gameMenu()
+    else if (s.kind == "text") textSourceDialog(s)
     else textDialog("Rename", "Name", s.name) { n -> s.name = n; Studio.save(); refreshInfo(); refreshPanel() }
   }
 
@@ -528,7 +589,7 @@ class MainActivity : Activity() {
       .setPositiveButton("Remove") { _, _ ->
         Studio.scene().sources.remove(s)
         if (File(s.file).absolutePath.contains("/sources/")) File(s.file).delete()
-        preview.selected = null; Studio.save(); preview.reload(); refreshInfo(); refreshPanel()
+        preview.selected = null; Studio.save(); preview.reload(); refreshHint(); refreshInfo(); refreshPanel()
       }.show()
   }
 
@@ -587,9 +648,9 @@ class MainActivity : Activity() {
         .setPositiveButton("Got it") { _, _ -> prefs.warned = true; startCapture(stream) }.show()
       return
     }
-    if (Studio.blocked.isNotEmpty() && !AppWatcher.allowed(this)) {
+    if ((Studio.blocked.isNotEmpty() || Studio.scene().sources.any { it.kind == "game" && it.visible }) && !AppWatcher.allowed(this)) {
       AlertDialog.Builder(this).setTitle("Allow usage access")
-        .setMessage("Your block list has apps on it, but HopCast can't see which app is open yet, so they wouldn't be hidden. Android needs you to allow \"usage access\" once. It only shows HopCast which app is open, nothing inside it. Then tap again.")
+        .setMessage("HopCast needs to see which app is open to keep other apps off the stream (your block list or your game). Android needs you to allow \"usage access\" once. It only shows HopCast which app is open, nothing inside it. Then tap again.")
         .setNegativeButton("Cancel", null)
         .setPositiveButton("Allow") { _, _ ->
           try { startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS, Uri.parse("package:$packageName"))) }
@@ -653,6 +714,11 @@ class MainActivity : Activity() {
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     @Suppress("DEPRECATION")
     super.onActivityResult(requestCode, resultCode, data)
+    if (requestCode == REQ_GAME) {
+      val pkg = data?.getStringExtra("pkg")
+      if (resultCode == RESULT_OK && pkg != null) setGame(pkg, data?.getStringExtra("label") ?: appLabel(pkg))
+      return
+    }
     if (requestCode == REQ_PICK) {
       val uri = data?.data
       val callback = pendingPick
@@ -727,6 +793,7 @@ class MainActivity : Activity() {
     const val REQ_MIC = 3
     const val REQ_MIC_TOGGLE = 4
     const val REQ_PICK = 5
+    const val REQ_GAME = 7
     const val REQ_CAMERA = 6
   }
 }

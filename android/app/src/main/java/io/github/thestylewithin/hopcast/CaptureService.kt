@@ -69,7 +69,7 @@ class CaptureService : Service() {
   /** Every second: if the block list has apps but the watcher got switched off, stay black rather than risk showing one. */
   private val watchdog = object : Runnable {
     override fun run() {
-      val down = Studio.blocked.isNotEmpty() && !AppWatcher.allowed(this@CaptureService)
+      val down = (Studio.blocked.isNotEmpty() || Live.gamePackage.isNotEmpty()) && !AppWatcher.allowed(this@CaptureService)
       if (down != Live.watcherDown) {
         Live.watcherDown = down
         applyMute()
@@ -134,6 +134,7 @@ class CaptureService : Service() {
     )
     Studio.load(applicationContext)
     Live.reset()
+    Live.gamePackage = Studio.scene().sources.firstOrNull { it.kind == "game" && it.visible }?.text.orEmpty()
     Live.micOn = intent.getBooleanExtra("mic", false)
     Live.status = ""
     instance = this
@@ -166,7 +167,7 @@ class CaptureService : Service() {
 
     Live.waiting = true
     main.post(watchdog)
-    if (Studio.blocked.isNotEmpty()) watcher = AppWatcher(applicationContext).also { it.start() }
+    if (Studio.blocked.isNotEmpty() || Live.gamePackage.isNotEmpty()) watcher = AppWatcher(applicationContext).also { it.start() }
     config?.let { cfg ->
       if (cfg.bubble && Settings.canDrawOverlays(this)) bubble = Bubble(this).also { it.show() }
     }
@@ -228,7 +229,7 @@ class CaptureService : Service() {
     val gl = s.getGlInterface()
     val canvasAspect = if (portrait) 9f / 16f else 16f / 9f
     for (src in Studio.scene().sources) {
-      if (!src.visible || !File(src.file).exists()) continue
+      if (!src.visible || src.kind == "game" || !File(src.file).exists()) continue
       try {
         if (src.kind == "camera") {
           val picture = ImageFilterRender().also { it.setImage(Studio.decode(src.file, 1024)) }
@@ -422,6 +423,7 @@ class CaptureService : Service() {
   private fun statusLine(): String {
     val extra = when {
       Live.watcherDown -> " Usage access is off, so the picture is black."
+      Live.blocked && Live.gamePackage.isNotEmpty() -> " You're not in your game, so the picture is black."
       Live.blocked -> " A blocked app is on screen, so the picture is black."
       Live.hidden -> " Screen hidden."
       else -> ""

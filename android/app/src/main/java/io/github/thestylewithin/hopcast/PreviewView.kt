@@ -23,6 +23,9 @@ class PreviewView(context: Context) : View(context) {
     set(value) { field = value; requestLayout(); invalidate() }
   var selected: Studio.Source? = null
     set(value) { field = value; invalidate() }
+  /** Shown in the middle of the preview: the whole screen, or the one game the stream is bound to. */
+  var hint = "WHOLE SCREEN"
+    set(value) { field = value; invalidate() }
   var onSelect: (Studio.Source?) -> Unit = {}
   var onChanged: () -> Unit = {}
 
@@ -83,10 +86,10 @@ class PreviewView(context: Context) : View(context) {
     canvas.drawColor(Color.parseColor("#151515"))
     back.shader = LinearGradient(canvasRect.left, canvasRect.top, canvasRect.right, canvasRect.bottom, Color.parseColor("#12243b"), Color.parseColor("#3d2535"), Shader.TileMode.CLAMP)
     canvas.drawRect(canvasRect, back)
-    canvas.drawText("WHOLE SCREEN", canvasRect.centerX(), canvasRect.centerY(), hint)
+    canvas.drawText(hint, canvasRect.centerX(), canvasRect.centerY(), hint)
     canvas.save()
     canvas.clipRect(canvasRect)
-    Studio.scene().sources.filter { it.visible }.forEach { s ->
+    Studio.scene().sources.filter { it.visible && it.kind != "game" }.forEach { s ->
       bitmapFor(s)?.let { canvas.drawBitmap(it, null, rectOf(s), bitmapPaint) }
     }
     canvas.restore()
@@ -99,7 +102,7 @@ class PreviewView(context: Context) : View(context) {
   }
 
   private fun hit(x: Float, y: Float): Studio.Source? =
-    Studio.scene().sources.filter { it.visible }.lastOrNull { rectOf(it).contains(x, y) }
+    Studio.scene().sources.filter { it.visible && it.kind != "game" }.lastOrNull { rectOf(it).contains(x, y) }
 
   override fun onTouchEvent(e: MotionEvent): Boolean {
     scaler.onTouchEvent(e)

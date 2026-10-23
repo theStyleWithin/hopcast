@@ -25,6 +25,8 @@ object Live {
   @Volatile var foreground = ""
   /** An app on the block list is on screen: viewers and the recording see black. */
   @Volatile var blocked = false
+  /** When set, only this app is ever shown on the stream and in the recording (the "Game" source). */
+  @Volatile var gamePackage = ""
   /** The block list has apps but the watcher is switched off, so the picture stays black to be safe. */
   @Volatile var watcherDown = false
 
@@ -39,6 +41,6 @@ object Live {
 
   fun reset() {
     running = false; waiting = false; hidden = false; micOn = false; streaming = false; recordOnly = false; startedMs = 0L
-    blocked = false; watcherDown = false; foreground = ""
+    blocked = false; watcherDown = false; foreground = ""; gamePackage = ""
   }
 }

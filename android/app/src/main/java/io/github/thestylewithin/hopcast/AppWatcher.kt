@@ -64,7 +64,8 @@ class AppWatcher(private val context: Context) {
     lastQuery = now
     val pkg = front ?: return
     if (pkg == context.packageName || pkg == "com.android.systemui" || pkg in keyboards) return
-    val blocked = Studio.blockedFast.contains(pkg)
+    val game = Live.gamePackage
+    val blocked = if (game.isNotEmpty()) pkg != game else Studio.blockedFast.contains(pkg)
     if (Live.foreground != pkg || Live.blocked != blocked) {
       Live.foreground = pkg
       Live.blocked = blocked
@@ -74,6 +75,32 @@ class AppWatcher(private val context: Context) {
 
   companion object {
     private const val POLL_MS = 120L
+
+    /** The app you were in just before opening HopCast (a likely game), as its package name, or null. */
+    fun lastAppBeforeUs(context: Context): String? {
+      if (!allowed(context)) return null
+      return try {
+        val usage = context.getSystemService(UsageStatsManager::class.java)
+        val keyboards = context.getSystemService(InputMethodManager::class.java)?.enabledInputMethodList?.map { it.packageName }?.toSet() ?: emptySet()
+        val launcher = android.content.Intent(android.content.Intent.ACTION_MAIN).addCategory(android.content.Intent.CATEGORY_HOME)
+        @Suppress("DEPRECATION")
+        val homes = context.packageManager.queryIntentActivities(launcher, 0).map { it.activityInfo.packageName }.toSet()
+        val now = System.currentTimeMillis()
+        val events = usage.queryEvents(now - 6 * 3600_000L, now)
+        val e = UsageEvents.Event()
+        var last: String? = null
+        while (events.hasNextEvent()) {
+          events.getNextEvent(e)
+          if (e.eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
+            val p = e.packageName
+            if (p != context.packageName && p != "com.android.systemui" && p !in keyboards && p !in homes) last = p
+          }
+        }
+        last
+      } catch (ex: Exception) {
+        null
+      }
+    }
 
     /** Whether the user has switched on "usage access" for HopCast. */
     fun allowed(context: Context): Boolean {
