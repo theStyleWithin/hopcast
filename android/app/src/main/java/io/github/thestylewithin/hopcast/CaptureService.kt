@@ -302,6 +302,9 @@ class CaptureService : Service() {
 
   fun probe(): ProbeFilterRender? = probeFilter
 
+  /** How many tagged apps the tracker is covering on the screen right now. */
+  fun tagsFollowed(): Int = trackerObj?.followed ?: 0
+
   /** One picture of what viewers would get right now, black boxes included. */
   fun viewerPicture(callback: (Bitmap) -> Unit) {
     stream?.getGlInterface()?.takePhoto { bitmap -> callback(bitmap) }

@@ -135,7 +135,14 @@ class CheckOverlay(private val context: Context, private val service: CaptureSer
   }
 
   private fun saveTag(view: FrozenEditorView, bitmap: Bitmap) {
-    val r = view.boxInBitmap()
+    val raw = view.boxInBitmap()
+    if (raw.width() < 12 || raw.height() < 12) { Toast.makeText(context, "Tap the app first", Toast.LENGTH_SHORT).show(); return }
+    // snap to the tracker's grid, so the saved picture lines up with what it sees later
+    val g = ProbeFilterRender.STEP
+    val r = Rect(
+      raw.left / g * g, raw.top / g * g,
+      Math.min(bitmap.width / g * g, (raw.right + g - 1) / g * g), Math.min(bitmap.height / g * g, (raw.bottom + g - 1) / g * g),
+    )
     if (r.width() < 12 || r.height() < 12) { Toast.makeText(context, "Tap the app first", Toast.LENGTH_SHORT).show(); return }
     val crop = Bitmap.createBitmap(bitmap, r.left, r.top, r.width(), r.height())
     if (!lookDistinct(crop)) {
@@ -176,7 +183,13 @@ class CheckOverlay(private val context: Context, private val service: CaptureSer
         closeFull()
         val root = FrameLayout(context).apply { setBackgroundColor(Color.BLACK); setOnClickListener { closeFull() } }
         root.addView(ImageView(context).apply { setImageBitmap(bitmap); scaleType = ImageView.ScaleType.FIT_CENTER }, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-        root.addView(text("What viewers would see. Tap to close.", 13f, Color.WHITE).apply { setBackgroundColor(Color.parseColor("#cc000000")); setPadding(dp(12), dp(40), dp(12), dp(8)) },
+        val total = Studio.tags.size
+        val covered = service.tagsFollowed()
+        val line = when {
+          total == 0 -> "No apps tagged yet."
+          else -> "$covered black box${if (covered == 1) "" else "es"} on this page, $total app${if (total == 1) "" else "s"} tagged in all (the rest are on other pages, or HopCast can't find them)."
+        }
+        root.addView(text("What viewers would see. Tap to close.\n$line", 13f, Color.WHITE).apply { setBackgroundColor(Color.parseColor("#cc000000")); setPadding(dp(12), dp(40), dp(12), dp(8)) },
           FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.TOP))
         full = root
         try { wm.addView(root, params(true)) } catch (e: Exception) { full = null }

@@ -14,7 +14,7 @@ class TagTracker(private val onResult: (List<Hit>, Boolean) -> Unit) {
   /** Where a tagged app is: left, top, width, height, as percents of the picture. */
   class Hit(val tag: Studio.Tag, val x: Float, val y: Float, val w: Float, val h: Float)
 
-  private class Template(val tag: Studio.Tag, val w: Int, val h: Int, val px: ByteArray, var lastX: Int = -1, var lastY: Int = -1, var seenMs: Long = 0)
+  private class Template(val tag: Studio.Tag, val w: Int, val h: Int, val px: ByteArray, var lastX: Int = -1, var lastY: Int = -1, var seenMs: Long = 0, var scannedMs: Long = 0)
 
   private val thread = HandlerThread("hopcast-tracker").apply { start() }
   private val handler = Handler(thread.looper)
@@ -22,6 +22,10 @@ class TagTracker(private val onResult: (List<Hit>, Boolean) -> Unit) {
   private var builtFor = 0
   private var previous: ByteArray? = null
   private var movingUntil = 0L
+  private var lastMotionMs = 0L
+  /** How many tagged apps were found on the screen in the last look. */
+  @Volatile var followed = 0
+    private set
   @Volatile private var busy = false
   @Volatile private var stale = true
 
@@ -44,17 +48,30 @@ class TagTracker(private val onResult: (List<Hit>, Boolean) -> Unit) {
   private fun build(gw: Int, step: Int) {
     val frameW = gw * step
     templates = Studio.tags.mapNotNull { tag ->
-      val bitmap = Studio.decode(tag.file, 4096) ?: return@mapNotNull null
+      var bitmap = Studio.decode(tag.file, 4096) ?: return@mapNotNull null
       val scale = if (tag.frameW > 0) frameW.toFloat() / tag.frameW else 1f
-      val tw = Math.max(4, Math.round(bitmap.width * scale / step))
-      val th = Math.max(4, Math.round(bitmap.height * scale / step))
-      val small = Bitmap.createScaledBitmap(bitmap, tw, th, true)
+      if (Math.abs(scale - 1f) > 0.01f) {
+        bitmap = Bitmap.createScaledBitmap(bitmap, Math.max(step, Math.round(bitmap.width * scale)), Math.max(step, Math.round(bitmap.height * scale)), true)
+      }
+      // the same step x step block averages the probe makes, so the two compare fairly
+      val tw = bitmap.width / step
+      val th = bitmap.height / step
+      if (tw < 2 || th < 2) return@mapNotNull null
+      val ints = IntArray(bitmap.width * bitmap.height)
+      bitmap.getPixels(ints, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
       val px = ByteArray(tw * th)
-      val ints = IntArray(tw * th)
-      small.getPixels(ints, 0, tw, 0, 0, tw, th)
-      for (i in ints.indices) {
-        val c = ints[i]
-        px[i] = ((((c shr 16) and 0xff) * 77 + ((c shr 8) and 0xff) * 150 + (c and 0xff) * 29) shr 8).toByte()
+      for (by in 0 until th) {
+        for (bx in 0 until tw) {
+          var sum = 0
+          for (dy in 0 until step) {
+            var i = (by * step + dy) * bitmap.width + bx * step
+            for (dx in 0 until step) {
+              val c = ints[i++]
+              sum += ((((c shr 16) and 0xff) * 77 + ((c shr 8) and 0xff) * 150 + (c and 0xff) * 29) shr 8)
+            }
+          }
+          px[by * tw + bx] = (sum / (step * step)).toByte()
+        }
       }
       Template(tag, tw, th, px)
     }
@@ -75,7 +92,7 @@ class TagTracker(private val onResult: (List<Hit>, Boolean) -> Unit) {
           if (Math.abs((grey[i].toInt() and 0xff) - (prev[i].toInt() and 0xff)) > 24) changed++
           i += 3
         }
-        if (changed * 3 > grey.size * 0.30) movingUntil = now + 350
+        if (changed * 3 > grey.size * 0.30) { movingUntil = now + 350; lastMotionMs = now }
       }
     }
     previous = grey
@@ -86,7 +103,10 @@ class TagTracker(private val onResult: (List<Hit>, Boolean) -> Unit) {
     for (t in templates) {
       if (gw < t.w || gh < t.h) continue
       var pos = if (t.lastX >= 0) find(grey, gw, gh, t, Math.max(0, t.lastX - 10), Math.max(0, t.lastY - 10), Math.min(gw - t.w, t.lastX + 10), Math.min(gh - t.h, t.lastY + 10), 1) else null
-      if (pos == null) pos = find(grey, gw, gh, t, 0, 0, gw - t.w, gh - t.h, 2)
+      if (pos == null && (t.lastX >= 0 || now - lastMotionMs < 1500 || now - t.scannedMs > 600)) {
+        t.scannedMs = now
+        pos = find(grey, gw, gh, t, 0, 0, gw - t.w, gh - t.h, 2)
+      }
       if (pos != null) {
         t.lastX = pos.first; t.lastY = pos.second; t.seenMs = now
       } else if (now - t.seenMs > 300) {
@@ -99,6 +119,7 @@ class TagTracker(private val onResult: (List<Hit>, Boolean) -> Unit) {
         hits.add(Hit(t.tag, (t.lastX - padX) * step / frameW * 100f, (t.lastY - padY) * step / frameH * 100f, (t.w + padX * 2) * step / frameW * 100f, (t.h + padY * 2) * step / frameH * 100f))
       }
     }
+    followed = hits.size
     onResult(hits, now < movingUntil)
   }
 
@@ -137,6 +158,6 @@ class TagTracker(private val onResult: (List<Hit>, Boolean) -> Unit) {
 
   private companion object {
     /** How different (grey levels per pixel, on average) a spot may be and still count as the tagged app. */
-    const val THRESHOLD = 14f
+    const val THRESHOLD = 20f
   }
 }

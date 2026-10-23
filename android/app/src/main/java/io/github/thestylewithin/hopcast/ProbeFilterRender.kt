@@ -40,7 +40,8 @@ class ProbeFilterRender(
   @Volatile private var snapshotWanted: ((Bitmap) -> Unit)? = null
   @Volatile var intervalMs = 110L
   /** How many full-size pixels make one grey pixel. */
-  var step = 4
+  var step = STEP
+  private var rgba: ByteArray? = null
 
   init {
     squareVertex = ByteBuffer.allocateDirect(vertexData.size * FLOAT_SIZE_BYTES).order(ByteOrder.nativeOrder()).asFloatBuffer()
@@ -125,20 +126,35 @@ class ProbeFilterRender(
       main.post { wantSnapshot(bitmap) }
     }
 
+    // every grey pixel is the average of a step x step block, so it matches the tag pictures (cut on the same grid)
+    // even when an icon sits a pixel or two off from where it was tagged
+    var bytes = rgba
+    if (bytes == null || bytes.size != w * h * 4) { bytes = ByteArray(w * h * 4); rgba = bytes }
+    buf.rewind()
+    buf.get(bytes)
     val s = step
     val gw = w / s
     val gh = h / s
     val grey = ByteArray(gw * gh)
+    val area = s * s
     for (gy in 0 until gh) {
-      val srcRow = h - 1 - gy * s // top row first
       for (gx in 0 until gw) {
-        val i = (srcRow * w + gx * s) * 4
-        val r = buf.get(i).toInt() and 0xff
-        val g = buf.get(i + 1).toInt() and 0xff
-        val b = buf.get(i + 2).toInt() and 0xff
-        grey[gy * gw + gx] = ((r * 77 + g * 150 + b * 29) shr 8).toByte()
+        var sum = 0
+        for (dy in 0 until s) {
+          var i = ((h - 1 - (gy * s + dy)) * w + gx * s) * 4 // top row first
+          for (dx in 0 until s) {
+            sum += ((bytes[i].toInt() and 0xff) * 77 + (bytes[i + 1].toInt() and 0xff) * 150 + (bytes[i + 2].toInt() and 0xff) * 29) shr 8
+            i += 4
+          }
+        }
+        grey[gy * gw + gx] = (sum / area).toByte()
       }
     }
     onGrey(grey, gw, gh, s)
+  }
+
+  companion object {
+    /** Full-size pixels per grey pixel. Tag pictures are cut on this grid so they line up with the grey pictures. */
+    const val STEP = 4
   }
 }
