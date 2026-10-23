@@ -45,6 +45,11 @@ class Prefs(context: Context) {
     get() = sp.getInt("shape", 0)
     set(v) = sp.edit().putInt("shape", v).apply()
 
+  /** The live-preview security check was offered once before going live. */
+  var checkOffered: Boolean
+    get() = sp.getBoolean("checkOffered", false)
+    set(v) = sp.edit().putBoolean("checkOffered", v).apply()
+
   /** The one-time notice about what goes out live has been shown. */
   var warned: Boolean
     get() = sp.getBoolean("warned", false)

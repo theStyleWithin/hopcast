@@ -38,6 +38,11 @@ object Studio {
 
   class Scene(val id: String, var name: String, val sources: MutableList<Source> = mutableListOf())
 
+  /** An app (its icon and name) tagged in the live-preview security check. The picture is cut from your screen. */
+  class Tag(val id: String, var name: String, val file: String, val w: Int, val h: Int, val frameW: Int, val frameH: Int)
+
+  val tags = mutableListOf<Tag>()
+
   val channels = mutableListOf<Channel>()
   val scenes = mutableListOf<Scene>()
   var activeScene = 0
@@ -100,6 +105,12 @@ object Studio {
             scenes.add(scene)
           }
         }
+        root.optJSONArray("tags")?.let { arr ->
+          for (i in 0 until arr.length()) {
+            val o = arr.getJSONObject(i)
+            tags.add(Tag(o.getString("id"), o.optString("name"), o.optString("file"), o.optInt("w"), o.optInt("h"), o.optInt("frameW"), o.optInt("frameH")))
+          }
+        }
         activeScene = root.optInt("activeScene", 0)
         backdrop = root.optString("backdrop", "")
         screenAdded = root.optBoolean("screenAdded", false)
@@ -148,6 +159,9 @@ object Studio {
             }
           }))
         }
+      })
+      root.put("tags", JSONArray().apply {
+        tags.forEach { t -> put(JSONObject().put("id", t.id).put("name", t.name).put("file", t.file).put("w", t.w).put("h", t.h).put("frameW", t.frameW).put("frameH", t.frameH)) }
       })
       root.put("activeScene", activeScene)
       root.put("backdrop", backdrop)

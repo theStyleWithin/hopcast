@@ -17,6 +17,10 @@ object Live {
   @Volatile var streaming = false
   /** Recording only, not streaming (the Rec button). */
   @Volatile var recordOnly = false
+  /** The live-preview security check is running: your screen shows as normal and nothing goes out. */
+  @Volatile var checking = false
+  /** The home screen is sliding around (a swipe), so the picture is black for a moment. */
+  @Volatile var moving = false
   @Volatile var startedMs = 0L
   /** HopCast's own screen is showing. It is never shown on the stream. */
   @Volatile var appVisible = false
@@ -42,7 +46,7 @@ object Live {
   fun changed() { main.post { listeners.forEach { it() } } }
 
   fun reset() {
-    running = false; waiting = false; hidden = false; micOn = false; streaming = false; recordOnly = false; startedMs = 0L
+    running = false; waiting = false; hidden = false; micOn = false; streaming = false; recordOnly = false; checking = false; moving = false; startedMs = 0L
     blocked = false; watcherDown = false; foreground = ""; gamePackage = ""
   }
 }

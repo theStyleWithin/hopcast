@@ -34,6 +34,7 @@ import com.pedro.encoder.input.gl.render.filters.`object`.ImageFilterRender
 import com.pedro.encoder.input.sources.video.ScreenSource
 import com.pedro.library.generic.GenericStream
 import android.graphics.Bitmap
+import android.content.Intent as AppIntent
 import java.io.File
 import java.io.FileInputStream
 import java.text.SimpleDateFormat
@@ -60,6 +61,12 @@ class CaptureService : Service() {
   private var finishing = false
   private var watcher: AppWatcher? = null
   private var cover: ImageFilterRender? = null
+  private var probeFilter: ProbeFilterRender? = null
+  private var trackerObj: TagTracker? = null
+  private val tagBoxes = mutableMapOf<String, ImageFilterRender>()
+  private var checkOverlay: CheckOverlay? = null
+  private var homePackages: Set<String> = emptySet()
+  private var awaitTracker = false
 
   /** A camera on screen: which source it belongs to, the picture it draws into, and the running camera. */
   private class CameraHandle(val src: Studio.Source, val filter: ImageFilterRender, var feed: CameraFeed)
@@ -131,10 +138,11 @@ class CaptureService : Service() {
       quality = intent.getIntExtra("quality", 0),
       shape = intent.getIntExtra("shape", 0),
       bubble = intent.getBooleanExtra("bubble", true),
-      stream = intent.getBooleanExtra("stream", true),
+      stream = intent.getBooleanExtra("stream", true) && !intent.getBooleanExtra("check", false),
     )
     Studio.load(applicationContext)
     Live.reset()
+    Live.checking = intent.getBooleanExtra("check", false)
     Live.gamePackage = Studio.scene().sources.firstOrNull { it.kind == "game" && it.visible }?.text.orEmpty()
     Live.hasBase = Studio.scene().sources.any { it.visible && (it.kind == "screen" || it.kind == "game") }
     Live.micOn = intent.getBooleanExtra("mic", false)
@@ -171,7 +179,7 @@ class CaptureService : Service() {
     main.post(watchdog)
     if (Studio.blocked.isNotEmpty() || Live.gamePackage.isNotEmpty()) watcher = AppWatcher(applicationContext).also { it.start() }
     config?.let { cfg ->
-      if (cfg.bubble && Settings.canDrawOverlays(this)) bubble = Bubble(this).also { it.show() }
+      if (cfg.bubble && !Live.checking && Settings.canDrawOverlays(this)) bubble = Bubble(this).also { it.show() }
     }
     refresh()
     if (!Live.appVisible) main.postDelayed(beginRunnable, SETTLE_MS)
@@ -208,7 +216,8 @@ class CaptureService : Service() {
         return
       }
       stream = s
-      applySources(s, portrait)
+      if (!Live.checking) applySources(s, portrait)
+      if (Live.checking || Studio.tags.isNotEmpty()) installTracking(s)
       applyMute()
       val file = newRecordFile()
       recordFile = file
@@ -219,6 +228,7 @@ class CaptureService : Service() {
       Live.streaming = false
       Live.recordOnly = !cfg.stream
       if (cfg.stream) s.startStream(endpoint(cfg))
+      if (Live.checking && Settings.canDrawOverlays(this)) checkOverlay = CheckOverlay(this, this).also { it.show() }
       refresh()
     } catch (e: Exception) {
       Live.status = "Couldn't start: ${clean(e.message ?: e.javaClass.simpleName)}"
@@ -279,8 +289,75 @@ class CaptureService : Service() {
 
   /** The block-list watcher saw an app on the list come on screen, or go away. */
   fun onBlockChanged() {
+    // back on the home screen with tagged apps: stay black until the tracker has looked once
+    if (Studio.tags.isNotEmpty() && !Live.checking && Live.foreground in homePackages) {
+      awaitTracker = true
+      Live.moving = true
+    }
     applyMute()
     refresh()
+  }
+
+  // ---- the live-preview security check: tagged apps get a black box that follows them
+
+  fun probe(): ProbeFilterRender? = probeFilter
+
+  /** One picture of what viewers would get right now, black boxes included. */
+  fun viewerPicture(callback: (Bitmap) -> Unit) {
+    stream?.getGlInterface()?.takePhoto { bitmap -> callback(bitmap) }
+  }
+
+  fun onTagsChanged() {
+    val gl = stream?.getGlInterface() ?: return
+    Studio.tags.filter { it.id !in tagBoxes }.forEach { addTagBox(gl, it) }
+    trackerObj?.reload()
+  }
+
+  private fun addTagBox(gl: com.pedro.library.view.GlInterface, tag: Studio.Tag) {
+    val black = Bitmap.createBitmap(8, 8, Bitmap.Config.ARGB_8888).apply { eraseColor(android.graphics.Color.BLACK) }
+    val box = ImageFilterRender()
+    box.setImage(black)
+    box.alpha = 0f
+    box.setScale(1f, 1f)
+    box.setPosition(0f, 0f)
+    gl.addFilter(box)
+    tagBoxes[tag.id] = box
+  }
+
+  private fun trackingWanted(): Boolean =
+    Live.checking || Live.foreground.isEmpty() || Live.foreground in homePackages
+
+  private fun installTracking(s: GenericStream) {
+    val gl = s.getGlInterface()
+    val launcher = AppIntent(AppIntent.ACTION_MAIN).addCategory(AppIntent.CATEGORY_HOME)
+    @Suppress("DEPRECATION")
+    homePackages = packageManager.queryIntentActivities(launcher, 0).map { it.activityInfo.packageName }.toSet()
+    val tracker = TagTracker { hits, moving -> main.post { onTrackerResult(hits, moving) } }
+    val probe = ProbeFilterRender { grey, gw, gh, step -> if (trackingWanted()) tracker.onGrey(grey, gw, gh, step) }
+    gl.addFilter(0, probe) // first, so it sees your screen before any black box is drawn
+    probeFilter = probe
+    trackerObj = tracker
+    Studio.tags.forEach { addTagBox(gl, it) }
+  }
+
+  private fun onTrackerResult(hits: List<TagTracker.Hit>, moving: Boolean) {
+    val active = trackingWanted()
+    for ((id, box) in tagBoxes) {
+      val hit = if (active) hits.firstOrNull { it.tag.id == id } else null
+      if (hit != null) {
+        box.setScale(hit.w, hit.h)
+        box.setPosition(hit.x, hit.y)
+        box.alpha = 1f
+      } else {
+        box.alpha = 0f
+      }
+    }
+    if (active) awaitTracker = false
+    val newMoving = (moving && Live.foreground in homePackages && !Live.checking) || awaitTracker
+    if (Live.moving != newMoving) {
+      Live.moving = newMoving
+      applyMute()
+    }
   }
 
   private fun streamStopped(message: String) {
@@ -318,7 +395,7 @@ class CaptureService : Service() {
   /** The picture goes black while the user hid it or HopCast's own screen is showing. */
   private fun applyMute() {
     val gl = stream?.getGlInterface() ?: return
-    val hide = Live.hidden || Live.appVisible || Live.blocked || Live.watcherDown || !Live.hasBase
+    val hide = Live.hidden || Live.appVisible || Live.blocked || Live.watcherDown || Live.moving || !Live.hasBase
     if (hide && cover == null) {
       // a solid black picture under your other sources, so nothing from the screen can show through
       val black = Bitmap.createBitmap(8, 8, Bitmap.Config.ARGB_8888).apply { eraseColor(android.graphics.Color.BLACK) }
@@ -326,7 +403,7 @@ class CaptureService : Service() {
       filter.setImage(black)
       filter.setScale(100f, 100f)
       filter.setPosition(0f, 0f)
-      gl.addFilter(0, filter)
+      gl.addFilter(if (probeFilter != null) 1 else 0, filter) // under your other sources, but after the probe
       cover = filter
     } else if (!hide && cover != null) {
       cover?.let { gl.removeFilter(it) }
@@ -342,6 +419,12 @@ class CaptureService : Service() {
     watcher?.stop()
     watcher = null
     cover = null
+    checkOverlay?.hide()
+    checkOverlay = null
+    trackerObj?.stop()
+    trackerObj = null
+    probeFilter = null
+    tagBoxes.clear()
     cameras.forEach { try { it.feed.close() } catch (e: Exception) { } }
     cameras.clear()
     bubble?.hide()
@@ -355,11 +438,15 @@ class CaptureService : Service() {
     projection = null
     val file = recordFile
     recordFile = null
+    val checkedOnly = Live.checking
     val last = Live.status
     Live.reset()
     Live.status = last
     Live.changed()
-    if (file != null && file.exists() && file.length() > 0) {
+    if (checkedOnly) {
+      file?.delete() // a security check records nothing for you to keep
+      done()
+    } else if (file != null && file.exists() && file.length() > 0) {
       notify(notification("Saving your recording..."))
       publish(file)
     } else {
@@ -445,6 +532,8 @@ class CaptureService : Service() {
       else -> ""
     }
     return when {
+      Live.running && Live.checking -> "Live-preview security check: nothing is going out. Tag the apps you want hidden, then tap Done."
+      Live.waiting && Live.checking -> "Go to your home screen: the security check starts once HopCast is out of view"
       Live.waiting -> "Open your game: capture starts once HopCast is out of view"
       Live.running && Live.recordOnly -> "Recording to this phone.$extra"
       Live.running && Live.streaming -> "Live, recording to this phone.$extra"

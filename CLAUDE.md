@@ -15,6 +15,7 @@ The owner's standing rules for this project. Follow them every session.
 ## Platforms behave the same
 
 - Keep the Linux, Windows and Android builds running as identically as possible. When a feature or fix lands on one platform, the others are owed it; where a platform can't do something (for example virtual camera or capture cards on Windows), say so plainly in the release text.
+- **One deliberate exception: the live-preview security check is Android-only.** A phone puts your whole life on screen and it is much harder to control what gets recorded, so HopCast for Android builds its own barriers: the app block list, the Game source (only one app is ever shown), black boxes, and the live-preview security check (tag app icons on your home screen before going live; HopCast keeps a black box over them). Desktop does not need these.
 - The owner tests only Linux and Android, for errors and viruses. Windows is checked by automated builds only, and its release notice says so.
 - Everyone should find their version on the one release page, with the same version number in every file name.
 

@@ -7,6 +7,7 @@ Android 10 or newer. GPL-2.0-or-later.
 - Starts when HopCast leaves the screen, so the screen shape (portrait or landscape) matches your game. HopCast's own screen is never shown on the stream.
 - Microphone is off until you turn it on. Game sound is captured only from apps that allow it.
 - An app block list: pick apps that should never be shown. While you're live or recording, one of them going on screen turns the picture black at once, on the stream and in the recording. It uses Android's "usage access" (one switch, allowed once) to see which app is open and nothing else; there is no Accessibility service.
+- The **live-preview security check** (Android only): before going live, your home screen shows with nothing going out, and you tag each app you never want seen. HopCast learns the icon and name and keeps a black box over it wherever it appears (other pages, the app drawer, recents), and blacks the screen while the home screen is sliding. Experimental: it finds icons by looking at the picture, so there is a very short delay.
 - A floating bubble (needs "show over other apps") holds quick buttons: hide screen (viewers see black), microphone, stop. It is marked secure so Android leaves it out of the picture.
 - The stream key is stored encrypted with a key the phone's keystore holds.
 

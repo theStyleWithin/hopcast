@@ -66,6 +66,7 @@ class MainActivity : Activity() {
   private var pendingPickFolder = "sources"
   private var pendingCamera: (() -> Unit)? = null
   private var askedCamera = false
+  private var pendingCheck = false
 
   private val refreshListener: () -> Unit = { refreshAll() }
   private val tick = object : Runnable {
@@ -112,7 +113,7 @@ class MainActivity : Activity() {
 
     // top bar
     val top = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL; setPadding(dp(14), dp(10), dp(14), dp(6)) }
-    top.addView(label("☰", 20f, Color.WHITE).apply { setPadding(0, 0, dp(12), 0); setOnClickListener { startActivity(Intent(this@MainActivity, BlocklistActivity::class.java)) } })
+    top.addView(label("☰", 20f, Color.WHITE).apply { setPadding(0, 0, dp(12), 0); setOnClickListener { mainMenu() } })
     top.addView(label("HopCast", 17f, Color.WHITE, bold = true))
     top.addView(label("  v" + versionName(), 11f, DIM))
     top.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f))
@@ -714,8 +715,41 @@ class MainActivity : Activity() {
 
   private fun stopCapture() = CaptureService.send(this, CaptureService.ACTION_STOP)
 
+  private fun mainMenu() {
+    val items = mutableListOf<Pair<String, () -> Unit>>()
+    items.add("Live-preview security check (${Studio.tags.size} tagged)" to { startCheck() })
+    items.add("App block list (${Studio.blocked.size})" to { startActivity(Intent(this, BlocklistActivity::class.java)) })
+    if (Studio.tags.isNotEmpty()) {
+      items.add("Clear the tagged apps" to {
+        AlertDialog.Builder(this).setTitle("Clear the tagged apps?").setNegativeButton("Cancel", null)
+          .setPositiveButton("Clear") { _, _ -> Studio.tags.forEach { File(it.file).delete() }; Studio.tags.clear(); Studio.save() }.show()
+      })
+    }
+    AlertDialog.Builder(this).setTitle("HopCast").setItems(items.map { it.first }.toTypedArray()) { _, i -> items[i].second() }.show()
+  }
+
+  /** The live-preview security check: your home screen shows, nothing goes out, and you tag the apps to hide. */
+  private fun startCheck() {
+    if (Live.active()) { Toast.makeText(this, "Stop the current session first", Toast.LENGTH_SHORT).show(); return }
+    if (!Settings.canDrawOverlays(this)) {
+      Toast.makeText(this, "Allow HopCast to show over other apps, then tap again", Toast.LENGTH_LONG).show()
+      startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
+      return
+    }
+    AlertDialog.Builder(this).setTitle("Live-preview security check")
+      .setMessage("Nothing goes out. HopCast shows your home screen with a small panel on top. Scroll to a page, tap \"Tag an app\", mark an app's icon and name, and HopCast keeps a black box over it wherever it appears, even when you move it. Tap Done when you've tagged everything.")
+      .setNegativeButton("Cancel", null)
+      .setPositiveButton("Start") { _, _ ->
+        pendingStream = false
+        pendingCheck = true
+        @Suppress("DEPRECATION")
+        startActivityForResult(getSystemService(MediaProjectionManager::class.java).createScreenCaptureIntent(), REQ_CAPTURE)
+      }.show()
+  }
+
   private fun startCapture(stream: Boolean) {
     pendingStream = stream
+    pendingCheck = false
     Studio.save()
     val channel = Studio.channels.firstOrNull { it.enabled && it.url.isNotBlank() }
     if (stream && channel == null) {
@@ -727,6 +761,15 @@ class MainActivity : Activity() {
       AlertDialog.Builder(this).setTitle("Heads up, once")
         .setMessage("Everything on your screen goes out live and into the recording, including notifications and messages.\n\nApps on your block list go black. Tap the bubble any time to hide your screen. Your microphone stays off until you turn it on.")
         .setPositiveButton("Got it") { _, _ -> prefs.warned = true; startCapture(stream) }.show()
+      return
+    }
+    if (stream && !prefs.checkOffered && Studio.tags.isEmpty()) {
+      prefs.checkOffered = true
+      AlertDialog.Builder(this).setTitle("Run the live-preview security check first?")
+        .setMessage("Phones show a lot. Before you go live, you can scroll your home screen and tag the apps you never want seen. HopCast then keeps a black box over them. Nothing goes out during the check.")
+        .setNegativeButton("Skip for now") { _, _ -> startCapture(stream) }
+        .setPositiveButton("Run it") { _, _ -> startCheck() }
+        .show()
       return
     }
     if ((Studio.blocked.isNotEmpty() || Studio.scene().sources.any { it.kind == "game" && it.visible }) && !AppWatcher.allowed(this)) {
@@ -822,6 +865,7 @@ class MainActivity : Activity() {
       .putExtra("resultCode", resultCode)
       .putExtra("data", data)
       .putExtra("stream", pendingStream)
+      .putExtra("check", pendingCheck)
       .putExtra("url", channel?.url.orEmpty())
       .putExtra("key", channel?.let { prefs.channelKey(it.id) }.orEmpty())
       .putExtra("sound", prefs.gameSound)
@@ -829,6 +873,7 @@ class MainActivity : Activity() {
       .putExtra("quality", prefs.quality)
       .putExtra("shape", prefs.shape)
       .putExtra("bubble", prefs.bubble)
+    pendingCheck = false
     startForegroundService(intent)
     moveTaskToBack(true) // step aside so your game is what's on screen
   }
