@@ -50,6 +50,7 @@ class MainActivity : Activity() {
   private lateinit var shapePill: TextView
   private lateinit var infoText: TextView
   private lateinit var sizeButton: Button
+  private lateinit var screenButton: Button
   private lateinit var editButton: Button
   private lateinit var removeButton: Button
   private lateinit var tabViews: List<TextView>
@@ -150,7 +151,8 @@ class MainActivity : Activity() {
     sizeButton = smallButton("Size") { sizeMenu() }
     editButton = smallButton("Edit") { editSelected() }
     removeButton = smallButton("Remove") { removeSelected() }
-    info.addView(sizeButton); info.addView(editButton); info.addView(removeButton)
+    screenButton = smallButton("My screen") { backdropMenu() }
+    info.addView(screenButton); info.addView(sizeButton); info.addView(editButton); info.addView(removeButton)
     root.addView(info)
 
     // tabs
@@ -197,11 +199,14 @@ class MainActivity : Activity() {
     infoText.text = when {
       s == null -> "No source selected. Tap one in the preview or the list."
       s.kind == "game" -> "Game: the stream shows only ${s.name}"
-      s.kind == "screen" -> "Home screen: shows your whole screen, every app"
+      s.kind == "screen" -> "Home screen: shows your whole screen, every app. Tap My screen to see yours here."
       s.kind == "cover" -> "Black box: drag to move, pinch or drag a corner to resize"
       else -> "${s.name}: drag to move, pinch to resize"
     }
     val box = s != null && s.kind != "screen" && s.kind != "game"
+    screenButton.visibility = if (s?.kind == "screen") View.VISIBLE else View.GONE
+    sizeButton.visibility = if (s?.kind == "screen") View.GONE else View.VISIBLE
+    editButton.visibility = if (s?.kind == "screen") View.GONE else View.VISIBLE
     sizeButton.isEnabled = box
     editButton.isEnabled = s != null && s.kind != "screen"
     removeButton.isEnabled = s != null
@@ -448,7 +453,7 @@ class MainActivity : Activity() {
     items.add("Text" to { textSourceDialog(null) })
     items.add("Camera" to { cameraMenu() })
     items.add("Black box (hide part of the screen)" to { addBlackBox() })
-    items.add("Preview backdrop (a screenshot)" to { backdropMenu() })
+    items.add("Show my real screen in the preview" to { backdropMenu() })
     AlertDialog.Builder(this).setTitle("Add a source")
       .setItems(items.map { it.first }.toTypedArray()) { _, which -> items[which].second() }.show()
   }
@@ -469,13 +474,13 @@ class MainActivity : Activity() {
   }
 
   private fun backdropMenu() {
-    val options = mutableListOf("Pick a screenshot...")
-    if (Studio.backdrop.isNotEmpty()) options.add("Remove the backdrop")
-    AlertDialog.Builder(this).setTitle("Preview backdrop").setMessage("Use a screenshot of your home screen behind the preview, so you can see where to put black boxes. It only shows here, never on the stream.")
-      .setItems(options.toTypedArray()) { _, i ->
-        if (i == 0) pickPicture("backdrop") { f -> Studio.backdrop = f.path; Studio.save(); preview.reload() }
-        else { Studio.backdrop = ""; Studio.save(); preview.reload() }
-      }.show()
+    val options = mutableListOf<Pair<String, () -> Unit>>()
+    options.add("Take a picture of my real screen" to { startCheck(forBackground = true) })
+    options.add("Pick a screenshot from my gallery" to { pickPicture("backdrop") { f -> Studio.backdrop = f.path; Studio.save(); preview.reload() } })
+    if (Studio.backdrop.isNotEmpty()) options.add("Go back to the plain background" to { Studio.backdrop = ""; Studio.save(); preview.reload() })
+    AlertDialog.Builder(this).setTitle("Your screen in the preview")
+      .setMessage("Optional. Shows your own home screen behind the preview, so you can see where things sit. It only shows here in HopCast, never on the stream, and stays on this phone.")
+      .setItems(options.map { it.first }.toTypedArray()) { _, i -> options[i].second() }.show()
   }
 
   // ---- size and place a picture, text, camera or black box
@@ -729,15 +734,15 @@ class MainActivity : Activity() {
   }
 
   /** The live-preview security check: your home screen shows, nothing goes out, and you tag the apps to hide. */
-  private fun startCheck() {
+  private fun startCheck(forBackground: Boolean = false) {
     if (Live.active()) { Toast.makeText(this, "Stop the current session first", Toast.LENGTH_SHORT).show(); return }
     if (!Settings.canDrawOverlays(this)) {
       Toast.makeText(this, "Allow HopCast to show over other apps, then tap again", Toast.LENGTH_LONG).show()
       startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
       return
     }
-    AlertDialog.Builder(this).setTitle("Live-preview security check")
-      .setMessage("Nothing goes out. HopCast shows your home screen with a small panel on top. Scroll to a page, tap \"Tag an app\", mark an app's icon and name, and HopCast keeps a black box over it wherever it appears, even when you move it. Tap Done when you've tagged everything.")
+    AlertDialog.Builder(this).setTitle(if (forBackground) "Picture of your screen" else "Live-preview security check")
+      .setMessage((if (forBackground) "Go to the page you want to see in the preview, tap \"Use my screen in the HopCast preview\" on the panel, then tap Done to come back here.\n\n" else "") + "Nothing goes out. HopCast shows your home screen with a small panel on top. Scroll to a page, tap \"Tag an app\", mark an app's icon and name, and HopCast keeps a black box over it wherever it appears, even when you move it. Tap Done when you've tagged everything.")
       .setNegativeButton("Cancel", null)
       .setPositiveButton("Start") { _, _ ->
         pendingStream = false

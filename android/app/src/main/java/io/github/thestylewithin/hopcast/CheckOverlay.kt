@@ -81,6 +81,9 @@ class CheckOverlay(private val context: Context, private val service: CaptureSer
     row.addView(button("What viewers see", "#3a3a3a") { showViewerPicture() })
     row.addView(button("Done", "#c34151") { CaptureService.send(context, CaptureService.ACTION_STOP) })
     b.addView(row)
+    val row2 = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL; setPadding(0, dp(6), 0, 0) }
+    row2.addView(button("Use my screen in the HopCast preview", "#3a3a3a") { grabBackdrop() })
+    b.addView(row2)
     banner = b
     updateCount()
     try { wm.addView(b, params(false)) } catch (e: Exception) { banner = null }
@@ -112,6 +115,29 @@ class CheckOverlay(private val context: Context, private val service: CaptureSer
       probe.requestSnapshot { bitmap ->
         banner?.visibility = View.VISIBLE
         showEditor(bitmap)
+      }
+    }, 250)
+  }
+
+  /** Keeps one picture of your real screen, to show behind the preview inside HopCast. It never goes on the stream. */
+  private fun grabBackdrop() {
+    val probe = service.probe()
+    if (probe == null) { Toast.makeText(context, "Not ready yet, try again in a moment", Toast.LENGTH_SHORT).show(); return }
+    banner?.visibility = View.INVISIBLE
+    handler.postDelayed({
+      probe.requestSnapshot { bitmap ->
+        banner?.visibility = View.VISIBLE
+        val dir = Studio.filesDir(context, "backdrop")
+        val file = File(dir, "screen_${System.currentTimeMillis()}.png")
+        try {
+          FileOutputStream(file).use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+          File(Studio.backdrop).takeIf { it.parentFile == dir }?.delete()
+          Studio.backdrop = file.path
+          Studio.save()
+          Toast.makeText(context, "Saved. Your screen now shows in the HopCast preview.", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+          Toast.makeText(context, "Couldn't save the picture", Toast.LENGTH_SHORT).show()
+        }
       }
     }, 250)
   }
