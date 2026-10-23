@@ -12,6 +12,12 @@ The owner's standing rules for this project. Follow them every session.
 - Never publish a release without asking the owner first. One yes covers all platforms of that version.
 - Do not publish to the AUR, Flathub or F-Droid. Those are hand-offs only (`PACKAGING.md`).
 
+## Platforms behave the same
+
+- Keep the Linux, Windows and Android builds running as identically as possible. When a feature or fix lands on one platform, the others are owed it; where a platform can't do something (for example virtual camera or capture cards on Windows), say so plainly in the release text.
+- The owner tests only Linux and Android, for errors and viruses. Windows is checked by automated builds only, and its release notice says so.
+- Everyone should find their version on the one release page, with the same version number in every file name.
+
 ## Branches and pull requests
 
 - Pushing branches and merging pull requests into `main` does not need asking; tell the owner the result afterwards.
