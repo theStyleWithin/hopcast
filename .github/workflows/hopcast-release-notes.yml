@@ -24,6 +24,9 @@ jobs:
           body=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json body -q .body)
           assets=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets -q '.assets[].name')
           added=0
+          # reword an earlier notice that claimed the app had been tested
+          fixed=${body//"It has been tested on one phone only (a RedMagic 8 Pro), so expect rough edges and tell us what you find."/"It is brand new: automated checks build it, and the developer will test it on a RedMagic 8 Pro, so expect rough edges and tell us what you find."}
+          if [ "$fixed" != "$body" ]; then body="$fixed"; added=1; fi
           if printf '%s\n' "$assets" | grep -q "^HopCast-windows-x64" && ! printf '%s' "$body" | grep -q "HopCast-windows-x64"; then
             body="$body
 
@@ -37,7 +40,7 @@ jobs:
 
           ---
 
-          **Android (early test build):** \`HopCast-android-*.apk\` - copy it to your phone and allow installs from your file manager or browser (Android 10 or newer). It has been tested on one phone only (a RedMagic 8 Pro), so expect rough edges and tell us what you find. It is signed with a public test key; compare \`sha256sum\` with \`SHA256SUMS-android\`. \`hopcast-fdroid-*.tar.gz\` holds F-Droid hand-off files (an untested template; the author doesn't publish to F-Droid)."
+          **Android (early test build):** \`HopCast-android-*.apk\` - copy it to your phone and allow installs from your file manager or browser (Android 10 or newer). It is brand new: automated checks build it, and the developer will test it on a RedMagic 8 Pro, so expect rough edges and tell us what you find. It is signed with a public test key; compare \`sha256sum\` with \`SHA256SUMS-android\`. \`hopcast-fdroid-*.tar.gz\` holds F-Droid hand-off files (an untested template; the author doesn't publish to F-Droid)."
             added=1
           fi
           if [ "$added" = 0 ]; then echo "nothing to add"; exit 0; fi

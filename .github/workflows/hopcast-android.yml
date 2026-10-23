@@ -71,7 +71,7 @@ jobs:
         run: |
           cd out
           cat > android-notes.md <<N
-          **HopCast for Android - early test build.** It hasn't been run on many phones yet (tested on a RedMagic 8 Pro), so expect rough edges and please tell us what you find. Android 10 or newer.
+          **HopCast for Android - early test build.** It is brand new: automated checks build it, and the developer will test it on a RedMagic 8 Pro, so expect rough edges and please tell us what you find. Android 10 or newer.
 
           - \`HopCast-android-*.apk\` - the app. Copy it to your phone and allow installs from your file manager or browser. It is signed with a public test key, so install updates over it only from these releases.
           - \`hopcast-fdroid-*.tar.gz\` - F-Droid hand-off files (an untested template; the author doesn't publish to F-Droid).
