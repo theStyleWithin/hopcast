@@ -63,6 +63,8 @@ class MainActivity : Activity() {
   private var pendingStream = true
   private var pendingPick: ((File) -> Unit)? = null
   private var pendingPickFolder = "sources"
+  private var pendingCamera: (() -> Unit)? = null
+  private var askedCamera = false
 
   private val refreshListener: () -> Unit = { refreshAll() }
   private val tick = object : Runnable {
@@ -323,9 +325,9 @@ class MainActivity : Activity() {
   private fun sourcesPanel(): View {
     val list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
     list.addView(header("Sources") { addSourceMenu() })
-    list.addView(sourceRow(null, "Your screen (game)", "Always on"))
+    list.addView(sourceRow(null, "Whole screen: home screen and every app", "Always on"))
     Studio.scene().sources.reversed().forEach { s ->
-      list.addView(sourceRow(s, s.name + if (s.kind == "text") " (text)" else if (s.kind == "gif") " (animated)" else " (image)", if (s.visible) "Shown" else "Hidden"))
+      list.addView(sourceRow(s, s.name + (if (s.kind == "text") " (text)" else if (s.kind == "gif") " (animated)" else if (s.kind == "camera") " (camera)" else " (image)"), if (s.visible) "Shown" else "Hidden"))
     }
     return list
   }
@@ -408,12 +410,61 @@ class MainActivity : Activity() {
 
   private fun addSourceMenu() {
     AlertDialog.Builder(this).setTitle("Add a source")
-      .setItems(arrayOf("Image (PNG, JPG, WebP)", "Animated picture (GIF)", "Text")) { _, which ->
+      .setItems(arrayOf("Image (PNG, JPG, WebP)", "Animated picture (GIF)", "Text", "Camera")) { _, which ->
         when (which) {
           0, 1 -> pickPicture("sources") { f -> addPictureSource(f) }
-          else -> textSourceDialog(null)
+          2 -> textSourceDialog(null)
+          else -> cameraMenu()
         }
       }.show()
+  }
+
+  private fun withCamera(then: () -> Unit) {
+    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+      then()
+    } else {
+      pendingCamera = then
+      requestPermissions(arrayOf(Manifest.permission.CAMERA), REQ_CAMERA)
+    }
+  }
+
+  private fun cameraMenu() {
+    val front = CameraFeed.hasFront(this)
+    val back = CameraFeed.hasBack(this)
+    val options = mutableListOf<Pair<String, String>>()
+    if (front) options.add("Front camera" to "front")
+    if (back) options.add("Back camera" to "back")
+    if (front && back) {
+      options.add("Switch between front and back" to "switch")
+      options.add("Both at the same time" to "both")
+    }
+    if (options.isEmpty()) { Toast.makeText(this, "This phone has no camera HopCast can use", Toast.LENGTH_LONG).show(); return }
+    AlertDialog.Builder(this).setTitle("Camera").setItems(options.map { it.first }.toTypedArray()) { _, i ->
+      val mode = options[i].second
+      withCamera { addCamera(mode) }
+    }.show()
+  }
+
+  private fun addCamera(mode: String) {
+    when (mode) {
+      "front" -> addCameraSource("front", "Front camera")
+      "back" -> addCameraSource("back", "Back camera")
+      "switch" -> addCameraSource("switch", "Camera (front or back)")
+      else -> {
+        if (!CameraFeed.bothAtOnce(this)) {
+          Toast.makeText(this, "This phone can't run both cameras at the same time. Use \"Switch between front and back\" instead.", Toast.LENGTH_LONG).show()
+          return
+        }
+        addCameraSource("front", "Front camera")
+        addCameraSource("back", "Back camera")
+      }
+    }
+  }
+
+  private fun addCameraSource(mode: String, label: String) {
+    val card = Studio.renderCameraLabel(this, label.take(22))
+    if (card == null) { Toast.makeText(this, "Couldn't add the camera", Toast.LENGTH_SHORT).show(); return }
+    addSource(Studio.Source(Studio.newId(), "camera", label, true, card.path, mode, Color.WHITE, 5f, 5f, 28f, 480f / 360f))
   }
 
   private fun addPictureSource(file: File) {
@@ -546,6 +597,12 @@ class MainActivity : Activity() {
         }.show()
       return
     }
+    if (Studio.scene().sources.any { it.kind == "camera" && it.visible } && !askedCamera &&
+      checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+      askedCamera = true
+      withCamera { startCapture(stream) }
+      return
+    }
     if (Build.VERSION.SDK_INT >= 33 && !askedNotifications && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
       askedNotifications = true
       requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQ_NOTIFICATIONS)
@@ -575,6 +632,14 @@ class MainActivity : Activity() {
       REQ_MIC -> {
         if (!granted) { prefs.mic = false; Toast.makeText(this, "Microphone stays off", Toast.LENGTH_SHORT).show() }
         startCapture(pendingStream)
+      }
+      REQ_CAMERA -> {
+        val then = pendingCamera
+        pendingCamera = null
+        if (granted) then?.invoke() else {
+          Toast.makeText(this, "The camera stays off", Toast.LENGTH_SHORT).show()
+          if (askedCamera) startCapture(pendingStream)
+        }
       }
       REQ_MIC_TOGGLE -> {
         if (granted) { if (Live.running) CaptureService.send(this, CaptureService.ACTION_MIC) else prefs.mic = true }
@@ -662,5 +727,6 @@ class MainActivity : Activity() {
     const val REQ_MIC = 3
     const val REQ_MIC_TOGGLE = 4
     const val REQ_PICK = 5
+    const val REQ_CAMERA = 6
   }
 }

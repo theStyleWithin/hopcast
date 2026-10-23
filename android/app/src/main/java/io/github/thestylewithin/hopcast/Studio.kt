@@ -178,6 +178,26 @@ object Studio {
     }
   }
 
+  /** A 4:3 dark card with a label, shown in the preview where a camera will appear. */
+  fun renderCameraLabel(context: Context, label: String): File? {
+    return try {
+      val w = 480
+      val h = 360
+      val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+      val canvas = Canvas(bitmap)
+      canvas.drawColor(Color.parseColor("#cc101418"))
+      val border = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#effc35"); style = Paint.Style.STROKE; strokeWidth = 10f }
+      canvas.drawRect(5f, 5f, w - 5f, h - 5f, border)
+      val text = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textSize = 52f; typeface = Typeface.DEFAULT_BOLD; textAlign = Paint.Align.CENTER }
+      canvas.drawText(label, w / 2f, h / 2f - (text.descent() + text.ascent()) / 2f, text)
+      val file = File(filesDir(context, "sources"), newId() + ".png")
+      FileOutputStream(file).use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+      file
+    } catch (e: Exception) {
+      null
+    }
+  }
+
   fun decode(path: String, maxSide: Int = 768): Bitmap? {
     return try {
       val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }

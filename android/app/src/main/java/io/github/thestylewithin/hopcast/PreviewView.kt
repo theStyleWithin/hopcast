@@ -83,7 +83,7 @@ class PreviewView(context: Context) : View(context) {
     canvas.drawColor(Color.parseColor("#151515"))
     back.shader = LinearGradient(canvasRect.left, canvasRect.top, canvasRect.right, canvasRect.bottom, Color.parseColor("#12243b"), Color.parseColor("#3d2535"), Shader.TileMode.CLAMP)
     canvas.drawRect(canvasRect, back)
-    canvas.drawText("YOUR SCREEN", canvasRect.centerX(), canvasRect.centerY(), hint)
+    canvas.drawText("WHOLE SCREEN", canvasRect.centerX(), canvasRect.centerY(), hint)
     canvas.save()
     canvas.clipRect(canvasRect)
     Studio.scene().sources.filter { it.visible }.forEach { s ->

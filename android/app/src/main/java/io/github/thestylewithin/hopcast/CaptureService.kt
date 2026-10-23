@@ -33,6 +33,7 @@ import com.pedro.encoder.input.gl.render.filters.`object`.GifFilterRender
 import com.pedro.encoder.input.gl.render.filters.`object`.ImageFilterRender
 import com.pedro.encoder.input.sources.video.ScreenSource
 import com.pedro.library.generic.GenericStream
+import android.graphics.Bitmap
 import java.io.File
 import java.io.FileInputStream
 import java.text.SimpleDateFormat
@@ -58,6 +59,10 @@ class CaptureService : Service() {
   private var recordFile: File? = null
   private var finishing = false
   private var watcher: AppWatcher? = null
+
+  /** A camera on screen: which source it belongs to, the picture it draws into, and the running camera. */
+  private class CameraHandle(val src: Studio.Source, val filter: ImageFilterRender, var feed: CameraFeed)
+  private val cameras = mutableListOf<CameraHandle>()
 
   private val beginRunnable = Runnable { if (Live.waiting && !Live.appVisible) beginCapture() }
 
@@ -102,6 +107,7 @@ class CaptureService : Service() {
       ACTION_STOP -> finish()
       ACTION_HIDE -> { Live.hidden = !Live.hidden; applyMute(); refresh() }
       ACTION_MIC -> toggleMic()
+      ACTION_FLIP -> flipCameras()
       else -> if (!Live.active() && !finishing) stopSelf()
     }
     return START_NOT_STICKY
@@ -133,6 +139,9 @@ class CaptureService : Service() {
     instance = this
 
     var type = ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
+    if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && Studio.scene().sources.any { it.kind == "camera" && it.visible }) {
+      type = type or ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
+    }
     if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
       type = type or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
     }
@@ -221,6 +230,14 @@ class CaptureService : Service() {
     for (src in Studio.scene().sources) {
       if (!src.visible || !File(src.file).exists()) continue
       try {
+        if (src.kind == "camera") {
+          val picture = ImageFilterRender().also { it.setImage(Studio.decode(src.file, 1024)) }
+          picture.setScale(src.w, src.w * canvasAspect / src.aspect.coerceAtLeast(0.05f))
+          picture.setPosition(src.x, src.y)
+          gl.addFilter(picture)
+          startCamera(src, picture)
+          continue
+        }
         val filter: BaseObjectFilterRender = if (src.kind == "gif") {
           GifFilterRender().also { it.setGif(FileInputStream(src.file)) }
         } else {
@@ -233,6 +250,27 @@ class CaptureService : Service() {
       } catch (e: Exception) {
         // a picture that can't be read is skipped; the rest of the layout still goes out
       }
+    }
+  }
+
+  private fun startCamera(src: Studio.Source, picture: ImageFilterRender) {
+    val front = src.text != "back" // "front" and "switch" start on the front camera
+    val feed = CameraFeed(applicationContext, front) { bitmap: Bitmap -> picture.setImage(bitmap) }
+    if (feed.open()) {
+      cameras.add(CameraHandle(src, picture, feed))
+    } else {
+      feed.close()
+      toast("Couldn't open the ${if (front) "front" else "back"} camera")
+    }
+  }
+
+  /** Swaps front and back on every camera source that is set to switch. */
+  private fun flipCameras() {
+    cameras.filter { it.src.text == "switch" }.forEach { h ->
+      val wasFront = h.feed.front
+      h.feed.close()
+      val next = CameraFeed(applicationContext, !wasFront) { bitmap: Bitmap -> h.filter.setImage(bitmap) }
+      if (next.open()) h.feed = next else { next.close(); toast("Couldn't switch the camera") }
     }
   }
 
@@ -287,6 +325,8 @@ class CaptureService : Service() {
     Live.blocked = false
     watcher?.stop()
     watcher = null
+    cameras.forEach { try { it.feed.close() } catch (e: Exception) { } }
+    cameras.clear()
     bubble?.hide()
     bubble = null
     val s = stream
@@ -433,6 +473,7 @@ class CaptureService : Service() {
     const val ACTION_STOP = "io.github.thestylewithin.hopcast.STOP"
     const val ACTION_HIDE = "io.github.thestylewithin.hopcast.HIDE"
     const val ACTION_MIC = "io.github.thestylewithin.hopcast.MIC"
+    const val ACTION_FLIP = "io.github.thestylewithin.hopcast.FLIP"
     private const val CHANNEL = "capture"
     private const val NOTIF_ID = 1
     private const val SETTLE_MS = 1500L
