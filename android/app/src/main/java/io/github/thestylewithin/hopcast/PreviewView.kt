@@ -133,9 +133,15 @@ class PreviewView(context: Context) : View(context) {
     back.shader = LinearGradient(canvasRect.left, canvasRect.top, canvasRect.right, canvasRect.bottom, Color.parseColor("#12243b"), Color.parseColor("#3d2535"), Shader.TileMode.CLAMP)
     canvas.drawRect(canvasRect, back)
     if (Studio.backdrop != backdropPath) { backdropPath = Studio.backdrop; backdropBitmap = if (backdropPath.isNotEmpty()) Studio.decode(backdropPath, 1280) else null }
-    val backdrop = backdropBitmap
+    // the live view of your screen (only while the check/live-view session runs) comes before a still backdrop
+    val live = if (Live.checking && Studio.scene().sources.any { it.kind == "screen" && it.visible }) Live.liveFrame else null
+    val backdrop = live ?: backdropBitmap
     if (backdrop != null) {
-      val scale = Math.max(canvasRect.width() / backdrop.width, canvasRect.height() / backdrop.height)
+      val sameShape = (backdrop.height > backdrop.width) == (canvasRect.height() > canvasRect.width())
+      val fitW = canvasRect.width() / backdrop.width
+      val fitH = canvasRect.height() / backdrop.height
+      // a still picture fills the box; the live view keeps its own shape if the preview's shape is different
+      val scale = if (live != null && !sameShape) Math.min(fitW, fitH) else Math.max(fitW, fitH)
       val w = backdrop.width * scale
       val h = backdrop.height * scale
       canvas.save()

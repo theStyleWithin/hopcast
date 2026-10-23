@@ -93,6 +93,7 @@ class MainActivity : Activity() {
     super.onStart()
     Live.addListener(refreshListener)
     Live.appVisible = true
+    Live.onFrame = { preview.invalidate() }
     CaptureService.instance?.onAppVisibility(true)
     ui.post(tick)
     refreshAll()
@@ -103,6 +104,7 @@ class MainActivity : Activity() {
     Live.removeListener(refreshListener)
     ui.removeCallbacks(tick)
     Live.appVisible = false
+    Live.onFrame = null
     CaptureService.instance?.onAppVisibility(false)
     super.onStop()
   }
@@ -475,6 +477,7 @@ class MainActivity : Activity() {
 
   private fun backdropMenu() {
     val options = mutableListOf<Pair<String, () -> Unit>>()
+    options.add("Live view of my screen" to { startCheck(forBackground = true) })
     options.add("Take a picture of my real screen" to { startCheck(forBackground = true) })
     options.add("Pick a screenshot from my gallery" to { pickPicture("backdrop") { f -> Studio.backdrop = f.path; Studio.save(); preview.reload() } })
     if (Studio.backdrop.isNotEmpty()) options.add("Go back to the plain background" to { Studio.backdrop = ""; Studio.save(); preview.reload() })
@@ -742,7 +745,7 @@ class MainActivity : Activity() {
       return
     }
     AlertDialog.Builder(this).setTitle(if (forBackground) "Picture of your screen" else "Live-preview security check")
-      .setMessage((if (forBackground) "Go to the page you want to see in the preview, tap \"Use my screen in the HopCast preview\" on the panel, then tap Done to come back here.\n\n" else "") + "Nothing goes out. HopCast shows your home screen with a small panel on top. Scroll to a page, tap \"Tag an app\", mark an app's icon and name, and HopCast keeps a black box over it wherever it appears, even when you move it. Tap Done when you've tagged everything.")
+      .setMessage((if (forBackground) "Your real home screen shows with a small panel on top. Go anywhere you like, then open HopCast again: the Home screen source shows your screen live, without HopCast in it (while HopCast or a blocked app is in front it keeps showing the last picture of your screen). Tap Done on the panel when you're finished. For a still picture instead, tap \"Use my screen in the HopCast preview\" on the panel.\n\n" else "") + "Nothing goes out. HopCast shows your home screen with a small panel on top. Scroll to a page, tap \"Tag an app\", mark an app's icon and name, and HopCast keeps a black box over it wherever it appears, even when you move it. Tap Done when you've tagged everything.")
       .setNegativeButton("Cancel", null)
       .setPositiveButton("Start") { _, _ ->
         pendingStream = false

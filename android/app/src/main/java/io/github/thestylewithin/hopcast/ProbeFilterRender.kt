@@ -35,6 +35,9 @@ class ProbeFilterRender(
   private var uSt = -1
   private var uSampler = -1
   private var lastMs = 0L
+  private var lastFrameMs = 0L
+  /** Gets a small colour picture of your screen a few times a second (for the live view in the studio). Runs on the GL thread. */
+  @Volatile var onFrame: ((Bitmap) -> Unit)? = null
   private var buffer: ByteBuffer? = null
   private val main = Handler(Looper.getMainLooper())
   @Volatile private var snapshotWanted: ((Bitmap) -> Unit)? = null
@@ -149,6 +152,21 @@ class ProbeFilterRender(
         }
         grey[gy * gw + gx] = (sum / area).toByte()
       }
+    }
+    val frameCallback = onFrame
+    if (frameCallback != null && now - lastFrameMs >= 400) {
+      lastFrameMs = now
+      val fw = w / 2
+      val fh = h / 2
+      val px = IntArray(fw * fh)
+      for (y in 0 until fh) {
+        val row = h - 1 - (y * 2)
+        for (x in 0 until fw) {
+          val i = (row * w + x * 2) * 4
+          px[y * fw + x] = (0xff shl 24) or ((bytes[i].toInt() and 0xff) shl 16) or ((bytes[i + 1].toInt() and 0xff) shl 8) or (bytes[i + 2].toInt() and 0xff)
+        }
+      }
+      frameCallback(Bitmap.createBitmap(px, fw, fh, Bitmap.Config.ARGB_8888))
     }
     onGrey(grey, gw, gh, s)
   }

@@ -1,5 +1,6 @@
 package io.github.thestylewithin.hopcast
 
+import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import java.util.concurrent.CopyOnWriteArrayList
@@ -36,6 +37,11 @@ object Live {
   /** The block list has apps but the watcher is switched off, so the picture stays black to be safe. */
   @Volatile var watcherDown = false
 
+  /** The latest picture of your screen without HopCast or a blocked app in it, for the Home screen source in the studio. */
+  @Volatile var liveFrame: Bitmap? = null
+  /** Set by the studio while it is on screen, to redraw its preview when a new live picture arrives. */
+  @Volatile var onFrame: (() -> Unit)? = null
+
   private val listeners = CopyOnWriteArrayList<() -> Unit>()
   private val main = Handler(Looper.getMainLooper())
 
@@ -47,6 +53,6 @@ object Live {
 
   fun reset() {
     running = false; waiting = false; hidden = false; micOn = false; streaming = false; recordOnly = false; checking = false; moving = false; startedMs = 0L
-    blocked = false; watcherDown = false; foreground = ""; gamePackage = ""
+    blocked = false; watcherDown = false; foreground = ""; gamePackage = ""; liveFrame = null
   }
 }

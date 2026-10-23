@@ -17,6 +17,7 @@ import android.media.projection.MediaProjectionManager
 import android.os.Environment
 import android.os.Handler
 import android.os.IBinder
+import android.os.SystemClock
 import android.os.Looper
 import android.provider.MediaStore
 import android.provider.Settings
@@ -67,6 +68,10 @@ class CaptureService : Service() {
   private var checkOverlay: CheckOverlay? = null
   private var homePackages: Set<String> = emptySet()
   private var awaitTracker = false
+
+  /** A small picture of your screen and when it was taken, held back briefly before the studio may show it. */
+  private class Frame(val ms: Long, val bitmap: Bitmap)
+  private val pendingFrames = ArrayDeque<Frame>()
 
   /** A camera on screen: which source it belongs to, the picture it draws into, and the running camera. */
   private class CameraHandle(val src: Studio.Source, val filter: ImageFilterRender, var feed: CameraFeed)
@@ -188,6 +193,7 @@ class CaptureService : Service() {
   /** HopCast's own screen came into view or left it. */
   fun onAppVisibility(visible: Boolean) {
     Live.appVisible = visible
+    if (visible) pendingFrames.clear() // anything taken while HopCast was sliding into view is thrown away
     if (Live.waiting) {
       main.removeCallbacks(beginRunnable)
       if (!visible) main.postDelayed(beginRunnable, SETTLE_MS) // give the game a moment to open and settle its screen shape
@@ -289,6 +295,7 @@ class CaptureService : Service() {
 
   /** The block-list watcher saw an app on the list come on screen, or go away. */
   fun onBlockChanged() {
+    pendingFrames.clear()
     // back on the home screen with tagged apps: stay black until the tracker has looked once
     if (Studio.tags.isNotEmpty() && !Live.checking && Live.foreground in homePackages) {
       awaitTracker = true
@@ -308,6 +315,23 @@ class CaptureService : Service() {
   /** One picture of what viewers would get right now, black boxes included. */
   fun viewerPicture(callback: (Bitmap) -> Unit) {
     stream?.getGlInterface()?.takePhoto { bitmap -> callback(bitmap) }
+  }
+
+  /**
+   * The live view for the Home screen source in the studio. A picture only counts if HopCast and blocked apps weren't on
+   * screen then, and it waits a moment first, so the slide of HopCast coming into view never gets in.
+   */
+  private fun onLiveFrame(bitmap: Bitmap) {
+    if (!Live.checking) return
+    if (Live.appVisible || Live.blocked || Live.watcherDown || Live.foreground == packageName) { pendingFrames.clear(); return }
+    val now = SystemClock.uptimeMillis()
+    pendingFrames.addLast(Frame(now, bitmap))
+    var ready: Frame? = null
+    while (pendingFrames.isNotEmpty() && now - pendingFrames.first().ms >= LIVE_DELAY_MS) ready = pendingFrames.removeFirst()
+    if (ready != null) {
+      Live.liveFrame = ready.bitmap
+      Live.onFrame?.invoke()
+    }
   }
 
   fun onTagsChanged() {
@@ -339,6 +363,7 @@ class CaptureService : Service() {
     val probe = ProbeFilterRender { grey, gw, gh, step -> if (trackingWanted()) tracker.onGrey(grey, gw, gh, step) }
     gl.addFilter(0, probe) // first, so it sees your screen before any black box is drawn
     probeFilter = probe
+    if (Live.checking) probe.onFrame = { bitmap -> main.post { onLiveFrame(bitmap) } }
     trackerObj = tracker
     Studio.tags.forEach { addTagBox(gl, it) }
   }
@@ -587,6 +612,8 @@ class CaptureService : Service() {
     private const val CHANNEL = "capture"
     private const val NOTIF_ID = 1
     private const val SETTLE_MS = 1500L
+    /** How long a picture of your screen waits before the studio may show it. */
+    private const val LIVE_DELAY_MS = 900L
 
     @Volatile var instance: CaptureService? = null
 
