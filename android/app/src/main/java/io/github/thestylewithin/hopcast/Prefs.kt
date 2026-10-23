@@ -54,6 +54,17 @@ class Prefs(context: Context) {
     get() = decrypt(sp.getString("key", "") ?: "")
     set(v) = sp.edit().putString("key", encrypt(v)).apply()
 
+  /** Stream keys for the channels, each encrypted the same way. */
+  fun channelKey(id: String): String = decrypt(sp.getString("ck_$id", "") ?: "")
+
+  fun setChannelKey(id: String, key: String) {
+    sp.edit().putString("ck_$id", encrypt(key)).apply()
+  }
+
+  fun removeChannelKey(id: String) {
+    sp.edit().remove("ck_$id").apply()
+  }
+
   private fun secretKey(): SecretKey {
     val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
     (store.getKey(KEY_ALIAS, null) as? SecretKey)?.let { return it }

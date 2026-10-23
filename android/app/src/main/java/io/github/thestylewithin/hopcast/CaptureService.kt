@@ -28,9 +28,13 @@ import com.pedro.encoder.input.sources.audio.InternalAudioSource
 import com.pedro.encoder.input.sources.audio.MicrophoneSource
 import com.pedro.encoder.input.sources.audio.MixAudioSource
 import com.pedro.encoder.input.sources.audio.NoAudioSource
+import com.pedro.encoder.input.gl.render.filters.`object`.BaseObjectFilterRender
+import com.pedro.encoder.input.gl.render.filters.`object`.GifFilterRender
+import com.pedro.encoder.input.gl.render.filters.`object`.ImageFilterRender
 import com.pedro.encoder.input.sources.video.ScreenSource
 import com.pedro.library.generic.GenericStream
 import java.io.File
+import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -43,7 +47,7 @@ class CaptureService : Service() {
 
   private class Config(
     val url: String, val key: String, val sound: Boolean,
-    val quality: Int, val shape: Int, val bubble: Boolean,
+    val quality: Int, val shape: Int, val bubble: Boolean, val stream: Boolean,
   )
 
   private val main = Handler(Looper.getMainLooper())
@@ -55,6 +59,19 @@ class CaptureService : Service() {
   private var finishing = false
 
   private val beginRunnable = Runnable { if (Live.waiting && !Live.appVisible) beginCapture() }
+
+  /** Every second: if the block list has apps but the watcher got switched off, stay black rather than risk showing one. */
+  private val watchdog = object : Runnable {
+    override fun run() {
+      val down = Studio.blocked.isNotEmpty() && !BlockWatcher.enabled(this@CaptureService)
+      if (down != Live.watcherDown) {
+        Live.watcherDown = down
+        applyMute()
+        refresh()
+      }
+      main.postDelayed(this, 1000)
+    }
+  }
 
   private val checker = object : ConnectChecker {
     override fun onConnectionStarted(url: String) {}
@@ -106,7 +123,9 @@ class CaptureService : Service() {
       quality = intent.getIntExtra("quality", 0),
       shape = intent.getIntExtra("shape", 0),
       bubble = intent.getBooleanExtra("bubble", true),
+      stream = intent.getBooleanExtra("stream", true),
     )
+    Studio.load(applicationContext)
     Live.reset()
     Live.micOn = intent.getBooleanExtra("mic", false)
     Live.status = ""
@@ -136,6 +155,7 @@ class CaptureService : Service() {
     projection = proj
 
     Live.waiting = true
+    main.post(watchdog)
     config?.let { cfg ->
       if (cfg.bubble && Settings.canDrawOverlays(this)) bubble = Bubble(this).also { it.show() }
     }
@@ -174,6 +194,7 @@ class CaptureService : Service() {
         return
       }
       stream = s
+      applySources(s, portrait)
       applyMute()
       val file = newRecordFile()
       recordFile = file
@@ -182,12 +203,41 @@ class CaptureService : Service() {
       Live.waiting = false
       Live.startedMs = System.currentTimeMillis()
       Live.streaming = false
-      s.startStream(endpoint(cfg))
+      Live.recordOnly = !cfg.stream
+      if (cfg.stream) s.startStream(endpoint(cfg))
       refresh()
     } catch (e: Exception) {
       Live.status = "Couldn't start: ${clean(e.message ?: e.javaClass.simpleName)}"
       finish()
     }
+  }
+
+  /** Puts the images, GIFs and text from the active scene over the screen, in the same places the preview shows. */
+  private fun applySources(s: GenericStream, portrait: Boolean) {
+    val gl = s.getGlInterface()
+    val canvasAspect = if (portrait) 9f / 16f else 16f / 9f
+    for (src in Studio.scene().sources) {
+      if (!src.visible || !File(src.file).exists()) continue
+      try {
+        val filter: BaseObjectFilterRender = if (src.kind == "gif") {
+          GifFilterRender().also { it.setGif(FileInputStream(src.file)) }
+        } else {
+          ImageFilterRender().also { it.setImage(Studio.decode(src.file, 1024)) }
+        }
+        val height = src.w * canvasAspect / src.aspect.coerceAtLeast(0.05f)
+        filter.setScale(src.w, height)
+        filter.setPosition(src.x, src.y)
+        gl.addFilter(filter)
+      } catch (e: Exception) {
+        // a picture that can't be read is skipped; the rest of the layout still goes out
+      }
+    }
+  }
+
+  /** The block-list watcher saw an app on the list come on screen, or go away. */
+  fun onBlockChanged() {
+    applyMute()
+    refresh()
   }
 
   private fun streamStopped(message: String) {
@@ -225,13 +275,14 @@ class CaptureService : Service() {
   /** The picture goes black while the user hid it or HopCast's own screen is showing. */
   private fun applyMute() {
     val gl = stream?.getGlInterface() ?: return
-    if (Live.hidden || Live.appVisible) gl.muteVideo() else gl.unMuteVideo()
+    if (Live.hidden || Live.appVisible || Live.blocked || Live.watcherDown) gl.muteVideo() else gl.unMuteVideo()
   }
 
   private fun finish() {
     if (finishing) return
     finishing = true
     main.removeCallbacksAndMessages(null)
+    Live.blocked = false
     bubble?.hide()
     bubble = null
     val s = stream
@@ -324,11 +375,20 @@ class CaptureService : Service() {
     main.post { Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show() }
   }
 
-  private fun statusLine(): String = when {
-    Live.waiting -> "Open your game: streaming starts once HopCast is out of view"
-    Live.running && Live.streaming -> if (Live.hidden) "Live (screen hidden), recording to this phone" else "Live, recording to this phone"
-    Live.running -> Live.status.ifEmpty { "Connecting..." } + if (recordFile != null) " Recording to this phone." else ""
-    else -> Live.status
+  private fun statusLine(): String {
+    val extra = when {
+      Live.watcherDown -> " The app watcher is off, so the picture is black."
+      Live.blocked -> " A blocked app is on screen, so the picture is black."
+      Live.hidden -> " Screen hidden."
+      else -> ""
+    }
+    return when {
+      Live.waiting -> "Open your game: capture starts once HopCast is out of view"
+      Live.running && Live.recordOnly -> "Recording to this phone.$extra"
+      Live.running && Live.streaming -> "Live, recording to this phone.$extra"
+      Live.running -> Live.status.ifEmpty { "Connecting..." } + (if (recordFile != null) " Recording to this phone." else "") + extra
+      else -> Live.status
+    }
   }
 
   private fun refresh() {

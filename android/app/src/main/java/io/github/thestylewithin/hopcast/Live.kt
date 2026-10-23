@@ -15,10 +15,18 @@ object Live {
   @Volatile var micOn = false
   /** Streaming to the server (false while only recording, e.g. after a failed connection). */
   @Volatile var streaming = false
+  /** Recording only, not streaming (the Rec button). */
+  @Volatile var recordOnly = false
   @Volatile var startedMs = 0L
   /** HopCast's own screen is showing. It is never shown on the stream. */
   @Volatile var appVisible = false
   @Volatile var status = ""
+  /** The app on screen right now, as the block-list watcher last saw it. */
+  @Volatile var foreground = ""
+  /** An app on the block list is on screen: viewers and the recording see black. */
+  @Volatile var blocked = false
+  /** The block list has apps but the watcher is switched off, so the picture stays black to be safe. */
+  @Volatile var watcherDown = false
 
   private val listeners = CopyOnWriteArrayList<() -> Unit>()
   private val main = Handler(Looper.getMainLooper())
@@ -30,6 +38,7 @@ object Live {
   fun changed() { main.post { listeners.forEach { it() } } }
 
   fun reset() {
-    running = false; waiting = false; hidden = false; micOn = false; streaming = false; startedMs = 0L
+    running = false; waiting = false; hidden = false; micOn = false; streaming = false; recordOnly = false; startedMs = 0L
+    blocked = false; watcherDown = false; foreground = ""
   }
 }
