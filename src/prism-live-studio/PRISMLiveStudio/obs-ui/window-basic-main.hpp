@@ -711,6 +711,12 @@ protected:
 
 	bool sysTrayMinimizeToTray();
 
+public:
+	/** HopCast: the close button hides the window to the tray and HopCast keeps running. */
+	bool closeToTray();
+	void hideToTray();
+
+protected:
 	void EnumDialogs();
 
 	QList<QPointer<QDialog>> visDialogs;

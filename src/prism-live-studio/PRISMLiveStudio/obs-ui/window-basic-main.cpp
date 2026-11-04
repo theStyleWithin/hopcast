@@ -57,6 +57,7 @@
 #include "window-basic-main.hpp"
 #include "../prism-ui/hopcast/HopCastScreenshot.h" // HopCast: tray screenshots
 #include "../prism-ui/hopcast/HopCastVideoDownload.h" // HopCast: download a video from a link
+#include "../prism-ui/hopcast/HopCastPinpoint.h" // HopCast: HopShots pinpoint screenshot
 #include "../prism-ui/hopcast/HopCastMultiStream.h" // HopCast: several servers at once
 #include "window-basic-stats.hpp"
 #include "PLSBasicStatusBar.hpp"
@@ -12371,6 +12372,16 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 		});
 	});
 	trayMenu->addAction(shotDesktop);
+	auto shotPinpoint = new QAction(QStringLiteral("Screenshot of one picture (pinpoint)"), trayIcon.data());
+	connect(shotPinpoint, &QAction::triggered, this, [this]() {
+		hopcast::takePinpointScreenshot([this](const QString &path, const QString &error) {
+			if (!error.isEmpty())
+				SysTrayNotify(error, QSystemTrayIcon::Warning, QStringLiteral("HopShots"));
+			else if (!path.isEmpty())
+				SysTrayNotify(QStringLiteral("Picture saved: ") + path + QStringLiteral(" (also copied)"), QSystemTrayIcon::Information, QStringLiteral("HopShots"));
+		});
+	});
+	trayMenu->addAction(shotPinpoint);
 	auto shotStream = new QAction(QStringLiteral("Screenshot of the stream preview"), trayIcon.data());
 	connect(shotStream, &QAction::triggered, this, &OBSBasic::ScreenshotScene);
 	trayMenu->addAction(shotStream);
@@ -12479,6 +12490,25 @@ bool OBSBasic::sysTrayMinimizeToTray()
 {
 	return config_get_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayMinimizeToTray");
 }
+
+#ifdef HOPCAST_NO_NAVER
+/* Only when there is a tray icon to bring the window back from; otherwise the close button quits as it always did. */
+bool OBSBasic::closeToTray()
+{
+	return QSystemTrayIcon::isSystemTrayAvailable() && trayIcon && trayIcon->isVisible() &&
+	       config_get_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayCloseToTray");
+}
+
+void OBSBasic::hideToTray()
+{
+	SetShowing(false);
+	if (!config_get_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayCloseNoticeShown")) {
+		config_set_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayCloseNoticeShown", true);
+		SysTrayNotify(QStringLiteral("HopCast is still running here. Click the icon to open it again, or right-click it to quit."),
+			      QSystemTrayIcon::Information, QStringLiteral("HopCast"));
+	}
+}
+#endif
 
 void OBSBasic::on_actionMainUndo_triggered()
 {

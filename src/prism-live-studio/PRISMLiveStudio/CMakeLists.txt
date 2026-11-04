@@ -1009,6 +1009,7 @@ if(OS_WINDOWS)
     prism-ui/hopcast/HopCastLinkGuard.cpp prism-ui/hopcast/HopCastLinkGuard.h
     prism-ui/hopcast/HopCastScreenshot.cpp prism-ui/hopcast/HopCastScreenshot.h
     prism-ui/hopcast/HopCastVideoDownload.cpp prism-ui/hopcast/HopCastVideoDownload.h
+    prism-ui/hopcast/HopCastPinpoint.cpp prism-ui/hopcast/HopCastPinpoint.h
     prism-ui/hopcast/HopCastMultiStream.cpp prism-ui/hopcast/HopCastMultiStream.h
     prism-ui/hopcast/HopCastProfileImport.cpp prism-ui/hopcast/HopCastProfileImport.h
     prism-ui/hopcast/HopCastNetLog.cpp prism-ui/hopcast/HopCastNetLog.h
@@ -1141,6 +1142,7 @@ elseif(OS_POSIX)
     prism-ui/hopcast/HopCastLinkGuard.cpp prism-ui/hopcast/HopCastLinkGuard.h # HopCast: no PRISM/NAVER links
     prism-ui/hopcast/HopCastScreenshot.cpp prism-ui/hopcast/HopCastScreenshot.h
     prism-ui/hopcast/HopCastVideoDownload.cpp prism-ui/hopcast/HopCastVideoDownload.h
+    prism-ui/hopcast/HopCastPinpoint.cpp prism-ui/hopcast/HopCastPinpoint.h
     prism-ui/hopcast/HopCastMultiStream.cpp prism-ui/hopcast/HopCastMultiStream.h
     prism-ui/hopcast/HopCastProfileImport.cpp prism-ui/hopcast/HopCastProfileImport.h
     prism-ui/hopcast/HopCastNetLog.cpp prism-ui/hopcast/HopCastNetLog.h

@@ -143,7 +143,7 @@ PLSMainView::PLSMainView(QWidget *parent) : PLSToplevelView<QFrame>(CreateWinId:
 		}
 		pls_flush_style(ui->maxres);
 	});
-	QObject::connect(ui->close, &QToolButton::clicked, this, [this]() { close(); });
+	QObject::connect(ui->close, &QToolButton::clicked, this, [this]() { m_userClosing = true; close(); });
 #if defined(Q_OS_LINUX) // HopCast: the desktop's own title bar already has these buttons
 	ui->min->hide();
 	ui->maxres->hide();
@@ -817,6 +817,18 @@ void PLSMainView::closeEvent(QCloseEvent *event)
 	PLS_INFO(MAINSCENE_MODULE, (bCloseByKeyboard ? __FUNCTION__ " by ALT+F4" : __FUNCTION__));
 #else
 	PLS_INFO(MAINSCENE_MODULE, "%s%s", __FUNCTION__, (pls_libutil_api_mac::pls_get_is_app_quitting_by_dock() ? " by dock quit" : ""));
+#endif
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: the window's X (the desktop's own, or our button) hides to the tray and HopCast keeps running.
+	 * Quit from the tray menu, a restart, an update and logging out all close the window from code, so they still quit. */
+	if (auto *basic = PLSBasic::instance(); basic && (event->spontaneous() || m_userClosing) && basic->closeToTray()) {
+		m_userClosing = false;
+		event->ignore();
+		pls_set_main_window_closing(false);
+		basic->hideToTray();
+		return;
+	}
+	m_userClosing = false;
 #endif
 	pls_set_main_window_closing(true);
 	closeEventCallback(event);

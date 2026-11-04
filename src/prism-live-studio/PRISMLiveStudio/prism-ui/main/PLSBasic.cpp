@@ -6,6 +6,7 @@
 #include "../hopcast/HopCastLinkGuard.h"
 #include "../hopcast/HopCastScreenshot.h" // HopCast: Tools > Screenshot
 #include "../hopcast/HopCastVideoDownload.h" // HopCast: Tools > Download a video
+#include "../hopcast/HopCastPinpoint.h" // HopCast: Tools > Screenshot of one picture
 #include "../hopcast/HopCastProfileImport.h" // HopCast: Profile > Import OBS profile
 #include "../hopcast/HopCastNetLog.h"
 #include "../hopcast/HopCastSettingsGuard.h"
@@ -1290,6 +1291,15 @@ void PLSBasic::PLSInit()
 	/* HopCast: Tools > Download a video from a link (runs yt-dlp). */
 	connect(ui->menuTools->addAction(QStringLiteral("Download a video from a link...")), &QAction::triggered, this,
 		[this]() { hopcast::showVideoDownloader(this); });
+	/* HopCast: Tools > Screenshot of one picture (pinpoint): point at a picture on the screen and save just that. */
+	connect(ui->menuTools->addAction(QStringLiteral("Screenshot of one picture (pinpoint)")), &QAction::triggered, this, [this]() {
+		hopcast::takePinpointScreenshot([this](const QString &path, const QString &error) {
+			if (!error.isEmpty())
+				PLSAlertView::warning(this, QStringLiteral("HopShots"), error);
+			else if (!path.isEmpty())
+				PLSAlertView::information(this, QStringLiteral("HopShots"), QStringLiteral("Picture saved (also copied):\n") + path);
+		});
+	});
 	/* HopCast: Profile > Import OBS profile (.zip) - the files streaming sites hand out. */
 	connect(ui->profileMenu->addAction(QStringLiteral("Import OBS profile (.zip)...")), &QAction::triggered, this, [this]() {
 		const QString file = QFileDialog::getOpenFileName(this, QStringLiteral("Import OBS profile"), QDir::homePath(),

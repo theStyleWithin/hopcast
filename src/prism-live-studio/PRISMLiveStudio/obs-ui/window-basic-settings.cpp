@@ -820,6 +820,9 @@ void OBSBasicSettings::LoadGeneralSettings()
 	bool systemTrayAlways = config_get_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayMinimizeToTray");
 	generalPage->systemTrayAlways->setChecked(systemTrayAlways);
 
+	bool systemTrayClose = config_get_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayCloseToTray");
+	generalPage->systemTrayClose->setChecked(systemTrayClose);
+
 	bool saveProjectors = config_get_bool(App()->GetUserConfig(), "BasicWindow", "SaveProjectors");
 	generalPage->saveProjectors->setChecked(saveProjectors);
 
@@ -3012,6 +3015,10 @@ void OBSBasicSettings::SaveGeneralSettings()
 		config_set_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayMinimizeToTray",
 				generalPage->systemTrayAlways->isChecked());
 
+	if (WidgetChanged(generalPage->systemTrayClose))
+		config_set_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayCloseToTray",
+				generalPage->systemTrayClose->isChecked());
+
 	if (WidgetChanged(generalPage->saveProjectors))
 		config_set_bool(App()->GetUserConfig(), "BasicWindow", "SaveProjectors",
 				generalPage->saveProjectors->isChecked());
@@ -3890,6 +3897,7 @@ void OBSBasicSettings::initGeneralage()
 		HookWidget(generalPage->systemTrayEnabled, CHECK_CHANGED, GENERAL_CHANGED);
 		HookWidget(generalPage->systemTrayWhenStarted, CHECK_CHANGED, GENERAL_CHANGED);
 		HookWidget(generalPage->systemTrayAlways, CHECK_CHANGED, GENERAL_CHANGED);
+		HookWidget(generalPage->systemTrayClose, CHECK_CHANGED, GENERAL_CHANGED);
 		HookWidget(generalPage->saveProjectors, CHECK_CHANGED, GENERAL_CHANGED);
 		HookWidget(generalPage->closeProjectors, CHECK_CHANGED, GENERAL_CHANGED);
 		HookWidget(generalPage->snappingEnabled, CHECK_CHANGED, GENERAL_CHANGED);
@@ -7148,6 +7156,7 @@ void OBSBasicSettings::ResetSettings()
 	config_remove_value(globalConfig, "BasicWindow", "SysTrayEnabled");
 	config_remove_value(globalConfig, "BasicWindow", "SysTrayWhenStarted");
 	config_remove_value(globalConfig, "BasicWindow", "SysTrayMinimizeToTray");
+	config_remove_value(globalConfig, "BasicWindow", "SysTrayCloseToTray");
 
 	config_remove_value(globalConfig, "BasicWindow", "ShowSafeAreas");
 	config_remove_value(globalConfig, "General", "AutomaticCollectionSearch");
