@@ -229,9 +229,8 @@ void toolScreenshot(const QString &path, Done done, std::function<void()> fallba
 
 namespace hopcast {
 
-void takeDesktopScreenshot(std::function<void(const QString &path, const QString &error)> done)
+static void captureTo(const QString &path, std::function<void(const QString &path, const QString &error)> done)
 {
-	const QString path = newScreenshotPath();
 
 #ifndef Q_OS_LINUX
 	// Windows and others: read the screens directly (after the tray menu has closed).
@@ -256,6 +255,28 @@ void takeDesktopScreenshot(std::function<void(const QString &path, const QString
 	}
 	toolScreenshot(path, done, [path, done]() { portalScreenshot(path, done); });
 #endif
+}
+
+void takeDesktopScreenshot(std::function<void(const QString &path, const QString &error)> done)
+{
+	captureTo(newScreenshotPath(), std::move(done));
+}
+
+void captureDesktopImage(std::function<void(const QImage &image, const QString &error)> done)
+{
+	const QString path = QDir::tempPath() + QStringLiteral("/hopcast-pinpoint-%1.png").arg(QRandomGenerator::global()->generate());
+	captureTo(path, [done](const QString &file, const QString &error) {
+		if (!error.isEmpty()) {
+			done(QImage(), error);
+			return;
+		}
+		QImage image(file);
+		QFile::remove(file);
+		if (image.isNull())
+			done(QImage(), QStringLiteral("Couldn't read the screenshot."));
+		else
+			done(image, QString());
+	});
 }
 
 } // namespace hopcast

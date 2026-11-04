@@ -56,6 +56,7 @@
 #include "window-basic-source-select.hpp"
 #include "window-basic-main.hpp"
 #include "../prism-ui/hopcast/HopCastScreenshot.h" // HopCast: tray screenshots
+#include "../prism-ui/hopcast/HopCastPinpoint.h" // HopCast: HopShots pinpoint screenshot
 #include "../prism-ui/hopcast/HopCastMultiStream.h" // HopCast: several servers at once
 #include "window-basic-stats.hpp"
 #include "PLSBasicStatusBar.hpp"
@@ -12370,6 +12371,16 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 		});
 	});
 	trayMenu->addAction(shotDesktop);
+	auto shotPinpoint = new QAction(QStringLiteral("Screenshot of one picture (pinpoint)"), trayIcon.data());
+	connect(shotPinpoint, &QAction::triggered, this, [this]() {
+		hopcast::takePinpointScreenshot([this](const QString &path, const QString &error) {
+			if (!error.isEmpty())
+				SysTrayNotify(error, QSystemTrayIcon::Warning, QStringLiteral("HopShots"));
+			else if (!path.isEmpty())
+				SysTrayNotify(QStringLiteral("Picture saved: ") + path + QStringLiteral(" (also copied)"), QSystemTrayIcon::Information, QStringLiteral("HopShots"));
+		});
+	});
+	trayMenu->addAction(shotPinpoint);
 	auto shotStream = new QAction(QStringLiteral("Screenshot of the stream preview"), trayIcon.data());
 	connect(shotStream, &QAction::triggered, this, &OBSBasic::ScreenshotScene);
 	trayMenu->addAction(shotStream);
