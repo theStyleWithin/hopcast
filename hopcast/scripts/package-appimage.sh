@@ -47,6 +47,9 @@ fi
 # Plugins are dlopen()ed, so give their dependencies to linuxdeploy explicitly.
 LIBS=(); while IFS= read -r f; do LIBS+=(--library "$f"); done < <(find "$APPDIR/usr/lib" -name '*.so*' -path '*plugins*' -type f 2>/dev/null)
 
+# The chat panel's browser engine is a separate library that the app loads on demand, so name it too.
+[[ -f "$APPDIR/usr/lib/libhopcast-chat.so" ]] && LIBS+=(--library "$APPDIR/usr/lib/libhopcast-chat.so")
+
 export PATH="$TOOLS:$PATH" QMAKE="${QMAKE:-$(command -v qmake6 || command -v qmake)}"
 export EXTRA_PLATFORM_PLUGINS="libqwayland-generic.so;libqwayland-egl.so"
 export EXTRA_QT_PLUGINS="svg;imageformats;tls;networkinformation;wayland-decoration-client;wayland-graphics-integration-client;wayland-shell-integration;xcbglintegrations;platformthemes;multimedia"
