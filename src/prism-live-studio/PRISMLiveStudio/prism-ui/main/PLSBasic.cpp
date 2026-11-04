@@ -5,6 +5,7 @@
 #include "../hopcast/HopCastSecrets.h"
 #include "../hopcast/HopCastLinkGuard.h"
 #include "../hopcast/HopCastScreenshot.h" // HopCast: Tools > Screenshot
+#include "../hopcast/HopCastPinpoint.h" // HopCast: Tools > Screenshot of one picture
 #include "../hopcast/HopCastProfileImport.h" // HopCast: Profile > Import OBS profile
 #include "../hopcast/HopCastNetLog.h"
 #include "../hopcast/HopCastSettingsGuard.h"
@@ -1284,6 +1285,15 @@ void PLSBasic::PLSInit()
 				PLSAlertView::information(this, QStringLiteral("HopShots"), QStringLiteral("Screenshot saved:\n") + path);
 			else
 				PLSAlertView::warning(this, QStringLiteral("HopShots"), error);
+		});
+	});
+	/* HopCast: Tools > Screenshot of one picture (pinpoint): point at a picture on the screen and save just that. */
+	connect(ui->menuTools->addAction(QStringLiteral("Screenshot of one picture (pinpoint)")), &QAction::triggered, this, [this]() {
+		hopcast::takePinpointScreenshot([this](const QString &path, const QString &error) {
+			if (!error.isEmpty())
+				PLSAlertView::warning(this, QStringLiteral("HopShots"), error);
+			else if (!path.isEmpty())
+				PLSAlertView::information(this, QStringLiteral("HopShots"), QStringLiteral("Picture saved (also copied):\n") + path);
 		});
 	});
 	/* HopCast: Profile > Import OBS profile (.zip) - the files streaming sites hand out. */
