@@ -17,6 +17,7 @@ import android.media.projection.MediaProjectionManager
 import android.os.Environment
 import android.os.Handler
 import android.os.IBinder
+import android.os.SystemClock
 import android.os.Looper
 import android.provider.MediaStore
 import android.provider.Settings
@@ -28,9 +29,15 @@ import com.pedro.encoder.input.sources.audio.InternalAudioSource
 import com.pedro.encoder.input.sources.audio.MicrophoneSource
 import com.pedro.encoder.input.sources.audio.MixAudioSource
 import com.pedro.encoder.input.sources.audio.NoAudioSource
+import com.pedro.encoder.input.gl.render.filters.`object`.BaseObjectFilterRender
+import com.pedro.encoder.input.gl.render.filters.`object`.GifFilterRender
+import com.pedro.encoder.input.gl.render.filters.`object`.ImageFilterRender
 import com.pedro.encoder.input.sources.video.ScreenSource
 import com.pedro.library.generic.GenericStream
+import android.graphics.Bitmap
+import android.content.Intent as AppIntent
 import java.io.File
+import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -43,7 +50,7 @@ class CaptureService : Service() {
 
   private class Config(
     val url: String, val key: String, val sound: Boolean,
-    val quality: Int, val shape: Int, val bubble: Boolean,
+    val quality: Int, val shape: Int, val bubble: Boolean, val stream: Boolean,
   )
 
   private val main = Handler(Looper.getMainLooper())
@@ -53,8 +60,37 @@ class CaptureService : Service() {
   private var bubble: Bubble? = null
   private var recordFile: File? = null
   private var finishing = false
+  private var watcher: AppWatcher? = null
+  private var cover: ImageFilterRender? = null
+  private var probeFilter: ProbeFilterRender? = null
+  private var trackerObj: TagTracker? = null
+  private val tagBoxes = mutableMapOf<String, ImageFilterRender>()
+  private var checkOverlay: CheckOverlay? = null
+  private var homePackages: Set<String> = emptySet()
+  private var awaitTracker = false
+
+  /** A small picture of your screen and when it was taken, held back briefly before the studio may show it. */
+  private class Frame(val ms: Long, val bitmap: Bitmap)
+  private val pendingFrames = ArrayDeque<Frame>()
+
+  /** A camera on screen: which source it belongs to, the picture it draws into, and the running camera. */
+  private class CameraHandle(val src: Studio.Source, val filter: ImageFilterRender, var feed: CameraFeed)
+  private val cameras = mutableListOf<CameraHandle>()
 
   private val beginRunnable = Runnable { if (Live.waiting && !Live.appVisible) beginCapture() }
+
+  /** Every second: if the block list has apps but the watcher got switched off, stay black rather than risk showing one. */
+  private val watchdog = object : Runnable {
+    override fun run() {
+      val down = (Studio.blocked.isNotEmpty() || Live.gamePackage.isNotEmpty()) && !AppWatcher.allowed(this@CaptureService)
+      if (down != Live.watcherDown) {
+        Live.watcherDown = down
+        applyMute()
+        refresh()
+      }
+      main.postDelayed(this, 1000)
+    }
+  }
 
   private val checker = object : ConnectChecker {
     override fun onConnectionStarted(url: String) {}
@@ -84,6 +120,7 @@ class CaptureService : Service() {
       ACTION_STOP -> finish()
       ACTION_HIDE -> { Live.hidden = !Live.hidden; applyMute(); refresh() }
       ACTION_MIC -> toggleMic()
+      ACTION_FLIP -> flipCameras()
       else -> if (!Live.active() && !finishing) stopSelf()
     }
     return START_NOT_STICKY
@@ -106,13 +143,21 @@ class CaptureService : Service() {
       quality = intent.getIntExtra("quality", 0),
       shape = intent.getIntExtra("shape", 0),
       bubble = intent.getBooleanExtra("bubble", true),
+      stream = intent.getBooleanExtra("stream", true) && !intent.getBooleanExtra("check", false),
     )
+    Studio.load(applicationContext)
     Live.reset()
+    Live.checking = intent.getBooleanExtra("check", false)
+    Live.gamePackage = Studio.scene().sources.firstOrNull { it.kind == "game" && it.visible }?.text.orEmpty()
+    Live.hasBase = Studio.scene().sources.any { it.visible && (it.kind == "screen" || it.kind == "game") }
     Live.micOn = intent.getBooleanExtra("mic", false)
     Live.status = ""
     instance = this
 
     var type = ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
+    if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && Studio.scene().sources.any { it.kind == "camera" && it.visible }) {
+      type = type or ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
+    }
     if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
       type = type or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
     }
@@ -136,8 +181,10 @@ class CaptureService : Service() {
     projection = proj
 
     Live.waiting = true
+    main.post(watchdog)
+    if (Studio.blocked.isNotEmpty() || Live.gamePackage.isNotEmpty()) watcher = AppWatcher(applicationContext).also { it.start() }
     config?.let { cfg ->
-      if (cfg.bubble && Settings.canDrawOverlays(this)) bubble = Bubble(this).also { it.show() }
+      if (cfg.bubble && !Live.checking && Settings.canDrawOverlays(this)) bubble = Bubble(this).also { it.show() }
     }
     refresh()
     if (!Live.appVisible) main.postDelayed(beginRunnable, SETTLE_MS)
@@ -146,6 +193,7 @@ class CaptureService : Service() {
   /** HopCast's own screen came into view or left it. */
   fun onAppVisibility(visible: Boolean) {
     Live.appVisible = visible
+    if (visible) pendingFrames.clear() // anything taken while HopCast was sliding into view is thrown away
     if (Live.waiting) {
       main.removeCallbacks(beginRunnable)
       if (!visible) main.postDelayed(beginRunnable, SETTLE_MS) // give the game a moment to open and settle its screen shape
@@ -174,6 +222,8 @@ class CaptureService : Service() {
         return
       }
       stream = s
+      if (!Live.checking) applySources(s, portrait)
+      if (Live.checking || Studio.tags.isNotEmpty()) installTracking(s)
       applyMute()
       val file = newRecordFile()
       recordFile = file
@@ -182,11 +232,159 @@ class CaptureService : Service() {
       Live.waiting = false
       Live.startedMs = System.currentTimeMillis()
       Live.streaming = false
-      s.startStream(endpoint(cfg))
+      Live.recordOnly = !cfg.stream
+      if (cfg.stream) s.startStream(endpoint(cfg))
+      if (Live.checking && Settings.canDrawOverlays(this)) checkOverlay = CheckOverlay(this, this).also { it.show() }
       refresh()
     } catch (e: Exception) {
       Live.status = "Couldn't start: ${clean(e.message ?: e.javaClass.simpleName)}"
       finish()
+    }
+  }
+
+  /** Puts the images, GIFs and text from the active scene over the screen, in the same places the preview shows. */
+  private fun applySources(s: GenericStream, portrait: Boolean) {
+    val gl = s.getGlInterface()
+    val canvasAspect = if (portrait) 9f / 16f else 16f / 9f
+    for (src in Studio.scene().sources) {
+      if (!src.visible || src.kind == "game" || src.kind == "screen" || !File(src.file).exists()) continue
+      try {
+        if (src.kind == "camera") {
+          val picture = ImageFilterRender().also { it.setImage(Studio.decode(src.file, 1024)) }
+          picture.setScale(src.w, src.w * canvasAspect / src.aspect.coerceAtLeast(0.05f))
+          picture.setPosition(src.x, src.y)
+          gl.addFilter(picture)
+          startCamera(src, picture)
+          continue
+        }
+        val filter: BaseObjectFilterRender = if (src.kind == "gif") {
+          GifFilterRender().also { it.setGif(FileInputStream(src.file)) }
+        } else {
+          ImageFilterRender().also { it.setImage(Studio.decode(src.file, 1024)) }
+        }
+        val height = src.w * canvasAspect / src.aspect.coerceAtLeast(0.05f)
+        filter.setScale(src.w, height)
+        filter.setPosition(src.x, src.y)
+        gl.addFilter(filter)
+      } catch (e: Exception) {
+        // a picture that can't be read is skipped; the rest of the layout still goes out
+      }
+    }
+  }
+
+  private fun startCamera(src: Studio.Source, picture: ImageFilterRender) {
+    val front = src.text != "back" // "front" and "switch" start on the front camera
+    val feed = CameraFeed(applicationContext, front) { bitmap: Bitmap -> picture.setImage(bitmap) }
+    if (feed.open()) {
+      cameras.add(CameraHandle(src, picture, feed))
+    } else {
+      feed.close()
+      toast("Couldn't open the ${if (front) "front" else "back"} camera")
+    }
+  }
+
+  /** Swaps front and back on every camera source that is set to switch. */
+  private fun flipCameras() {
+    cameras.filter { it.src.text == "switch" }.forEach { h ->
+      val wasFront = h.feed.front
+      h.feed.close()
+      val next = CameraFeed(applicationContext, !wasFront) { bitmap: Bitmap -> h.filter.setImage(bitmap) }
+      if (next.open()) h.feed = next else { next.close(); toast("Couldn't switch the camera") }
+    }
+  }
+
+  /** The block-list watcher saw an app on the list come on screen, or go away. */
+  fun onBlockChanged() {
+    pendingFrames.clear()
+    // back on the home screen with tagged apps: stay black until the tracker has looked once
+    if (Studio.tags.isNotEmpty() && !Live.checking && Live.foreground in homePackages) {
+      awaitTracker = true
+      Live.moving = true
+    }
+    applyMute()
+    refresh()
+  }
+
+  // ---- the live-preview security check: tagged apps get a black box that follows them
+
+  fun probe(): ProbeFilterRender? = probeFilter
+
+  /** How many tagged apps the tracker is covering on the screen right now. */
+  fun tagsFollowed(): Int = trackerObj?.followed ?: 0
+
+  /** One picture of what viewers would get right now, black boxes included. */
+  fun viewerPicture(callback: (Bitmap) -> Unit) {
+    stream?.getGlInterface()?.takePhoto { bitmap -> callback(bitmap) }
+  }
+
+  /**
+   * The live view for the Home screen source in the studio. A picture only counts if HopCast and blocked apps weren't on
+   * screen then, and it waits a moment first, so the slide of HopCast coming into view never gets in.
+   */
+  private fun onLiveFrame(bitmap: Bitmap) {
+    if (!Live.checking) return
+    if (Live.appVisible || Live.blocked || Live.watcherDown || Live.foreground == packageName) { pendingFrames.clear(); return }
+    val now = SystemClock.uptimeMillis()
+    pendingFrames.addLast(Frame(now, bitmap))
+    var ready: Frame? = null
+    while (pendingFrames.isNotEmpty() && now - pendingFrames.first().ms >= LIVE_DELAY_MS) ready = pendingFrames.removeFirst()
+    if (ready != null) {
+      Live.liveFrame = ready.bitmap
+      Live.onFrame?.invoke()
+    }
+  }
+
+  fun onTagsChanged() {
+    val gl = stream?.getGlInterface() ?: return
+    Studio.tags.filter { it.id !in tagBoxes }.forEach { addTagBox(gl, it) }
+    trackerObj?.reload()
+  }
+
+  private fun addTagBox(gl: com.pedro.library.view.GlInterface, tag: Studio.Tag) {
+    val black = Bitmap.createBitmap(8, 8, Bitmap.Config.ARGB_8888).apply { eraseColor(android.graphics.Color.BLACK) }
+    val box = ImageFilterRender()
+    box.setImage(black)
+    box.alpha = 0f
+    box.setScale(1f, 1f)
+    box.setPosition(0f, 0f)
+    gl.addFilter(box)
+    tagBoxes[tag.id] = box
+  }
+
+  private fun trackingWanted(): Boolean =
+    Live.checking || Live.foreground.isEmpty() || Live.foreground in homePackages
+
+  private fun installTracking(s: GenericStream) {
+    val gl = s.getGlInterface()
+    val launcher = AppIntent(AppIntent.ACTION_MAIN).addCategory(AppIntent.CATEGORY_HOME)
+    @Suppress("DEPRECATION")
+    homePackages = packageManager.queryIntentActivities(launcher, 0).map { it.activityInfo.packageName }.toSet()
+    val tracker = TagTracker { hits, moving -> main.post { onTrackerResult(hits, moving) } }
+    val probe = ProbeFilterRender { grey, gw, gh, step -> if (trackingWanted()) tracker.onGrey(grey, gw, gh, step) }
+    gl.addFilter(0, probe) // first, so it sees your screen before any black box is drawn
+    probeFilter = probe
+    if (Live.checking) probe.onFrame = { bitmap -> main.post { onLiveFrame(bitmap) } }
+    trackerObj = tracker
+    Studio.tags.forEach { addTagBox(gl, it) }
+  }
+
+  private fun onTrackerResult(hits: List<TagTracker.Hit>, moving: Boolean) {
+    val active = trackingWanted()
+    for ((id, box) in tagBoxes) {
+      val hit = if (active) hits.firstOrNull { it.tag.id == id } else null
+      if (hit != null) {
+        box.setScale(hit.w, hit.h)
+        box.setPosition(hit.x, hit.y)
+        box.alpha = 1f
+      } else {
+        box.alpha = 0f
+      }
+    }
+    if (active) awaitTracker = false
+    val newMoving = (moving && Live.foreground in homePackages && !Live.checking) || awaitTracker
+    if (Live.moving != newMoving) {
+      Live.moving = newMoving
+      applyMute()
     }
   }
 
@@ -225,13 +423,38 @@ class CaptureService : Service() {
   /** The picture goes black while the user hid it or HopCast's own screen is showing. */
   private fun applyMute() {
     val gl = stream?.getGlInterface() ?: return
-    if (Live.hidden || Live.appVisible) gl.muteVideo() else gl.unMuteVideo()
+    val hide = Live.hidden || Live.appVisible || Live.blocked || Live.watcherDown || Live.moving || !Live.hasBase
+    if (hide && cover == null) {
+      // a solid black picture under your other sources, so nothing from the screen can show through
+      val black = Bitmap.createBitmap(8, 8, Bitmap.Config.ARGB_8888).apply { eraseColor(android.graphics.Color.BLACK) }
+      val filter = ImageFilterRender()
+      filter.setImage(black)
+      filter.setScale(100f, 100f)
+      filter.setPosition(0f, 0f)
+      gl.addFilter(if (probeFilter != null) 1 else 0, filter) // under your other sources, but after the probe
+      cover = filter
+    } else if (!hide && cover != null) {
+      cover?.let { gl.removeFilter(it) }
+      cover = null
+    }
   }
 
   private fun finish() {
     if (finishing) return
     finishing = true
     main.removeCallbacksAndMessages(null)
+    Live.blocked = false
+    watcher?.stop()
+    watcher = null
+    cover = null
+    checkOverlay?.hide()
+    checkOverlay = null
+    trackerObj?.stop()
+    trackerObj = null
+    probeFilter = null
+    tagBoxes.clear()
+    cameras.forEach { try { it.feed.close() } catch (e: Exception) { } }
+    cameras.clear()
     bubble?.hide()
     bubble = null
     val s = stream
@@ -243,11 +466,15 @@ class CaptureService : Service() {
     projection = null
     val file = recordFile
     recordFile = null
+    val checkedOnly = Live.checking
     val last = Live.status
     Live.reset()
     Live.status = last
     Live.changed()
-    if (file != null && file.exists() && file.length() > 0) {
+    if (checkedOnly) {
+      file?.delete() // a security check records nothing for you to keep
+      done()
+    } else if (file != null && file.exists() && file.length() > 0) {
       notify(notification("Saving your recording..."))
       publish(file)
     } else {
@@ -324,11 +551,23 @@ class CaptureService : Service() {
     main.post { Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show() }
   }
 
-  private fun statusLine(): String = when {
-    Live.waiting -> "Open your game: streaming starts once HopCast is out of view"
-    Live.running && Live.streaming -> if (Live.hidden) "Live (screen hidden), recording to this phone" else "Live, recording to this phone"
-    Live.running -> Live.status.ifEmpty { "Connecting..." } + if (recordFile != null) " Recording to this phone." else ""
-    else -> Live.status
+  private fun statusLine(): String {
+    val extra = when {
+      Live.watcherDown -> " Usage access is off, so the picture is black."
+      Live.blocked && Live.gamePackage.isNotEmpty() -> " You're not in your game, so the picture is black."
+      Live.blocked -> " A blocked app is on screen, so the picture is black."
+      Live.hidden -> " Screen hidden."
+      else -> ""
+    }
+    return when {
+      Live.running && Live.checking -> "Live-preview security check: nothing is going out. Tag the apps you want hidden, then tap Done."
+      Live.waiting && Live.checking -> "Go to your home screen: the security check starts once HopCast is out of view"
+      Live.waiting -> "Open your game: capture starts once HopCast is out of view"
+      Live.running && Live.recordOnly -> "Recording to this phone.$extra"
+      Live.running && Live.streaming -> "Live, recording to this phone.$extra"
+      Live.running -> Live.status.ifEmpty { "Connecting..." } + (if (recordFile != null) " Recording to this phone." else "") + extra
+      else -> Live.status
+    }
   }
 
   private fun refresh() {
@@ -369,9 +608,12 @@ class CaptureService : Service() {
     const val ACTION_STOP = "io.github.thestylewithin.hopcast.STOP"
     const val ACTION_HIDE = "io.github.thestylewithin.hopcast.HIDE"
     const val ACTION_MIC = "io.github.thestylewithin.hopcast.MIC"
+    const val ACTION_FLIP = "io.github.thestylewithin.hopcast.FLIP"
     private const val CHANNEL = "capture"
     private const val NOTIF_ID = 1
     private const val SETTLE_MS = 1500L
+    /** How long a picture of your screen waits before the studio may show it. */
+    private const val LIVE_DELAY_MS = 900L
 
     @Volatile var instance: CaptureService? = null
 

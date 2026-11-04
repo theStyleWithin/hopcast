@@ -73,6 +73,9 @@ class Bubble(private val context: Context) {
     micButton = button("Mic", Color.parseColor("#3a3a3a")) { CaptureService.send(context, CaptureService.ACTION_MIC) }
     t.addView(hideButton)
     t.addView(micButton)
+    if (Studio.scene().sources.any { it.kind == "camera" && it.text == "switch" && it.visible }) {
+      t.addView(button("Flip", Color.parseColor("#3a3a3a")) { CaptureService.send(context, CaptureService.ACTION_FLIP) })
+    }
     t.addView(button("Stop", Color.parseColor("#c34151")) { CaptureService.send(context, CaptureService.ACTION_STOP) })
     layout.addView(t)
 
