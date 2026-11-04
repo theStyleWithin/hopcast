@@ -140,7 +140,7 @@ jobs:
           sleep 1
           cmake -S hopcast/tests/chat-panel -B chat-test/build -G Ninja -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR" 2>&1 | tail -3
           cmake --build chat-test/build 2>&1 | tail -3
-          export HOME="$PWD/chat-test/home"; mkdir -p "$HOME"
+          export HOME="$PWD/chat-test/home" XDG_CONFIG_HOME="$PWD/chat-test/home/.config" XDG_DATA_HOME="$PWD/chat-test/home/.local/share"; mkdir -p "$HOME"
           export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox --disable-gpu" QT_QPA_PLATFORM=offscreen LD_LIBRARY_PATH="$QT_ROOT_DIR/lib:$PWD/build/stage/lib"
           timeout 240 chat-test/build/chat-panel-test "$PWD/$LIB" http://127.0.0.1:8777/chat.html 2>&1 | tee chat-test/result.log | grep -v '^$' | tail -30
 
@@ -244,7 +244,7 @@ jobs:
           mkdir -p chat-test/www && printf '%s' '<!doctype html><title>chat ok</title><script>document.cookie="seen=1; max-age=3600"; document.title = "chat ok " + (document.cookie.indexOf("seen")>=0 ? "cookie" : "nocookie");</script>' > chat-test/www/chat.html
           (cd chat-test/www && python3 -m http.server 8778 >/dev/null 2>&1 &)
           sleep 1
-          export HOME="$PWD/chat-test/home2"; mkdir -p "$HOME"
+          export HOME="$PWD/chat-test/home2" XDG_CONFIG_HOME="$PWD/chat-test/home2/.config" XDG_DATA_HOME="$PWD/chat-test/home2/.local/share"; mkdir -p "$HOME"
           export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox --disable-gpu" QT_QPA_PLATFORM=offscreen
           timeout 240 chat-test/build/chat-panel-test "$root/lib/libhopcast-chat.so" http://127.0.0.1:8778/chat.html 2>&1 | tee chat-test/appimage-result.log | grep -v '^$' | tail -30 || failed=1
           grep -q "FAIL" chat-test/appimage-result.log && failed=1
