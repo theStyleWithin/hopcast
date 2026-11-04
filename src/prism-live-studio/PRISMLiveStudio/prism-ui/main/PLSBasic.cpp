@@ -5,6 +5,7 @@
 #include "../hopcast/HopCastSecrets.h"
 #include "../hopcast/HopCastLinkGuard.h"
 #include "../hopcast/HopCastScreenshot.h" // HopCast: Tools > Screenshot
+#include "../hopcast/HopCastVideoDownload.h" // HopCast: Tools > Download a video
 #include "../hopcast/HopCastProfileImport.h" // HopCast: Profile > Import OBS profile
 #include "../hopcast/HopCastNetLog.h"
 #include "../hopcast/HopCastSettingsGuard.h"
@@ -1286,6 +1287,9 @@ void PLSBasic::PLSInit()
 				PLSAlertView::warning(this, QStringLiteral("HopShots"), error);
 		});
 	});
+	/* HopCast: Tools > Download a video from a link (runs yt-dlp). */
+	connect(ui->menuTools->addAction(QStringLiteral("Download a video from a link...")), &QAction::triggered, this,
+		[this]() { hopcast::showVideoDownloader(this); });
 	/* HopCast: Profile > Import OBS profile (.zip) - the files streaming sites hand out. */
 	connect(ui->profileMenu->addAction(QStringLiteral("Import OBS profile (.zip)...")), &QAction::triggered, this, [this]() {
 		const QString file = QFileDialog::getOpenFileName(this, QStringLiteral("Import OBS profile"), QDir::homePath(),
