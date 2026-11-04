@@ -12476,6 +12476,25 @@ bool OBSBasic::sysTrayMinimizeToTray()
 	return config_get_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayMinimizeToTray");
 }
 
+#ifdef HOPCAST_NO_NAVER
+/* Only when there is a tray icon to bring the window back from; otherwise the close button quits as it always did. */
+bool OBSBasic::closeToTray()
+{
+	return QSystemTrayIcon::isSystemTrayAvailable() && trayIcon && trayIcon->isVisible() &&
+	       config_get_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayCloseToTray");
+}
+
+void OBSBasic::hideToTray()
+{
+	SetShowing(false);
+	if (!config_get_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayCloseNoticeShown")) {
+		config_set_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayCloseNoticeShown", true);
+		SysTrayNotify(QStringLiteral("HopCast is still running here. Click the icon to open it again, or right-click it to quit."),
+			      QSystemTrayIcon::Information, QStringLiteral("HopCast"));
+	}
+}
+#endif
+
 void OBSBasic::on_actionMainUndo_triggered()
 {
 	undo_s.undo();
