@@ -64,7 +64,7 @@ jobs:
           host: linux
           target: desktop
           arch: linux_gcc_64
-          modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats qtwebengine qtwebchannel qtpositioning'
+          modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats qtwebengine qtwebchannel qtpositioning qtserialport'
           cache: true
 
       # Restore/save split so the compiler cache is kept even when the build fails

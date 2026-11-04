@@ -69,7 +69,7 @@ jobs:
           host: windows
           target: desktop
           arch: win64_msvc2022_64
-          modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats qtwebengine qtwebchannel qtpositioning'
+          modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats qtwebengine qtwebchannel qtpositioning qtserialport'
           cache: true
 
       - name: Install libraries (vcpkg)
