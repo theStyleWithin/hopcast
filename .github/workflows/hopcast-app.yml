@@ -221,6 +221,36 @@ jobs:
           ls -la *.AppImage
           exit $failed
 
+      - name: Chat panel inside the AppImage (engine bundled, no missing libraries, page loads)
+        if: steps.pkg.outcome == 'success'
+        run: |
+          set -o pipefail
+          cd build/appimage
+          root="$PWD/x-release/squashfs-root/usr"
+          failed=0
+          echo "--- chat library and browser engine files inside the AppImage:"
+          find "$root" \( -name 'libhopcast-chat.so' -o -name 'QtWebEngineProcess' -o -name 'libQt6WebEngineCore.so*' -o -name 'qtwebengine_resources.pak' -o -name 'icudtl.dat' \) -printf '%p  %s bytes\n'
+          for pat in libhopcast-chat.so QtWebEngineProcess 'libQt6WebEngineCore.so*' qtwebengine_resources.pak icudtl.dat; do
+            [ -n "$(find "$root" -name "$pat" | head -1)" ] || { echo "::error title=AppImage::chat panel file missing: $pat"; failed=1; }
+          done
+          echo "--- libraries the chat panel and the engine process can't find:"
+          export LD_LIBRARY_PATH="$root/lib"
+          for b in "$root/lib/libhopcast-chat.so" "$(find "$root" -name QtWebEngineProcess | head -1)"; do
+            [ -f "$b" ] || continue
+            ldd "$b" | grep "not found" && { echo "::error title=AppImage::$(basename "$b") has unresolved libraries"; failed=1; } || true
+          done
+          echo "--- drive the panel from the AppImage's own libraries:"
+          cd "$GITHUB_WORKSPACE"
+          mkdir -p chat-test/www && printf '%s' '<!doctype html><title>chat ok</title><script>document.cookie="seen=1; max-age=3600"; document.title = "chat ok " + (document.cookie.indexOf("seen")>=0 ? "cookie" : "nocookie");</script>' > chat-test/www/chat.html
+          (cd chat-test/www && python3 -m http.server 8778 >/dev/null 2>&1 &)
+          sleep 1
+          export HOME="$PWD/chat-test/home2"; mkdir -p "$HOME"
+          export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox --disable-gpu" QT_QPA_PLATFORM=offscreen
+          timeout 240 chat-test/build/chat-panel-test "$root/lib/libhopcast-chat.so" http://127.0.0.1:8778/chat.html 2>&1 | tee chat-test/appimage-result.log | grep -v '^$' | tail -30 || failed=1
+          grep -q "FAIL" chat-test/appimage-result.log && failed=1
+          [ -f chat-test/appimage-result.log ] && grep -q "ok: chat page loaded" chat-test/appimage-result.log || { echo "::error title=AppImage::the chat page did not load from the AppImage's libraries"; failed=1; }
+          exit $failed
+
       - uses: actions/upload-artifact@v4
         if: steps.pkg.outcome != 'skipped'
         with:
