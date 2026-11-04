@@ -539,6 +539,7 @@ void OBSApp::InitUserConfigDefaults()
 	config_set_default_bool(appConfig, "BasicWindow", "SysTrayWhenStarted", false);
 #ifdef HOPCAST_NO_NAVER // HopCast: minimizing sends the window to the tray
 	config_set_default_bool(appConfig, "BasicWindow", "SysTrayMinimizeToTray", true);
+	config_set_default_bool(appConfig, "BasicWindow", "SysTrayCloseToTray", true); // the close button hides to the tray
 #endif
 	config_set_default_bool(appConfig, "BasicWindow", "SaveProjectors", false);
 	config_set_default_bool(appConfig, "BasicWindow", "ShowTransitions", true);

@@ -266,6 +266,7 @@ private:
 	QPointer<PLSAlertView> m_pAlertViewMobileLost;
 	QPointer<PLSAlertView> m_pAlertViewMobileDisconnect;
 	bool m_isFirstShow = true;
+	bool m_userClosing = false; // HopCast: the close button was clicked (as opposed to the tray's Quit, restarts, updates)
 	friend class PLSBasic;
 	friend class ResolutionGuidePage;
 
