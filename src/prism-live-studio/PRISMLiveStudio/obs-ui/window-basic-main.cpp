@@ -56,6 +56,7 @@
 #include "window-basic-source-select.hpp"
 #include "window-basic-main.hpp"
 #include "../prism-ui/hopcast/HopCastScreenshot.h" // HopCast: tray screenshots
+#include "../prism-ui/hopcast/HopCastVideoDownload.h" // HopCast: download a video from a link
 #include "../prism-ui/hopcast/HopCastPinpoint.h" // HopCast: HopShots pinpoint screenshot
 #include "../prism-ui/hopcast/HopCastMultiStream.h" // HopCast: several servers at once
 #include "window-basic-stats.hpp"
@@ -12384,6 +12385,9 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 	auto shotStream = new QAction(QStringLiteral("Screenshot of the stream preview"), trayIcon.data());
 	connect(shotStream, &QAction::triggered, this, &OBSBasic::ScreenshotScene);
 	trayMenu->addAction(shotStream);
+	auto videoDownload = new QAction(QStringLiteral("Download a video from a link..."), trayIcon.data());
+	connect(videoDownload, &QAction::triggered, this, [this]() { hopcast::showVideoDownloader(this); });
+	trayMenu->addAction(videoDownload);
 #endif
 #ifndef HOPCAST_NO_NAVER
 	sysTrayBanner = addSysTrayAction(QTStr("Basic.Main.Wizard"), "sysTrayBanner",

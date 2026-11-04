@@ -5,6 +5,7 @@
 #include "../hopcast/HopCastSecrets.h"
 #include "../hopcast/HopCastLinkGuard.h"
 #include "../hopcast/HopCastScreenshot.h" // HopCast: Tools > Screenshot
+#include "../hopcast/HopCastVideoDownload.h" // HopCast: Tools > Download a video
 #include "../hopcast/HopCastPinpoint.h" // HopCast: Tools > Screenshot of one picture
 #include "../hopcast/HopCastProfileImport.h" // HopCast: Profile > Import OBS profile
 #include "../hopcast/HopCastNetLog.h"
@@ -1287,6 +1288,9 @@ void PLSBasic::PLSInit()
 				PLSAlertView::warning(this, QStringLiteral("HopShots"), error);
 		});
 	});
+	/* HopCast: Tools > Download a video from a link (runs yt-dlp). */
+	connect(ui->menuTools->addAction(QStringLiteral("Download a video from a link...")), &QAction::triggered, this,
+		[this]() { hopcast::showVideoDownloader(this); });
 	/* HopCast: Tools > Screenshot of one picture (pinpoint): point at a picture on the screen and save just that. */
 	connect(ui->menuTools->addAction(QStringLiteral("Screenshot of one picture (pinpoint)")), &QAction::triggered, this, [this]() {
 		hopcast::takePinpointScreenshot([this](const QString &path, const QString &error) {
