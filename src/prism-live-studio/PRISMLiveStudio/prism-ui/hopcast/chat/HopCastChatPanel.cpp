@@ -14,6 +14,8 @@
 #include <QDir>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
+#include <functional>
 #include <QSettings>
 #include <QStandardPaths>
 #include <QTimer>
@@ -202,8 +204,20 @@ public:
 		t->setAlignment(Qt::AlignCenter);
 		t->setWordWrap(true);
 		t->setStyleSheet(QStringLiteral("color: white; background: transparent; border: none;"));
-		l->addWidget(t);
+		l->addWidget(t, 1);
+		// the dock's own buttons can sit underneath the overlay, so locking it is possible from the overlay itself
+		auto *done = new QPushButton(QStringLiteral("Done: lock it here"), this);
+		done->setObjectName(QStringLiteral("chatOverlayDone"));
+		done->setCursor(Qt::ArrowCursor);
+		done->setStyleSheet(QStringLiteral("QPushButton { color: black; background: #f5e700; border: none; border-radius: 4px; padding: 8px 14px; font-weight: bold; }"));
+		connect(done, &QPushButton::clicked, this, [this]() {
+			if (onDone)
+				onDone();
+		});
+		l->addWidget(done, 0, Qt::AlignHCenter);
 	}
+
+	std::function<void()> onDone;
 
 protected:
 	static Qt::Edges edgesAt(const QPoint &p, const QSize &s)
@@ -266,6 +280,7 @@ public:
 		layout_ = new QVBoxLayout(this);
 		layout_->setContentsMargins(0, 0, 0, 0);
 		drag_ = new DragLayer(this);
+		drag_->onDone = [this]() { setLocked(true); };
 		drag_->hide();
 		hint_ = new QLabel(this);
 		hint_->setObjectName(QStringLiteral("chatOverlayHint"));

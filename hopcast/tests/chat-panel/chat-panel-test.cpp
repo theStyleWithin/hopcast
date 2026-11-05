@@ -4,6 +4,7 @@
 #include <QLibrary>
 #include <QLineEdit>
 #include <QLabel>
+#include <QPushButton>
 #include <QTest>
 #include <QWebEngineView>
 #include <QWebEnginePage>
@@ -97,6 +98,12 @@ int main(int argc, char **argv)
 	CHECK(overlay->windowHandle() && !(overlay->windowHandle()->flags() & Qt::WindowTransparentForInput), "unlocked overlay takes the mouse so it can be moved");
 	QWidget *drag = overlay->findChild<QWidget *>("chatOverlayDrag");
 	CHECK(drag && drag->isVisible() && drag->size() == overlay->size(), "move mode: the drag layer covers the whole overlay");
+	QPushButton *done = overlay->findChild<QPushButton *>("chatOverlayDone");
+	CHECK(done && done->isVisible(), "move mode has a Done button on the overlay itself");
+	if (done) done->click();
+	QTest::qWait(200);
+	CHECK(ovState() == 1 && (overlay->windowHandle()->flags() & Qt::WindowTransparentForInput), "Done locks it (click-through) without needing the dock's buttons");
+	CHECK(ovMove(1) == 1, "move mode can be turned on again");
 	CHECK(ovMove(0) == 0 && (overlay->windowHandle()->flags() & Qt::WindowTransparentForInput), "locking makes it click-through again");
 	CHECK(drag && !drag->isVisible(), "locked: the drag layer is gone");
 	panel->hide(); QTest::qWait(300);
