@@ -58,6 +58,9 @@
 #include "../prism-ui/hopcast/HopCastScreenshot.h" // HopCast: tray screenshots
 #include "../prism-ui/hopcast/HopCastVideoDownload.h" // HopCast: download a video from a link
 #include "../prism-ui/hopcast/HopCastPinpoint.h" // HopCast: HopShots pinpoint screenshot
+#include "../prism-ui/hopcast/HopCastChatSettings.h" // HopCast: tray "Reset chat panel"
+#include <QDockWidget>
+#include <QSettings>
 #include "../prism-ui/hopcast/HopCastMultiStream.h" // HopCast: several servers at once
 #include "window-basic-stats.hpp"
 #include "PLSBasicStatusBar.hpp"
@@ -12398,6 +12401,21 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 		on_action_Settings_triggered();
 	});
 	trayMenu->addAction(quickSettings);
+	/* One-click undo for the chat panel: hides it, forgets the link and turns it off (back on in Settings > General > Chat). */
+	auto resetChat = new QAction(QStringLiteral("Reset chat panel"), trayIcon.data());
+	resetChat->setObjectName(QStringLiteral("sysTrayResetChat"));
+	connect(resetChat, &QAction::triggered, this, [this]() {
+		QSettings chat = hopcast::openChatSettings();
+		chat.remove(QStringLiteral("url"));
+		chat.setValue(QStringLiteral("signedIn"), false);
+		chat.setValue(QStringLiteral("enabled"), false);
+		chat.sync();
+		if (QDockWidget *dock = findChild<QDockWidget *>(QStringLiteral("hopcastChatDock")))
+			dock->hide();
+		SysTrayNotify(QStringLiteral("The chat panel is off and its link is cleared. Turn it back on in Settings > General > Chat."),
+			      QSystemTrayIcon::Information, QStringLiteral("HopCast"));
+	});
+	trayMenu->addAction(resetChat);
 #endif
 #ifndef HOPCAST_NO_NAVER
 	sysTrayBanner = addSysTrayAction(QTStr("Basic.Main.Wizard"), "sysTrayBanner",
