@@ -41,3 +41,4 @@ sidebar-draw-pen | click 1573 217; wait 3
 sidebar-virtual-camera | click 1573 258; wait 3
 sidebar-settings | click 1573 331; wait 3
 notifications | click 1573 842; wait 2
+chat-dock-open | click 380 109; wait 1; shot docks-menu-with-chat; click 440 431; wait 5; shot chat-dock-shown
