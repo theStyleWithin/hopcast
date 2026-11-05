@@ -614,6 +614,11 @@ void OBSBasicSettings::LoadSimpleFormats()
 {
 #define FORMAT_STR(str) QTStr("Basic.Settings.Output.Format." str)
 
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: the choice is MKV or MP4 (kept between sessions like every other setting). */
+	outputSimplePage->simpleOutRecFormat->addItem(QStringLiteral("MKV - safest: the recording still opens if something stops it"), "mkv");
+	outputSimplePage->simpleOutRecFormat->addItem(QStringLiteral("MP4 - plays everywhere (a crash during recording can damage the file)"), "mp4");
+#else
 	outputSimplePage->simpleOutRecFormat->addItem(FORMAT_STR("FLV"), "flv");
 	outputSimplePage->simpleOutRecFormat->addItem(FORMAT_STR("MKV"), "mkv");
 	outputSimplePage->simpleOutRecFormat->addItem(FORMAT_STR("MP4"), "mp4");
@@ -622,6 +627,7 @@ void OBSBasicSettings::LoadSimpleFormats()
 	outputSimplePage->simpleOutRecFormat->addItem(FORMAT_STR("fMP4"), "fragmented_mp4");
 	outputSimplePage->simpleOutRecFormat->addItem(FORMAT_STR("fMOV"), "fragmented_mov");
 	outputSimplePage->simpleOutRecFormat->addItem(FORMAT_STR("TS"), "mpegts");
+#endif
 
 #undef FORMAT_STR
 }
@@ -650,6 +656,10 @@ void OBSBasicSettings::LoadRecordFormats()
 
 	outputRecordPage->advOutFFFormat->blockSignals(false);
 
+#ifdef HOPCAST_NO_NAVER
+	outputRecordPage->advOutRecFormat->addItem(QStringLiteral("MKV - safest: the recording still opens if something stops it"), "mkv");
+	outputRecordPage->advOutRecFormat->addItem(QStringLiteral("MP4 - plays everywhere (a crash during recording can damage the file)"), "mp4");
+#else
 	outputRecordPage->advOutRecFormat->addItem(FORMAT_STR("FLV"), "flv");
 	outputRecordPage->advOutRecFormat->addItem(FORMAT_STR("MKV"), "mkv");
 	outputRecordPage->advOutRecFormat->addItem(FORMAT_STR("MP4"), "mp4");
@@ -659,6 +669,7 @@ void OBSBasicSettings::LoadRecordFormats()
 	outputRecordPage->advOutRecFormat->addItem(FORMAT_STR("fMOV"), "fragmented_mov");
 	outputRecordPage->advOutRecFormat->addItem(FORMAT_STR("TS"), "mpegts");
 	outputRecordPage->advOutRecFormat->addItem(FORMAT_STR("HLS"), "hls");
+#endif
 
 #undef FORMAT_STR
 }
@@ -1426,6 +1437,12 @@ void OBSBasicSettings::LoadSimpleOutputSettings()
 	outputSimplePage->simpleOutputVBitrate->setValue(videoBitrate);
 
 	int idx = outputSimplePage->simpleOutRecFormat->findData(format);
+#ifdef HOPCAST_NO_NAVER
+	if (idx < 0) { // an older setting (e.g. FLV): keep it as it is until the user picks MKV or MP4
+		outputSimplePage->simpleOutRecFormat->addItem(QString::fromUtf8(format).toUpper(), QString::fromUtf8(format));
+		idx = outputSimplePage->simpleOutRecFormat->count() - 1;
+	}
+#endif
 	outputSimplePage->simpleOutRecFormat->setCurrentIndex(idx);
 
 	PopulateSimpleBitrates(outputSimplePage->simpleOutputABitrate, isOpus);
@@ -1673,6 +1690,12 @@ void OBSBasicSettings::LoadAdvOutputRecordingSettings()
 	outputRecordPage->advOutMuxCustom->setText(muxCustom);
 
 	idx = outputRecordPage->advOutRecFormat->findData(format);
+#ifdef HOPCAST_NO_NAVER
+	if (idx < 0) {
+		outputRecordPage->advOutRecFormat->addItem(QString::fromUtf8(format).toUpper(), QString::fromUtf8(format));
+		idx = outputRecordPage->advOutRecFormat->count() - 1;
+	}
+#endif
 	outputRecordPage->advOutRecFormat->setCurrentIndex(idx);
 
 	outputRecordPage->advOutRecTrack1->setChecked(tracks & (1 << 0));

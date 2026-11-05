@@ -40,7 +40,7 @@ QString newPinpointPath()
 		dir = QDir::homePath();
 	dir += QStringLiteral("/HopCast");
 	QDir().mkpath(dir);
-	return dir + QStringLiteral("/Pinpoint ") +
+	return dir + QStringLiteral("/HopShots ") +
 	       QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd hh-mm-ss")) + QStringLiteral(".png");
 }
 
