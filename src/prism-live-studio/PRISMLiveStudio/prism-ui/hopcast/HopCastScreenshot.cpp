@@ -36,7 +36,7 @@ QString newScreenshotPath()
 		dir = QDir::homePath();
 	dir += QStringLiteral("/HopCast");
 	QDir().mkpath(dir);
-	return dir + QStringLiteral("/Screenshot ") +
+	return dir + QStringLiteral("/HopShots ") +
 	       QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd hh-mm-ss")) + QStringLiteral(".png");
 }
 

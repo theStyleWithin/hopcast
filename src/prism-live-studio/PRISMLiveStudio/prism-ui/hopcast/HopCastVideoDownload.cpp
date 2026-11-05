@@ -54,6 +54,7 @@ struct Job {
 	QString folder;
 	QString scratch;
 	int quality = 0; // 0 best, 1 up to 1080p, 2 up to 720p, 3 up to 480p, 4 sound only (MP3)
+	int container = 0; // 0 the site's own (often WebM), 1 MP4, 2 MKV
 	bool playlist = false;
 	bool haveFfmpeg = false;
 };
@@ -85,9 +86,18 @@ QStringList buildArgs(const Job &j)
 		QString f;
 		if (j.haveFfmpeg)
 			f = h ? QStringLiteral("bv*[height<=%1]+ba/b[height<=%1]").arg(h) : QStringLiteral("bv*+ba/b");
+		else if (j.container == 1) // no ffmpeg to convert with: at least ask for a stream that already is an MP4
+			f = h ? QStringLiteral("b[height<=%1][ext=mp4]/b[height<=%1]/b").arg(h) : QStringLiteral("b[ext=mp4]/b");
 		else
 			f = h ? QStringLiteral("b[height<=%1]/b").arg(h) : QStringLiteral("b"); // one ready-made file, no joining needed
 		a << "-f" << f;
+		if (j.haveFfmpeg && j.container != 0) {
+			const QString box = j.container == 1 ? QStringLiteral("mp4") : QStringLiteral("mkv");
+			// MP4 is picked to play everywhere, so at the same size prefer the codecs every player knows (H.264 and AAC)
+			if (j.container == 1)
+				a << "-S" << "res,vcodec:h264,acodec:m4a";
+			a << "--merge-output-format" << box << "--remux-video" << box;
+		}
 	}
 	a << "--" << j.url;
 	return a;
@@ -232,7 +242,17 @@ public:
 				    QStringLiteral("Up to 480p"), QStringLiteral("Sound only (MP3)")});
 		quality_->setCurrentIndex(qBound(0, settings_.value(QStringLiteral("quality"), 0).toInt(), kQualities - 1));
 		row->addWidget(quality_);
+		row->addWidget(new QLabel(QStringLiteral("Save as")));
+		container_ = new QComboBox;
+		container_->setObjectName(QStringLiteral("container"));
+		container_->addItems({QStringLiteral("Original (often WebM)"), QStringLiteral("MP4"), QStringLiteral("MKV")});
+		container_->setToolTip(QStringLiteral("The file type of the finished video. MP4 and MKV need ffmpeg to convert."));
+		container_->setCurrentIndex(qBound(0, settings_.value(QStringLiteral("container"), 0).toInt(), 2));
+		row->addWidget(container_);
 		row->addStretch(1);
+		// saved the moment it changes, so a choice survives even if HopCast is closed with this window open
+		connect(container_, &QComboBox::currentIndexChanged, this, [this](int i) { settings_.setValue(QStringLiteral("container"), i); settings_.sync(); });
+		connect(quality_, &QComboBox::currentIndexChanged, this, [this](int i) { settings_.setValue(QStringLiteral("quality"), i); settings_.sync(); });
 		playlist_ = new QCheckBox(QStringLiteral("If the link is a playlist, download all of it"));
 		playlist_->setObjectName(QStringLiteral("playlist"));
 		playlist_->setChecked(settings_.value(QStringLiteral("playlist"), false).toBool());
@@ -332,6 +352,7 @@ protected:
 		cancelWork();
 		settings_.setValue(QStringLiteral("folder"), folder_->text());
 		settings_.setValue(QStringLiteral("quality"), quality_->currentIndex());
+		settings_.setValue(QStringLiteral("container"), container_->currentIndex());
 		settings_.setValue(QStringLiteral("playlist"), playlist_->isChecked());
 		QDialog::closeEvent(e);
 	}
@@ -358,6 +379,7 @@ private:
 		go_->setEnabled(!busy);
 		url_->setEnabled(!busy);
 		quality_->setEnabled(!busy);
+		container_->setEnabled(!busy);
 		playlist_->setEnabled(!busy);
 		folder_->setEnabled(!busy);
 		get_->setEnabled(!busy && !assetName().isEmpty());
@@ -535,6 +557,7 @@ private:
 		job.folder = folder;
 		job.scratch = scratch_->path();
 		job.quality = quality_->currentIndex();
+		job.container = job.quality == 4 ? 0 : container_->currentIndex();
 		job.playlist = playlist_->isChecked();
 		job.haveFfmpeg = !findFfmpeg().isEmpty();
 
@@ -679,6 +702,7 @@ private:
 	QLineEdit *url_ = nullptr;
 	QComboBox *quality_ = nullptr;
 	QCheckBox *playlist_ = nullptr;
+	QComboBox *container_ = nullptr;
 	QLineEdit *folder_ = nullptr;
 	QLabel *tools_ = nullptr;
 	QProgressBar *bar_ = nullptr;
