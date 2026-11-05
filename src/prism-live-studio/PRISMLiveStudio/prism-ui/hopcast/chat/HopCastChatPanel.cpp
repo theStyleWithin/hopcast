@@ -193,6 +193,7 @@ class DragLayer : public QWidget {
 public:
 	explicit DragLayer(QWidget *parent) : QWidget(parent)
 	{
+		setObjectName(QStringLiteral("chatOverlayDrag"));
 		setMouseTracking(true);
 		setAttribute(Qt::WA_StyledBackground, true);
 		setStyleSheet(QStringLiteral("background: rgba(20,20,20,120); border: 2px solid #f5e700;"));
@@ -266,6 +267,12 @@ public:
 		layout_->setContentsMargins(0, 0, 0, 0);
 		drag_ = new DragLayer(this);
 		drag_->hide();
+		hint_ = new QLabel(this);
+		hint_->setObjectName(QStringLiteral("chatOverlayHint"));
+		hint_->setWordWrap(true);
+		hint_->setMargin(8);
+		hint_->setStyleSheet(QStringLiteral("color: white; background: rgba(20,20,20,200); border-radius: 6px;"));
+		hint_->hide();
 		saveTimer_.setSingleShot(true);
 		saveTimer_.setInterval(600);
 		connect(&saveTimer_, &QTimer::timeout, this, [this]() { saveRect(); });
@@ -294,11 +301,22 @@ public:
 
 	bool locked() const { return locked_; }
 
+	// a short message over the chat (for example "no chat link yet"), since a see-through empty window shows nothing
+	void setHint(const QString &text)
+	{
+		hint_->setText(text);
+		hint_->setVisible(!text.isEmpty());
+		layoutOverlays();
+		hint_->raise();
+	}
+
 	void setLocked(bool locked)
 	{
 		locked_ = locked;
+		layoutOverlays();
 		drag_->setVisible(!locked);
 		drag_->raise();
+		hint_->raise();
 		applyInputFlag();
 	}
 
@@ -330,11 +348,21 @@ protected:
 	void resizeEvent(QResizeEvent *ev) override
 	{
 		QWidget::resizeEvent(ev);
+		layoutOverlays();
 		if (isVisible())
 			saveTimer_.start();
 	}
 
 private:
+	// the drag layer covers the whole window; the hint sits at the top
+	void layoutOverlays()
+	{
+		drag_->setGeometry(rect());
+		hint_->setFixedWidth(qMax(100, width() - 24));
+		hint_->adjustSize();
+		hint_->move(12, 12);
+	}
+
 	void applyInputFlag()
 	{
 		if (QWindow *w = windowHandle())
@@ -366,6 +394,7 @@ private:
 
 	QVBoxLayout *layout_ = nullptr;
 	DragLayer *drag_ = nullptr;
+	QLabel *hint_ = nullptr;
 	QWebEngineView *view_ = nullptr;
 	QTimer saveTimer_;
 	bool locked_ = true;
@@ -478,6 +507,7 @@ public:
 			overlayOn_ = true;
 			overlayNote_->setVisible(true);
 			overlay_->present();
+			overlay_->setHint(lastNote_);
 		} else {
 			overlay_->hide();
 			overlay_->release();
@@ -582,6 +612,9 @@ private:
 
 	void showNote(const QString &text)
 	{
+		lastNote_ = text;
+		if (overlay_ && overlayOn_)
+			overlay_->setHint(text);
 		const QString all = text.isEmpty() ? sandboxNote_ : (sandboxNote_.isEmpty() ? text : text + QLatin1Char('\n') + sandboxNote_);
 		note_->setText(all);
 		note_->setVisible(!all.isEmpty());
@@ -646,6 +679,7 @@ private:
 	QWebEngineView *view_ = nullptr;
 	QString url_;
 	QString sandboxNote_;
+	QString lastNote_;
 	bool signedIn_ = false;
 	bool sound_ = false;
 	double zoom_ = 1.0;

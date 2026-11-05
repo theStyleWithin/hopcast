@@ -95,7 +95,10 @@ int main(int argc, char **argv)
 	CHECK(qAbs(runJs("document.documentElement.style.opacity").toString().toDouble() - 0.5) < 0.001, "see-through setting is applied to the overlay");
 	CHECK(ovMove(1) == 1 && ovState() == 3, "move / resize mode turns on");
 	CHECK(overlay->windowHandle() && !(overlay->windowHandle()->flags() & Qt::WindowTransparentForInput), "unlocked overlay takes the mouse so it can be moved");
+	QWidget *drag = overlay->findChild<QWidget *>("chatOverlayDrag");
+	CHECK(drag && drag->isVisible() && drag->size() == overlay->size(), "move mode: the drag layer covers the whole overlay");
 	CHECK(ovMove(0) == 0 && (overlay->windowHandle()->flags() & Qt::WindowTransparentForInput), "locking makes it click-through again");
+	CHECK(drag && !drag->isVisible(), "locked: the drag layer is gone");
 	panel->hide(); QTest::qWait(300);
 	CHECK(view->page()->lifecycleState() == QWebEnginePage::LifecycleState::Active, "dock closed but overlay on: chat stays live");
 	CHECK(ovSet(0) == 0 && ovState() == 0, "overlay turns off");
@@ -109,6 +112,12 @@ int main(int argc, char **argv)
 	CHECK(ovSet(1) == 1, "overlay on again"); QTest::qWait(300);
 	overlay->setGeometry(QRect(120, 140, 333, 444)); QTest::qWait(1200);
 	CHECK(s.value("overlayRect").toString() == "120,140,333,444", "overlay position and size are remembered");
+	ovSet(0);
+	// no link: the overlay says so instead of being an invisible empty window
+	s.remove("url"); s.sync(); QTest::qWait(1500);
+	CHECK(ovSet(1) == 1, "overlay on without a link"); QTest::qWait(500);
+	QLabel *hint = overlay->findChild<QLabel *>("chatOverlayHint");
+	CHECK(hint && hint->isVisible() && hint->text().contains("Settings"), "overlay shows a hint when there is no chat link");
 	ovSet(0);
 	QTest::qWait(1500);
 	delete panel;
