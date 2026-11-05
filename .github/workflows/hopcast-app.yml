@@ -64,7 +64,7 @@ jobs:
           host: linux
           target: desktop
           arch: linux_gcc_64
-          modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats'
+          modules: 'qtwebsockets qtmultimedia qtnetworkauth qtimageformats qtwebengine qtwebchannel qtpositioning qtserialport'
           cache: true
 
       # Restore/save split so the compiler cache is kept even when the build fails
@@ -122,6 +122,27 @@ jobs:
         run: |
           sudo apt-get install -y --no-install-recommends x11-apps x11-utils imagemagick gdb
           bash hopcast/scripts/launch-test-app.sh build/stage build/launch-test 30
+
+      - name: Chat panel test (browser engine library + a local test page)
+        id: chattest
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          sudo apt-get install -y --no-install-recommends libnss3 libxtst6 libxrandr2 libxkbfile1 libxcb-cursor0 libasound2t64 xvfb 2>&1 | tail -2
+          LIB=$(find build/stage -name libhopcast-chat.so | head -1)
+          echo "library: ${LIB:-<not built>}"
+          [ -n "$LIB" ]
+          mkdir -p chat-test/www && cat > chat-test/www/chat.html <<'HTML'
+          <!doctype html><html><head><meta charset="utf-8"><title>chat ok</title></head>
+          <body><h1>hello chat</h1><script>document.cookie="seen=1; max-age=3600"; document.title = "chat ok " + (document.cookie.indexOf("seen")>=0 ? "cookie" : "nocookie");</script></body></html>
+          HTML
+          (cd chat-test/www && python3 -m http.server 8777 >/dev/null 2>&1 &)
+          sleep 1
+          cmake -S hopcast/tests/chat-panel -B chat-test/build -G Ninja -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR" 2>&1 | tail -3
+          cmake --build chat-test/build 2>&1 | tail -3
+          export HOME="$PWD/chat-test/home" XDG_CONFIG_HOME="$PWD/chat-test/home/.config" XDG_DATA_HOME="$PWD/chat-test/home/.local/share"; mkdir -p "$HOME"
+          export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox --disable-gpu" QT_QPA_PLATFORM=offscreen LD_LIBRARY_PATH="$QT_ROOT_DIR/lib:$PWD/build/stage/lib"
+          timeout 240 chat-test/build/chat-panel-test "$PWD/$LIB" http://127.0.0.1:8777/chat.html 2>&1 | tee chat-test/result.log | grep -v '^$' | tail -30
 
       - name: UI tour (click through the app, screenshot every screen)
         if: inputs.ui_tour
@@ -198,6 +219,36 @@ jobs:
 
           for v in release debug; do test -s smoke-$v/screen.png || failed=1; done
           ls -la *.AppImage
+          exit $failed
+
+      - name: Chat panel inside the AppImage (engine bundled, no missing libraries, page loads)
+        if: steps.pkg.outcome == 'success'
+        run: |
+          set -o pipefail
+          cd build/appimage
+          root="$PWD/x-release/squashfs-root/usr"
+          failed=0
+          echo "--- chat library and browser engine files inside the AppImage:"
+          find "$root" \( -name 'libhopcast-chat.so' -o -name 'QtWebEngineProcess' -o -name 'libQt6WebEngineCore.so*' -o -name 'qtwebengine_resources.pak' -o -name 'icudtl.dat' \) -printf '%p  %s bytes\n'
+          for pat in libhopcast-chat.so QtWebEngineProcess 'libQt6WebEngineCore.so*' qtwebengine_resources.pak icudtl.dat; do
+            [ -n "$(find "$root" -name "$pat" | head -1)" ] || { echo "::error title=AppImage::chat panel file missing: $pat"; failed=1; }
+          done
+          echo "--- libraries the chat panel and the engine process can't find:"
+          export LD_LIBRARY_PATH="$root/lib"
+          for b in "$root/lib/libhopcast-chat.so" "$(find "$root" -name QtWebEngineProcess | head -1)"; do
+            [ -f "$b" ] || continue
+            ldd "$b" | grep "not found" && { echo "::error title=AppImage::$(basename "$b") has unresolved libraries"; failed=1; } || true
+          done
+          echo "--- drive the panel from the AppImage's own libraries:"
+          cd "$GITHUB_WORKSPACE"
+          mkdir -p chat-test/www && printf '%s' '<!doctype html><title>chat ok</title><script>document.cookie="seen=1; max-age=3600"; document.title = "chat ok " + (document.cookie.indexOf("seen")>=0 ? "cookie" : "nocookie");</script>' > chat-test/www/chat.html
+          (cd chat-test/www && python3 -m http.server 8778 >/dev/null 2>&1 &)
+          sleep 1
+          export HOME="$PWD/chat-test/home2" XDG_CONFIG_HOME="$PWD/chat-test/home2/.config" XDG_DATA_HOME="$PWD/chat-test/home2/.local/share"; mkdir -p "$HOME"
+          export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox --disable-gpu" QT_QPA_PLATFORM=offscreen
+          timeout 240 chat-test/build/chat-panel-test "$root/lib/libhopcast-chat.so" http://127.0.0.1:8778/chat.html 2>&1 | tee chat-test/appimage-result.log | grep -v '^$' | tail -30 || failed=1
+          grep -q "FAIL" chat-test/appimage-result.log && failed=1
+          [ -f chat-test/appimage-result.log ] && grep -q "ok: chat page loaded" chat-test/appimage-result.log || { echo "::error title=AppImage::the chat page did not load from the AppImage's libraries"; failed=1; }
           exit $failed
 
       - uses: actions/upload-artifact@v4

@@ -2154,6 +2154,10 @@ int run_program(int argc, char *argv[])
 	 * and in the case of OBS it significantly slows down lists with many
 	 * elements (e.g. Hotkeys) and it is actually faster to disable it. */
 	qputenv("QT_NO_SUBTRACTOPAQUESIBLINGS", "1");
+#ifdef HOPCAST_NO_NAVER
+	/* HopCast: the chat panel's browser engine (Qt WebEngine) needs this set before the app object exists. */
+	QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+#endif
 	PLSApp program(argc, argv, profilerNameStore.get());
 
 	PLSErrorHandler::instance(); //must  before with OBSTranslator

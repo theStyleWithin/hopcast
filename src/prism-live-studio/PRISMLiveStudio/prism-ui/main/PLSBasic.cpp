@@ -5,6 +5,7 @@
 #include "../hopcast/HopCastSecrets.h"
 #include "../hopcast/HopCastLinkGuard.h"
 #include "../hopcast/HopCastScreenshot.h" // HopCast: Tools > Screenshot
+#include "../hopcast/HopCastChatDock.h" // HopCast: the chat panel dock
 #include "../hopcast/HopCastVideoDownload.h" // HopCast: Tools > Download a video
 #include "../hopcast/HopCastPinpoint.h" // HopCast: Tools > Screenshot of one picture
 #include "../hopcast/HopCastProfileImport.h" // HopCast: Profile > Import OBS profile
@@ -1345,6 +1346,9 @@ void PLSBasic::PLSInit()
 		if (visible)
 			QMetaObject::invokeMethod(dock, [dock]() { dock->hide(); }, Qt::QueuedConnection);
 	});
+	/* HopCast: our own chat panel instead - paste a chat link and it shows beside the preview (View > Docks > Chat). */
+	if (QDockWidget *hopChat = hopcast::createChatDock(this))
+		ui->menuDocks->addAction(hopChat->toggleViewAction());
 #endif
 
 #if defined(Q_OS_MACOS)
