@@ -7,7 +7,12 @@
 #include <QLabel>
 #include <QLibrary>
 #include <QMainWindow>
+#include <QMetaObject>
+#include <QPushButton>
+#include <QTimer>
 #include <QVBoxLayout>
+
+#include "HopCastChatSettings.h"
 
 namespace {
 
@@ -16,14 +21,40 @@ public:
 	explicit ChatDock(QWidget *parent) : QDockWidget(QStringLiteral("Chat"), parent)
 	{
 		setObjectName(QStringLiteral("hopcastChatDock"));
-		holder_ = new QWidget(this);
+		auto *outer = new QWidget(this);
+		auto *outerLayout = new QVBoxLayout(outer);
+		outerLayout->setContentsMargins(6, 6, 6, 0);
+		auto *settings = new QPushButton(QStringLiteral("Chat settings..."), outer);
+		settings->setObjectName(QStringLiteral("chatSettingsButton"));
+		settings->setToolTip(QStringLiteral("Open Settings > General > Chat to set the chat link"));
+		outerLayout->addWidget(settings);
+		holder_ = new QWidget(outer);
 		layout_ = new QVBoxLayout(holder_);
 		layout_->setContentsMargins(0, 0, 0, 0);
-		setWidget(holder_);
-		// load the browser engine only when the dock is first shown
+		outerLayout->addWidget(holder_, 1);
+		setWidget(outer);
+
+		connect(settings, &QPushButton::clicked, this, [this]() {
+			if (QWidget *w = window())
+				QMetaObject::invokeMethod(w, "onPopupSettingView", Qt::QueuedConnection, Q_ARG(QString, QStringLiteral("General")),
+							  Q_ARG(QString, QString()));
+		});
+
+		// The panel starts only when you open it yourself (View > Docks > Chat, or its right-click entry). If a saved
+		// window layout brings the dock back at start-up it is hidden again, so the chat can never stop HopCast from opening.
+		connect(toggleViewAction(), &QAction::triggered, this, [this]() { opened_ = true; });
 		connect(this, &QDockWidget::visibilityChanged, this, [this](bool visible) {
-			if (visible && !tried_)
-				loadPanel();
+			if (!visible)
+				return;
+			// wait one turn of the event loop: a click on the menu entry reports "triggered" just after the dock shows
+			QTimer::singleShot(0, this, [this]() {
+				if (!isVisible())
+					return;
+				if (!opened_)
+					hide();
+				else if (!tried_)
+					loadPanel();
+			});
 		});
 	}
 
@@ -40,16 +71,23 @@ private:
 
 	void say(const QString &text)
 	{
-		auto *label = new QLabel(text, holder_);
-		label->setWordWrap(true);
-		label->setMargin(10);
-		label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-		layout_->addWidget(label);
+		delete message_;
+		message_ = new QLabel(text, holder_);
+		message_->setWordWrap(true);
+		message_->setMargin(10);
+		message_->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+		layout_->addWidget(message_);
 	}
 
 	void loadPanel()
 	{
 		tried_ = true;
+		QSettings chat = hopcast::openChatSettings();
+		if (!chat.value(QStringLiteral("enabled"), true).toBool()) {
+			say(QStringLiteral("The Chat panel is turned off. Turn it on in Settings > General > Chat, then close and open this panel again."));
+			tried_ = false; // look again the next time it is opened
+			return;
+		}
 		const QString path = libraryPath();
 		if (!QFile::exists(path)) {
 			say(QStringLiteral("The chat panel isn't part of this build (its browser engine wasn't included)."));
@@ -74,12 +112,16 @@ private:
 			say(QStringLiteral("The chat panel couldn't start."));
 			return;
 		}
+		delete message_;
+		message_ = nullptr;
 		layout_->addWidget(panel);
 	}
 
 	QWidget *holder_ = nullptr;
+	QLabel *message_ = nullptr;
 	QVBoxLayout *layout_ = nullptr;
 	bool tried_ = false;
+	bool opened_ = false;
 };
 
 } // namespace
