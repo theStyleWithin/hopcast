@@ -12393,7 +12393,7 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 	auto quickSettings = new QAction(QStringLiteral("Settings"), trayIcon.data());
 	quickSettings->setObjectName(QStringLiteral("sysTraySettings"));
 	connect(quickSettings, &QAction::triggered, this, [this]() {
-		if (!isVisible())
+		if (!this->isVisible()) // (the init function's own "isVisible" argument hides the member here)
 			SetShowing(true);
 		on_action_Settings_triggered();
 	});
