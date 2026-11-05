@@ -49,7 +49,7 @@ than OBS's, and makes four changes:
 | Recording | MKV/MP4 to a folder of your choice; works before, during and after streaming |
 | Sources | Video capture (V4L2), screen capture (PipeWire/X11), audio (PulseAudio/PipeWire/ALSA), images, media files, text, color |
 | Encoders | x264 (software). NVENC and VAAPI need real-desktop testing |
-| Chat panel | Paste a stream's chat link and it shows in a dock beside the preview (View > Docks > Chat; drag it to the left or right). It loads only that link, keeps nothing unless you tick "Stay signed in", opens links you click in your normal browser and never downloads files. The browser engine (Qt WebEngine) is a separate library loaded the first time you open the dock |
+| Chat panel | Paste a stream's chat link and it shows in a dock beside the preview (View > Docks > Chat; drag it to the left or right). It loads only that link, keeps nothing unless you tick "Stay signed in", opens links you click in your normal browser and never downloads files. The browser engine (Qt WebEngine) is a separate library loaded the first time you open the dock. Chat overlay (tray menu or the dock): the same page shown over a game in a see-through, always-on-top, click-through window (borderless-windowed games; not on at start-up). Light by design: one shared page, frozen when neither the dock nor the overlay is showing, low-memory browser mode |
 | Stream-key storage | Kept inside HopCast's own storage, encrypted; no prompt and no folder to manage |
 | Display servers | X11 and Wayland (native Qt) |
 
