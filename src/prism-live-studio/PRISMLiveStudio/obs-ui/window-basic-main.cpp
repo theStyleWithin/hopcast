@@ -12388,6 +12388,16 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 	auto videoDownload = new QAction(QStringLiteral("Download a video from a link..."), trayIcon.data());
 	connect(videoDownload, &QAction::triggered, this, [this]() { hopcast::showVideoDownloader(this); });
 	trayMenu->addAction(videoDownload);
+	/* Quick way into Settings that works even when the window is hidden or something on screen is stuck. */
+	trayMenu->addSeparator();
+	auto quickSettings = new QAction(QStringLiteral("Settings"), trayIcon.data());
+	quickSettings->setObjectName(QStringLiteral("sysTraySettings"));
+	connect(quickSettings, &QAction::triggered, this, [this]() {
+		if (!isVisible())
+			SetShowing(true);
+		on_action_Settings_triggered();
+	});
+	trayMenu->addAction(quickSettings);
 #endif
 #ifndef HOPCAST_NO_NAVER
 	sysTrayBanner = addSysTrayAction(QTStr("Basic.Main.Wizard"), "sysTrayBanner",

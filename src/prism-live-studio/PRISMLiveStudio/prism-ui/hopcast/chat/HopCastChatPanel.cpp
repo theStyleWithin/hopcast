@@ -3,15 +3,13 @@
 // Built as its own small library so HopCast still starts on a computer where the browser engine (Qt WebEngine) can't be
 // loaded; the app opens it on demand with QLibrary (see HopCastChatDock.cpp). It shows one page, the chat link you paste,
 // and nothing else: no tabs, no downloads, links inside the chat open in your normal browser.
-#include <QCheckBox>
 #include <QDesktopServices>
 #include <QDir>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QTimer>
 #include <QToolButton>
 #include <QUrl>
 #include <QVBoxLayout>
@@ -103,6 +101,8 @@ bool sandboxPossible()
 }
 #endif
 
+// The chat link, "stay signed in" and "sound" are set in HopCast's Settings > General > Chat (they are kept in Chat.ini).
+// This panel only shows the page and notices when those choices change. Reload and text size live here.
 class ChatPanel : public QWidget {
 public:
 	explicit ChatPanel(QWidget *parent) : QWidget(parent), settings_(QSettings::IniFormat, QSettings::UserScope, QStringLiteral("HopCast"), QStringLiteral("Chat"))
@@ -111,29 +111,11 @@ public:
 		auto *root = new QVBoxLayout(this);
 		root->setContentsMargins(6, 6, 6, 6);
 
-		auto *row = new QHBoxLayout;
-		url_ = new QLineEdit;
-		url_->setObjectName(QStringLiteral("chatUrl"));
-		url_->setPlaceholderText(QStringLiteral("Paste the chat link here"));
-		url_->setClearButtonEnabled(true);
-		row->addWidget(url_, 1);
-		go_ = new QPushButton(QStringLiteral("Load"));
-		go_->setObjectName(QStringLiteral("chatGo"));
-		row->addWidget(go_);
+		auto *options = new QHBoxLayout;
 		reload_ = new QToolButton;
 		reload_->setText(QStringLiteral("↻"));
 		reload_->setToolTip(QStringLiteral("Reload the chat"));
-		row->addWidget(reload_);
-		root->addLayout(row);
-
-		auto *options = new QHBoxLayout;
-		signedIn_ = new QCheckBox(QStringLiteral("Stay signed in"));
-		signedIn_->setObjectName(QStringLiteral("chatSignedIn"));
-		signedIn_->setToolTip(QStringLiteral("Keeps the chat site's cookies in HopCast's own folder so you stay logged in. Off: nothing is kept."));
-		options->addWidget(signedIn_);
-		sound_ = new QCheckBox(QStringLiteral("Sound"));
-		sound_->setObjectName(QStringLiteral("chatSound"));
-		options->addWidget(sound_);
+		options->addWidget(reload_);
 		options->addStretch(1);
 		auto *smaller = new QToolButton;
 		smaller->setText(QStringLiteral("A-"));
@@ -146,6 +128,7 @@ public:
 		root->addLayout(options);
 
 		note_ = new QLabel;
+		note_->setObjectName(QStringLiteral("chatNote"));
 		note_->setWordWrap(true);
 		note_->setVisible(false);
 		root->addWidget(note_);
@@ -154,49 +137,87 @@ public:
 		view_->setObjectName(QStringLiteral("chatView"));
 		root->addWidget(view_, 1);
 
-		signedIn_->setChecked(settings_.value(QStringLiteral("signedIn"), false).toBool());
-		sound_->setChecked(settings_.value(QStringLiteral("sound"), false).toBool());
 		zoom_ = qBound(0.5, settings_.value(QStringLiteral("zoom"), 1.0).toDouble(), 3.0);
-		url_->setText(settings_.value(QStringLiteral("url")).toString());
 
 #ifdef Q_OS_LINUX
 		if (!sandboxPossible()) {
 			qputenv("QTWEBENGINE_DISABLE_SANDBOX", "1");
-			note_->setText(QStringLiteral("This system doesn't allow the browser's safety sandbox, so the chat runs without it. Only load chat links you trust."));
-			note_->setVisible(true);
+			sandboxNote_ = QStringLiteral("This system doesn't allow the browser's safety sandbox, so the chat runs without it. Only load chat links you trust.");
 		}
 #endif
 
-		connect(go_, &QPushButton::clicked, this, [this]() { load(); });
-		connect(url_, &QLineEdit::returnPressed, this, [this]() { load(); });
 		connect(reload_, &QToolButton::clicked, this, [this]() { view_->reload(); });
-		connect(signedIn_, &QCheckBox::toggled, this, [this](bool on) {
-			settings_.setValue(QStringLiteral("signedIn"), on);
-			makePage();
-			load();
-		});
-		connect(sound_, &QCheckBox::toggled, this, [this](bool on) {
-			settings_.setValue(QStringLiteral("sound"), on);
-			if (view_->page())
-				view_->page()->setAudioMuted(!on);
-		});
 		connect(smaller, &QToolButton::clicked, this, [this]() { setZoom(zoom_ - 0.1); });
 		connect(bigger, &QToolButton::clicked, this, [this]() { setZoom(zoom_ + 0.1); });
 
+		// Settings writes the file from the main program; look at it twice a second while this panel is open.
+		watch_.setInterval(500);
+		connect(&watch_, &QTimer::timeout, this, [this]() { refresh(); });
+		watch_.start();
+
+		signedIn_ = readSignedIn();
+		sound_ = readSound();
 		makePage();
-		if (!url_->text().trimmed().isEmpty())
-			load();
+		refresh(true);
 	}
 
-	QWebEngineView *view() const { return view_; }
-
 private:
+	bool readSignedIn() { return settings_.value(QStringLiteral("signedIn"), false).toBool(); }
+	bool readSound() { return settings_.value(QStringLiteral("sound"), false).toBool(); }
+
+	// Looks at Chat.ini again and applies whatever changed in Settings.
+	void refresh(bool first = false)
+	{
+		settings_.sync();
+		const bool signedIn = readSignedIn();
+		const bool sound = readSound();
+		const QString typed = settings_.value(QStringLiteral("url")).toString();
+
+		bool reloadNeeded = first;
+		if (signedIn != signedIn_) {
+			signedIn_ = signedIn;
+			makePage();
+			reloadNeeded = true;
+		}
+		if (sound != sound_) {
+			sound_ = sound;
+			if (view_->page())
+				view_->page()->setAudioMuted(!sound_);
+		}
+		if (typed != url_) {
+			url_ = typed;
+			reloadNeeded = true;
+		}
+		if (!reloadNeeded)
+			return;
+
+		if (url_.trimmed().isEmpty()) {
+			view_->setUrl(QUrl(QStringLiteral("about:blank")));
+			showNote(QStringLiteral("No chat link yet. Open HopCast's Settings, go to General > Chat, and paste your chat link."));
+			return;
+		}
+		const QUrl link = cleanLink(url_);
+		if (!link.isValid()) {
+			showNote(QStringLiteral("That doesn't look like a web link. In Settings > General > Chat it should look like https://..."));
+			return;
+		}
+		showNote(QString());
+		view_->load(link);
+	}
+
+	void showNote(const QString &text)
+	{
+		const QString all = text.isEmpty() ? sandboxNote_ : (sandboxNote_.isEmpty() ? text : text + QLatin1Char('\n') + sandboxNote_);
+		note_->setText(all);
+		note_->setVisible(!all.isEmpty());
+	}
+
 	// A fresh page each time the "stay signed in" choice changes: kept cookies live in HopCast's own folder, otherwise
 	// the page has no storage at all and everything is forgotten when HopCast closes.
 	void makePage()
 	{
 		QWebEngineProfile *profile = nullptr;
-		if (signedIn_->isChecked()) {
+		if (signedIn_) {
 			profile = new QWebEngineProfile(QStringLiteral("HopCastChat"));
 			profile->setPersistentStoragePath(dataDir());
 			profile->setCachePath(dataDir() + QStringLiteral("/cache"));
@@ -214,7 +235,7 @@ private:
 		s->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, false);
 		s->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls, false);
 		s->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls, false);
-		page->setAudioMuted(!sound_->isChecked());
+		page->setAudioMuted(!sound_);
 		page->setZoomFactor(zoom_);
 
 		profile->setParent(page); // a profile has to outlive its page's last use, so it goes away together with it
@@ -224,38 +245,24 @@ private:
 			old->deleteLater();
 	}
 
-	void load()
-	{
-		const QUrl link = cleanLink(url_->text());
-		if (!link.isValid()) {
-			if (!url_->text().trimmed().isEmpty()) {
-				note_->setText(QStringLiteral("That doesn't look like a web link. It should look like https://..."));
-				note_->setVisible(true);
-			}
-			return;
-		}
-		note_->setVisible(false);
-		url_->setText(link.toString());
-		settings_.setValue(QStringLiteral("url"), link.toString());
-		view_->load(link);
-	}
-
 	void setZoom(double z)
 	{
 		zoom_ = qBound(0.5, z, 3.0);
 		settings_.setValue(QStringLiteral("zoom"), zoom_);
+		settings_.sync();
 		if (view_->page())
 			view_->page()->setZoomFactor(zoom_);
 	}
 
 	QSettings settings_;
-	QLineEdit *url_ = nullptr;
-	QPushButton *go_ = nullptr;
+	QTimer watch_;
 	QToolButton *reload_ = nullptr;
-	QCheckBox *signedIn_ = nullptr;
-	QCheckBox *sound_ = nullptr;
 	QLabel *note_ = nullptr;
 	QWebEngineView *view_ = nullptr;
+	QString url_;
+	QString sandboxNote_;
+	bool signedIn_ = false;
+	bool sound_ = false;
 	double zoom_ = 1.0;
 };
 
