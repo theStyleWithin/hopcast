@@ -10,7 +10,7 @@ OUT="$(mkdir -p "${2:-$ROOT/build/ui-tour}" && cd "${2:-$ROOT/build/ui-tour}" &&
 SCENARIOS="${3:-$ROOT/hopcast/tests/ui-tour.txt}"
 BIN="$STAGE/bin/PRISMLiveStudio"
 
-export LIBGL_ALWAYS_SOFTWARE=1 QT_QPA_PLATFORM=xcb DISPLAY=:98
+export LIBGL_ALWAYS_SOFTWARE=1 QT_QPA_PLATFORM=xcb DISPLAY=:98 HOPCAST_NO_CRASH_GUARD=1 # (each scenario kills the app; that must not switch the chat panel off for the next one)
 export XDG_CONFIG_HOME="$OUT/home/config" XDG_DATA_HOME="$OUT/home/data" XDG_CACHE_HOME="$OUT/home/cache"
 export HOME="$OUT/home" # folder pickers etc. start here
 rm -rf "$OUT/home" # every tour starts from a fresh profile

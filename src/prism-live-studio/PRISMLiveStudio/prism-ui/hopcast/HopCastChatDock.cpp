@@ -2,6 +2,7 @@
 #include "HopCastChatDock.h"
 
 #include <QCoreApplication>
+#include <QDateTime>
 #include <QDockWidget>
 #include <QFile>
 #include <QLabel>
@@ -167,14 +168,29 @@ private:
 		}
 		// Crash guard: say "the browser engine is running" before it starts and take it back at a clean exit. If HopCast is
 		// found with the mark still set, the engine took it down, and the panel is switched off for next time.
-		chat.setValue(QStringLiteral("engineRunning"), true);
+		const qint64 started = QDateTime::currentSecsSinceEpoch();
+		chat.setValue(QStringLiteral("engineRunning"), started);
+		chat.setValue(QStringLiteral("engineAlive"), started);
 		chat.sync();
+		// For the first two minutes note every 20 seconds that HopCast is still alive. A crash from the engine comes right
+		// after it starts; a HopCast that is closed with a kill, a log-out or a power-off later on is not a crash.
+		beat_.setInterval(20000);
+		connect(&beat_, &QTimer::timeout, this, [this, started]() {
+			const qint64 now = QDateTime::currentSecsSinceEpoch();
+			QSettings c = hopcast::openChatSettings();
+			c.setValue(QStringLiteral("engineAlive"), now);
+			c.sync();
+			if (now - started >= 120)
+				beat_.stop();
+		});
+		beat_.start();
 		static bool exitHooked = false;
 		if (!exitHooked) {
 			exitHooked = true;
 			QObject::connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, []() {
 				QSettings c = hopcast::openChatSettings();
 				c.remove(QStringLiteral("engineRunning"));
+				c.remove(QStringLiteral("engineAlive"));
 				c.sync();
 			});
 		}
@@ -194,6 +210,7 @@ private:
 	QPushButton *overlayButton_ = nullptr;
 	QPushButton *moveButton_ = nullptr;
 	QTimer syncTimer_;
+	QTimer beat_;
 	QLabel *message_ = nullptr;
 	QVBoxLayout *layout_ = nullptr;
 	bool tried_ = false;
@@ -215,13 +232,19 @@ using OverlayState = int (*)();
 QDockWidget *createChatDock(QMainWindow *window)
 {
 	{
-		// The last run ended with the browser engine still marked as running: it never exited cleanly. Turn the chat panel off
-		// so it can't take HopCast down again (it is switched back on in Settings > General > Chat).
+		// The last run ended with the browser engine still marked as running: it never exited cleanly. Only a stop within two
+		// minutes of the engine starting counts as the engine taking HopCast down (then the chat panel is turned off, and
+		// switched back on in Settings > General > Chat). A kill or a shut-down much later is not blamed on the chat.
 		QSettings chat = openChatSettings();
-		if (chat.value(QStringLiteral("engineRunning"), false).toBool()) {
+		if (chat.contains(QStringLiteral("engineRunning"))) {
+			const qint64 started = chat.value(QStringLiteral("engineRunning")).toLongLong();
+			const qint64 alive = chat.value(QStringLiteral("engineAlive"), started).toLongLong();
 			chat.remove(QStringLiteral("engineRunning"));
-			chat.setValue(QStringLiteral("enabled"), false);
-			chat.setValue(QStringLiteral("crashedLastTime"), true);
+			chat.remove(QStringLiteral("engineAlive"));
+			if (qEnvironmentVariableIsEmpty("HOPCAST_NO_CRASH_GUARD") && alive - started < 120) {
+				chat.setValue(QStringLiteral("enabled"), false);
+				chat.setValue(QStringLiteral("crashedLastTime"), true);
+			}
 			chat.sync();
 		}
 	}
