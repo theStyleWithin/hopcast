@@ -586,96 +586,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QGroupBox" name="chatGroup">
-            <property name="title">
-             <string>Chat</string>
-            </property>
-            <layout class="QFormLayout" name="chatForm">
-             <property name="fieldGrowthPolicy">
-              <enum>QFormLayout::FieldGrowthPolicy::AllNonFixedFieldsGrow</enum>
-             </property>
-             <property name="horizontalSpacing">
-              <number>20</number>
-             </property>
-             <property name="verticalSpacing">
-              <number>10</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item row="0" column="1">
-              <widget class="QLabel" name="chatHint">
-               <property name="text">
-                <string>Paste the link to your chat (for example your Kick chat). It shows in the Chat panel: View &gt; Docks &gt; Chat.</string>
-               </property>
-               <property name="wordWrap">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="PLSLineEdit" name="chatLink">
-               <property name="placeholderText">
-                <string>https://kick.com/...</string>
-               </property>
-               <property name="clearButtonEnabled">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QLabel" name="chatLinkNote">
-               <property name="visible">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string>That doesn't look like a web link. It should look like https://...</string>
-               </property>
-               <property name="wordWrap">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="PLSCheckBox" name="chatSignedIn">
-               <property name="toolTip">
-                <string>Keeps the chat site's cookies in HopCast's own folder so you stay logged in. Off: nothing is kept.</string>
-               </property>
-               <property name="text">
-                <string>Stay signed in to the chat</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="PLSCheckBox" name="chatSound">
-               <property name="text">
-                <string>Play the chat's sound</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="1">
-              <widget class="PLSCheckBox" name="chatEnabled">
-               <property name="toolTip">
-                <string>Off: the Chat panel stays empty and never starts the browser engine. Use this if the chat ever causes trouble.</string>
-               </property>
-               <property name="text">
-                <string>Allow the Chat panel</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
            <widget class="QGroupBox" name="groupBox_18">
             <property name="title">
              <string>StudioMode.Preview</string>
@@ -1026,11 +936,6 @@
    <class>PLSDoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
    <header>PLSSpinBox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>PLSLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">PLSEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

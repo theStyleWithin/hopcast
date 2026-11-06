@@ -67,9 +67,6 @@
 #include "pls-performance.h"
 #include "PLSLoadingView.h"
 #include "PLSWatchers.h"
-#ifdef HOPCAST_NO_NAVER
-#include "../prism-ui/hopcast/HopCastChatSettings.h" // HopCast: Settings > General > Chat
-#endif
 
 static bool ValidResolutions(OBSBasicSettings *settings, PLSEditableComboBox *baseResolution,
 			     PLSEditableComboBox *outputResolution);
@@ -837,18 +834,6 @@ void OBSBasicSettings::LoadGeneralSettings()
 	bool systemTrayClose = config_get_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayCloseToTray");
 	generalPage->systemTrayClose->setChecked(systemTrayClose);
 
-#ifdef HOPCAST_NO_NAVER
-	{
-		QSettings chat = hopcast::openChatSettings();
-		generalPage->chatLink->setText(chat.value(QStringLiteral("url")).toString());
-		generalPage->chatSignedIn->setChecked(chat.value(QStringLiteral("signedIn"), false).toBool());
-		generalPage->chatSound->setChecked(chat.value(QStringLiteral("sound"), false).toBool());
-		generalPage->chatEnabled->setChecked(chat.value(QStringLiteral("enabled"), true).toBool());
-		generalPage->chatLinkNote->setVisible(false);
-	}
-#else
-	generalPage->chatGroup->setVisible(false);
-#endif
 
 	bool saveProjectors = config_get_bool(App()->GetUserConfig(), "BasicWindow", "SaveProjectors");
 	generalPage->saveProjectors->setChecked(saveProjectors);
@@ -3058,28 +3043,6 @@ void OBSBasicSettings::SaveGeneralSettings()
 		config_set_bool(App()->GetUserConfig(), "BasicWindow", "SysTrayCloseToTray",
 				generalPage->systemTrayClose->isChecked());
 
-#ifdef HOPCAST_NO_NAVER
-	if (WidgetChanged(generalPage->chatLink) || WidgetChanged(generalPage->chatSignedIn) ||
-	    WidgetChanged(generalPage->chatSound) || WidgetChanged(generalPage->chatEnabled)) {
-		QSettings chat = hopcast::openChatSettings();
-		const QString typed = generalPage->chatLink->text().trimmed();
-		if (typed.isEmpty()) {
-			chat.remove(QStringLiteral("url"));
-		} else {
-			const QUrl link = hopcast::cleanChatLink(typed);
-			if (link.isValid()) {
-				chat.setValue(QStringLiteral("url"), link.toString());
-				const QSignalBlocker quiet(generalPage->chatLink);
-				generalPage->chatLink->setText(link.toString());
-			}
-			// a link that isn't a web link is not saved; the note under the box says so
-		}
-		chat.setValue(QStringLiteral("signedIn"), generalPage->chatSignedIn->isChecked());
-		chat.setValue(QStringLiteral("sound"), generalPage->chatSound->isChecked());
-		chat.setValue(QStringLiteral("enabled"), generalPage->chatEnabled->isChecked());
-		chat.sync();
-	}
-#endif
 
 	if (WidgetChanged(generalPage->saveProjectors))
 		config_set_bool(App()->GetUserConfig(), "BasicWindow", "SaveProjectors",
@@ -3960,15 +3923,6 @@ void OBSBasicSettings::initGeneralage()
 		HookWidget(generalPage->systemTrayWhenStarted, CHECK_CHANGED, GENERAL_CHANGED);
 		HookWidget(generalPage->systemTrayAlways, CHECK_CHANGED, GENERAL_CHANGED);
 		HookWidget(generalPage->systemTrayClose, CHECK_CHANGED, GENERAL_CHANGED);
-#ifdef HOPCAST_NO_NAVER
-		HookWidget(generalPage->chatLink, EDIT_CHANGED, GENERAL_CHANGED);
-		HookWidget(generalPage->chatSignedIn, CHECK_CHANGED, GENERAL_CHANGED);
-		HookWidget(generalPage->chatSound, CHECK_CHANGED, GENERAL_CHANGED);
-		HookWidget(generalPage->chatEnabled, CHECK_CHANGED, GENERAL_CHANGED);
-		connect(generalPage->chatLink, &QLineEdit::textChanged, this, [this](const QString &t) {
-			generalPage->chatLinkNote->setVisible(!t.trimmed().isEmpty() && !hopcast::cleanChatLink(t).isValid());
-		});
-#endif
 		HookWidget(generalPage->saveProjectors, CHECK_CHANGED, GENERAL_CHANGED);
 		HookWidget(generalPage->closeProjectors, CHECK_CHANGED, GENERAL_CHANGED);
 		HookWidget(generalPage->snappingEnabled, CHECK_CHANGED, GENERAL_CHANGED);

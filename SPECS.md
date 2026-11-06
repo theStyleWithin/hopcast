@@ -22,7 +22,7 @@ than OBS's, and makes four changes:
 - **A friendly studio on Linux.** Scenes, sources, audio mixer, studio mode, dual (horizontal and vertical) output, recording, virtual camera.
 - **Private by default.**
   - No sign-in and no telemetry.
-  - No network traffic except what you start yourself: the stream, a chat link you paste into the Chat panel, a video you download.
+  - No network traffic except what you start yourself: the stream, a video you download.
 - **Neutral.** You enter your own server address and stream key. HopCast doesn't recommend, rank or advertise any platform.
 - **No nudges.** No quick links, invitations or suggestions of where to be, so every choice about where to stream is the user's own. This is a golden rule, not a default: changes that add promotional or social links are out of scope.
 - **Safe with secrets.** Stream keys are encrypted at rest and never written to logs.
@@ -32,7 +32,7 @@ than OBS's, and makes four changes:
 ## 3. Non-goals
 
 - Accounts, cloud sync or anything that needs a HopCast or NAVER server.
-- Built-in platform integrations (sign-in with Twitch/YouTube/Facebook, viewer counts). The Chat panel is not one: it only shows the link you paste.
+- Built-in platform integrations (sign-in with Twitch/YouTube/Facebook, viewer counts).
 - Quick links, recommendations, community or social invitations, or anything else that steers people toward a platform.
 - Viewer counts, follower numbers, rankings or any other metric that compares how a stream is doing.
 - Windows or macOS builds. Use PRISM Live Studio or OBS Studio there.
@@ -49,7 +49,6 @@ than OBS's, and makes four changes:
 | Recording | MKV/MP4 to a folder of your choice; works before, during and after streaming |
 | Sources | Video capture (V4L2), screen capture (PipeWire/X11), audio (PulseAudio/PipeWire/ALSA), images, media files, text, color |
 | Encoders | x264 (software). NVENC and VAAPI need real-desktop testing |
-| Chat panel | Paste a stream's chat link and it shows in a dock beside the preview (View > Docks > Chat; drag it to the left or right). It loads only that link, keeps nothing unless you tick "Stay signed in", opens links you click in your normal browser and never downloads files. The browser engine (Qt WebEngine) is a separate library loaded the first time you open the dock. Chat overlay (tray menu or the dock): the same page shown over a game in a see-through, always-on-top, click-through window (borderless-windowed games; not on at start-up). Light by design: one shared page, frozen when neither the dock nor the overlay is showing, low-memory browser mode |
 | Stream-key storage | Kept inside HopCast's own storage, encrypted; no prompt and no folder to manage |
 | Display servers | X11 and Wayland (native Qt) |
 
@@ -59,6 +58,7 @@ than OBS's, and makes four changes:
 - NAVER services: settings sync, notices, update checks, the live-status channel, the broadcast relay.
 - Platform buttons and lists (Twitch, YouTube, Facebook, SOOP, NAVER TV, BAND, CHZZK, …).
 - PRISM Lens, stickers, scene templates, the platform chat panel, the output-setting guide, help links, logos.
+- HopCast's own stream chat (the Chat dock and the chat overlay over a game): removed for now, see KNOWN-ISSUES.md.
 
 ### Planned
 

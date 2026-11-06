@@ -82,21 +82,6 @@ if(OS_LINUX) # HopCast: obs-ui/platform-x11.cpp talks to xdg-desktop-portal over
   find_package(Qt6 REQUIRED COMPONENTS DBus)
 endif()
 find_package(nlohmann_json REQUIRED)
-# HopCast: the chat panel's browser engine (Qt WebEngine) is its own library, loaded only when the Chat dock is opened, so the
-# app starts the same where it can't be loaded. Skipped (the dock says so) when Qt WebEngine isn't installed.
-find_package(Qt6 COMPONENTS WebEngineWidgets QUIET)
-if(TARGET Qt6::WebEngineWidgets)
-  add_library(hopcast-chat SHARED prism-ui/hopcast/chat/HopCastChatPanel.cpp)
-  set_target_properties(hopcast-chat PROPERTIES CXX_STANDARD 17 POSITION_INDEPENDENT_CODE ON)
-  target_link_libraries(hopcast-chat PRIVATE Qt6::Widgets Qt6::WebEngineWidgets)
-  if(OS_LINUX) # KDE window rule for the chat overlay (keep above)
-    target_link_libraries(hopcast-chat PRIVATE Qt6::DBus)
-  endif()
-  add_dependencies(PRISMLiveStudio hopcast-chat)
-  message(STATUS "HopCast: chat panel enabled (Qt WebEngine)")
-else()
-  message(STATUS "HopCast: chat panel skipped (Qt WebEngine not found)")
-endif()
 target_link_libraries(PRISMLiveStudio PRIVATE Qt6::Widgets Qt6::WidgetsPrivate Qt6::Svg Qt6::Xml Qt6::Network Qt6::WebSockets nlohmann_json::nlohmann_json Qt6::Multimedia)
 
 if(ENABLE_TEST)
@@ -1023,7 +1008,6 @@ if(OS_WINDOWS)
     prism-ui/hopcast/HopCastSecrets.cpp prism-ui/hopcast/HopCastSecrets.h
     prism-ui/hopcast/HopCastLinkGuard.cpp prism-ui/hopcast/HopCastLinkGuard.h
     prism-ui/hopcast/HopCastScreenshot.cpp prism-ui/hopcast/HopCastScreenshot.h
-    prism-ui/hopcast/HopCastChatDock.cpp prism-ui/hopcast/HopCastChatDock.h
     prism-ui/hopcast/HopCastVideoDownload.cpp prism-ui/hopcast/HopCastVideoDownload.h
     prism-ui/hopcast/HopCastPinpoint.cpp prism-ui/hopcast/HopCastPinpoint.h
     prism-ui/hopcast/HopCastMultiStream.cpp prism-ui/hopcast/HopCastMultiStream.h
@@ -1157,7 +1141,6 @@ elseif(OS_POSIX)
     prism-ui/hopcast/HopCastSecrets.cpp prism-ui/hopcast/HopCastSecrets.h # HopCast: encrypted secrets
     prism-ui/hopcast/HopCastLinkGuard.cpp prism-ui/hopcast/HopCastLinkGuard.h # HopCast: no PRISM/NAVER links
     prism-ui/hopcast/HopCastScreenshot.cpp prism-ui/hopcast/HopCastScreenshot.h
-    prism-ui/hopcast/HopCastChatDock.cpp prism-ui/hopcast/HopCastChatDock.h
     prism-ui/hopcast/HopCastVideoDownload.cpp prism-ui/hopcast/HopCastVideoDownload.h
     prism-ui/hopcast/HopCastPinpoint.cpp prism-ui/hopcast/HopCastPinpoint.h
     prism-ui/hopcast/HopCastMultiStream.cpp prism-ui/hopcast/HopCastMultiStream.h
