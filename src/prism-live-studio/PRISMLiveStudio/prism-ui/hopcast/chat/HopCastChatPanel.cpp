@@ -454,9 +454,17 @@ public:
 		root->addWidget(overlayNote_);
 
 		// Everything below must be set before the first browser object is made (the engine reads it once, at that point).
-		// Light on a busy computer: one renderer process, Chromium's low-memory mode, no background network chatter.
-		if (qEnvironmentVariableIsEmpty("QTWEBENGINE_CHROMIUM_FLAGS"))
-			qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--enable-low-end-device-mode --renderer-process-limit=1 --disable-background-networking --disable-smooth-scrolling");
+		// A chat is a small, mostly still page, so it is drawn by the processor, not the graphics card: that keeps it from
+		// competing with a game for the GPU and from touching the graphics driver at all (set HOPCAST_CHAT_GPU=1 to use the
+		// GPU). One renderer process and no background network chatter keep it light.
+		if (qEnvironmentVariableIsEmpty("QTWEBENGINE_CHROMIUM_FLAGS")) {
+			QByteArray flags = "--renderer-process-limit=1 --disable-background-networking --disable-smooth-scrolling";
+			if (qEnvironmentVariableIsEmpty("HOPCAST_CHAT_GPU"))
+				flags += " --disable-gpu --disable-gpu-compositing";
+			qputenv("QTWEBENGINE_CHROMIUM_FLAGS", flags);
+		}
+		if (qEnvironmentVariableIsEmpty("HOPCAST_CHAT_GPU") && qEnvironmentVariableIsEmpty("QT_QUICK_BACKEND"))
+			qputenv("QT_QUICK_BACKEND", "software");
 #ifdef Q_OS_LINUX
 		if (!sandboxPossible()) {
 			qputenv("QTWEBENGINE_DISABLE_SANDBOX", "1");

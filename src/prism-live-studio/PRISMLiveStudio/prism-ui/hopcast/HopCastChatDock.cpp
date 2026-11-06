@@ -138,7 +138,11 @@ private:
 		tried_ = true;
 		QSettings chat = hopcast::openChatSettings();
 		if (!chat.value(QStringLiteral("enabled"), true).toBool()) {
-			say(QStringLiteral("The Chat panel is turned off. Turn it on in Settings > General > Chat, then close and open this panel again."));
+			if (chat.value(QStringLiteral("crashedLastTime"), false).toBool())
+				say(QStringLiteral("The chat panel's browser engine stopped HopCast last time, so the panel was turned off to keep HopCast safe. "
+						   "To try it again, turn on \"Allow the Chat panel\" in Settings > General > Chat, then close and open this panel."));
+			else
+				say(QStringLiteral("The Chat panel is turned off. Turn it on in Settings > General > Chat, then close and open this panel again."));
 			tried_ = false; // look again the next time it is opened
 			return;
 		}
@@ -160,6 +164,19 @@ private:
 		if (!abi || !create || abi() != 1) {
 			say(QStringLiteral("The chat panel doesn't match this version of HopCast."));
 			return;
+		}
+		// Crash guard: say "the browser engine is running" before it starts and take it back at a clean exit. If HopCast is
+		// found with the mark still set, the engine took it down, and the panel is switched off for next time.
+		chat.setValue(QStringLiteral("engineRunning"), true);
+		chat.sync();
+		static bool exitHooked = false;
+		if (!exitHooked) {
+			exitHooked = true;
+			QObject::connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, []() {
+				QSettings c = hopcast::openChatSettings();
+				c.remove(QStringLiteral("engineRunning"));
+				c.sync();
+			});
 		}
 		QWidget *panel = create(holder_);
 		if (!panel) {
@@ -197,6 +214,17 @@ using OverlayState = int (*)();
 
 QDockWidget *createChatDock(QMainWindow *window)
 {
+	{
+		// The last run ended with the browser engine still marked as running: it never exited cleanly. Turn the chat panel off
+		// so it can't take HopCast down again (it is switched back on in Settings > General > Chat).
+		QSettings chat = openChatSettings();
+		if (chat.value(QStringLiteral("engineRunning"), false).toBool()) {
+			chat.remove(QStringLiteral("engineRunning"));
+			chat.setValue(QStringLiteral("enabled"), false);
+			chat.setValue(QStringLiteral("crashedLastTime"), true);
+			chat.sync();
+		}
+	}
 	auto *dock = new ChatDock(window);
 	g_dock = dock;
 	dock->setAllowedAreas(Qt::AllDockWidgetAreas);
