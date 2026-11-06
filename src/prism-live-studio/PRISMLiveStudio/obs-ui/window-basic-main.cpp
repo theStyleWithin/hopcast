@@ -58,12 +58,6 @@
 #include "../prism-ui/hopcast/HopCastScreenshot.h" // HopCast: tray screenshots
 #include "../prism-ui/hopcast/HopCastVideoDownload.h" // HopCast: download a video from a link
 #include "../prism-ui/hopcast/HopCastPinpoint.h" // HopCast: HopShots pinpoint screenshot
-#include "../prism-ui/hopcast/HopCastChatSettings.h" // HopCast: tray "Reset chat panel"
-#include "../prism-ui/hopcast/HopCastChatDock.h" // HopCast: tray "Chat overlay"
-#include <QActionGroup>
-#include <QMenu>
-#include <QDockWidget>
-#include <QSettings>
 #include "../prism-ui/hopcast/HopCastMultiStream.h" // HopCast: several servers at once
 #include "window-basic-stats.hpp"
 #include "PLSBasicStatusBar.hpp"
@@ -12404,64 +12398,6 @@ void OBSBasic::SystemTrayInit(bool isVisible)
 		on_action_Settings_triggered();
 	});
 	trayMenu->addAction(quickSettings);
-	/* One-click undo for the chat panel: hides it, forgets the link and turns it off (back on in Settings > General > Chat). */
-	auto resetChat = new QAction(QStringLiteral("Reset chat panel"), trayIcon.data());
-	resetChat->setObjectName(QStringLiteral("sysTrayResetChat"));
-	connect(resetChat, &QAction::triggered, this, [this]() {
-		QSettings chat = hopcast::openChatSettings();
-		chat.remove(QStringLiteral("url"));
-		chat.setValue(QStringLiteral("signedIn"), false);
-		chat.setValue(QStringLiteral("enabled"), false);
-		chat.sync();
-		hopcast::setChatOverlay(false);
-		if (QDockWidget *dock = findChild<QDockWidget *>(QStringLiteral("hopcastChatDock")))
-			dock->hide();
-		SysTrayNotify(QStringLiteral("The chat panel is off and its link is cleared. Turn it back on in Settings > General > Chat."),
-			      QSystemTrayIcon::Information, QStringLiteral("HopCast"));
-	});
-	trayMenu->addAction(resetChat);
-	/* Chat over a game: see-through, always on top, clicks go to the game. Never on at start-up. */
-	auto *overlayMenu = new QMenu(QStringLiteral("Chat overlay (over my game)"), trayMenu.data());
-	overlayMenu->setObjectName(QStringLiteral("sysTrayChatOverlay"));
-	auto *overlayShow = overlayMenu->addAction(QStringLiteral("Show over my game"));
-	overlayShow->setCheckable(true);
-	auto *overlayMove = overlayMenu->addAction(QStringLiteral("Move / resize (turn off to lock it)"));
-	overlayMove->setCheckable(true);
-	overlayMenu->addSeparator();
-	auto *opacityGroup = new QActionGroup(overlayMenu);
-	QList<QAction *> opacityActions;
-	for (int pct : {100, 85, 70, 50, 30}) {
-		auto *a = overlayMenu->addAction(QStringLiteral("See-through: %1%").arg(pct));
-		a->setCheckable(true);
-		a->setData(pct);
-		opacityGroup->addAction(a);
-		opacityActions << a;
-		connect(a, &QAction::triggered, this, [pct]() {
-			QSettings chat = hopcast::openChatSettings();
-			chat.setValue(QStringLiteral("overlayOpacity"), pct);
-			chat.sync();
-		});
-	}
-	connect(overlayShow, &QAction::triggered, this, [this, overlayShow, overlayMove](bool on) {
-		const bool now = hopcast::setChatOverlay(on);
-		overlayShow->setChecked(now);
-		if (!now) {
-			overlayMove->setChecked(false);
-			if (on)
-				SysTrayNotify(QStringLiteral("The chat overlay couldn't start. Set a chat link in Settings > General > Chat and make sure \"Allow the Chat panel\" is on."),
-					      QSystemTrayIcon::Warning, QStringLiteral("HopCast"));
-		}
-	});
-	connect(overlayMove, &QAction::triggered, this, [overlayMove](bool on) { overlayMove->setChecked(hopcast::setChatOverlayMove(on)); });
-	connect(overlayMenu, &QMenu::aboutToShow, this, [overlayShow, overlayMove, opacityActions]() {
-		overlayShow->setChecked(hopcast::chatOverlayOn());
-		overlayMove->setEnabled(hopcast::chatOverlayOn());
-		overlayMove->setChecked(hopcast::chatOverlayMove());
-		const int pct = hopcast::openChatSettings().value(QStringLiteral("overlayOpacity"), 85).toInt();
-		for (QAction *a : opacityActions)
-			a->setChecked(a->data().toInt() == pct);
-	});
-	trayMenu->addMenu(overlayMenu);
 #endif
 #ifndef HOPCAST_NO_NAVER
 	sysTrayBanner = addSysTrayAction(QTStr("Basic.Main.Wizard"), "sysTrayBanner",

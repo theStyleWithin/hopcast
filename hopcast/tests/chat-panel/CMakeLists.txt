@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 3.16)
-project(hopcast-chat-panel-test CXX)
-set(CMAKE_CXX_STANDARD 17)
-find_package(Qt6 REQUIRED COMPONENTS Widgets WebEngineWidgets Test)
-add_executable(chat-panel-test chat-panel-test.cpp)
-target_link_libraries(chat-panel-test PRIVATE Qt6::Widgets Qt6::WebEngineWidgets Qt6::Test)
