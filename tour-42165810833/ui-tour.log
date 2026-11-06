@@ -1,0 +1,82 @@
+scenario 01-main
+  shot 01-main
+scenario 02-hamburger
+  shot 02-hamburger
+scenario 03-menu-settings
+  shot 03-menu-settings
+scenario 04-menu-scene-collection
+  shot 04-menu-scene-collection
+scenario 05-menu-edit-source
+  shot 05-menu-edit-source
+scenario 06-menu-view
+  shot 06-menu-view
+scenario 07-menu-docks
+  shot 07-menu-docks
+scenario 08-menu-profile
+  shot 08-menu-profile
+scenario 09-menu-tools
+  shot 09-menu-tools
+scenario 10-menu-help
+  shot 10-menu-help
+scenario 11-help-program-info
+  shot 11-help-program-info
+scenario 12-my-channel-menu
+  shot 12-my-channel-menu
+scenario 13-custom-rtmp
+  shot custom-rtmp-form
+  shot 13-custom-rtmp
+scenario 14-custom-rtmp-save
+  shot custom-rtmp-filled
+  shot 14-custom-rtmp-save
+scenario 15-after-channel-added
+  shot 15-after-channel-added
+scenario 16-channel-in-bar-menu
+  shot 16-channel-in-bar-menu
+scenario 17-tools-screenshot
+  shot 17-tools-screenshot
+scenario 18-scenes-add
+  shot 18-scenes-add
+scenario 19-scenes-transition
+  shot 19-scenes-transition
+scenario 20-scenes-more
+  shot 20-scenes-more
+scenario 21-sources-add
+  shot 21-sources-add
+scenario 22-sources-more
+  shot 22-sources-more
+scenario 23-settings-video
+  shot 23-settings-video
+scenario 24-settings-general
+  shot 24-settings-general
+scenario 25-settings-output
+  shot 25-settings-output
+scenario 26-settings-audio
+  shot 26-settings-audio
+scenario 27-settings-hotkeys
+  shot 27-settings-hotkeys
+scenario 28-settings-accessibility
+  shot 28-settings-accessibility
+scenario 29-settings-advanced
+  shot 29-settings-advanced
+scenario 30-performance
+  shot 30-performance
+scenario 31-go-live
+  shot 31-go-live
+scenario 32-record
+  shot record-running
+  shot 32-record
+scenario 33-sidebar-studio-mode
+  shot 33-sidebar-studio-mode
+scenario 34-sidebar-dual-output
+  shot 34-sidebar-dual-output
+scenario 35-sidebar-music
+  shot 35-sidebar-music
+scenario 36-sidebar-draw-pen
+  shot 36-sidebar-draw-pen
+scenario 37-sidebar-virtual-camera
+  shot 37-sidebar-virtual-camera
+scenario 38-sidebar-settings
+  shot 38-sidebar-settings
+scenario 39-notifications
+  shot 39-notifications
+39 scenarios captured in /home/runner/work/hopcast/hopcast/build/ui-tour
