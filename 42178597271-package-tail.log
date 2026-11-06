@@ -1,0 +1,18 @@
+launcher.c
+
+7-Zip 26.05 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-10-21
+
+Scanning the drive:
+132 folders, 1965 files, 646805273 bytes (617 MiB)
+
+Creating archive: HopCast-windows-x64-0.1.21.0.zip
+
+Add new data to archive: 132 folders, 1965 files, 646805273 bytes (617 MiB)
+
+
+Files read from disk: 1965
+Archive size: 214402489 bytes (205 MiB)
+Everything is Ok
+34974bd54a27395f192315e81381d7cc8878588b67a7eb10090e80967ee7b3be *HopCast-windows-x64-0.1.21.0.zip
+-rw-r--r-- 1 runneradmin 197121 214402489 Nov  6 07:46 HopCast-windows-x64-0.1.21.0.zip
+launcher check: HopCast.exe started the program (obs64.exe is running)

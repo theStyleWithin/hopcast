@@ -1,0 +1,604 @@
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/libobs/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/deps/w32-pthreads/CMakeLists.txt
+  obsversion.c
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/deps/glad/CMakeLists.txt
+  glad.c
+  glad_wgl.c
+  pthread.c
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/win-capture/graphics-hook/CMakeLists.txt
+  libobs-version.vcxproj -> D:\a\hopcast\hopcast\build\engine\libobs\libobs-version.dir\RelWithDebInfo\libobs-version.lib
+  d3d10-capture.cpp
+  d3d11-capture.cpp
+  d3d12-capture.cpp
+  d3d8-capture.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/deps/libcaption/CMakeLists.txt
+  caption.c
+  cea708.c
+  eia608.c
+  eia608_charmap.c
+  eia608_from_utf8.c
+  mpeg.c
+  scc.c
+  srt.c
+  utf8.c
+  xds.c
+  caption.vcxproj -> D:\a\hopcast\hopcast\build\engine\deps\libcaption\RelWithDebInfo\caption.lib
+  obsglad.vcxproj -> D:\a\hopcast\hopcast\build\engine\deps\glad\obsglad.dir\RelWithDebInfo\obsglad.lib
+  d3d9-capture.cpp
+  dxgi-capture.cpp
+  pls-c-util.cpp
+     Creating library D:/a/hopcast/hopcast/build/engine/deps/w32-pthreads/RelWithDebInfo/w32-pthreads.lib and object D:/a/hopcast/hopcast/build/engine/deps/w32-pthreads/RelWithDebInfo/w32-pthreads.exp
+  Generating code
+  Finished generating code
+  w32-pthreads.vcxproj -> D:\a\hopcast\hopcast\build\engine\deps\w32-pthreads\RelWithDebInfo\w32-pthreads.dll
+  Copy w32-pthreads to destination
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/libobs/CMakeLists.txt
+  gl-capture.c
+  graphics-hook.c
+  vulkan-capture.c
+  pipe-windows.c
+  obfuscate.c
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  obs-hevc.c
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  obs-audio-controls.c
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  obs-audio.c
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  obs-av1.c
+  obs-avc.c
+  obs-data.c
+  obs-display.c
+  obs-encoder.c
+  obs-hotkey-name-map.c
+  obs-hotkey.c
+  obs-missing-files.c
+  obs-nal.c
+  obs-output-delay.c
+  obs-output.c
+  obs-scene.c
+  obs-service.c
+  obs-source-deinterlace.c
+  obs-source-transition.c
+  obs-source.c
+  obs-video-gpu-encode.c
+  obs-video.c
+  obs-view.c
+  obs.c
+  array-serializer.c
+  base.c
+  bitstream.c
+  bmem.c
+  buffered-file-serializer.c
+  cf-lexer.c
+  cf-parser.c
+  config-file.c
+  crc32.c
+  dstr.c
+  file-serializer.c
+  lexer.c
+  pipe.c
+  platform.c
+  profiler.c
+  task.c
+  text-lookup.c
+  utf8.c
+  calldata.c
+  decl.c
+  proc.c
+  signal.c
+  audio-io.c
+  audio-resampler-ffmpeg.c
+  format-conversion.c
+  media-remux.c
+  video-fourcc.c
+  video-frame.c
+  video-io.c
+  video-matrices.c
+  video-scaler-ffmpeg.c
+  axisang.c
+  bounds.c
+  effect-parser.c
+  effect.c
+  graphics-ffmpeg.c
+  graphics-imports.c
+  graphics.c
+  image-file.c
+  libnsgif.c
+  math-extra.c
+  matrix3.c
+  matrix4.c
+  plane.c
+  quat.c
+  shader-parser.c
+  texture-render.c
+  vec2.c
+  vec3.c
+  vec4.c
+  media-info.c
+  pls-dual-output.c
+  pls-encoder.c
+  pls-graphics-api.c
+  pls-lens-info2.c
+  pls-module.c
+  pls-obs-api.c
+  pls-output-ex.c
+  pls-sceneitem-cropping.c
+  pls-source.c
+  pls-statistics.c
+  wasapi-enum-devices.c
+  wasapi-monitoring-available.c
+  wasapi-output.c
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/win-capture/graphics-hook/RelWithDebInfo/graphics-hook64.lib and object D:/a/hopcast/hopcast/build/engine/plugins/win-capture/graphics-hook/RelWithDebInfo/graphics-hook64.exp
+  Generating code
+  obs-windows.c
+  pipe-windows.c
+  platform-windows.c
+  threading-windows.c
+  device-enum.c
+  window-helpers.c
+  Finished generating code
+  source-profiler.c
+  obfuscate.c
+  graphics-hook.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\win-capture\graphics-hook\RelWithDebInfo\graphics-hook64.dll
+  Build x86 graphics-hook				
+  MSBuild version 17.14.60+43b635718 for .NET Framework
+  
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  pls-action-util.cpp
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  pls-debug-util.cpp
+  pls-lens-event.cpp
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  pls-lens-info.cpp
+  pls-obs-api-ex.cpp
+    1>Checking Build System
+    Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/win-capture/graphics-hook/CMakeLists.txt
+    d3d10-capture.cpp
+  pls-output.cpp
+    d3d11-capture.cpp
+    d3d12-capture.cpp
+    d3d8-capture.cpp
+  pls-taken-time-impl.cpp
+  pls-upload-time.cpp
+    d3d9-capture.cpp
+    dxgi-capture.cpp
+    pls-c-util.cpp
+  pls-video-output.cpp
+  task-pool.cpp
+  handle-wrapper.cpp
+  monitor-lens-install.cpp
+  prism-ipc-buffer.cpp
+  prism-ipc-impl.cpp
+    gl-capture.c
+    graphics-hook.c
+    vulkan-capture.c
+    pipe-windows.c
+    obfuscate.c
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  pls-base.c
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  pls-base.m
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  pls-properties.c
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  pls-properties.cpp
+cl : command line  warning D9025: overriding '/EHc' with '/EHc-' [D:\a\hopcast\hopcast\build\engine\libobs\libobs.vcxproj]
+  obs-win-crash-handler.c
+       Creating library D:/a/hopcast/hopcast/src/obs-studio/build_x86/plugins/win-capture/graphics-hook/RelWithDebInfo/graphics-hook32.lib and object D:/a/hopcast/hopcast/src/obs-studio/build_x86/plugins/win-capture/graphics-hook/RelWithDebInfo/graphics-hook32.exp
+    Generating code
+    Finished generating code
+     Creating library D:/a/hopcast/hopcast/build/engine/libobs/RelWithDebInfo/obs.lib and object D:/a/hopcast/hopcast/build/engine/libobs/RelWithDebInfo/obs.exp
+  Generating code
+    graphics-hook.vcxproj -> D:\a\hopcast\hopcast\src\obs-studio\build_x86\plugins\win-capture\graphics-hook\RelWithDebInfo\graphics-hook32.dll
+  Copy graphics-hook resource D:/a/hopcast/hopcast/src/obs-studio/plugins/win-capture/graphics-hook/obs-vulkan64.json to library directory
+  Copy graphics-hook resource D:/a/hopcast/hopcast/src/obs-studio/plugins/win-capture/graphics-hook/obs-vulkan32.json to library directory
+  Copy graphics-hook (x86) to destination
+  Copy graphics-hook to destination
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/win-capture/inject-helper/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/win-capture/get-graphics-offsets/CMakeLists.txt
+  inject-helper.c
+  inject-library.c
+  obfuscate.c
+  d3d8-offsets.cpp
+  d3d9-offsets.cpp
+  dxgi-offsets.cpp
+  Finished generating code
+  Generating code
+  Finished generating code
+  libobs.vcxproj -> D:\a\hopcast\hopcast\build\engine\libobs\RelWithDebInfo\obs.dll
+  Copy libobs to destination
+  get-graphics-offsets.c
+  Copy libobs resources to data directory
+  inject-helper.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\win-capture\inject-helper\RelWithDebInfo\inject-helper64.exe
+  Build x86 inject-helper		
+  MSBuild version 17.14.60+43b635718 for .NET Framework
+  
+  Generating code
+  Finished generating code
+  get-graphics-offsets.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\win-capture\get-graphics-offsets\RelWithDebInfo\get-graphics-offsets64.exe
+  Build x86 get-graphics-offsets		
+    Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/win-capture/inject-helper/CMakeLists.txt
+  MSBuild version 17.14.60+43b635718 for .NET Framework
+  
+    inject-helper.c
+    inject-library.c
+    obfuscate.c
+    Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/win-capture/get-graphics-offsets/CMakeLists.txt
+    d3d8-offsets.cpp
+    d3d9-offsets.cpp
+    dxgi-offsets.cpp
+    Generating code
+    Finished generating code
+    inject-helper.vcxproj -> D:\a\hopcast\hopcast\src\obs-studio\build_x86\plugins\win-capture\inject-helper\RelWithDebInfo\inject-helper32.exe
+  Copy inject-helper (x86) to destination
+  Copy inject-helper to destination
+    get-graphics-offsets.c
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/image-source/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/shared/happy-eyeballs/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/coreaudio-encoder/CMakeLists.txt
+  color-source.c
+  image-source.c
+  obs-slideshow.c
+  obs-slideshow-mk2.c
+  encoder.cpp
+  happy-eyeballs.c
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/image-source/RelWithDebInfo/image-source.lib and object D:/a/hopcast/hopcast/build/engine/plugins/image-source/RelWithDebInfo/image-source.exp
+  Generating code
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/libobs-winrt/CMakeLists.txt
+  Finished generating code
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/libobs-d3d11/CMakeLists.txt
+  image-source.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\image-source\RelWithDebInfo\image-source.dll
+    Generating code
+  cmake_pch.cxx
+  d3d11-duplicator.cpp
+  d3d11-indexbuffer.cpp
+  d3d11-rebuild.cpp
+  d3d11-samplerstate.cpp
+  d3d11-shader.cpp
+    Finished generating code
+  d3d11-shaderprocessor.cpp
+  d3d11-stagesurf.cpp
+  d3d11-subsystem.cpp
+  happy-eyeballs.vcxproj -> D:\a\hopcast\hopcast\build\engine\shared\happy-eyeballs\happy-eyeballs.dir\RelWithDebInfo\happy-eyeballs.lib
+  d3d11-texture2d.cpp
+  Copy image-source to destination
+    get-graphics-offsets.vcxproj -> D:\a\hopcast\hopcast\src\obs-studio\build_x86\plugins\win-capture\get-graphics-offsets\RelWithDebInfo\get-graphics-offsets32.exe
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/nv-filters/CMakeLists.txt
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/coreaudio-encoder/RelWithDebInfo/coreaudio-encoder.lib and object D:/a/hopcast/hopcast/build/engine/plugins/coreaudio-encoder/RelWithDebInfo/coreaudio-encoder.exp
+  Generating code
+  d3d11-texture3d.cpp
+  d3d11-vertexbuffer.cpp
+  Finished generating code
+  d3d11-zstencilbuffer.cpp
+  coreaudio-encoder.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\coreaudio-encoder\RelWithDebInfo\coreaudio-encoder.dll
+  Copy get-graphics-offsets (x86) to destination
+  nvidia-audiofx-filter.c
+  nvidia-videofx-filter.c
+  nv-filters.c
+  Copy coreaudio-encoder to destination
+  Copy image-source resources to data directory
+  Copy get-graphics-offsets to destination
+  Copy coreaudio-encoder resources to data directory
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-filters/CMakeLists.txt
+  async-delay-filter.c
+  chroma-key-filter.c
+  color-correction-filter.c
+  color-grade-filter.c
+     Creating library D:/a/hopcast/hopcast/build/engine/libobs-d3d11/RelWithDebInfo/libobs-d3d11.lib and object D:/a/hopcast/hopcast/build/engine/libobs-d3d11/RelWithDebInfo/libobs-d3d11.exp
+  Generating code
+  color-key-filter.c
+  compressor-filter.c
+  crop-filter.c
+  eq-filter.c
+  expander-filter.c
+  gain-filter.c
+  gpu-delay.c
+  hdr-tonemap-filter.c
+  invert-audio-polarity.c
+  limiter-filter.c
+  luma-key-filter.c
+  mask-filter.c
+  noise-gate-filter.c
+  obs-filters.c
+  scale-filter.c
+  scroll-filter.c
+  sharpness-filter.c
+  noise-suppress-filter.c
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/shared/opts-parser/CMakeLists.txt
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/nv-filters/RelWithDebInfo/nv-filters.lib and object D:/a/hopcast/hopcast/build/engine/plugins/nv-filters/RelWithDebInfo/nv-filters.exp
+  Generating code
+  Finished generating code
+  Finished generating code
+  opts-parser.c
+  nv-filters.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\nv-filters\RelWithDebInfo\nv-filters.dll
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-qsv11/CMakeLists.txt
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/obs-filters/RelWithDebInfo/obs-filters.lib and object D:/a/hopcast/hopcast/build/engine/plugins/obs-filters/RelWithDebInfo/obs-filters.exp
+  Generating code
+  Copy nv-filters to destination
+  Finished generating code
+  common_directx11.cpp
+  common_utils_windows.cpp
+  common_utils.cpp
+  QSV_Encoder.cpp
+  opts-parser.vcxproj -> D:\a\hopcast\hopcast\build\engine\shared\opts-parser\opts-parser.dir\RelWithDebInfo\opts-parser.lib
+  QSV_Encoder_Internal.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-transitions/CMakeLists.txt
+  obs-transitions.c
+  transition-cut.c
+  transition-fade-to-color.c
+  transition-fade.c
+  transition-luma-wipe.c
+  transition-slide.c
+  transition-stinger.c
+  transition-swipe.c
+  Copy nv-filters resources to data directory
+  libobs-d3d11.vcxproj -> D:\a\hopcast\hopcast\build\engine\libobs-d3d11\RelWithDebInfo\libobs-d3d11.dll
+  Copy libobs-d3d11 to destination
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/text-freetype2/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-text/CMakeLists.txt
+  obs-text.cpp
+  find-font.c
+  find-font-windows.c
+  obs-convenience.c
+  text-freetype2.c
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/win-capture/CMakeLists.txt
+  text-functionality.c
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/rtmp-services/CMakeLists.txt
+  rtmp-common.c
+  rtmp-custom.c
+  rtmp-services-main.c
+  amazon-ivs.c
+  dacast.c
+  nimotv.c
+  service-ingest.c
+  showroom.c
+  twitch.c
+  file-updater.c
+  app-helpers.c
+  audio-helpers.c
+  compat-helpers.c
+  cursor-capture.c
+  dc-capture.c
+  duplicator-monitor-capture.c
+  game-capture-file-init.c
+  game-capture.c
+  load-graphics-offsets.c
+  monitor-capture.c
+  nt-stuff.c
+  plugin-main.c
+  window-capture.c
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/win-wasapi/CMakeLists.txt
+  file-updater.c
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/text-freetype2/RelWithDebInfo/text-freetype2.lib and object D:/a/hopcast/hopcast/build/engine/plugins/text-freetype2/RelWithDebInfo/text-freetype2.exp
+  inject-library.c
+  Generating code
+  obfuscate.c
+  pipe-windows.c
+  Finished generating code
+  obs-qsv11-plugin-main.c
+  obs-qsv11.c
+  win-wasapi.cpp
+  wasapi-notify.cpp
+  enum-wasapi.cpp
+  plugin-main.cpp
+  pls-win-helper.cpp
+  winrt-capture.cpp
+  winrt-dispatch.cpp
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/obs-text/RelWithDebInfo/obs-text.lib and object D:/a/hopcast/hopcast/build/engine/plugins/obs-text/RelWithDebInfo/obs-text.exp
+  Generating code
+  text-freetype2.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\text-freetype2\RelWithDebInfo\text-freetype2.dll
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/rtmp-services/RelWithDebInfo/rtmp-services.lib and object D:/a/hopcast/hopcast/build/engine/plugins/rtmp-services/RelWithDebInfo/rtmp-services.exp
+  Generating code
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/obs-qsv11/RelWithDebInfo/obs-qsv11.lib and object D:/a/hopcast/hopcast/build/engine/plugins/obs-qsv11/RelWithDebInfo/obs-qsv11.exp
+  Generating code
+  Copy text-freetype2 to destination
+  Finished generating code
+  Finished generating code
+  Finished generating code
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/win-wasapi/RelWithDebInfo/win-wasapi.lib and object D:/a/hopcast/hopcast/build/engine/plugins/win-wasapi/RelWithDebInfo/win-wasapi.exp
+  Generating code
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/win-capture/RelWithDebInfo/win-capture.lib and object D:/a/hopcast/hopcast/build/engine/plugins/win-capture/RelWithDebInfo/win-capture.exp
+  Generating code
+  obs-text.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-text\RelWithDebInfo\obs-text.dll
+  Finished generating code
+  Copy obs-text to destination
+  Copy text-freetype2 resources to data directory
+  Copy obs-text resources to data directory
+  Finished generating code
+  obs-qsv11.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-qsv11\RelWithDebInfo\obs-qsv11.dll
+  win-wasapi.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\win-wasapi\RelWithDebInfo\win-wasapi.dll
+  Copy obs-qsv11 to destination
+  Copy win-wasapi to destination
+  Copy obs-qsv11 resources to data directory
+  Copy win-wasapi resources to data directory
+  win-capture.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\win-capture\RelWithDebInfo\win-capture.dll
+  rtmp-services.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\rtmp-services\RelWithDebInfo\rtmp-services.dll
+  Copy rtmp-services to destination
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/win-dshow/CMakeLists.txt
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/obs-transitions/RelWithDebInfo/obs-transitions.lib and object D:/a/hopcast/hopcast/build/engine/plugins/obs-transitions/RelWithDebInfo/obs-transitions.exp
+  Generating code
+     Creating library D:/a/hopcast/hopcast/build/engine/libobs-winrt/RelWithDebInfo/libobs-winrt.lib and object D:/a/hopcast/hopcast/build/engine/libobs-winrt/RelWithDebInfo/libobs-winrt.exp
+  Finished generating code
+  Generating code
+  dshow-plugin.cpp
+  win-dshow-encoder.cpp
+  Copy rtmp-services resources to data directory
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-ffmpeg/CMakeLists.txt
+  win-dshow.cpp
+  device-notification.cpp
+  pls-av-capture-monitor.cpp
+  pls-data-monitor.cpp
+  pls-lens-helper.cpp
+  Finished generating code
+  capture-filter.cpp
+  device-vendor.cpp
+  device.cpp
+  obs-transitions.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-transitions\RelWithDebInfo\obs-transitions.dll
+  dshow-base.cpp
+  dshow-demux.cpp
+  dshow-encoded-device.cpp
+  Copy obs-transitions to destination
+  dshow-enum.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-x264/CMakeLists.txt
+  Copy obs-transitions resources to data directory
+  dshow-formats.cpp
+  dshow-media-type.cpp
+  dshowcapture.cpp
+  dshowencode.cpp
+  encoder.cpp
+  log.cpp
+  output-filter.cpp
+  Copy win-capture to destination
+  EGAVResult.cpp
+  libobs-winrt.vcxproj -> D:\a\hopcast\hopcast\build\engine\libobs-winrt\RelWithDebInfo\libobs-winrt.dll
+  ElgatoUVCDevice.cpp
+  EGAVHIDImplementation.cpp
+  DriverInterface.cpp
+  Copy libobs-winrt to destination
+  Copy win-capture resources to data directory
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-nvenc/CMakeLists.txt
+  nvenc-d3d11.c
+  cuda-helpers.c
+  nvenc-compat.c
+  nvenc-cuda.c
+  nvenc-helpers.c
+  nvenc-opts-parser.c
+  nvenc-properties.c
+  nvenc.c
+  obs-nvenc.c
+  obs-filters.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-filters\RelWithDebInfo\obs-filters.dll
+  obs-x264.c
+  obs-ffmpeg-mpegts.c
+  obs-x264-plugin-main.c
+  obs-ffmpeg-audio-encoders.c
+  obs-ffmpeg-av1.c
+  obs-ffmpeg-hls-mux.c
+  obs-ffmpeg-mux.c
+  obs-ffmpeg-output.c
+  obs-ffmpeg-source.c
+  obs-ffmpeg-video-encoders.c
+  ffmpeg-decode.c
+  obs-ffmpeg.c
+  cache.c
+  tiny-nv12-scale.c
+  decode.c
+  shared-memory-queue.c
+  media-playback.c
+  media.c
+  Copy obs-filters to destination
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/obs-nvenc/RelWithDebInfo/obs-nvenc.lib and object D:/a/hopcast/hopcast/build/engine/plugins/obs-nvenc/RelWithDebInfo/obs-nvenc.exp
+  Generating code
+  Copy obs-filters resources to data directory
+  texture-amf.cpp
+  Finished generating code
+  obs-nvenc.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-nvenc\RelWithDebInfo\obs-nvenc.dll
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-outputs/CMakeLists.txt
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/obs-x264/RelWithDebInfo/obs-x264.lib and object D:/a/hopcast/hopcast/build/engine/plugins/obs-x264/RelWithDebInfo/obs-x264.exp
+  Generating code
+  Copy obs-nvenc to destination
+  Finished generating code
+  Copy obs-nvenc resources to data directory
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/win-dshow/RelWithDebInfo/win-dshow.lib and object D:/a/hopcast/hopcast/build/engine/plugins/win-dshow/RelWithDebInfo/win-dshow.exp
+  Generating code
+  rtmp-hevc.c
+  flv-mux.c
+  flv-output.c
+  amf.c
+  cencode.c
+  hashswf.c
+  log.c
+  md5.c
+  obs-x264.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-x264\RelWithDebInfo\obs-x264.dll
+  parseurl.c
+  rtmp.c
+  mp4-mux.c
+  mp4-output.c
+  net-if.c
+  null-output.c
+  obs-outputs.c
+  rtmp-av1.c
+  rtmp-stream.c
+  rtmp-windows.c
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/obs-outputs/RelWithDebInfo/obs-outputs.lib and object D:/a/hopcast/hopcast/build/engine/plugins/obs-outputs/RelWithDebInfo/obs-outputs.exp
+  Copy obs-x264 to destination
+  Generating code
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/obs-ffmpeg/RelWithDebInfo/obs-ffmpeg.lib and object D:/a/hopcast/hopcast/build/engine/plugins/obs-ffmpeg/RelWithDebInfo/obs-ffmpeg.exp
+  Generating code
+  Finished generating code
+  Finished generating code
+  win-dshow.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\win-dshow\RelWithDebInfo\win-dshow.dll
+  Copy win-dshow to destination
+  Copy obs-x264 resources to data directory
+  Finished generating code
+  obs-outputs.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-outputs\RelWithDebInfo\obs-outputs.dll
+  Copy win-dshow resources to data directory
+  Copy obs-outputs to destination
+  Copy obs-outputs resources to data directory
+  obs-ffmpeg.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-ffmpeg\RelWithDebInfo\obs-ffmpeg.dll
+  Copy obs-ffmpeg to destination
+  Copy obs-ffmpeg resources to data directory
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/UI/obs-frontend-api/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-ffmpeg/obs-amf-test/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-ffmpeg/ffmpeg-mux/CMakeLists.txt
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-nvenc/obs-nvenc-test/CMakeLists.txt
+  obs-amf-test.cpp
+  obs-frontend-api.cpp
+  pls-frontend-api.cpp
+  ffmpeg-mux.c
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-qsv11/obs-qsv-test/CMakeLists.txt
+  obs-nvenc-test.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/plugins/obs-x264/CMakeLists.txt
+  obs-qsv-test.cpp
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/libobs-opengl/CMakeLists.txt
+  obs-x264-test.c
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/obs-ffmpeg/obs-amf-test/RelWithDebInfo/obs-amf-test.lib and object D:/a/hopcast/hopcast/build/engine/plugins/obs-ffmpeg/obs-amf-test/RelWithDebInfo/obs-amf-test.exp
+  Generating code
+     Creating library D:/a/hopcast/hopcast/build/engine/UI/obs-frontend-api/RelWithDebInfo/obs-frontend-api.lib and object D:/a/hopcast/hopcast/build/engine/UI/obs-frontend-api/RelWithDebInfo/obs-frontend-api.exp
+  Generating code
+  Generating code
+  Finished generating code
+  Finished generating code
+  Finished generating code
+  obs-frontend-api.vcxproj -> D:\a\hopcast\hopcast\build\engine\UI\obs-frontend-api\RelWithDebInfo\obs-frontend-api.dll
+  Generating code
+  Finished generating code
+     Creating library D:/a/hopcast/hopcast/build/engine/plugins/obs-qsv11/obs-qsv-test/RelWithDebInfo/obs-qsv-test.lib and object D:/a/hopcast/hopcast/build/engine/plugins/obs-qsv11/obs-qsv-test/RelWithDebInfo/obs-qsv-test.exp
+  obs-amf-test.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-ffmpeg\obs-amf-test\RelWithDebInfo\obs-amf-test.exe
+  Generating code
+  Copy obs-frontend-api to destination
+  Copy obs-amf-test to destination
+  obs-ffmpeg-mux.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-ffmpeg\ffmpeg-mux\RelWithDebInfo\obs-ffmpeg-mux.exe
+  Finished generating code
+  Copy obs-ffmpeg-mux to destination
+  obs-x264-test.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-x264\RelWithDebInfo\obs-x264-test.exe
+  gl-windows.c
+  gl-helpers.c
+  gl-indexbuffer.c
+  gl-shader.c
+  gl-shaderparser.c
+  gl-stagesurf.c
+  obs-qsv-test.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-qsv11\obs-qsv-test\RelWithDebInfo\obs-qsv-test.exe
+  gl-subsystem.c
+  gl-texture2d.c
+  gl-texture3d.c
+  gl-texturecube.c
+  gl-vertexbuffer.c
+  gl-zstencil.c
+  Generating code
+  Copy obs-qsv-test to destination
+     Creating library D:/a/hopcast/hopcast/build/engine/libobs-opengl/RelWithDebInfo/libobs-opengl.lib and object D:/a/hopcast/hopcast/build/engine/libobs-opengl/RelWithDebInfo/libobs-opengl.exp
+  Generating code
+  Finished generating code
+  Finished generating code
+  obs-nvenc-test.vcxproj -> D:\a\hopcast\hopcast\build\engine\plugins\obs-nvenc\obs-nvenc-test\RelWithDebInfo\obs-nvenc-test.exe
+  Copy obs-nvenc-test to destination
+  libobs-opengl.vcxproj -> D:\a\hopcast\hopcast\build\engine\libobs-opengl\RelWithDebInfo\libobs-opengl.dll
+  Copy libobs-opengl to destination
+  Building Custom Rule D:/a/hopcast/hopcast/src/obs-studio/CMakeLists.txt

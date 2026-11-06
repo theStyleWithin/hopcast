@@ -1,0 +1,80 @@
+engine runtime:
+ok
+app output:
+copied build/app/output/Release
+app exe:
+build/app/output/Release/bin/64bit/obs64.exe
+PRISM libraries:
+build/app/common-libs/libdump-analyzer/libdump-analyzer/RelWithDebInfo/libdump-analyzer.dll
+build/app/common-libs/libhttp-client/RelWithDebInfo/libhttp-client.dll
+build/app/common-libs/libipc/RelWithDebInfo/libipc.dll
+build/app/common-libs/liblog/liblog/RelWithDebInfo/liblog.dll
+build/app/common-libs/libresource/RelWithDebInfo/libresource.dll
+build/app/common-libs/libtask/RelWithDebInfo/libtask.dll
+build/app/common-libs/libui/RelWithDebInfo/libui.dll
+build/app/common-libs/libutils-api/RelWithDebInfo/libutils-api.dll
+build/app/common-libs/third-party/QtApng/src/plugins/imageformats/apng/RelWithDebInfo/qapng.dll
+build/app/prism-live-studio/common/libbrowser/RelWithDebInfo/libbrowser.dll
+build/app/prism-live-studio/PRISMLiveStudio/frontend-api/RelWithDebInfo/frontend-api.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/obs-composite-blur/RelWithDebInfo/obs-composite-blur.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/obs-spout2-plugin/RelWithDebInfo/win-spout.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bgm-plugins/RelWithDebInfo/prism-bgm-plugins.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-bkg-template/RelWithDebInfo/prism-bkg-template.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chat-source/RelWithDebInfo/prism-chat-source.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chatv2-source/RelWithDebInfo/prism-chatv2-source.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-chzzk-sponsor-source/RelWithDebInfo/prism-chzzk-sponsor-source.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-lens-v2/RelWithDebInfo/prism-lens-v2.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-monitor-capture/RelWithDebInfo/prism-monitor-capture.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sound-touch/RelWithDebInfo/prism-sound-touch.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-spectralizer/RelWithDebInfo/prism-spectralizer.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-sticker-source/RelWithDebInfo/prism-sticker-source.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-stream-deck/RelWithDebInfo/prism-stream-deck.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-text-template-source/RelWithDebInfo/prism-text-template-source.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-timer-source/RelWithDebInfo/prism-timer-source.dll
+build/app/prism-live-studio/PRISMLiveStudio/plugins/source/prism-viewer-count-source/RelWithDebInfo/prism-viewer-count-source.dll
+leave out PRISM's platform-tied source plugins (viewer count, chat, sponsor, stickers, Lens), as on Linux:
+D:/a/hopcast/hopcast/stage/HopCast/bin/64bit/prism-chat-source.dll
+D:/a/hopcast/hopcast/stage/HopCast/bin/64bit/prism-chatv2-source.dll
+D:/a/hopcast/hopcast/stage/HopCast/bin/64bit/prism-chzzk-sponsor-source.dll
+D:/a/hopcast/hopcast/stage/HopCast/bin/64bit/prism-lens-v2.dll
+D:/a/hopcast/hopcast/stage/HopCast/bin/64bit/prism-sticker-source.dll
+D:/a/hopcast/hopcast/stage/HopCast/bin/64bit/prism-viewer-count-source.dll
+D:/a/hopcast/hopcast/stage/HopCast/data/prism-plugins/prism-chat-source
+D:/a/hopcast/hopcast/stage/HopCast/data/prism-plugins/prism-chatv2-source
+D:/a/hopcast/hopcast/stage/HopCast/data/prism-plugins/prism-chzzk-sponsor-source
+D:/a/hopcast/hopcast/stage/HopCast/data/prism-plugins/prism-lens-v2
+D:/a/hopcast/hopcast/stage/HopCast/data/prism-plugins/prism-sticker-source
+D:/a/hopcast/hopcast/stage/HopCast/data/prism-plugins/prism-viewer-count-source
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-chat-source.dll
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-chat-source.pdb
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-chatv2-source.dll
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-chatv2-source.pdb
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-chzzk-sponsor-source.dll
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-chzzk-sponsor-source.pdb
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-lens-v2.dll
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-lens-v2.pdb
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-sticker-source.dll
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-sticker-source.pdb
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-viewer-count-source.dll
+D:/a/hopcast/hopcast/stage/HopCast/prism-plugins/64bit/prism-viewer-count-source.pdb
+drop NAVER's prebuilt OpenSSL 1.1 / mosquitto:
+removed 'D:/a/hopcast/hopcast/stage/HopCast/bin/64bit/libssl-1_1-x64.dll'
+removed 'D:/a/hopcast/hopcast/stage/HopCast/bin/64bit/libcrypto-1_1-x64.dll'
+dependency libraries:
+Qt:
+qicns.dll is up to date.
+qico.dll is up to date.
+qjpeg.dll is up to date.
+qsvg.dll is up to date.
+qtga.dll is up to date.
+qtiff.dll is up to date.
+qwbmp.dll is up to date.
+qwebp.dll is up to date.
+ffmpegmediaplugin.dll is up to date.
+windowsmediaplugin.dll is up to date.
+qnetworklistmanager.dll is up to date.
+qwindows.dll is up to date.
+qmodernwindowsstyle.dll is up to date.
+qcertonlybackend.dll is up to date.
+qschannelbackend.dll is up to date.
+1962
