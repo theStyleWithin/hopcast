@@ -6,6 +6,7 @@
 > real desktop, and things will change or break without notice. Don't rely on it for a stream that matters yet.
 
 HopCast is a free, open-source live-streaming and recording studio for Linux.
+
 [![Your app | AlternativeTo](https://alternativeto.net/static/badges/badge-compact-dark.svg)](https://alternativeto.net/software/your-app/about/?utm_source=badge&utm_medium=referral)
 
 It is built from the open-source code of [PRISM Live Studio](https://github.com/naver/prism-live-studio)
