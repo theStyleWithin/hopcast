@@ -18,6 +18,8 @@ object Live {
   @Volatile var streaming = false
   /** Recording only, not streaming (the Rec button). */
   @Volatile var recordOnly = false
+  /** Recording only sound (no picture): the Rec button's audio-only choice. */
+  @Volatile var audioOnly = false
   /** The live-preview security check is running: your screen shows as normal and nothing goes out. */
   @Volatile var checking = false
   /** The home screen is sliding around (a swipe), so the picture is black for a moment. */
@@ -52,7 +54,7 @@ object Live {
   fun changed() { main.post { listeners.forEach { it() } } }
 
   fun reset() {
-    running = false; waiting = false; hidden = false; micOn = false; streaming = false; recordOnly = false; checking = false; moving = false; startedMs = 0L
+    running = false; waiting = false; hidden = false; micOn = false; streaming = false; recordOnly = false; audioOnly = false; checking = false; moving = false; startedMs = 0L
     blocked = false; watcherDown = false; foreground = ""; gamePackage = ""; liveFrame = null
   }
 }

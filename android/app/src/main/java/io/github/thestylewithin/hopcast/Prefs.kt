@@ -31,6 +31,11 @@ class Prefs(context: Context) {
     get() = sp.getBoolean("mic", false)
     set(v) = sp.edit().putBoolean("mic", v).apply()
 
+  /** The Rec button records only sound (M4A) instead of the screen. */
+  var audioOnly: Boolean
+    get() = sp.getBoolean("audioOnly", false)
+    set(v) = sp.edit().putBoolean("audioOnly", v).apply()
+
   var bubble: Boolean
     get() = sp.getBoolean("bubble", true)
     set(v) = sp.edit().putBoolean("bubble", v).apply()

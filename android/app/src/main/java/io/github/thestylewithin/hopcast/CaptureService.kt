@@ -50,7 +50,7 @@ class CaptureService : Service() {
 
   private class Config(
     val url: String, val key: String, val sound: Boolean,
-    val quality: Int, val shape: Int, val bubble: Boolean, val stream: Boolean,
+    val quality: Int, val shape: Int, val bubble: Boolean, val stream: Boolean, val audioOnly: Boolean = false,
   )
 
   private val main = Handler(Looper.getMainLooper())
@@ -59,6 +59,7 @@ class CaptureService : Service() {
   private var stream: GenericStream? = null
   private var bubble: Bubble? = null
   private var recordFile: File? = null
+  private var audio: AudioRecorder? = null
   private var finishing = false
   private var watcher: AppWatcher? = null
   private var cover: ImageFilterRender? = null
@@ -143,10 +144,12 @@ class CaptureService : Service() {
       quality = intent.getIntExtra("quality", 0),
       shape = intent.getIntExtra("shape", 0),
       bubble = intent.getBooleanExtra("bubble", true),
-      stream = intent.getBooleanExtra("stream", true) && !intent.getBooleanExtra("check", false),
+      stream = intent.getBooleanExtra("stream", true) && !intent.getBooleanExtra("check", false) && !intent.getBooleanExtra("audioOnly", false),
+      audioOnly = intent.getBooleanExtra("audioOnly", false) && !intent.getBooleanExtra("check", false),
     )
     Studio.load(applicationContext)
     Live.reset()
+    Live.audioOnly = config?.audioOnly == true
     Live.checking = intent.getBooleanExtra("check", false)
     Live.gamePackage = Studio.scene().sources.firstOrNull { it.kind == "game" && it.visible }?.text.orEmpty()
     Live.hasBase = Studio.scene().sources.any { it.visible && (it.kind == "screen" || it.kind == "game") }
@@ -180,6 +183,11 @@ class CaptureService : Service() {
     }, main)
     projection = proj
 
+    if (config?.audioOnly == true) {
+      beginAudio()
+      return
+    }
+
     Live.waiting = true
     main.post(watchdog)
     if (Studio.blocked.isNotEmpty() || Live.gamePackage.isNotEmpty()) watcher = AppWatcher(applicationContext).also { it.start() }
@@ -188,6 +196,29 @@ class CaptureService : Service() {
     }
     refresh()
     if (!Live.appVisible) main.postDelayed(beginRunnable, SETTLE_MS)
+  }
+
+  /** Audio only: no picture, no waiting for a game, no bubble. Starts recording the sound straight away. */
+  private fun beginAudio() {
+    val cfg = config ?: return
+    val file = newRecordFile("m4a")
+    val micAllowed = Live.micOn && checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+    val recorder = AudioRecorder(projection, file, cfg.sound, micAllowed)
+    if (!recorder.start()) {
+      Live.status = "Nothing to record: turn on Game sound or Microphone first"
+      toast(Live.status)
+      finish()
+      return
+    }
+    audio = recorder
+    recordFile = file
+    Live.micOn = micAllowed
+    Live.running = true
+    Live.waiting = false
+    Live.startedMs = System.currentTimeMillis()
+    Live.streaming = false
+    Live.recordOnly = true
+    refresh()
   }
 
   /** HopCast's own screen came into view or left it. */
@@ -399,6 +430,16 @@ class CaptureService : Service() {
   private fun toggleMic() {
     val proj = projection ?: return
     val want = !Live.micOn
+    if (Live.audioOnly) {
+      if (want && checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        toast("Open HopCast and switch Microphone on first, so Android can ask you")
+        return
+      }
+      audio?.setMic(want)
+      Live.micOn = want
+      refresh()
+      return
+    }
     if (want && checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
       toast("Open HopCast and switch Microphone on first, so Android can ask you")
       return
@@ -457,6 +498,9 @@ class CaptureService : Service() {
     cameras.clear()
     bubble?.hide()
     bubble = null
+    val a = audio
+    audio = null
+    val audioFailed = if (a != null) { a.stop(); a.failed } else null
     val s = stream
     stream = null
     try { if (s?.isStreaming == true) s.stopStream() } catch (e: Exception) { }
@@ -467,7 +511,7 @@ class CaptureService : Service() {
     val file = recordFile
     recordFile = null
     val checkedOnly = Live.checking
-    val last = Live.status
+    val last = if (audioFailed != null && Live.status.isEmpty()) "The audio recording stopped early: $audioFailed" else Live.status
     Live.reset()
     Live.status = last
     Live.changed()
@@ -491,20 +535,21 @@ class CaptureService : Service() {
 
   /** Copies the finished MP4 into the phone's Movies/HopCast folder, where the gallery and file manager see it. */
   private fun publish(file: File) {
+    val isAudio = file.extension == "m4a"
     Thread {
       var saved = false
       try {
         val values = ContentValues().apply {
-          put(MediaStore.Video.Media.DISPLAY_NAME, file.name)
-          put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
-          put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/HopCast")
-          put(MediaStore.Video.Media.IS_PENDING, 1)
+          put(MediaStore.MediaColumns.DISPLAY_NAME, file.name)
+          put(MediaStore.MediaColumns.MIME_TYPE, if (isAudio) "audio/mp4" else "video/mp4")
+          put(MediaStore.MediaColumns.RELATIVE_PATH, if (isAudio) "Music/HopCast" else "Movies/HopCast")
+          put(MediaStore.MediaColumns.IS_PENDING, 1)
         }
-        val uri = contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values)
+        val uri = contentResolver.insert(if (isAudio) MediaStore.Audio.Media.EXTERNAL_CONTENT_URI else MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values)
         if (uri != null) {
           contentResolver.openOutputStream(uri)?.use { out -> file.inputStream().use { it.copyTo(out) } }
           values.clear()
-          values.put(MediaStore.Video.Media.IS_PENDING, 0)
+          values.put(MediaStore.MediaColumns.IS_PENDING, 0)
           contentResolver.update(uri, values, null, null)
           file.delete()
           saved = true
@@ -513,7 +558,7 @@ class CaptureService : Service() {
         saved = false
       }
       main.post {
-        Live.status = if (saved) "Saved to Movies/HopCast" else "Couldn't copy the recording; it is in HopCast's own folder on the phone"
+        Live.status = if (saved) (if (isAudio) "Saved to Music/HopCast" else "Saved to Movies/HopCast") else "Couldn't copy the recording; it is in HopCast's own folder on the phone"
         Live.changed()
         toast(Live.status)
         done()
@@ -521,10 +566,10 @@ class CaptureService : Service() {
     }.start()
   }
 
-  private fun newRecordFile(): File {
-    val dir = getExternalFilesDir(Environment.DIRECTORY_MOVIES) ?: filesDir
+  private fun newRecordFile(ext: String = "mp4"): File {
+    val dir = getExternalFilesDir(if (ext == "m4a") Environment.DIRECTORY_MUSIC else Environment.DIRECTORY_MOVIES) ?: filesDir
     dir.mkdirs()
-    return File(dir, "HopCast-" + SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date()) + ".mp4")
+    return File(dir, (if (ext == "m4a") "HopCast-audio-" else "HopCast-") + SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date()) + "." + ext)
   }
 
   private fun endpoint(cfg: Config): String {
@@ -563,6 +608,7 @@ class CaptureService : Service() {
       Live.running && Live.checking -> "Live-preview security check: nothing is going out. Tag the apps you want hidden, then tap Done."
       Live.waiting && Live.checking -> "Go to your home screen: the security check starts once HopCast is out of view"
       Live.waiting -> "Open your game: capture starts once HopCast is out of view"
+      Live.running && Live.audioOnly -> "Recording sound only (no picture) to this phone."
       Live.running && Live.recordOnly -> "Recording to this phone.$extra"
       Live.running && Live.streaming -> "Live, recording to this phone.$extra"
       Live.running -> Live.status.ifEmpty { "Connecting..." } + (if (recordFile != null) " Recording to this phone." else "") + extra
@@ -590,7 +636,7 @@ class CaptureService : Service() {
       .setOngoing(true)
       .setContentIntent(open)
     if (Live.running) {
-      b.addAction(action(if (Live.hidden) "Show screen" else "Hide screen", ACTION_HIDE, 2))
+      if (!Live.audioOnly) b.addAction(action(if (Live.hidden) "Show screen" else "Hide screen", ACTION_HIDE, 2))
       b.addAction(action(if (Live.micOn) "Mic off" else "Mic on", ACTION_MIC, 3))
     }
     b.addAction(action("Stop", ACTION_STOP, 1))
