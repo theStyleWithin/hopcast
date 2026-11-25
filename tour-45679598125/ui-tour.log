@@ -1,0 +1,7 @@
+scenario 40-audio-only-mp3
+  shot rec-mode-menu
+  shot rec-mode-audio
+  shot audio-rec-running
+  shot audio-rec-stopped
+  shot 40-audio-only-mp3
+40 scenarios captured in /home/runner/work/hopcast/hopcast/build/ui-tour
