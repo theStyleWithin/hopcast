@@ -5,6 +5,7 @@
 #include <QMenu>
 #include "ChannelCommonFunctions.h"
 class PLSAddingFrame;
+class QToolButton;
 
 namespace Ui {
 class GoLivePannel;
@@ -44,6 +45,13 @@ private:
 	void setEnteredGolive(bool isEntered) { isEnteredGolive = isEntered; }
 	void setEnteredRecord(bool isEntered) { isEnteredRecord = isEntered; }
 	void holdOnRec(bool holdOn);
+#ifdef HOPCAST_NO_NAVER
+	// HopCast: the little arrow beside Rec: "Record video" or "Record audio only (MP3)"
+	void setupRecordMode();
+	void updateRecordMode();
+	void toggleAudioRecord();
+	QToolButton *m_recordMode = nullptr;
+#endif
 	//private:
 	Ui::GoLivePannel *ui;
 

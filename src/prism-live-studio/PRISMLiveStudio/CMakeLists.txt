@@ -82,7 +82,11 @@ if(OS_LINUX) # HopCast: obs-ui/platform-x11.cpp talks to xdg-desktop-portal over
   find_package(Qt6 REQUIRED COMPONENTS DBus)
 endif()
 find_package(nlohmann_json REQUIRED)
-target_link_libraries(PRISMLiveStudio PRIVATE Qt6::Widgets Qt6::WidgetsPrivate Qt6::Svg Qt6::Xml Qt6::Network Qt6::WebSockets nlohmann_json::nlohmann_json Qt6::Multimedia)
+# HopCast: Shine, a small MP3 encoder (LGPL-2, see prism-ui/hopcast/shine/README.hopcast), for "Record audio only (MP3)"
+file(GLOB HOPCAST_SHINE_SOURCES CONFIGURE_DEPENDS prism-ui/hopcast/shine/*.c)
+add_library(hopcast-shine STATIC ${HOPCAST_SHINE_SOURCES})
+set_target_properties(hopcast-shine PROPERTIES C_STANDARD 99 POSITION_INDEPENDENT_CODE ON)
+target_link_libraries(PRISMLiveStudio PRIVATE Qt6::Widgets Qt6::WidgetsPrivate Qt6::Svg Qt6::Xml Qt6::Network Qt6::WebSockets nlohmann_json::nlohmann_json Qt6::Multimedia hopcast-shine)
 
 if(ENABLE_TEST)
   find_package(Qt6 COMPONENTS Test)
@@ -1009,6 +1013,8 @@ if(OS_WINDOWS)
     prism-ui/hopcast/HopCastLinkGuard.cpp prism-ui/hopcast/HopCastLinkGuard.h
     prism-ui/hopcast/HopCastScreenshot.cpp prism-ui/hopcast/HopCastScreenshot.h
     prism-ui/hopcast/HopCastVideoDownload.cpp prism-ui/hopcast/HopCastVideoDownload.h
+    prism-ui/hopcast/HopCastAudioRecord.cpp prism-ui/hopcast/HopCastAudioRecord.h
+    prism-ui/hopcast/HopCastMp3.cpp prism-ui/hopcast/HopCastMp3.h
     prism-ui/hopcast/HopCastPinpoint.cpp prism-ui/hopcast/HopCastPinpoint.h
     prism-ui/hopcast/HopCastMultiStream.cpp prism-ui/hopcast/HopCastMultiStream.h
     prism-ui/hopcast/HopCastProfileImport.cpp prism-ui/hopcast/HopCastProfileImport.h
@@ -1142,6 +1148,8 @@ elseif(OS_POSIX)
     prism-ui/hopcast/HopCastLinkGuard.cpp prism-ui/hopcast/HopCastLinkGuard.h # HopCast: no PRISM/NAVER links
     prism-ui/hopcast/HopCastScreenshot.cpp prism-ui/hopcast/HopCastScreenshot.h
     prism-ui/hopcast/HopCastVideoDownload.cpp prism-ui/hopcast/HopCastVideoDownload.h
+    prism-ui/hopcast/HopCastAudioRecord.cpp prism-ui/hopcast/HopCastAudioRecord.h
+    prism-ui/hopcast/HopCastMp3.cpp prism-ui/hopcast/HopCastMp3.h
     prism-ui/hopcast/HopCastPinpoint.cpp prism-ui/hopcast/HopCastPinpoint.h
     prism-ui/hopcast/HopCastMultiStream.cpp prism-ui/hopcast/HopCastMultiStream.h
     prism-ui/hopcast/HopCastProfileImport.cpp prism-ui/hopcast/HopCastProfileImport.h

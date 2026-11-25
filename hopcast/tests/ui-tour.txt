@@ -41,3 +41,4 @@ sidebar-draw-pen | click 1573 217; wait 3
 sidebar-virtual-camera | click 1573 258; wait 3
 sidebar-settings | click 1573 331; wait 3
 notifications | click 1573 842; wait 2
+audio-only-mp3 | click 1506 873; wait 1; shot rec-mode-menu; key Down; key Down; key Return; wait 1; shot rec-mode-audio; click 1426 873; wait 4; shot audio-rec-running; click 1426 873; wait 2; shot audio-rec-stopped
