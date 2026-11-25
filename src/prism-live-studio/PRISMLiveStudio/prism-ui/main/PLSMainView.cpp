@@ -1148,9 +1148,14 @@ void PLSMainView::registerSideBarButton(ConfigId id, const IconData &data, bool 
 	QVBoxLayout *layout = nullptr;
 	int insertIndex = -1;
 	if (ConfigId::LivingMsgView == id) {
+#ifdef HOPCAST_NO_NAVER
+		/* HopCast: the bell sits in the tool group, between the camera and the settings cog (not at the bottom) */
+		layout = m_sideBarLayout;
+#else
 		/* Notice + Lens: fixed bottom, not in VScrollArea */
 		layout = m_bottomLayout;
 		insertIndex = 0;
+#endif
 	} else if (ConfigId::CamStudioConfig == id) {
 		layout = m_bottomLayout;
 		insertIndex = 1;
@@ -1337,6 +1342,14 @@ void PLSMainView::initSideBarButtons()
 			      IconData{VIRTUAL_CAMERA_OFF_NORMAL, VIRTUAL_CAMERA_OFF_OVER, VIRTUAL_CAMERA_OFF_CLICKED, VIRTUAL_CAMERA_OFF_DISABLE, VIRTUAL_CAMERA_ON_NORMAL, VIRTUAL_CAMERA_ON_OVER,
 				       VIRTUAL_CAMERA_ON_CLICKED, VIRTUAL_CAMERA_ON_DISABLE, QTStr("sidebar.virtualcamera.inactive.tips"), 22, 22, 22, 22});
 
+#ifdef HOPCAST_NO_NAVER
+	// HopCast: the notification bell goes right after the camera, above the separator and the settings cog
+	registerSideBarButton(ConfigId::LivingMsgView,
+			      IconData{TOAST_OFF_NORMAL, TOAST_OFF_OVER, TOAST_OFF_CLICKED, TOAST_OFF_DISABLE, TOAST_ON_NORMAL, TOAST_ON_OVER, TOAST_ON_CLICKED, TOAST_ON_DISABLE, QTStr("Alert.Title"),
+				       22, 22, 22, 22},
+			      false);
+#endif
+
 	/* Resolution / Settings / Help: inside sidebar scroll area */
 	createSidebarUtilityButtons();
 	{
@@ -1361,11 +1374,13 @@ void PLSMainView::initSideBarButtons()
 
 	addSideBarStretch();
 
-	/* Bottom strip: Notice → Lens; not in scroll */
+	/* Bottom strip: Notice → Lens; not in scroll (HopCast: the bell is already placed above, next to the camera) */
+#ifndef HOPCAST_NO_NAVER
 	registerSideBarButton(ConfigId::LivingMsgView,
 			      IconData{TOAST_OFF_NORMAL, TOAST_OFF_OVER, TOAST_OFF_CLICKED, TOAST_OFF_DISABLE, TOAST_ON_NORMAL, TOAST_ON_OVER, TOAST_ON_CLICKED, TOAST_ON_DISABLE, QTStr("Alert.Title"),
 				       22, 22, 22, 22},
 			      false);
+#endif
 
 	registerSideBarButton(ConfigId::CamStudioConfig,
 			      IconData{PRISM_CAM_OFF_NORMAL, PRISM_CAM_OFF_OVER, PRISM_CAM_OFF_CLICKED, PRISM_CAM_OFF_DISABLE, PRISM_CAM_ON_NORMAL, PRISM_CAM_ON_OVER, PRISM_CAM_ON_CLICKED,

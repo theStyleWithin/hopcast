@@ -1,0 +1,4 @@
+Shine - fast fixed-point MP3 encoder (https://github.com/toots/shine), copied unchanged from src/lib
+(revision 7612c31e21e1fae2241ed86bc59c68d7b8f64e13).
+Licence: GNU Library General Public License v2 (see COPYING). HopCast links it statically and is GPL-2.0-or-later,
+which the LGPL permits. It is used only for "Record audio only (MP3)" (HopCastAudioRecord.cpp).

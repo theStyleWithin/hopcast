@@ -10,6 +10,15 @@
 #include "pls-channel-const.h"
 #include "prism/PLSPlatformPrism.h"
 #include "ui_GoLivePannel.h"
+#ifdef HOPCAST_NO_NAVER
+#include "../../hopcast/HopCastAudioRecord.h"
+#include <QActionGroup>
+#include <QHBoxLayout>
+#include <QMenu>
+#include <QStandardPaths>
+#include <QToolButton>
+#include <util/config-file.h>
+#endif
 
 using namespace ChannelData;
 
@@ -41,6 +50,9 @@ GoLivePannel::GoLivePannel(QWidget *parent) : QFrame(parent), ui(new Ui::GoLiveP
 	recLayout->setContentsMargins(0, 0, 0, 0);
 	ui->Record->setLayout(recLayout);
 	m_busyFrameForRec->hide();
+#ifdef HOPCAST_NO_NAVER
+	setupRecordMode();
+#endif
 
 	connect(PLSCHANNELS_API, &PLSChannelDataAPI::recordingChanged, this, &GoLivePannel::updateRecordButton);
 	connect(PLSCHANNELS_API, &PLSChannelDataAPI::liveStateChanged, this, &GoLivePannel::updateGoliveButton);
@@ -96,6 +108,14 @@ void GoLivePannel::on_Record_toggled(bool isCheck)
 
 void GoLivePannel::toggleRecord(bool isStart)
 {
+#ifdef HOPCAST_NO_NAVER
+	// HopCast: with "Record audio only (MP3)" chosen, Rec makes an MP3 of the audio and leaves the video recording alone. A video
+	// recording that is already running is stopped the normal way, whatever the choice is.
+	if (hopcast::audioRecording() || (hopcast::audioOnlyMode() && !PLSCHANNELS_API->isInWholeRecording())) {
+		toggleAudioRecord();
+		return;
+	}
+#endif
 	if (isEnteredRecord) {
 		PRE_LOG_MSG_STEP(" Wait for record state changing .... new event is ignored!", g_recordStep, INFO)
 		return;
@@ -477,3 +497,102 @@ void GoLivePannel::setRecTooltip()
 		}
 	}
 }
+
+#ifdef HOPCAST_NO_NAVER
+namespace {
+// The folder the normal recordings go to (Settings > Output > Recording), so the MP3s land beside the videos.
+QString hopcastRecordingFolder()
+{
+	config_t *cfg = PLSBasic::instance()->Config();
+	const bool advanced = cfg && QString::fromUtf8(config_get_string(cfg, "Output", "Mode")).compare(QStringLiteral("Advanced"), Qt::CaseInsensitive) == 0;
+	const char *path = cfg ? config_get_string(cfg, advanced ? "AdvOut" : "SimpleOutput", advanced ? "RecFilePath" : "FilePath") : nullptr;
+	QString folder = path ? QString::fromUtf8(path) : QString();
+	if (folder.isEmpty())
+		folder = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
+	return folder;
+}
+} // namespace
+
+void GoLivePannel::setupRecordMode()
+{
+	m_recordMode = new QToolButton(this);
+	m_recordMode->setObjectName(QStringLiteral("RecordMode"));
+	m_recordMode->setFocusPolicy(Qt::NoFocus);
+	m_recordMode->setCursor(Qt::PointingHandCursor);
+	m_recordMode->setPopupMode(QToolButton::InstantPopup);
+	m_recordMode->setStyleSheet(QStringLiteral("QToolButton { color: #e6e6e6; background: #3a3a3a; border: none; border-radius: 4px; padding: 0 7px; min-height: 26px; font-size: 13px; }"
+						   "QToolButton:hover { background: #4a4a4a; } QToolButton:disabled { color: #777777; } QToolButton::menu-indicator { image: none; }"));
+
+	auto *menu = new QMenu(m_recordMode);
+	auto *group = new QActionGroup(menu);
+	auto *video = menu->addAction(QStringLiteral("Record video"));
+	auto *audio = menu->addAction(QStringLiteral("Record audio only (MP3)"));
+	for (QAction *a : {video, audio}) {
+		a->setCheckable(true);
+		group->addAction(a);
+	}
+	connect(menu, &QMenu::aboutToShow, this, [video, audio]() {
+		video->setChecked(!hopcast::audioOnlyMode());
+		audio->setChecked(hopcast::audioOnlyMode());
+	});
+	connect(video, &QAction::triggered, this, [this]() {
+		hopcast::setAudioOnlyMode(false);
+		updateRecordMode();
+	});
+	connect(audio, &QAction::triggered, this, [this]() {
+		hopcast::setAudioOnlyMode(true);
+		updateRecordMode();
+	});
+	m_recordMode->setMenu(menu);
+
+	if (auto *row = qobject_cast<QHBoxLayout *>(layout()))
+		row->addWidget(m_recordMode);
+	connect(PLSCHANNELS_API, &PLSChannelDataAPI::recordingChanged, this, [this](int) { updateRecordMode(); });
+	updateRecordMode();
+}
+
+void GoLivePannel::updateRecordMode()
+{
+	if (!m_recordMode)
+		return;
+	const bool audio = hopcast::audioOnlyMode();
+	const bool busy = hopcast::audioRecording() || PLSCHANNELS_API->isInWholeRecording();
+	m_recordMode->setText(audio ? QStringLiteral("\u266A \u25BE") : QStringLiteral("\u25BE")); // "note arrow" in audio mode
+	m_recordMode->setEnabled(!busy);
+	m_recordMode->setToolTip(audio ? QStringLiteral("Rec records audio only (MP3). Click to change.") : QStringLiteral("Rec records video. Click to choose audio only (MP3)."));
+}
+
+void GoLivePannel::toggleAudioRecord()
+{
+	QString message;
+	QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information;
+	if (hopcast::audioRecording()) {
+		QString problem;
+		const QString saved = hopcast::stopAudioRecording(&problem);
+		message = QStringLiteral("Audio saved: ") + saved;
+		if (!problem.isEmpty()) {
+			message += QStringLiteral(" (") + problem + QLatin1Char(')');
+			icon = QSystemTrayIcon::Warning;
+		}
+	} else {
+		QString path, error;
+		if (hopcast::startAudioRecording(hopcastRecordingFolder(), &path, &error)) {
+			message = QStringLiteral("Recording audio (MP3): ") + path;
+		} else {
+			message = QStringLiteral("Audio recording didn't start. ") + error;
+			icon = QSystemTrayIcon::Warning;
+		}
+	}
+
+	// Rec shows "STOP" while the audio recording runs (without starting the video recording logic)
+	const bool running = hopcast::audioRecording();
+	{
+		QSignalBlocker blocker(ui->Record);
+		ui->Record->setChecked(running);
+	}
+	ui->Record->setText(running ? QTStr("Channels.STOP") : QTStr("Channels.REC"));
+	ui->Record->setDisabled(false);
+	updateRecordMode();
+	PLSBasic::instance()->SysTrayNotify(message, icon, QStringLiteral("HopCast"));
+}
+#endif

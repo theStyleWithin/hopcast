@@ -116,6 +116,16 @@ jobs:
           n=$(grep -c "warning:" build-app.log || true)
           echo "::notice title=app warnings::$n compiler warnings in the PRISM layer"
 
+      - name: MP3 writer test (the audio-only recording's encoder makes valid MP3)
+        run: |
+          set -euo pipefail
+          src="$PWD/src/prism-live-studio/PRISMLiveStudio/prism-ui/hopcast"
+          mkdir -p mp3-test && cd mp3-test
+          for f in "$src"/shine/*.c; do gcc -O2 -std=c11 -c "$f" -I "$src/shine"; done
+          g++ -O2 -std=c++17 -Wall -I "$src" -o mp3test *.o "$src/HopCastMp3.cpp" "$PWD/../hopcast/tests/mp3-writer/mp3-writer-test.cpp"
+          ./mp3test | tee result.log
+          ! grep -q '^FAIL' result.log
+
       - name: Launch test (Xvfb + screenshot)
         id: launch
         continue-on-error: true
