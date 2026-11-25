@@ -31,6 +31,7 @@ import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.Switch
@@ -58,11 +59,13 @@ class MainActivity : Activity() {
   private lateinit var timer: TextView
   private lateinit var goLive: Button
   private lateinit var rec: Button
+  private lateinit var recMode: Button
 
   private val ui = Handler(Looper.getMainLooper())
   private var tab = 1
   private var askedNotifications = false
   private var pendingStream = true
+  private var pendingAudio = false
   private var pendingPick: ((File) -> Unit)? = null
   private var pendingPickFolder = "sources"
   private var pendingCamera: (() -> Unit)? = null
@@ -183,6 +186,10 @@ class MainActivity : Activity() {
     rec = bigButton("Rec", "#c34151", "#ffffff") { startCapture(false) }
     bottom.addView(goLive, LinearLayout.LayoutParams(0, dp(44), 1f).apply { rightMargin = dp(10) })
     bottom.addView(rec, LinearLayout.LayoutParams(dp(84), dp(44)))
+    // a small arrow beside Rec: record video, or only the sound
+    recMode = bigButton("", "#3a3a3a", "#dddddd") { chooseRecordMode() }.apply { textSize = 13f }
+    bottom.addView(recMode, LinearLayout.LayoutParams(dp(40), dp(44)).apply { leftMargin = dp(6) })
+    refreshRecordMode()
     root.addView(bottom)
     return root
   }
@@ -221,12 +228,31 @@ class MainActivity : Activity() {
     }
   }
 
+  private fun refreshRecordMode() {
+    recMode.text = if (prefs.audioOnly) "♪ ▾" else "▾"
+    rec.text = if (prefs.audioOnly) "Rec ♪" else "Rec"
+  }
+
+  private fun chooseRecordMode() {
+    val menu = PopupMenu(this, recMode)
+    menu.menu.add(0, 1, 0, "Record video").isCheckable = true
+    menu.menu.add(0, 2, 1, "Record audio only (M4A)").isCheckable = true
+    menu.menu.findItem(if (prefs.audioOnly) 2 else 1).isChecked = true
+    menu.setOnMenuItemClickListener {
+      prefs.audioOnly = it.itemId == 2
+      refreshRecordMode()
+      true
+    }
+    menu.show()
+  }
+
   private fun refreshBottom() {
     val seconds = if (Live.startedMs > 0) ((System.currentTimeMillis() - Live.startedMs) / 1000).toInt() else 0
     timer.text = (if (Live.running) (if (Live.streaming) "LIVE" else "REC") else "LIVE") + "\n" +
       String.format("%02d:%02d:%02d", seconds / 3600, (seconds / 60) % 60, seconds % 60)
     goLive.text = if (Live.active()) "Stop" else "Go Live"
     rec.visibility = if (Live.active()) View.GONE else View.VISIBLE
+    recMode.visibility = rec.visibility
   }
 
   // ---------------------------------------------------------------- channels
@@ -747,6 +773,7 @@ class MainActivity : Activity() {
       .setPositiveButton("Start") { _, _ ->
         pendingStream = false
         pendingCheck = true
+        pendingAudio = false
         @Suppress("DEPRECATION")
         startActivityForResult(getSystemService(MediaProjectionManager::class.java).createScreenCaptureIntent(), REQ_CAPTURE)
       }.show()
@@ -755,7 +782,12 @@ class MainActivity : Activity() {
   private fun startCapture(stream: Boolean) {
     pendingStream = stream
     pendingCheck = false
+    pendingAudio = !stream && prefs.audioOnly
     Studio.save()
+    if (pendingAudio) {
+      startAudioOnly()
+      return
+    }
     val channel = Studio.channels.firstOrNull { it.enabled && it.url.isNotBlank() }
     if (stream && channel == null) {
       Toast.makeText(this, "Add a channel first", Toast.LENGTH_SHORT).show()
@@ -810,6 +842,26 @@ class MainActivity : Activity() {
     if (stream && Studio.channels.count { it.enabled } > 1) {
       Toast.makeText(this, "Streaming to ${channel!!.name} for now; several channels at once is coming next", Toast.LENGTH_LONG).show()
     }
+    @Suppress("DEPRECATION")
+    startActivityForResult(getSystemService(MediaProjectionManager::class.java).createScreenCaptureIntent(), REQ_CAPTURE)
+  }
+
+  /** Rec in audio-only mode: no picture is captured, so none of the screen checks apply. Only the permissions for sound. */
+  private fun startAudioOnly() {
+    if (!prefs.gameSound && !prefs.mic) {
+      Toast.makeText(this, "Turn on Game sound or Microphone first, so there is something to record", Toast.LENGTH_LONG).show()
+      return
+    }
+    if (Build.VERSION.SDK_INT >= 33 && !askedNotifications && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+      askedNotifications = true
+      requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQ_NOTIFICATIONS)
+      return
+    }
+    if (prefs.mic && checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+      requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), REQ_MIC)
+      return
+    }
+    // Android's one permission screen covers the phone's sound; HopCast uses only the sound from it
     @Suppress("DEPRECATION")
     startActivityForResult(getSystemService(MediaProjectionManager::class.java).createScreenCaptureIntent(), REQ_CAPTURE)
   }
@@ -871,6 +923,7 @@ class MainActivity : Activity() {
       .putExtra("data", data)
       .putExtra("stream", pendingStream)
       .putExtra("check", pendingCheck)
+      .putExtra("audioOnly", pendingAudio)
       .putExtra("url", channel?.url.orEmpty())
       .putExtra("key", channel?.let { prefs.channelKey(it.id) }.orEmpty())
       .putExtra("sound", prefs.gameSound)
@@ -880,7 +933,7 @@ class MainActivity : Activity() {
       .putExtra("bubble", prefs.bubble)
     pendingCheck = false
     startForegroundService(intent)
-    moveTaskToBack(true) // step aside so your game is what's on screen
+    if (!pendingAudio) moveTaskToBack(true) // step aside so your game is what's on screen; sound-only has no screen to show
   }
 
   // ---------------------------------------------------------------- small view helpers

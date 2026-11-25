@@ -47,6 +47,7 @@ than OBS's, and makes four changes:
 | Studio interface | PRISM's layout: channel bar, preview, scenes, sources, audio mixer, sidebar tools |
 | Streaming | Custom RTMP, SRT or RIST. Switch on as many channels as you like and Go Live sends to all of them at once: the picture is encoded once and shared, so there is no relay and no extra CPU load. A destination that fails doesn't stop the others. Reconnects automatically |
 | Recording | MKV/MP4 to a folder of your choice; works before, during and after streaming |
+| Audio-only recording | An arrow beside Rec chooses "Record audio only". Desktop: MP3 (192 kbps) of mixer Track 1 beside the videos. Android: M4A (AAC) of the phone's sound and, if on, the microphone, in Music/HopCast |
 | Sources | Video capture (V4L2), screen capture (PipeWire/X11), audio (PulseAudio/PipeWire/ALSA), images, media files, text, color |
 | Encoders | x264 (software). NVENC and VAAPI need real-desktop testing |
 | Stream-key storage | Kept inside HopCast's own storage, encrypted; no prompt and no folder to manage |
