@@ -150,6 +150,40 @@ jobs:
           git -C "$tmp" -c user.name=ci -c user.email=ci@localhost commit -qm "ui tour ${GITHUB_RUN_ID}"
           git -C "$tmp" push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:dev-logs-tour
 
+      - name: Audio-only recording check (the UI tour records a few seconds as MP3)
+        if: inputs.ui_tour && (inputs.tour_only == '' || contains(inputs.tour_only, 'audio-only-mp3'))
+        run: |
+          f=$(find build/ui-tour/home -name 'HopCast audio *.mp3' 2>/dev/null | head -1)
+          echo "file: ${f:-<none>}"
+          [ -n "$f" ] || { echo "::error title=Audio only::the audio-only recording made no MP3 file"; exit 1; }
+          ls -l "$f"
+          python3 -I - "$f" <<'PY'
+          import sys
+          d = open(sys.argv[1], 'rb').read()
+          br = [0,32,40,48,56,64,80,96,112,128,160,192,224,256,320,0]
+          sr = [44100,48000,32000,0]
+          i = 0
+          frames = 0
+          rate = bit = 0
+          while i + 4 <= len(d):
+              if d[i] != 0xFF or (d[i+1] & 0xFE) != 0xFA:
+                  break
+              b = br[d[i+2] >> 4]; r = sr[(d[i+2] >> 2) & 3]
+              if not b or not r:
+                  break
+              n = 144 * b * 1000 // r + ((d[i+2] >> 1) & 1)
+              if i + n > len(d):
+                  break
+              rate, bit = r, b
+              frames += 1; i += n
+          secs = frames * 1152 / rate if rate else 0
+          print("valid frames:", frames, "bytes parsed:", i, "of", len(d), "rate:", rate, "kbps:", bit, "seconds: %.2f" % secs)
+          ok = frames > 0 and i == len(d) and bit == 192 and secs >= 2.5
+          if not ok:
+              print("::error title=Audio only::the MP3 is not valid or is too short")
+              sys.exit(1)
+          PY
+
       - name: Publish launch results
         if: always() && hashFiles('build/launch-test/stdout.txt') != ''
         env:
